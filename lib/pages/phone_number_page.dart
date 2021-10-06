@@ -1,6 +1,8 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:left_style/apis/smsApi.dart';
+import 'package:left_style/models/sms_request_model.dart';
+import 'package:left_style/pages/verify_pin_page.dart';
 
 class PhoneNumberPage extends StatefulWidget {
   const PhoneNumberPage({Key key}) : super(key: key);
@@ -13,10 +15,10 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _phoneController = TextEditingController();
   String phoneNumber = "";
-  SmsApi _smsApi = SmsApi();
 
   @override
   Widget build(BuildContext context) {
+    SmsApi _smsApi = SmsApi(this.context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -62,10 +64,6 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                                                   color: Colors.grey))),
                                       child: TextFormField(
                                         controller: _phoneController,
-                                        // validator: (val) {
-                                        //   return Validator.phone(
-                                        //       val.toString());
-                                        // },
                                         keyboardType: TextInputType.phone,
                                         decoration: InputDecoration(
                                             border: InputBorder.none,
@@ -91,14 +89,14 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                                   print("Pressed");
                                   _formKey.currentState.validate();
 
-                                  // if (!_formKey.currentState.validate()) {
-                                  // print("Not");
-                                  // return;
-                                  // } else {
                                   print("OK");
 
                                   phoneNumber = _phoneController.text;
-                                  _smsApi.requestPin(phoneNumber);
+                                  SmsRequestModel requestModel =
+                                      await _smsApi.requestPin(phoneNumber);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => VerifyPinPage(
+                                          requestId: requestModel.request_id)));
                                 },
                                 child: Text(
                                   "Add Phone Number",
@@ -117,21 +115,6 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
               ),
             ),
           ),
-          Positioned(
-            top: 20.0,
-            left: 4.0,
-            child: IconButton(
-              icon: Icon(
-                  // Icons.keyboard_arrow_left_rounded,
-                  Icons.arrow_back_ios,
-                  // size: 30,
-                  color: Colors.grey[900]),
-              // color: Theme.of(context).primaryColor,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          )
         ],
       ),
     );

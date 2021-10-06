@@ -11,9 +11,19 @@
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_web-0.10.0+3" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_facebook_auth_web-2.6.0+2" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.1.0" />
+<<<<<<< HEAD
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.1.2" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.1.1" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications-9.0.0" />
+=======
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-1.4.1" />
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.4" />
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_facebook_auth-3.5.2" />
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.0" />
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/sms_autofill-2.1.2" />
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_facebook_auth_web-2.6.0+2" />
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.0.3" />
+>>>>>>> 96f03b937f23577bdf7a4964abe21a2bc4075ccb
     </CLASSES>
     <JAVADOC />
     <SOURCES />
