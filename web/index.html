@@ -16,12 +16,14 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Unifine Lifestyle">
-
+  <!--  google sign-->
+  <meta name="google-signin-client_id" content="668500900148-j04lo291amb7l04j0e3jmm5m8cra5uhv.apps.googleusercontent.com">
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="left_style">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
 
   <title>left_style</title>
   <link rel="manifest" href="manifest.json">
@@ -32,6 +34,24 @@
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+  <!-- Firebase Auth SDK -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
+  <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyBWlbheVA4PN-acHACHWm2_yh17S9OEPVI",
+        authDomain: "epcapp-df336.firebaseapp.com",
+        projectId: "epcapp-df336",
+        storageBucket: "epcapp-df336.appspot.com",
+        messagingSenderId: "106900086927",
+        appId: "1:106900086927:web:3be091cdec18d85e0b50fa"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
   <script>
     var serviceWorkerVersion = null;
     var scriptLoaded = false;
