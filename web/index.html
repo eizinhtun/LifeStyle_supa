@@ -35,10 +35,16 @@
        https://developers.google.com/web/fundamentals/primers/service-workers -->
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 
+  <!-- <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-messaging.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script> -->
 
-  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+
+
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
   <!-- Firebase Auth SDK -->
-  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
   <script>
       // Your web app's Firebase configuration
       var firebaseConfig = {
@@ -51,6 +57,7 @@
       };
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
+      //firebase.analytics();
     </script>
   <script>
     var serviceWorkerVersion = null;
@@ -72,6 +79,7 @@
         // Wait for registration to finish before dropping the <script> tag.
         // Otherwise, the browser will load the script multiple times,
         // potentially different versions.
+        navigator.serviceWorker.register("firebase-messaging-sw.js");
         var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
         navigator.serviceWorker.register(serviceWorkerUrl)
           .then((reg) => {

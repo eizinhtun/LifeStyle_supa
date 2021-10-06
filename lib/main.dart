@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -5,7 +8,13 @@ import 'package:left_style/pages/facebook_login.dart';
 import 'package:left_style/pages/sign_in_screen.dart';
 import 'package:left_style/splash.dart';
 
-void main() {
+
+void main() async {
+
+  //firebase messaging
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_messageHandler);
   if (kIsWeb) {
     // initialiaze the facebook javascript SDK
     FacebookAuth.i.webInitialize(
@@ -18,7 +27,12 @@ void main() {
   runApp(MyApp());
 }
 
+Future<void> _messageHandler(RemoteMessage message) async {
+  print('background message ${message.notification!.body}');
+}
+
 class MyApp extends StatelessWidget {
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -45,8 +59,9 @@ class MyApp extends StatelessWidget {
               // is not restarted.
               primarySwatch: Colors.blue,
             ),
-            // home: MyHomePage(title: 'EPC Home Page'),
-            home: SignInScreen(),
+            home: MyHomePage(title: 'EPC Home Page'),
+            //home: SignInScreen(),
+            // home: FacebookLoginPage()
           );
         }
       },
@@ -73,7 +88,49 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
+  late FirebaseMessaging messaging;
   int _counter = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    messaging = FirebaseMessaging.instance;
+    messaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    messaging.getToken().then((token) {
+      print(token);
+    });
+    //messaging.subscribeToTopic('pyae');
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      print("message recieved");
+      print(event.notification!.body);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Notification"),
+              content: Text(event.notification!.body!),
+              actions: [
+                TextButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('Message clicked!');
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -123,10 +180,14 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'You have pushed the button this many times:',
             ),
+            ElevatedButton(onPressed: (){
+              createUser();
+            }, child: Text("store")),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+
           ],
         ),
       ),
@@ -137,4 +198,17 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  void createUser() async {
+    FirebaseFirestore.instance.collection('users').doc('p1').set({
+      'title': 'Mastering Flutter',
+      'description': 'Programming Guide for Dart'
+    });
+
+  }
+
+  
+
 }
+
+
