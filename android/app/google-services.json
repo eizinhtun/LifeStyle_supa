@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "106900086927",
+    "project_id": "epcapp-df336",
+    "storage_bucket": "epcapp-df336.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106900086927:android:e42f1551ab2156a30b50fa",
+        "android_client_info": {
+          "package_name": "com.unifine.epc.left_style"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106900086927-a7u78a16121bklcrmjck2n7l9lik0gps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmq2szLG1BJKeF9XqwKV3mmZi6SiuMZ9w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106900086927-a7u78a16121bklcrmjck2n7l9lik0gps.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

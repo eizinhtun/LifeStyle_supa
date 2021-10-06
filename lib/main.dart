@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:left_style/pages/sign_in_screen.dart';
 import 'package:left_style/splash.dart';
 
 void main() {
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
               // is not restarted.
               primarySwatch: Colors.blue,
             ),
-            home: MyHomePage(title: 'EPC Home Page'),
+            // home: MyHomePage(title: 'EPC Home Page'),
+            home: SignInScreen(),
           );
         }
       },
