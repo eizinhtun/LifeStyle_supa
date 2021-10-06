@@ -1,7 +1,19 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:left_style/pages/facebook_login.dart';
 import 'package:left_style/splash.dart';
 
 void main() {
+  if (kIsWeb) {
+    // initialiaze the facebook javascript SDK
+    FacebookAuth.i.webInitialize(
+      appId: "3105247143054675", //<-- YOUR APP_ID
+      cookie: true,
+      xfbml: true,
+      version: "v9.0",
+    );
+  }
   runApp(MyApp());
 }
 
@@ -18,22 +30,23 @@ class MyApp extends StatelessWidget {
         } else {
           // Loading is done, return the app:
           return MaterialApp(
-            title: 'Unifine',
-            theme: ThemeData(
-              //  pageTransitionsTheme: NoTransitionsOnWeb(),
-              // This is the theme of your application.
-              //
-              // Try running your application with "flutter run". You'll see the
-              // application has a blue toolbar. Then, without quitting the app, try
-              // changing the primarySwatch below to Colors.green and then invoke
-              // "hot reload" (press "r" in the console where you ran "flutter run",
-              // or simply save your changes to "hot reload" in a Flutter IDE).
-              // Notice that the counter didn't reset back to zero; the application
-              // is not restarted.
-              primarySwatch: Colors.blue,
-            ),
-            home: MyHomePage(title: 'EPC Home Page'),
-          );
+              title: 'Unifine',
+              theme: ThemeData(
+                //  pageTransitionsTheme: NoTransitionsOnWeb(),
+                // This is the theme of your application.
+                //
+                // Try running your application with "flutter run". You'll see the
+                // application has a blue toolbar. Then, without quitting the app, try
+                // changing the primarySwatch below to Colors.green and then invoke
+                // "hot reload" (press "r" in the console where you ran "flutter run",
+                // or simply save your changes to "hot reload" in a Flutter IDE).
+                // Notice that the counter didn't reset back to zero; the application
+                // is not restarted.
+                primarySwatch: Colors.blue,
+              ),
+              home: FacebookLoginPage()
+              // MyHomePage(title: 'EPC Home Page'),
+              );
         }
       },
     );
