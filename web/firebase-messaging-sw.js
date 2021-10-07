@@ -1,6 +1,7 @@
 importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js");
 importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js");
 importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js");
+importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js");
 firebase.initializeApp({
         apiKey: "AIzaSyBWlbheVA4PN-acHACHWm2_yh17S9OEPVI",
         authDomain: "epcapp-df336.firebaseapp.com",
