@@ -1,13 +1,11 @@
 // @dart=2.9
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:left_style/apis/smsApi.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:pin_input_text_field/pin_input_text_field.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 class VerifyPinPage extends StatefulWidget {

@@ -61,3 +61,5 @@ Future<Map<String, String>> getHeadersWithOutToken() async {
     return headers;
   }
 }
+
+const String userCollection = "users";

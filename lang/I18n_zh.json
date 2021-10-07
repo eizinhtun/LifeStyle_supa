@@ -1,0 +1,14 @@
+{
+  "phone":"Phone number",
+  "password":"Password",
+  "login":"Login",
+  "login_with":"Login With",
+  "forgot_password":"Forgot Password",
+  "register_now":"Register Now",
+  "requiredField": " @value is required",
+  "lenghtInvaild":"@filed is  @size number",
+  "userInvaild":"Account is not correct",
+  "full_name":"Full Name",  
+  "confirm_password":"确认密码",
+  "register":"Register"
+}

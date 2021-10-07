@@ -7,9 +7,10 @@ class SignInScreen extends StatefulWidget {
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
+
 class _SignInScreenState extends State<SignInScreen> {
-  bool _isLoggedIn = false;
-  Map _userObj = {};
+  // bool _isLoggedIn = false;
+  // Map _userObj = {};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +26,6 @@ class _SignInScreenState extends State<SignInScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             // mainAxisSize: MainAxisSize.max,
             children: [
-
               FutureBuilder(
                 future: Authentication.initializeFirebase(context: context),
                 builder: (context, snapshot) {
@@ -41,17 +41,10 @@ class _SignInScreenState extends State<SignInScreen> {
                   );
                 },
               ),
-
             ],
           ),
-
         ),
-
       ),
     );
   }
-
-
 }
-
-

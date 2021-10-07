@@ -6,7 +6,7 @@ import 'package:left_style/NetworkUtil.dart';
 import 'package:left_style/models/OtpSms.dart';
 import 'package:left_style/utils/message_handler.dart';
 
-import '../constants.dart';
+import '../datas/constants.dart';
 
 class RegisterOTPApi {
   BuildContext context;

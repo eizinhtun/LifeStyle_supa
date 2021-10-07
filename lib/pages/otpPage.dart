@@ -2,20 +2,17 @@
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:left_style/models/OtpSms.dart';
-import 'package:left_style/providers/register_provider.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class OtpPage extends StatefulWidget {
   OtpPage({Key key, this.otpSms}) : super(key: key);
-  OtpSms otpSms = null;
+  OtpSms otpSms = OtpSms();
 
   @override
   _OtpPage createState() => _OtpPage();

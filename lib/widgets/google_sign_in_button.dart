@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:left_style/pages/user_info_screen.dart';
 import 'package:left_style/utils/authentication.dart';
 
-
 class GoogleSignInButton extends StatefulWidget {
   @override
   _GoogleSignInButtonState createState() => _GoogleSignInButtonState();
@@ -56,7 +55,6 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Text(

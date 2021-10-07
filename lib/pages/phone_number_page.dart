@@ -12,7 +12,7 @@ class PhoneNumberPage extends StatefulWidget {
 }
 
 class _PhoneNumberPageState extends State<PhoneNumberPage> {
-  final _formKey = GlobalKey<FormState>();
+  final _phnoformKey = GlobalKey<FormState>();
   TextEditingController _phoneController = TextEditingController();
   String phoneNumber = "";
 
@@ -41,7 +41,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                               height: 20,
                             ),
                             Form(
-                              key: _formKey,
+                              key: _phnoformKey,
                               child: Container(
                                 padding: EdgeInsets.all(5),
                                 decoration: BoxDecoration(
@@ -87,7 +87,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                               child: ElevatedButton(
                                 onPressed: () async {
                                   print("Pressed");
-                                  _formKey.currentState.validate();
+                                  _phnoformKey.currentState.validate();
 
                                   print("OK");
 
@@ -96,7 +96,7 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                                       await _smsApi.requestPin(phoneNumber);
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => VerifyPinPage(
-                                          requestId: requestModel.request_id)));
+                                          requestId: requestModel.requestId)));
                                 },
                                 child: Text(
                                   "Add Phone Number",

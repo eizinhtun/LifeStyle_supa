@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'dart:convert';
 
-class FacebookLoginPage extends StatefulWidget {
-  FacebookLoginPage({
+class FacebookUserInfoScreen extends StatefulWidget {
+  FacebookUserInfoScreen({
     Key key,
   }) : super(key: key);
 
   @override
-  _FacebookLoginPageState createState() => _FacebookLoginPageState();
+  _FacebookUserInfoScreenState createState() => _FacebookUserInfoScreenState();
 }
 
 String prettyPrint(Map json) {
@@ -19,7 +19,7 @@ String prettyPrint(Map json) {
   return pretty;
 }
 
-class _FacebookLoginPageState extends State<FacebookLoginPage> {
+class _FacebookUserInfoScreenState extends State<FacebookUserInfoScreen> {
   Map<String, dynamic> _userData;
   AccessToken _accessToken;
   bool _checking = true;
@@ -78,6 +78,7 @@ class _FacebookLoginPageState extends State<FacebookLoginPage> {
     _accessToken = null;
     _userData = null;
     setState(() {});
+    Navigator.of(context).pop();
   }
 
   @override

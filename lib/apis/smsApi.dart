@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:left_style/models/sms_request_model.dart';
 import 'package:left_style/models/sms_verify_model.dart';
 import 'package:left_style/utils/message_handler.dart';
-import '../constants.dart';
+import '../datas/constants.dart';
 
 class SmsApi {
   BuildContext context;
@@ -52,7 +52,7 @@ class SmsApi {
       } else if (response.statusCode == 200) {
         var obj = json.decode(response.body);
         result = SmsVerifyModel.fromJson(obj);
-        MessageHandler.ShowMessage(context, "PIN Verified", "PIN Vefify OK");
+        MessageHandler.showMessage(context, "PIN Verified", "PIN Vefify OK");
 
         return result;
       }
@@ -61,14 +61,14 @@ class SmsApi {
   }
 
   Future<void> sendMessage(String phone, String signature, String otp) async {
-    SmsRequestModel result = SmsRequestModel();
+    // SmsRequestModel result = SmsRequestModel();
     var body = json.encode({
       "to": "$phone",
       "message": "OTP ကုဒ် $otp။ ဤကုဒ်အား မည်သူ့ကိုမှ မပေးပါရန်။.$signature",
       "sender": "SMSPoh",
       "test": "true"
     });
-    var url = "$smsUrl/v2/send";
+    // var url = "$smsUrl/v2/send";
     var smsurl = "https://smspoh.com/api/v2/send";
     http.Response response = await http.post(Uri.parse(smsurl),
         headers: {
