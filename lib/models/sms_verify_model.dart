@@ -1,19 +1,19 @@
 // @dart=2.9
 class SmsVerifyModel {
   bool status;
-  int request_id;
+  int requestId;
 
-  SmsVerifyModel({this.status, this.request_id});
+  SmsVerifyModel({this.status, this.requestId});
 
   SmsVerifyModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    request_id = json['request_id'];
+    requestId = json['request_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
-    data['request_id'] = this.request_id;
+    data['request_id'] = this.requestId;
     return data;
   }
 }

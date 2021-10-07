@@ -20,7 +20,7 @@ class MessageHandler {
     //if(msg.contains(other))
   }
 
-  static ShowMessage(BuildContext context, String title, String msg) {
+  static showMessage(BuildContext context, String title, String msg) {
     Flushbar(
       flushbarPosition: FlushbarPosition.TOP,
       title: title,
