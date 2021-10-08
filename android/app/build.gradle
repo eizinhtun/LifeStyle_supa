@@ -62,4 +62,5 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.android.support:multidex:2.0.1'
+    implementation 'com.google.android.gms:play-services-safetynet:17.0.1'
 }

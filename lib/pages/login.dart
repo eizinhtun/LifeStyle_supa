@@ -1,8 +1,10 @@
 // @dart=2.9
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/pages/register.dart';
@@ -23,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  var userRef = FirebaseFirestore.instance.collection(userCollection);
 
   AccessToken _accessToken;
   String lang = "en";
@@ -90,7 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                                 keyboardType: TextInputType.phone,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: Tran.of(context)?.text("phone"),
+                                    hintText: "Phone",
+                                    // Tran.of(context)?.text("phone"),
                                     hintStyle:
                                         TextStyle(color: Colors.grey[400])),
                               ),
@@ -106,8 +111,8 @@ class _LoginPageState extends State<LoginPage> {
                                 },
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText:
-                                        Tran.of(context)?.text("password"),
+                                    hintText: "Password",
+                                    // Tran.of(context)?.text("password"),
                                     suffixIcon: GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -136,12 +141,17 @@ class _LoginPageState extends State<LoginPage> {
                           maxHeight: 400),
                       child: ElevatedButton(
                         onPressed: () {
-                          _loginformKey.currentState.validate();
-
-                          if (!_loginformKey.currentState.validate()) {
-                            print("Not");
-                            return;
-                          } else {}
+                          if (_loginformKey.currentState.validate()) {
+                            print("Validate");
+                            // userRef
+                            //     .doc(userId)
+                            //     .get()
+                            //     .then((DocumentSnapshot documentSnapshot) {
+                            //   if (documentSnapshot.exists) {
+                            //     print('Document exists on the database');
+                            //   }
+                            // });
+                          }
                         },
                         child: Text(
                           "Login",
@@ -268,6 +278,21 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
+//  void performLogin(String emailId, String password) {
+//     firebaseRef.authWithPassword(emailId,password, new Firebase.AuthResultHandler() {
+//         @Override
+//         public void onAuthenticated(AuthData authData) {
+//             uid = authData.getUid() ;
+//             Toast.makeText(getBaseContext(), authData.toString(), Toast.LENGTH_SHORT).show();
+//         }
+
+//         @Override
+//         public void onAuthenticationError(FirebaseError firebaseError) {
+//             Toast.makeText(getBaseContext(), firebaseError.toString(), Toast.LENGTH_SHORT).show();
+//         }
+//     });
+// }
+
   changeLangColor() {
     switch (lang) {
       case "en":
@@ -314,8 +339,15 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _fblogin() async {
     User user = await Authentication.signInWithFacebook(context: context);
 
+<<<<<<< HEAD
 
     if (user != null) {
+=======
+    if (result.status == LoginStatus.success) {
+      _accessToken = result.accessToken;
+      // final userData = await FacebookAuth.instance.getUserData();
+      _printCredentials();
+>>>>>>> 27d2eeb19c21e1c9ec44cebc758d4630759ac725
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => UserInfoScreen(user: user)),
       );

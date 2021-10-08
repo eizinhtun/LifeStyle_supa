@@ -1,10 +1,13 @@
 // @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dbcrypt/dbcrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
+import 'package:left_style/pages/verify_pin_page.dart';
 import 'package:left_style/validators/validator.dart';
-import 'package:crypt/crypt.dart';
+
+import 'firebase_verify_pin_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key key}) : super(key: key);
@@ -97,8 +100,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           keyboardType: TextInputType.phone,
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: Tran.of(context)
-                                                  .text('phone'),
+                                              hintText: "Phone",
+                                              // Tran.of(context)
+                                              //     .text('phone'),
                                               hintStyle: TextStyle(
                                                   color: Colors.grey[400])),
                                         ),
@@ -120,8 +124,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: Tran.of(context)
-                                                  .text('full_name'),
+                                              hintText: "Full Name",
+                                              // Tran.of(context)
+                                              //     .text('full_name'),
                                               hintStyle: TextStyle(
                                                   color: Colors.grey[400])),
                                         ),
@@ -140,8 +145,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: Tran.of(context)
-                                                  .text('password'),
+                                              hintText: "Password",
+                                              // Tran.of(context)
+                                              //     .text('password'),
                                               suffixIcon: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
@@ -173,8 +179,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: Tran.of(context)
-                                                  .text('confirm_password'),
+                                              hintText: "Confirm Password",
+                                              // Tran.of(context)
+                                              //     .text('confirm_password'),
                                               suffixIcon: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
@@ -204,41 +211,92 @@ class _RegisterPageState extends State<RegisterPage> {
                                     maxHeight: 400),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    isPhoneToken =
-                                        await Validator.checkUserIsExist(
-                                            _phoneController.text);
+                                    register();
+                                  },
+                                  child: Text(
+                                    "Register",
+                                    // Tran.of(context).text('register'),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-                                    print("Pressed");
+  void register() async {
+    phoneNumber = _phoneController.text;
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => FirebaseVerifyPinPage()));
+    // isPhoneToken = await Validator.checkUserIsExist(phoneNumber);
 
-                                    if (_registerformKey.currentState
-                                        .validate()) {
-                                      print("Validate");
-                                      // final pass = Crypt.sha256(
-                                      //     _passwordController.text);
-                                      userRef
-                                          .add({
-                                            'full_name': _nameController
-                                                .text, // John Doe
-                                            'phone': _phoneController
-                                                .text, // Stokes and Sons
-                                            'password':
-                                                _passwordController.text // 42
-                                          })
-                                          .then((value) =>
-                                              print("User Added $value"))
-                                          .catchError((error) => print(
-                                              "Failed to add user: $error"));
-                                      // userRef.add({
-                                      //   'full_name':
-                                      //       _nameController.text, // John Doe
-                                      //   'phone': _phoneController
-                                      //       .text, // Stokes and Sons
-                                      //   'password':
-                                      //       _passwordController.text // 42
-                                      // });
-                                    }
+    // if (phoneNumber.startsWith("0")) {
+    //   phoneNumber = phoneNumber.substring(1, phoneNumber.length);
+    // }
+    // phoneNumber = "+95" + phoneNumber;
 
-                                    //   phoneNumber = _phoneController.text;
+    // Navigator.of(context)
+    //     .push(MaterialPageRoute(builder: (context) => FirebaseVerifyPinPage()));
+
+    //   firebase.auth().signInAnonymously()
+    // .then(()=> {
+    // return     userRef
+    //         .add({
+    //           'full_name': _nameController.text,
+    //           'phone': _phoneController.text,
+    //           'password': _passwordController.text
+    //         })
+    //         .then((value) => print("User Added $value"))
+    //         .catchError((error) => print("Failed to add user: $error"));
+    // }).catch((err)=>{
+    // 	alert(err);
+    // });
+
+    // if (_registerformKey.currentState.validate()) {
+    //   print("Validate");
+    //   var pass = new DBCrypt()
+    //       .hashpw(_passwordController.text, new DBCrypt().gensalt());
+    //   // var isCorrect = new DBCrypt().checkpw(plain, hashed);
+    //   userRef
+    //       .add({
+    //         'full_name': _nameController.text,
+    //         'phone': _phoneController.text,
+    //         'password': pass
+    //       })
+    //       .then((value) => print("User Added $value"))
+    //       .catchError((error) => print("Failed to add user: $error"));
+    //   Navigator.of(context)
+    //       .push(MaterialPageRoute(builder: (context) => VerifyPinPage()));
+    // }
+  }
+
+  Future<bool> checkUserIsExist(String phoneNumber) async {
+    QuerySnapshot snaptData =
+        await userRef.where('phone', isEqualTo: phoneNumber).get();
+    if (snaptData.docs.length > 0) {
+      return true;
+    } else {
+      return true;
+    }
+  }
+}
+
+
+
+                                    // phoneNumber = _phoneController.text;
                                     //   SmsRequestModel requestModel =
                                     //       await _smsApi.requestPin(phoneNumber);
                                     //   Navigator.of(context).push(
@@ -352,37 +410,3 @@ class _RegisterPageState extends State<RegisterPage> {
                                     //     return alert;
                                     //   },
                                     // );
-                                  },
-                                  child: Text(
-                                    Tran.of(context).text('register'),
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<bool> checkUserIsExist(String phoneNumber) async {
-    QuerySnapshot snaptData =
-        await userRef.where('phone', isEqualTo: phoneNumber).get();
-    if (snaptData.docs.length > 0) {
-      return true;
-    } else {
-      return true;
-    }
-  }
-}
