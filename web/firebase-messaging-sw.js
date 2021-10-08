@@ -1,13 +1,15 @@
 importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js");
 importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js");
 importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js");
+importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js");
 firebase.initializeApp({
-        apiKey: "AIzaSyBWlbheVA4PN-acHACHWm2_yh17S9OEPVI",
-        authDomain: "epcapp-df336.firebaseapp.com",
-        projectId: "epcapp-df336",
-        storageBucket: "epcapp-df336.appspot.com",
-        messagingSenderId: "106900086927",
-        appId: "1:106900086927:web:3be091cdec18d85e0b50fa"
+    apiKey: "AIzaSyD5qAMy9jtcQxUGQUX38ZZ9RnrZi8TXZOY",
+    authDomain: "lifestyle-f0e4e.firebaseapp.com",
+    projectId: "lifestyle-f0e4e",
+    storageBucket: "lifestyle-f0e4e.appspot.com",
+    messagingSenderId: "719786289421",
+    appId: "1:719786289421:web:d96bdea27ad1c9c0f42844",
+    measurementId: "G-PTGJMCT0RP"
 
 });
 const messaging = firebase.messaging();

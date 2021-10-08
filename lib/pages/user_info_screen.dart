@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/pages/sign_in_screen.dart';
+import 'package:left_style/pages/upload_images.dart';
 import 'package:left_style/res/custom_colors.dart';
 import 'package:left_style/utils/authentication.dart';
 
@@ -66,6 +67,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              RaisedButton(onPressed: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UploadImageFirebase()));
+              },child: Text("Upload Image")),
               Row(),
               _user.photoURL != null
                   ? ClipOval(

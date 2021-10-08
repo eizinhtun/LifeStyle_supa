@@ -50,6 +50,10 @@ dependencies:
   firebase_messaging: ^10.0.8
   flutter_local_notifications: ^9.0.0
   cloud_firestore: ^2.5.3
+  firebase_storage: ^10.0.4
+
+  image_picker: ^0.8.4+1
+
 
 
 dev_dependencies:

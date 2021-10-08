@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "106900086927",
-    "project_id": "epcapp-df336",
-    "storage_bucket": "epcapp-df336.appspot.com"
+    "project_number": "719786289421",
+    "project_id": "lifestyle-f0e4e",
+    "storage_bucket": "lifestyle-f0e4e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:106900086927:android:e42f1551ab2156a30b50fa",
+        "mobilesdk_app_id": "1:719786289421:android:5cd2d2ac6e6333b2f42844",
         "android_client_info": {
           "package_name": "com.unifine.epc.left_style"
         }
       },
       "oauth_client": [
         {
-          "client_id": "106900086927-a7u78a16121bklcrmjck2n7l9lik0gps.apps.googleusercontent.com",
+          "client_id": "719786289421-3ng988obgo2eumss7jqac7j8qtpeg66f.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBmq2szLG1BJKeF9XqwKV3mmZi6SiuMZ9w"
+          "current_key": "AIzaSyCiBAmECvCR0iopl26254_vpalkQ9-94F4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "106900086927-a7u78a16121bklcrmjck2n7l9lik0gps.apps.googleusercontent.com",
+              "client_id": "719786289421-3ng988obgo2eumss7jqac7j8qtpeg66f.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
