@@ -144,7 +144,8 @@ class _LoginPageState extends State<LoginPage> {
                           } else {}
                         },
                         child: Text(
-                          Tran.of(context).text('login'),
+                          "Login",
+                          // Tran.of(context)?.text('login'),
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
@@ -155,7 +156,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Center(
                       child: Text(
-                        Tran.of(context).text("login_with"),
+                        "Login With",
+                        // Tran.of(context).text("login_with"),
                         style: TextStyle(color: Colors.black26),
                       ),
                     ),
@@ -190,7 +192,8 @@ class _LoginPageState extends State<LoginPage> {
                         //     builder: (context) => ForgotPasswordPage()));
                       },
                       child: Text(
-                        Tran.of(context)?.text("forgot_password"),
+                        "Forgot Password",
+                        // Tran.of(context)?.text("forgot_password"),
                         style:
                             TextStyle(color: Color.fromRGBO(143, 148, 251, 1)),
                       ),
@@ -204,7 +207,8 @@ class _LoginPageState extends State<LoginPage> {
                             builder: (context) => RegisterPage()));
                       },
                       child: Text(
-                        Tran.of(context)?.text("register_now"),
+                        "Register Now",
+                        // Tran.of(context)?.text("register_now"),
                         style:
                             TextStyle(color: Color.fromRGBO(143, 148, 251, 1)),
                       ),
@@ -295,6 +299,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (result.status == LoginStatus.success) {
       _accessToken = result.accessToken;
+      final userData = await FacebookAuth.instance.getUserData();
       _printCredentials();
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => FacebookUserInfoScreen()),

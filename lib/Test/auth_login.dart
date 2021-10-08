@@ -1,6 +1,8 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/Test/auth.dart';
+import 'package:left_style/datas/constants.dart';
 class AuthLogin extends StatefulWidget {
   const AuthLogin({Key? key}) : super(key: key);
 
@@ -9,22 +11,37 @@ class AuthLogin extends StatefulWidget {
 }
 
 class _AuthLoginState extends State<AuthLogin> {
-  Services auth=Services();
+  final Services auth=Services();
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: RaisedButton(onPressed: ()async{
-       final result= await auth.signInAnon();
-       if(result != null){
-         print("connect Succes");
-         print(result);
-       }
-       else{
-         print("fail");
-       }
+      // child: RaisedButton(onPressed: ()async{
+      //  dynamic result= await auth.signInAnon();
+      //  if(result != null){
+      //    print("connect Succes");
+      //    print(result);
+      //  }
+      //  else{
+      //    print("fail");
+      //  }
+      //
+      //
+      // },child: Text("anonyme"),),
+      //child: RaisedButton(onPressed: (){createUser();},child: Text("click"),),
 
+      child: RaisedButton(onPressed: (){
 
-      },child: Text("anonyme"),),
+      },child: Text("login with facebook"),),
     );
   }
+}
+void createUser() async {
+  Services auth=Services();
+
+  final result= await auth.signInAnon();
+  FirebaseFirestore.instance.collection('test').doc('t1').set({
+    'uid': result,
+    'name': 'pyaepyae',
+    'phone': '076554479'
+  });
 }
