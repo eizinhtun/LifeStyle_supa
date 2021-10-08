@@ -48,7 +48,8 @@ class _FirebaseVerifyPinPageState extends State<FirebaseVerifyPinPage>
 
     SmsAutoFill().getAppSignature.then((signature) {
       setState(() {
-        appSignature = signature;
+        appSignature = "lifestyle-f0e4e.firebaseapp.com";
+        // signature;
       });
     });
   }
@@ -98,7 +99,7 @@ class _FirebaseVerifyPinPageState extends State<FirebaseVerifyPinPage>
                               child: ElevatedButton(
                                 onPressed: () async {
                                   // loginUser("09401531039", context);
-                                  await verify("+95 401531038");
+                                  await verify("+959401531039");
                                 },
                                 child: Text(
                                   "Verify Phone",
@@ -460,33 +461,33 @@ class _FirebaseVerifyPinPageState extends State<FirebaseVerifyPinPage>
   }
 
   void signInWithPhoneNumber() async {
-    var recaptchaVerifier = RecaptchaVerifier(
-      container: null,
-      size: RecaptchaVerifierSize.compact,
-      theme: RecaptchaVerifierTheme.dark,
-      onSuccess: () async {
-        print('reCAPTCHA Completed!');
-        // setState(() {
-        //   currentInput = "otp";
-        //   _isLoading = false;
-        // });
-      },
-      onError: (FirebaseAuthException error) async {
-        print("error");
-        print(error);
-        // setState(() {
-        //   _isLoading = false;
-        // });
-        _scaffoldKey.currentState
-            .showSnackBar(SnackBar(content: Text(error.message)));
-      },
-      onExpired: () async {
-        print('reCAPTCHA Expired!');
-        // setState(() {
-        //   _isLoading = false;
-        // });
-      },
-    );
+    // var recaptchaVerifier = RecaptchaVerifier(
+    //   container: null,
+    //   size: RecaptchaVerifierSize.compact,
+    //   theme: RecaptchaVerifierTheme.dark,
+    //   onSuccess: () async {
+    //     print('reCAPTCHA Completed!');
+    //     // setState(() {
+    //     //   currentInput = "otp";
+    //     //   _isLoading = false;
+    //     // });
+    //   },
+    //   onError: (FirebaseAuthException error) async {
+    //     print("error");
+    //     print(error);
+    //     // setState(() {
+    //     //   _isLoading = false;
+    //     // });
+    //     _scaffoldKey.currentState
+    //         .showSnackBar(SnackBar(content: Text(error.message)));
+    //   },
+    //   onExpired: () async {
+    //     print('reCAPTCHA Expired!');
+    //     // setState(() {
+    //     //   _isLoading = false;
+    //     // });
+    //   },
+    // );
 
     try {
       final AuthCredential credential = PhoneAuthProvider.credential(

@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:left_style/datas/constants.dart';
@@ -95,7 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                                 keyboardType: TextInputType.phone,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: Tran.of(context)?.text("phone"),
+                                    hintText: "Phone",
+                                    // Tran.of(context)?.text("phone"),
                                     hintStyle:
                                         TextStyle(color: Colors.grey[400])),
                               ),
@@ -111,8 +111,8 @@ class _LoginPageState extends State<LoginPage> {
                                 },
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText:
-                                        Tran.of(context)?.text("password"),
+                                    hintText: "Password",
+                                    // Tran.of(context)?.text("password"),
                                     suffixIcon: GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -324,7 +324,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (result.status == LoginStatus.success) {
       _accessToken = result.accessToken;
-      final userData = await FacebookAuth.instance.getUserData();
+      // final userData = await FacebookAuth.instance.getUserData();
       _printCredentials();
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => FacebookUserInfoScreen()),

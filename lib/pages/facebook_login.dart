@@ -1,5 +1,4 @@
 // @dart=2.9
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -55,7 +54,6 @@ class _FacebookLoginPageState extends State<FacebookLoginPage> {
   }
 
   Future<void> _login() async {
-
     final LoginResult result = await FacebookAuth.instance.login();
 
     if (result.status == LoginStatus.success) {

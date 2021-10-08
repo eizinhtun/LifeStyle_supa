@@ -100,8 +100,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           keyboardType: TextInputType.phone,
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: Tran.of(context)
-                                                  .text('phone'),
+                                              hintText: "Phone",
+                                              // Tran.of(context)
+                                              //     .text('phone'),
                                               hintStyle: TextStyle(
                                                   color: Colors.grey[400])),
                                         ),
@@ -123,8 +124,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: Tran.of(context)
-                                                  .text('full_name'),
+                                              hintText: "Full Name",
+                                              // Tran.of(context)
+                                              //     .text('full_name'),
                                               hintStyle: TextStyle(
                                                   color: Colors.grey[400])),
                                         ),
@@ -143,8 +145,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: Tran.of(context)
-                                                  .text('password'),
+                                              hintText: "Password",
+                                              // Tran.of(context)
+                                              //     .text('password'),
                                               suffixIcon: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
@@ -176,8 +179,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: Tran.of(context)
-                                                  .text('confirm_password'),
+                                              hintText: "Confirm Password",
+                                              // Tran.of(context)
+                                              //     .text('confirm_password'),
                                               suffixIcon: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
@@ -210,7 +214,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     register();
                                   },
                                   child: Text(
-                                    Tran.of(context).text('register'),
+                                    "Register",
+                                    // Tran.of(context).text('register'),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -234,6 +239,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void register() async {
     phoneNumber = _phoneController.text;
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => FirebaseVerifyPinPage()));
     // isPhoneToken = await Validator.checkUserIsExist(phoneNumber);
 
     // if (phoneNumber.startsWith("0")) {
@@ -241,8 +248,22 @@ class _RegisterPageState extends State<RegisterPage> {
     // }
     // phoneNumber = "+95" + phoneNumber;
 
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => VerifyPinPage()));
+    // Navigator.of(context)
+    //     .push(MaterialPageRoute(builder: (context) => FirebaseVerifyPinPage()));
+
+    //   firebase.auth().signInAnonymously()
+    // .then(()=> {
+    // return     userRef
+    //         .add({
+    //           'full_name': _nameController.text,
+    //           'phone': _phoneController.text,
+    //           'password': _passwordController.text
+    //         })
+    //         .then((value) => print("User Added $value"))
+    //         .catchError((error) => print("Failed to add user: $error"));
+    // }).catch((err)=>{
+    // 	alert(err);
+    // });
 
     // if (_registerformKey.currentState.validate()) {
     //   print("Validate");
