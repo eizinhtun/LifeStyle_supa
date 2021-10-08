@@ -4,7 +4,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:left_style/pages/firebase_verify_pin_page.dart';
 import 'package:left_style/pages/login.dart';
+import 'package:left_style/pages/verify_pin_page.dart';
 import 'package:left_style/splash.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'datas/constants.dart';
@@ -88,6 +90,7 @@ class MyApp extends StatelessWidget {
               ),
               // home: MyHomePage(title: 'EPC Home Page'),
               home: LoginPage()
+              // LoginPage()
               // PhoneNumberPage(),
               );
         }
