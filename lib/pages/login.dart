@@ -294,25 +294,35 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Future<void> _fblogin() async {
+  //   final LoginResult result = await FacebookAuth.instance.login();
+  //
+  //   if (result.status == LoginStatus.success) {
+  //     _accessToken = result.accessToken;
+  //     final userData = await FacebookAuth.instance.getUserData();
+  //     _printCredentials();
+  //     Navigator.of(context).push(
+  //       MaterialPageRoute(builder: (context) => FacebookUserInfoScreen()),
+  //     );
+  //   } else {
+  //     print(result.status);
+  //     print(result.message);
+  //   }
+  //
+  //   setState(() {});
+  // }
   Future<void> _fblogin() async {
-    final LoginResult result = await FacebookAuth.instance.login();
+    User user = await Authentication.signInWithFacebook(context: context);
 
-    if (result.status == LoginStatus.success) {
-      _accessToken = result.accessToken;
-      final userData = await FacebookAuth.instance.getUserData();
-      _printCredentials();
+
+    if (user != null) {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => FacebookUserInfoScreen()),
+        MaterialPageRoute(builder: (context) => UserInfoScreen(user: user)),
       );
-    } else {
-      print(result.status);
-      print(result.message);
     }
-
-    setState(() {});
   }
-
   Future<void> _googlelogin() async {
+    //User user = await Authentication.signInWithFacebook(context: context);
     User user = await Authentication.signInWithGoogle(context: context);
 
     if (user != null) {
