@@ -8,6 +8,8 @@ import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'package:otp_autofill/otp_autofill.dart';
+import 'dart:async';
 
 class FirebaseVerifyPinPage extends StatefulWidget {
   const FirebaseVerifyPinPage({Key key, @required this.requestId})
@@ -41,9 +43,27 @@ class _FirebaseVerifyPinPageState extends State<FirebaseVerifyPinPage>
     });
   }
 
+  // late OTPTextEditController controller;
   @override
   void initState() {
     super.initState();
+    // super.initState();
+    // OTPInteractor.getAppSignature()
+    //     //ignore: avoid_print
+    //     .then((value) => print('signature - $value'));
+    // controller = OTPTextEditController(
+    //   codeLength: 5,
+    //   //ignore: avoid_print
+    //   onCodeReceive: (code) => print('Your Application receive code - $code'),
+    // )..startListenUserConsent(
+    //     (code) {
+    //       final exp = RegExp(r'(\d{5})');
+    //       return exp.stringMatch(code ?? '') ?? '';
+    //     },
+    //     strategies: [
+    //       SampleStrategy(),
+    //     ],
+    //   );
     listenForCode();
 
     SmsAutoFill().getAppSignature.then((signature) {
@@ -99,7 +119,7 @@ class _FirebaseVerifyPinPageState extends State<FirebaseVerifyPinPage>
                               child: ElevatedButton(
                                 onPressed: () async {
                                   // loginUser("09401531039", context);
-                                  await verify("+959401531039");
+                                  await verify("+959970376826");
                                 },
                                 child: Text(
                                   "Verify Phone",

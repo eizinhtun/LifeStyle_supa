@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:left_style/pages/firebase_verify_pin_page.dart';
 import 'package:left_style/pages/login.dart';
+import 'package:left_style/pages/otp_auto_fill.dart';
 import 'package:left_style/pages/verify_pin_page.dart';
 import 'package:left_style/pages/phone_number_page.dart';
 import 'package:left_style/pages/sign_in_screen.dart';
@@ -71,7 +72,7 @@ class MyApp extends StatelessWidget {
                 primarySwatch: colorCustom,
               ),
               //home: MyHomePage(title: 'EPC Home Page'),
-              home: LoginPage()
+              home: OTPFill()
               //home: SignInScreen(),
               //home: AuthLogin(),
               // PhoneNumberPage(),
