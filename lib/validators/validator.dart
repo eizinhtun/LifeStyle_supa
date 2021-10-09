@@ -29,14 +29,10 @@ class Validator {
     // RegExp regExp =  RegExp(patttern);
 
     RegExp phoneExp = RegExp(r'^09\d{6,9}$');
-    RegExp phoneExp1 = RegExp(r'^08\d{6,9}$');
-    RegExp phoneExp2 = RegExp(r'^06\d{6,9}$');
 
     if (value.length == 0) {
       return 'Please enter mobile number';
-    } else if (!phoneExp.hasMatch(value) &&
-        !phoneExp1.hasMatch(value) &&
-        !phoneExp2.hasMatch(value)) {
+    } else if (!phoneExp.hasMatch(value)) {
       return 'Please enter valid mobile number';
     }
 
@@ -46,10 +42,7 @@ class Validator {
   static String requiredField(
       BuildContext context, String value, String fileName) {
     if (value.isEmpty) {
-      return Tran.of(context)
-          .text("requiredField")
-          .replaceAll("@value", fileName);
-      //fileName+":"+Tran.of(context).text("requiredField");
+      return "${Tran.of(context)?.text("requiredField").replaceAll("@value", fileName)}";
     }
     return null;
   }
@@ -58,10 +51,7 @@ class Validator {
       BuildContext context, String value, String fileName, bool isRequired) {
     if (isRequired) {
       if (value.isEmpty) {
-        return Tran.of(context)
-            .text("requiredField")
-            .replaceAll("@value", fileName);
-        //fileName +":"+Tran.of(context).text("requiredField");
+        return "${Tran.of(context)?.text("requiredField").replaceAll("@value", fileName)}";
       }
     }
     Pattern pattern =
@@ -70,7 +60,7 @@ class Validator {
     if (regex.hasMatch(value)) {
       return "";
     } else {
-      return Tran.of(context).text("emailInvaild");
+      return "${Tran.of(context)?.text("emailInvaild")}";
     }
   }
 
@@ -78,20 +68,20 @@ class Validator {
       BuildContext context, String value, String fileName, bool isRequired) {
     if (isRequired) {
       if (value.isEmpty) {
-        return Tran.of(context)
-            .text("requiredField")
-            .replaceAll("@value", fileName);
-        //fileName +":"+Tran.of(context).text("requiredField");
+        return "${Tran.of(context)?.text("requiredField").replaceAll("@value", fileName)}";
       }
     }
     if (value.length < 4) {
-      String tip = Tran.of(context).text("lenghtInvaild");
-      tip = tip.replaceAll("@filed", Tran.of(context).text("length_field"));
+      String tip = "${Tran.of(context)?.text("lenghtInvaild")}";
+      tip =
+          tip.replaceAll("@filed", "${Tran.of(context)?.text("length_field")}");
+
       tip = tip.replaceAll("@size", "4");
       if (SystemData.language == "zh") {
         return tip;
       } else {
-        return Tran.of(context).text("requiredField").replaceAll("@value", tip);
+        return "${Tran.of(context)?.text("requiredField")}"
+            .replaceAll("@value", tip);
       }
     }
     return null;
@@ -101,10 +91,8 @@ class Validator {
       String confirmValue, String fileName, bool isRequired) {
     if (isRequired) {
       if (confirmValue.isEmpty) {
-        return Tran.of(context)
-            .text("requiredField")
+        return "${Tran.of(context)?.text("requiredField")}"
             .replaceAll("@value", fileName);
-        //fileName +":"+Tran.of(context).text("requiredField");
       }
     }
     if (value != confirmValue) {
@@ -117,29 +105,24 @@ class Validator {
       String oldPassword, String fileName, bool isRequired) {
     if (isRequired) {
       if (newPassword.isEmpty) {
-        return Tran.of(context)
-            .text("requiredField")
+        return "${Tran.of(context)?.text("requiredField")}"
             .replaceAll("@value", fileName);
-        //fileName +":"+Tran.of(context).text("requiredField");
       }
     }
     if (newPassword == oldPassword) {
-      return Tran.of(context).text("newPwdCantNewPwd");
+      return "${Tran.of(context)?.text("newPwdCantNewPwd")}";
     }
-    // if(newPassword.length<4){
-    //   String tip=Tran.of(context).text("lenghtInvaild");
-    //   tip=tip.replaceAll("@filed", Tran.of(context).text("newPassword"));
-    //   tip=tip.replaceAll("@size", "4") ;
-    //   return Tran.of(context).text("requiredField").replaceAll("@value", tip);
-    // }
+
     if (newPassword.length < 4) {
-      String tip = Tran.of(context).text("lenghtInvaild1");
-      tip = tip.replaceAll("@filed", Tran.of(context).text("length_field"));
+      String tip = "${Tran.of(context)?.text("lenghtInvaild1")}";
+      tip =
+          tip.replaceAll("@filed", "${Tran.of(context)?.text("length_field")}");
       tip = tip.replaceAll("@size", "4");
       if (SystemData.language == "zh") {
         return tip;
       } else {
-        return Tran.of(context).text("requiredField").replaceAll("@value", tip);
+        return "${Tran.of(context)?.text("requiredField")}"
+            .replaceAll("@value", tip);
       }
     }
     return null;
@@ -149,22 +132,21 @@ class Validator {
       BuildContext context, String value, String fileName, bool isRequired) {
     if (isRequired) {
       if (value.isEmpty) {
-        return Tran.of(context)
-            .text("requiredField")
+        return "${Tran.of(context)?.text("requiredField")}"
             .replaceAll("@value", fileName);
-        //fileName +":"+Tran.of(context).text("requiredField");
       }
     }
     if (value.length < 4) {
-      String tip = Tran.of(context).text("lenghtInvaild");
+      String tip = "${Tran.of(context)?.text("lenghtInvaild")}";
       tip = tip.replaceAll("@filed", fileName);
       tip = tip.replaceAll("@size", "4");
       return tip;
     }
-    RegExp phoneExp = RegExp(r'^[A-Za-z0-9]*$'); //english and number only
-    if (!phoneExp.hasMatch(value)) {
-      return Tran.of(context).text("userInvaild");
-    }
+    // RegExp phoneExp = RegExp(r'^[A-Za-z0-9]*$'); //english and number only
+    // if (!phoneExp.hasMatch(value)) {
+    //   return "Account is not correct";
+    //   // Tran.of(context).text("userInvaild");
+    // }
     return null;
   }
 

@@ -29,6 +29,12 @@ class DatabaseHelper {
     return true;
   }
 
+  static Future<bool> setAppData(bool data, String keyName) async {
+    var dbClient = await db;
+    dbClient.setString(keyName, data ? "1" : "0");
+    return true;
+  }
+
   static Future<String> getData(String keyName) async {
     try {
       var dbClient = await db;
@@ -68,6 +74,20 @@ class DatabaseHelper {
       return;
     } catch (ex) {
       await setData("en", "language");
+      return;
+    }
+  }
+
+  static Future<void> setAppLoggedIn(
+      BuildContext context, bool isLoggedIn) async {
+    try {
+      SystemData.isLoggedIn = isLoggedIn;
+
+      await DatabaseHelper.setAppData(isLoggedIn, "isLoggedIn");
+      await Tran.of(context).load();
+      return;
+    } catch (ex) {
+      await setAppData(isLoggedIn, "isLoggedIn");
       return;
     }
   }

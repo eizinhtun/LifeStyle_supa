@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:left_style/pages/firebase_verify_pin_page.dart';
+import 'package:left_style/pages/home_screen.dart';
 import 'package:left_style/pages/login.dart';
 import 'package:left_style/pages/otp_auto_fill.dart';
 import 'package:left_style/pages/verify_pin_page.dart';
@@ -71,20 +73,131 @@ class MyApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(home: Splash());
         } else {
-          // Loading is done, return the app:
           return MaterialApp(
               title: 'Unifine',
               theme: ThemeData(
                 primarySwatch: colorCustom,
               ),
               //home: MyHomePage(title: 'EPC Home Page'),
-              //home: OTPFill()
+              supportedLocales: [
+                ///////const Locale('', ''),
+                const Locale('zh', 'CN'),
+                const Locale('en', 'US'),
+                const Locale('my', 'MM'),
+              ],
+              localizationsDelegates: [
+                const MyLocalizationsDelegate(),
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate
+              ],
+              //     home:  FutureBuilder<User>(
+              //   future:FirebaseAuth.instance.currentUser(),
+              //   //  FirebaseAuth!.instance!.currentUser(),
+              //   builder: (BuildContext context, AsyncSnapshot<User> snapshot){
+              //              if (snapshot.hasData){
+              //                  User user = snapshot.data; // this is your user instance
+              //                  /// is because there is user already logged
+              //                  return MainScreen();
+              //               }
+              //                /// other way there is no user logged.
+              //                return LoginScreen();
+              //    }
+              // );
+
+              home: LoginPage()
+              // FirebaseVerifyPinPage(),
+              // OTPFill()
               //home: SignInScreen(),
               //home: AuthLogin(),
               // PhoneNumberPage(),
               //home: UploadImageFirebase(),
-            home: SignInScreen(),
+              // home: SignInScreen(),
               );
+
+//           if (FirebaseAuth.instance.currentUser?.uid == null) {
+// // not logged
+//             // Loading is done, return the app:
+//             return MaterialApp(
+//                 title: 'Unifine',
+//                 theme: ThemeData(
+//                   primarySwatch: colorCustom,
+//                 ),
+//                 //home: MyHomePage(title: 'EPC Home Page'),
+//                 supportedLocales: [
+//                   ///////const Locale('', ''),
+//                   const Locale('zh', 'CN'),
+//                   const Locale('en', 'US'),
+//                   const Locale('my', 'MM'),
+//                 ],
+//                 localizationsDelegates: [
+//                   const MyLocalizationsDelegate(),
+//                   GlobalMaterialLocalizations.delegate,
+//                   GlobalWidgetsLocalizations.delegate
+//                 ],
+//                 //     home:  FutureBuilder<User>(
+//                 //   future:FirebaseAuth.instance.currentUser(),
+//                 //   //  FirebaseAuth!.instance!.currentUser(),
+//                 //   builder: (BuildContext context, AsyncSnapshot<User> snapshot){
+//                 //              if (snapshot.hasData){
+//                 //                  User user = snapshot.data; // this is your user instance
+//                 //                  /// is because there is user already logged
+//                 //                  return MainScreen();
+//                 //               }
+//                 //                /// other way there is no user logged.
+//                 //                return LoginScreen();
+//                 //    }
+//                 // );
+
+//                 home: LoginPage()
+//                 // FirebaseVerifyPinPage(),
+//                 // OTPFill()
+//                 //home: SignInScreen(),
+//                 //home: AuthLogin(),
+//                 // PhoneNumberPage(),
+//                 //home: UploadImageFirebase(),
+//                 );
+//           } else {
+//             return MaterialApp(
+//                 title: 'Unifine',
+//                 theme: ThemeData(
+//                   primarySwatch: colorCustom,
+//                 ),
+//                 //home: MyHomePage(title: 'EPC Home Page'),
+//                 supportedLocales: [
+//                   ///////const Locale('', ''),
+//                   const Locale('zh', 'CN'),
+//                   const Locale('en', 'US'),
+//                   const Locale('my', 'MM'),
+//                 ],
+//                 localizationsDelegates: [
+//                   const MyLocalizationsDelegate(),
+//                   GlobalMaterialLocalizations.delegate,
+//                   GlobalWidgetsLocalizations.delegate
+//                 ],
+//                 //     home:  FutureBuilder<User>(
+//                 //   future:FirebaseAuth.instance.currentUser(),
+//                 //   //  FirebaseAuth!.instance!.currentUser(),
+//                 //   builder: (BuildContext context, AsyncSnapshot<User> snapshot){
+//                 //              if (snapshot.hasData){
+//                 //                  User user = snapshot.data; // this is your user instance
+//                 //                  /// is because there is user already logged
+//                 //                  return MainScreen();
+//                 //               }
+//                 //                /// other way there is no user logged.
+//                 //                return LoginScreen();
+//                 //    }
+//                 // );
+
+//                 home: HomeScreen()
+//                 // FirebaseVerifyPinPage(),
+//                 // OTPFill()
+//                 //home: SignInScreen(),
+//                 //home: AuthLogin(),
+//                 // PhoneNumberPage(),
+//                 //home: UploadImageFirebase(),
+//                 );
+
+//           }
         }
       },
     );

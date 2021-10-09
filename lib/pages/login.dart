@@ -48,7 +48,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Tran.of(context).text('login');
     changeLangColor();
 
     return Scaffold(
@@ -94,8 +93,9 @@ class _LoginPageState extends State<LoginPage> {
                                 keyboardType: TextInputType.phone,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: "Phone",
-                                    // Tran.of(context)?.text("phone"),
+                                    hintText:
+                                        // "Phone",
+                                        Tran.of(context)?.text("phone"),
                                     hintStyle:
                                         TextStyle(color: Colors.grey[400])),
                               ),
@@ -111,8 +111,9 @@ class _LoginPageState extends State<LoginPage> {
                                 },
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: "Password",
-                                    // Tran.of(context)?.text("password"),
+                                    hintText:
+                                        // "Password",
+                                        "${Tran.of(context)?.text("password")}",
                                     suffixIcon: GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -154,8 +155,8 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         },
                         child: Text(
-                          "Login",
-                          // Tran.of(context)?.text('login'),
+                          // "Login",
+                          "${Tran.of(context)?.text("login")}",
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
@@ -166,8 +167,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Center(
                       child: Text(
-                        "Login With",
-                        // Tran.of(context).text("login_with"),
+                        // "Login With",
+                        "${Tran.of(context)?.text("login_with")}",
                         style: TextStyle(color: Colors.black26),
                       ),
                     ),
@@ -202,8 +203,8 @@ class _LoginPageState extends State<LoginPage> {
                         //     builder: (context) => ForgotPasswordPage()));
                       },
                       child: Text(
-                        "Forgot Password",
-                        // Tran.of(context)?.text("forgot_password"),
+                        // "Forgot Password",
+                        "${Tran.of(context)?.text("forgot_password")}",
                         style:
                             TextStyle(color: Color.fromRGBO(143, 148, 251, 1)),
                       ),
@@ -217,8 +218,8 @@ class _LoginPageState extends State<LoginPage> {
                             builder: (context) => RegisterPage()));
                       },
                       child: Text(
-                        "Register Now",
-                        // Tran.of(context)?.text("register_now"),
+                        // "Register Now",
+                        "${Tran.of(context)?.text("register_now")}",
                         style:
                             TextStyle(color: Color.fromRGBO(143, 148, 251, 1)),
                       ),
@@ -339,7 +340,13 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _fblogin() async {
     User user = await Authentication.signInWithFacebook(context: context);
 
+    if (user != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => UserInfoScreen(user: user)),
+      );
+    }
   }
+
   Future<void> _googlelogin() async {
     //User user = await Authentication.signInWithFacebook(context: context);
     User user = await Authentication.signInWithGoogle(context: context);
