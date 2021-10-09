@@ -1,10 +1,12 @@
 // @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dbcrypt/dbcrypt.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/pages/verify_pin_page.dart';
+import 'package:left_style/models/user_model.dart';
+import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/validators/validator.dart';
 
 import 'firebase_verify_pin_page.dart';
@@ -19,15 +21,18 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _registerformKey = GlobalKey<FormState>();
   bool _obscureText = true;
-  bool _confirmObscureText = true;
+
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
-  String phoneNumber = "";
   bool isPhoneToken = false;
+  String phone = "";
 
   var userRef = FirebaseFirestore.instance.collection(userCollection);
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String verificationId = "";
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +42,20 @@ class _RegisterPageState extends State<RegisterPage> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
+            title: Text(
+              "Register",
+              style: TextStyle(fontSize: 20, color: Colors.black54),
+            ),
             iconTheme: IconThemeData(color: Colors.black),
             backgroundColor: Colors.transparent,
             pinned: true,
             snap: false,
             floating: false,
             expandedHeight: 0.0,
+            // flexibleSpace: FlexibleSpaceBar(
+            //   title: Text('Register',
+            //       style: TextStyle(color: Colors.black), textScaleFactor: 1),
+            // ),
           ),
           SliverToBoxAdapter(
             child: Center(
@@ -55,14 +68,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: EdgeInsets.all(30.0),
                           child: Column(
                             children: <Widget>[
-                              CircleAvatar(
-                                  radius: 40,
-                                  backgroundImage: AssetImage(
-                                    "assets/icon/icon.png",
-                                  )),
-                              SizedBox(
-                                height: 20,
-                              ),
+                              // CircleAvatar(
+                              //     radius: 40,
+                              //     backgroundImage: AssetImage(
+                              //       "assets/icon/icon.png",
+                              //     )),
+                              // SizedBox(
+                              //   height: 20,
+                              // ),
                               Form(
                                 key: _registerformKey,
                                 child: Container(
@@ -86,23 +99,30 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 bottom: BorderSide(
                                                     color: Colors.grey))),
                                         child: TextFormField(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
                                           controller: _phoneController,
                                           validator: (val) {
+                                            String phoneFormate =
+                                                Validator.registerPhone(
+                                                    val.toString());
+                                            if (phoneFormate != null) {
+                                              return phoneFormate;
+                                            }
                                             String data =
                                                 Validator.showPhoneToken(
                                                     isPhoneToken);
                                             if (data != "") {
                                               return data;
                                             }
-                                            return Validator.registerPhone(
-                                                val.toString());
+
+                                            return null;
                                           },
                                           keyboardType: TextInputType.phone,
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: "Phone",
-                                              // Tran.of(context)
-                                              //     .text('phone'),
+                                              hintText:
+                                                  "${Tran.of(context)?.text('phone')}",
                                               hintStyle: TextStyle(
                                                   color: Colors.grey[400])),
                                         ),
@@ -114,6 +134,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 bottom: BorderSide(
                                                     color: Colors.grey))),
                                         child: TextFormField(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
                                           controller: _nameController,
                                           validator: (val) {
                                             return Validator.userName(
@@ -124,9 +146,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: "Full Name",
-                                              // Tran.of(context)
-                                              //     .text('full_name'),
+                                              hintText:
+                                                  "${Tran.of(context)?.text('full_name')}",
                                               hintStyle: TextStyle(
                                                   color: Colors.grey[400])),
                                         ),
@@ -134,6 +155,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                       Container(
                                         padding: EdgeInsets.all(8.0),
                                         child: TextFormField(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
                                           controller: _passwordController,
                                           obscureText: _obscureText,
                                           validator: (val) {
@@ -145,9 +168,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: "Password",
-                                              // Tran.of(context)
-                                              //     .text('password'),
+                                              hintText:
+                                                  "${Tran.of(context)?.text('password')}",
                                               suffixIcon: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
@@ -166,9 +188,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                       Container(
                                         padding: EdgeInsets.all(8.0),
                                         child: TextFormField(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
                                           controller:
                                               _confirmPasswordController,
-                                          obscureText: _confirmObscureText,
+                                          obscureText: _obscureText,
                                           validator: (val) {
                                             return Validator.confirmPassword(
                                                 context,
@@ -179,17 +203,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: "Confirm Password",
-                                              // Tran.of(context)
-                                              //     .text('confirm_password'),
+                                              hintText:
+                                                  "${Tran.of(context)?.text('confirm_password')}",
                                               suffixIcon: GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    _confirmObscureText =
-                                                        !_confirmObscureText;
+                                                    _obscureText =
+                                                        !_obscureText;
                                                   });
                                                 },
-                                                child: Icon(_confirmObscureText
+                                                child: Icon(_obscureText
                                                     ? Icons.visibility
                                                     : Icons.visibility_off),
                                               ),
@@ -211,11 +234,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                     maxHeight: 400),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    register();
+                                    bool isTaken = await checkPhoneIsTaken();
+                                    phone = phNoFormat();
+                                    if (!isTaken) {
+                                      register();
+                                    }
                                   },
                                   child: Text(
-                                    "Register",
-                                    // Tran.of(context).text('register'),
+                                    "${Tran.of(context)?.text('register')}",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -237,50 +263,89 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  String phNoFormat() {
+    String phoneNumber = _phoneController.text;
+    if (phoneNumber.startsWith("0")) {
+      phoneNumber = phoneNumber.substring(1, phoneNumber.length);
+    }
+    phoneNumber = "+95" + phoneNumber;
+    return phoneNumber;
+  }
+
+  Future<bool> checkPhoneIsTaken() async {
+    isPhoneToken =
+        phone == null ? false : await Validator.checkUserIsExist(phone);
+
+    if (isPhoneToken) {
+      setState(() {});
+    }
+    return isPhoneToken;
+  }
+
   void register() async {
-    phoneNumber = _phoneController.text;
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => FirebaseVerifyPinPage()));
-    // isPhoneToken = await Validator.checkUserIsExist(phoneNumber);
+    // _auth.setSettings(appVerificationDisabledForTesting: true);
+    if (_registerformKey.currentState.validate()) {
+      print("Validate");
 
-    // if (phoneNumber.startsWith("0")) {
-    //   phoneNumber = phoneNumber.substring(1, phoneNumber.length);
-    // }
-    // phoneNumber = "+95" + phoneNumber;
+      var pass = new DBCrypt()
+          .hashpw(_passwordController.text, new DBCrypt().gensalt());
+      // var isCorrect = new DBCrypt().checkpw(plain, hashed);
+      UserModel user = UserModel(
+          fullName: _nameController.text,
+          phone: phone,
+          password: _passwordController.text);
 
-    // Navigator.of(context)
-    //     .push(MaterialPageRoute(builder: (context) => FirebaseVerifyPinPage()));
+      try {
+        await _auth.verifyPhoneNumber(
+            phoneNumber: phone,
+            timeout: const Duration(seconds: 5),
+            verificationCompleted:
+                (PhoneAuthCredential phoneAuthCredential) async {
+              // await _auth.signInWithCredential(phoneAuthCredential);
+              // MessageHandler.showSnackbar(
+              //     "Phone number automatically verified and user signed in: ${_auth.currentUser.uid}",
+              //     context,
+              //     6);
+            },
+            verificationFailed: (FirebaseAuthException authException) {
+              print(
+                  'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+              MessageHandler.showSnackbar(
+                  'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
+                  context,
+                  6);
+            },
+            codeSent: (String verificationId, [int forceResendingToken]) async {
+              print('Please check your phone for the verification code.' +
+                  verificationId);
+              MessageHandler.showSnackbar(
+                  'Please check your phone for the verification code.',
+                  context,
+                  6);
+              verificationId = verificationId;
+              print("Before: $verificationId");
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => FirebaseVerifyPinPage(
+                      user: user, verificationId: verificationId)));
+            },
+            // codeSent,
+            codeAutoRetrievalTimeout: (String verificationId) {
+              print("verification code: " + verificationId);
+              MessageHandler.showSnackbar(
+                  "verification code: " + verificationId, context, 6);
+              verificationId = verificationId;
+            });
 
-    //   firebase.auth().signInAnonymously()
-    // .then(()=> {
-    // return     userRef
-    //         .add({
-    //           'full_name': _nameController.text,
-    //           'phone': _phoneController.text,
-    //           'password': _passwordController.text
-    //         })
-    //         .then((value) => print("User Added $value"))
-    //         .catchError((error) => print("Failed to add user: $error"));
-    // }).catch((err)=>{
-    // 	alert(err);
-    // });
+        // print("Before: $verificationId");
+        // Navigator.of(context).push(MaterialPageRoute(
+        //     builder: (context) => FirebaseVerifyPinPage(
+        //         user: user, verificationId: verificationId)));
 
-    // if (_registerformKey.currentState.validate()) {
-    //   print("Validate");
-    //   var pass = new DBCrypt()
-    //       .hashpw(_passwordController.text, new DBCrypt().gensalt());
-    //   // var isCorrect = new DBCrypt().checkpw(plain, hashed);
-    //   userRef
-    //       .add({
-    //         'full_name': _nameController.text,
-    //         'phone': _phoneController.text,
-    //         'password': pass
-    //       })
-    //       .then((value) => print("User Added $value"))
-    //       .catchError((error) => print("Failed to add user: $error"));
-    //   Navigator.of(context)
-    //       .push(MaterialPageRoute(builder: (context) => VerifyPinPage()));
-    // }
+      } catch (e) {
+        MessageHandler.showSnackbar(
+            "Failed to Verify Phone Number: ${e}", context, 6);
+      }
+    }
   }
 
   Future<bool> checkUserIsExist(String phoneNumber) async {
@@ -293,120 +358,3 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 }
-
-
-
-                                    // phoneNumber = _phoneController.text;
-                                    //   SmsRequestModel requestModel =
-                                    //       await _smsApi.requestPin(phoneNumber);
-                                    //   Navigator.of(context).push(
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) =>
-                                    //               VerifyPinPage(
-                                    //                   requestId: requestModel
-                                    //                       .requestId)));
-                                    // }
-                                    // print("OK");
-                                    // phoneNumber = _phoneController.text;
-                                    // if (phoneNumber.startsWith("0")) {
-                                    //   phoneNumber = phoneNumber.substring(
-                                    //       1, phoneNumber.length);
-                                    // }
-                                    // phoneNumber = "+95" + phoneNumber;
-                                    // //}
-                                    // setState(() {});
-                                    // set up the button
-                                    // ignore: deprecated_member_use
-                                    // Widget okButton = FlatButton(
-                                    //   child: Text("Next",
-                                    //       style: TextStyle(
-                                    //           fontWeight: FontWeight.bold)),
-                                    //   onPressed: () async {
-                                    //     Navigator.of(context).pop();
-                                    //     // OtpSms obj = await context
-                                    //     //     .read<RegisterProvider>()
-                                    //     //     .getOtp(context, phoneNumber);
-                                    //     // if (obj != null) {
-                                    //     //   // openNextPage(obj);
-                                    //     //   Navigator.push(
-                                    //     //       context,
-                                    //     //       MaterialPageRoute(
-                                    //     //         builder: (BuildContext context) =>
-                                    //     //             OtpPage(
-                                    //     //           otpSms: obj,
-                                    //     //         ),
-                                    //     //       ));
-                                    //     // }
-                                    //     // OtpSms obj = OtpSms();
-                                    //     // Navigator.push(
-                                    //     //     context,
-                                    //     //     MaterialPageRoute(
-                                    //     //       builder: (BuildContext context) =>
-                                    //     //           OtpPage(
-                                    //     //         otpSms: obj,
-                                    //     //       ),
-                                    //     //     ));
-                                    //     // setState(() {});
-                                    //     phoneNumber = _phoneController.text;
-                                    //     SmsRequestModel requestModel =
-                                    //         await _smsApi.requestPin(phoneNumber);
-                                    //     Navigator.of(context).push(
-                                    //         MaterialPageRoute(
-                                    //             builder: (context) =>
-                                    //                 VerifyPinPage(
-                                    //                     requestId: requestModel
-                                    //                         .requestId)));
-                                    //   },
-                                    // );
-                                    // // ignore: deprecated_member_use
-                                    // Widget editButton = FlatButton(
-                                    //   child: Text(
-                                    //     "Edit",
-                                    //     style: TextStyle(
-                                    //         fontWeight: FontWeight.bold),
-                                    //   ),
-                                    //   onPressed: () =>
-                                    //       Navigator.of(context).pop(),
-                                    // );
-                                    // // set up the AlertDialog
-                                    // AlertDialog alert = AlertDialog(
-                                    //   title: Column(
-                                    //     mainAxisSize: MainAxisSize.max,
-                                    //     mainAxisAlignment:
-                                    //         MainAxisAlignment.start,
-                                    //     crossAxisAlignment:
-                                    //         CrossAxisAlignment.start,
-                                    //     children: [
-                                    //       Padding(
-                                    //         padding: const EdgeInsets.all(8.0),
-                                    //         child: Text(
-                                    //           "Is this your phone number?",
-                                    //           style: TextStyle(
-                                    //               fontSize: 16,
-                                    //               color: Colors.grey),
-                                    //         ),
-                                    //       ),
-                                    //       Text(
-                                    //         phoneNumber,
-                                    //         style: TextStyle(
-                                    //             fontSize: 20, color: Colors.blue),
-                                    //       ),
-                                    //     ],
-                                    //   ),
-                                    //   content: Text(
-                                    //     "The OTP code will send the the phone number ",
-                                    //     style: TextStyle(
-                                    //         fontSize: 14, color: Colors.grey),
-                                    //   ),
-                                    //   actions: [
-                                    //     editButton,
-                                    //     okButton,
-                                    //   ],
-                                    // );
-                                    // // show the dialog
-                                    // showDialog(
-                                    //   context: context,
-                                    //   builder: (BuildContext context) {
-                                    //     return alert;
-                                    //   },
-                                    // );

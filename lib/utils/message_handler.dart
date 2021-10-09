@@ -35,4 +35,22 @@ class MessageHandler {
       ),
     )..show(context);
   }
+
+  static void showSnackbar(
+      String message, BuildContext context, int durationInSecs) {
+    Flushbar(
+      flushbarPosition: FlushbarPosition.BOTTOM,
+      flushbarStyle: FlushbarStyle.FLOATING,
+      backgroundColor: Colors.red, //.withOpacity(0.9),
+      margin: EdgeInsets.only(top: 200.0, left: 10.0, right: 10.0),
+      message: message,
+
+      duration: Duration(seconds: durationInSecs),
+
+      icon: Icon(
+        Icons.info,
+        color: Colors.white,
+      ),
+    )..show(context);
+  }
 }

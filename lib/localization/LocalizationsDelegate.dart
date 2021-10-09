@@ -7,7 +7,8 @@ class MyLocalizationsDelegate extends LocalizationsDelegate<Tran> {
   const MyLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['zh','en','my','th'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      ['zh', 'en', 'my'].contains(locale.languageCode);
 
   @override
   Future<Tran> load(Locale locale) async {
