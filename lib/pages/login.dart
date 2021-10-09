@@ -339,19 +339,6 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _fblogin() async {
     User user = await Authentication.signInWithFacebook(context: context);
 
-<<<<<<< HEAD
-
-    if (user != null) {
-=======
-    if (result.status == LoginStatus.success) {
-      _accessToken = result.accessToken;
-      // final userData = await FacebookAuth.instance.getUserData();
-      _printCredentials();
->>>>>>> 27d2eeb19c21e1c9ec44cebc758d4630759ac725
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => UserInfoScreen(user: user)),
-      );
-    }
   }
   Future<void> _googlelogin() async {
     //User user = await Authentication.signInWithFacebook(context: context);

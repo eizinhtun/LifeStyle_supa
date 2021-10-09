@@ -162,3 +162,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     );
   }
 }
+
+
+Widget _ProfileImage() => FlatButton(
+  onPressed: ( ){
+
+  },
+  child: Row(
+
+  ),
+
+);
