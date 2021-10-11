@@ -10,7 +10,10 @@ import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/pages/register.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/validators/validator.dart';
+import 'package:left_style/utils/message_handler.dart';
 import 'facebook_user_info_screen.dart';
+import 'firebase_verify_pin_page.dart';
+import 'login_verify_pin_page.dart';
 import 'user_info_screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -27,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordController = TextEditingController();
 
   var userRef = FirebaseFirestore.instance.collection(userCollection);
+  String verificationId = "";
 
   AccessToken _accessToken;
   String lang = "en";
@@ -141,9 +145,10 @@ class _LoginPageState extends State<LoginPage> {
                           minWidth: double.infinity,
                           maxHeight: 400),
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_loginformKey.currentState.validate()) {
                             print("Validate");
+                            await login();
                             // userRef
                             //     .doc(userId)
                             //     .get()
@@ -293,6 +298,80 @@ class _LoginPageState extends State<LoginPage> {
 //         }
 //     });
 // }
+
+  String phNoFormat() {
+    String phoneNumber = _phoneController.text;
+    if (phoneNumber.startsWith("0")) {
+      phoneNumber = phoneNumber.substring(1, phoneNumber.length);
+    }
+    phoneNumber = "+95" + phoneNumber;
+    return phoneNumber;
+  }
+
+  Future<void> login() async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    String phone = phNoFormat();
+    try {
+      await _auth.verifyPhoneNumber(
+          phoneNumber: phone,
+          timeout: const Duration(seconds: 5),
+          verificationCompleted:
+              (PhoneAuthCredential phoneAuthCredential) async {
+            await _auth
+                .signInWithCredential(phoneAuthCredential)
+                .then((UserCredential result) => {
+                      if (result != null && result.user != null)
+                        {print("Authentication is Successful")}
+                      else
+                        {print("Authentication failed!")}
+                    })
+                .catchError((error) {
+              print(error);
+            });
+
+            // MessageHandler.showSnackbar(
+            //     "Phone number automatically verified and user signed in: ${_auth.currentUser.uid}",
+            //     context,
+            //     6);
+          },
+          verificationFailed: (FirebaseAuthException authException) {
+            print(
+                'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+            MessageHandler.showSnackbar(
+                'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
+                context,
+                6);
+          },
+          codeSent: (String verificationId, [int forceResendingToken]) async {
+            print('Please check your phone for the verification code.' +
+                verificationId);
+            MessageHandler.showSnackbar(
+                'Please check your phone for the verification code.',
+                context,
+                6);
+            verificationId = verificationId;
+            print("Before: $verificationId");
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    LoginVerifyPinPage(verificationId: verificationId)));
+          },
+          // codeSent,
+          codeAutoRetrievalTimeout: (String verificationId) {
+            print("verification code: " + verificationId);
+            MessageHandler.showSnackbar(
+                "verification code: " + verificationId, context, 6);
+            verificationId = verificationId;
+          });
+
+      print("Before: $verificationId");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              LoginVerifyPinPage(verificationId: verificationId)));
+    } catch (e) {
+      MessageHandler.showSnackbar(
+          "Failed to Verify Phone Number: ${e}", context, 6);
+    }
+  }
 
   changeLangColor() {
     switch (lang) {

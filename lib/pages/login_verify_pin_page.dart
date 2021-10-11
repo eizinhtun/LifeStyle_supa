@@ -4,26 +4,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/datas/database_helper.dart';
-import 'package:left_style/models/user_model.dart';
-import 'package:left_style/pages/phone_auth_handler.dart';
+import 'package:left_style/providers/login_provider.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:otp_autofill/otp_autofill.dart';
+import 'package:provider/provider.dart';
 
 // import 'package:pin_code_text_field/pin_code_text_field.dart';
 
-class FirebaseVerifyPinPage extends StatefulWidget {
-  const FirebaseVerifyPinPage(
-      {Key key, @required this.user, @required this.verificationId})
+class LoginVerifyPinPage extends StatefulWidget {
+  const LoginVerifyPinPage({Key key, @required this.verificationId})
       : super(key: key);
-  final UserModel user;
   final String verificationId;
 
   @override
-  _FirebaseVerifyPinPageState createState() => _FirebaseVerifyPinPageState();
+  _LoginVerifyPinPageState createState() => _LoginVerifyPinPageState();
 }
 
-class _FirebaseVerifyPinPageState extends State<FirebaseVerifyPinPage> {
+class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
   OTPTextEditController controller;
   StreamController<ErrorAnimationType> errorController;
@@ -266,33 +263,30 @@ class _FirebaseVerifyPinPageState extends State<FirebaseVerifyPinPage> {
     //   },
     // );
 
-    try {
-      print("After: ${widget.verificationId}");
-      final AuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: widget.verificationId,
-        smsCode: controller.text,
-      );
-      final User user = (await _auth.signInWithCredential(credential)).user;
-      print("Successfully signed in UID: ${user.uid}");
-      showSnackbar("Successfully signed in UID: ${user.uid}");
-      UserModel userModel = widget.user;
-      userModel.uid = user.uid;
-      print("UserModel: $userModel");
-      userRef
-          .add(userModel.toJson())
-          .then((value) => print("User Added $value"))
-          .catchError((error) => print("Failed to add user: $error"));
+    await context
+        .read<LoginProvider>()
+        .login(context, widget.verificationId, controller.text);
 
-      // if (user?.uid != null) {
-      //   await DatabaseHelper.setAppLoggedIn(context, true);
-      //   Navigator.of(context)
-      //       .push(MaterialPageRoute(builder: (context) => HomeScreen()));
-      // } else {
-      //   await DatabaseHelper.setAppLoggedIn(context, false);
-      // }
-    } catch (e) {
-      print(e.toString());
-      showSnackbar("Failed to sign in: " + e.toString());
-    }
+    // try {
+    //   print("After: ${widget.verificationId}");
+    //   final AuthCredential credential = PhoneAuthProvider.credential(
+    //     verificationId: widget.verificationId,
+    //     smsCode: controller.text,
+    //   );
+    //   final User user = (await _auth.signInWithCredential(credential)).user;
+    //   print("Successfully signed in UID: ${user.uid}");
+    //   showSnackbar("Successfully signed in UID: ${user.uid}");
+    //   bool isLogin = await context.read<LoginProvider>().login(context);
+    //   if (isLogin) {
+    //     Navigator.of(context)
+    //         .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    //   } else {
+    //     Navigator.of(context)
+    //         .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+    //   }
+    // } catch (e) {
+    //   print(e.toString());
+    //   showSnackbar("Failed to sign in: " + e.toString());
+    // }
   }
 }
