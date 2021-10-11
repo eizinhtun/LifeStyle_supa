@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:left_style/pages/firebase_verify_pin_page.dart';
 import 'package:left_style/pages/home_screen.dart';
@@ -16,6 +17,7 @@ import 'package:left_style/pages/sign_in_screen.dart';
 import 'package:left_style/pages/upload_images.dart';
 import 'package:left_style/splash.dart';
 import 'package:provider/provider.dart';
+import 'package:left_style/widgets/profile_image.dart';
 
 import 'Test/auth_login.dart';
 import 'package:left_style/splash.dart';
