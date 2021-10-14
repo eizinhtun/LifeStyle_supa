@@ -291,9 +291,9 @@ class _RegisterPageState extends State<RegisterPage> {
           .hashpw(_passwordController.text, new DBCrypt().gensalt());
       // var isCorrect = new DBCrypt().checkpw(plain, hashed);
       UserModel user = UserModel(
-          fullName: _nameController.text,
-          phone: phone,
-          password: _passwordController.text);
+        fullName: _nameController.text,
+        phone: phone,
+      );
 
       try {
         await _auth.verifyPhoneNumber(
