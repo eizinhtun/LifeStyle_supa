@@ -186,13 +186,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   setState(() {});
                                 },
                                 child: Text("Choose From Album")),
-                            //text wallet page
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Wallet()));
-                                },
-                                child: Text("Wallet")),
                           ],
                         ))),
                   ),

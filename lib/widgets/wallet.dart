@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/widgets/topup_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
@@ -34,7 +35,7 @@ class WalletState extends State<Wallet> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-      child: Stack(
+        child: Stack(
         children: <Widget>[
           CustomScrollView(
             slivers: <Widget>[
@@ -89,54 +90,165 @@ class WalletState extends State<Wallet> {
                       color: Colors.white,
                       elevation: 10,
                       child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                        // padding:
+                        //     EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Row(
-                              children: [
-                                Icon(Icons.account_balance_wallet),
-                                SizedBox(width: 10),
-                                Text("Wallet Balance (Ks) "),
-                                Spacer(),
-                                Icon(
-                                  Icons.chevron_right,
-                                  size: 30,
-                                ),
-                              ],
+                            Container(
+                              margin: EdgeInsets.only(left: 10,right: 10,top: 10),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.account_balance_wallet),
+                                  SizedBox(width: 10),
+                                  Text("Wallet Balance (Ks) "),
+                                  Spacer(),
+                                  Icon(
+                                    Icons.chevron_right,
+                                    size: 30,
+                                  ),
+                                ],
+                              ),
                             ),
-                            Row(
-                              children: [
-                                Text("20000.00",
-                                    style: TextStyle(fontSize: 20)),
-                              ],
+                            Container(
+                              margin: EdgeInsets.only(left: 10,right: 10,top: 10),
+                              child: Row(
+                                children: [
+                                  Text("2000000.00",
+                                      style: TextStyle(fontSize: 20)),
+                                ],
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        padding: EdgeInsets.only(
-                                            left: 35,
-                                            right: 35,
-                                            top: 10,
-                                            bottom: 10) // foreground
+                            Container(
+                              margin: EdgeInsets.all(10),
+                              color: Colors.transparent,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            // primary: Colors.white,
+                                            padding: EdgeInsets.only(
+                                              left: 15,
+                                              right:  15,
+                                              top: 10,
+                                              bottom: 10,)  // foreground
                                         ),
-                                    onPressed: () {},
-                                    child: Text("Cash In")),
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        padding: EdgeInsets.only(
-                                            left: 35,
-                                            right: 35,
-                                            top: 10,
-                                            bottom: 10) // foreground
+                                        onPressed: () {
+                                          Navigator.of(context).push(MaterialPageRoute(builder: (contex)=>TopUpPage()));
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.cached),
+                                            SizedBox(width: 5),
+                                            Text("Top Up"),
+                                          ],
+                                        )
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            padding: EdgeInsets.only(
+                                              left: 15,
+                                              right:  15,
+                                              top: 10,
+                                              bottom: 10,) // foreground
                                         ),
-                                    onPressed: () {},
-                                    child: Text("Cash Out")),
-                              ],
+                                        onPressed: () {},
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.payments),
+                                            SizedBox(width: 5),
+                                            Text("Withdrawal"),
+                                          ],
+                                        )
+                                    ),
+                                  ),
+                                  // ElevatedButton(
+                                  //     style: ElevatedButton.styleFrom(
+                                  //         padding: EdgeInsets.only(
+                                  //             left: 35,
+                                  //             right: 35,
+                                  //             top: 10,
+                                  //             bottom: 10) // foreground
+                                  //         ),
+                                  //     onPressed: () {},
+                                  //     child: Text("Cash In")),
+                                  // ElevatedButton(
+                                  //     style: ElevatedButton.styleFrom(
+                                  //         padding: EdgeInsets.only(
+                                  //             left: 35,
+                                  //             right: 35,
+                                  //             top: 10,
+                                  //             bottom: 10) // foreground
+                                  //         ),
+                                  //     onPressed: () {},
+                                  //     child: Text("Cash Out")),
+                                ],
+                              ),
                             ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            //   children: [
+                            //     ElevatedButton(
+                            //         style: ElevatedButton.styleFrom(
+                            //             padding: EdgeInsets.only(
+                            //                 left: 20,
+                            //                 right: 20,
+                            //                 top: 10,
+                            //                 bottom: 10) // foreground
+                            //         ),
+                            //         onPressed: () {},
+                            //         child: Row(
+                            //           children: [
+                            //             Icon(Icons.cached),
+                            //             SizedBox(width: 5),
+                            //             Text("Top Up    "),
+                            //           ],
+                            //         )
+                            //     ),
+                            //     ElevatedButton(
+                            //         style: ElevatedButton.styleFrom(
+                            //             padding: EdgeInsets.only(
+                            //                 left: 20,
+                            //                 right: 20,
+                            //                 top: 10,
+                            //                 bottom: 10) // foreground
+                            //         ),
+                            //         onPressed: () {},
+                            //         child: Row(
+                            //           children: [
+                            //             Icon(Icons.payment),
+                            //             SizedBox(width: 5),
+                            //             Text("Withdrawal"),
+                            //           ],
+                            //         )
+                            //     ),
+                            //     // ElevatedButton(
+                            //     //     style: ElevatedButton.styleFrom(
+                            //     //         padding: EdgeInsets.only(
+                            //     //             left: 35,
+                            //     //             right: 35,
+                            //     //             top: 10,
+                            //     //             bottom: 10) // foreground
+                            //     //         ),
+                            //     //     onPressed: () {},
+                            //     //     child: Text("Cash In")),
+                            //     // ElevatedButton(
+                            //     //     style: ElevatedButton.styleFrom(
+                            //     //         padding: EdgeInsets.only(
+                            //     //             left: 35,
+                            //     //             right: 35,
+                            //     //             top: 10,
+                            //     //             bottom: 10) // foreground
+                            //     //         ),
+                            //     //     onPressed: () {},
+                            //     //     child: Text("Cash Out")),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),
