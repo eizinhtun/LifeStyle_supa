@@ -1,7 +1,9 @@
 // @dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/providers/wallet_provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:provider/provider.dart';
 
 class Wallet extends StatefulWidget {
   @override
@@ -113,7 +115,11 @@ class WalletState extends State<Wallet> {
                                             top: 10,
                                             bottom: 10) // foreground
                                         ),
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      await context
+                                          .read<WalletProvider>()
+                                          .topup(context, 200);
+                                    },
                                     child: Text("Cash In")),
                                 ElevatedButton(
                                     style: ElevatedButton.styleFrom(
@@ -123,7 +129,11 @@ class WalletState extends State<Wallet> {
                                             top: 10,
                                             bottom: 10) // foreground
                                         ),
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      await context
+                                          .read<WalletProvider>()
+                                          .withdrawl(context, 200);
+                                    },
                                     child: Text("Cash Out")),
                               ],
                             ),

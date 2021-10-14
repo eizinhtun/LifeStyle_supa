@@ -342,7 +342,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
       } catch (e) {
         MessageHandler.showSnackbar(
-            "Failed to Verify Phone Number: ${e}", context, 6);
+            "Failed to Verify Phone Number: $e", context, 6);
       }
     }
   }
