@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:left_style/utils/authentication.dart';
+import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:photo_view/photo_view.dart';
 
 class CommonExampleRouteWrapper extends StatelessWidget {
+
   const CommonExampleRouteWrapper({
     this.imageProvider,
     this.loadingBuilder,
@@ -29,7 +32,6 @@ class CommonExampleRouteWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -39,12 +41,14 @@ class CommonExampleRouteWrapper extends StatelessWidget {
             snap: false,
             floating: false,
             expandedHeight: 0.0,
+
           ),
           SliverToBoxAdapter(
             child: Center(
               child:  Container(
                 constraints: BoxConstraints.expand(
                   height: MediaQuery.of(context).size.height,
+
                 ),
                 child: PhotoView(
                   imageProvider: imageProvider,
@@ -63,10 +67,6 @@ class CommonExampleRouteWrapper extends StatelessWidget {
           ),
         ],
       )
-
-
-
-
     );
   }
 }
