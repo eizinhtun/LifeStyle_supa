@@ -1,5 +1,5 @@
+// @dart=2.9
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,11 +8,10 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
-import 'package:left_style/providers/user_info_screen.dart';
-import 'package:left_style/widgets/user-info_screen_photo.dart';
+import 'package:left_style/pages/user_info_screen.dart';
 
 class Authentication {
-  static SnackBar customSnackBar({required String content}) {
+  static SnackBar customSnackBar({String content}) {
     return SnackBar(
       backgroundColor: Colors.black,
       content: Text(
@@ -22,19 +21,17 @@ class Authentication {
     );
   }
 
-  static Future<FirebaseApp> initializeFirebase({
-    required BuildContext context,
-  }) async {
+  static Future<FirebaseApp> initializeFirebase({BuildContext context}) async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
 
-    User? user = FirebaseAuth.instance.currentUser;
+    User user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => UserInfoScreen(
-            user: user,
-          ),
+              // user: user,
+              ),
         ),
       );
     }
@@ -42,9 +39,9 @@ class Authentication {
     return firebaseApp;
   }
 
-  static Future<User?> signInWithGoogle({required BuildContext context}) async {
+  static Future<User> signInWithGoogle({BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
+    User user;
 
     if (kIsWeb) {
       GoogleAuthProvider authProvider = GoogleAuthProvider();
@@ -60,7 +57,7 @@ class Authentication {
     } else {
       final GoogleSignIn googleSignIn = GoogleSignIn();
 
-      final GoogleSignInAccount? googleSignInAccount =
+      final GoogleSignInAccount googleSignInAccount =
           await googleSignIn.signIn();
 
       if (googleSignInAccount != null) {
@@ -106,33 +103,15 @@ class Authentication {
     return user;
   }
 
-  static Future<void> signOut({required BuildContext context}) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-
-    try {
-      if (!kIsWeb) {
-        await googleSignIn.signOut();
-      }
-      await FirebaseAuth.instance.signOut();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        Authentication.customSnackBar(
-          content: 'Error signing out. Try again.',
-        ),
-      );
-    }
-  }
-
-  static Future<User?> signInWithFacebook(
-      {required BuildContext context}) async {
+  static Future<User> signInWithFacebook({BuildContext context}) async {
     FirebaseAuth _auth = FirebaseAuth.instance;
-    User? user;
+    User user;
     try {
       final LoginResult result = await FacebookAuth.instance.login();
       switch (result.status) {
         case LoginStatus.success:
           final OAuthCredential facebookCredential =
-              FacebookAuthProvider.credential(result.accessToken!.token);
+              FacebookAuthProvider.credential(result.accessToken.token);
           final userCredential =
               await _auth.signInWithCredential(facebookCredential);
           user = userCredential.user;
@@ -150,42 +129,13 @@ class Authentication {
     }
   }
 
-  static Future<String?> updatePhoto() async {
-    String? url = "";
-    var user = FirebaseAuth.instance.currentUser;
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    var link = FirebaseStorage.instance
-        .ref("profile/" + user!.uid)
-        .putFile(File(pickedFile!.path))
-        .then((TaskSnapshot taskSnapshot) {
-      if (taskSnapshot.state == TaskState.success) {
-        taskSnapshot.ref.getDownloadURL().then((imageURL) {
-          // print(imageURL.toString());
-          user.updatePhotoURL(imageURL.toString());
-          url = imageURL.toString();
-          return url;
-        });
-      }
-      // else if (taskSnapshot.state == TaskState.running) {
-      //  print("Running");
-      // }
-      // else if (taskSnapshot.state == TaskState.error) {
-      //   print("Error");
-      // }
-    });
-
-    // var ref = FirebaseStorage.instance.ref("profile/"+user.uid);
-    // String? url=await ref.getDownloadURL();
-  }
-
   static Future<String> uploadphotofile() async {
     var user = FirebaseAuth.instance.currentUser;
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    final ref = FirebaseStorage.instance.ref('profile').child(user!.uid);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final ref = FirebaseStorage.instance.ref('profile').child(user.uid);
 
-    final uploadTask = ref.putFile(File(pickedFile!.path));
+    final uploadTask = ref.putFile(File(pickedFile.path));
     String downloadUrl = await (await uploadTask).ref.getDownloadURL();
     if (downloadUrl != null) {
       user.updatePhotoURL(downloadUrl);
@@ -198,10 +148,10 @@ class Authentication {
   static Future<String> uploadphotofilecamera() async {
     var user = FirebaseAuth.instance.currentUser;
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-    final ref = FirebaseStorage.instance.ref('profile').child(user!.uid);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    final ref = FirebaseStorage.instance.ref('profile').child(user.uid);
 
-    final uploadTask = ref.putFile(File(pickedFile!.path));
+    final uploadTask = ref.putFile(File(pickedFile.path));
     String downloadUrl = await (await uploadTask).ref.getDownloadURL();
     if (downloadUrl != null) {
       user.updatePhotoURL(downloadUrl);
