@@ -69,15 +69,14 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
       print("UserIdExist : $userIdExist");
       if (!userIdExist) {
-        userRef
-            .add({
-              "uid": user.uid,
-              "full_name": user.displayName,
-              "email": user.email,
-              "phone": user.phoneNumber,
-              "photo": user.photoURL
-            })
-            .then((value) => print("User Added $value"))
+        userRef.doc(user.uid).set({
+          "uid": user.uid,
+          "full_name": user.displayName,
+          "email": user.email,
+          "phone": user.phoneNumber,
+          "photo": user.photoURL
+        })
+            // .then((value) => print("User Added $value"))
             .catchError((error) => print("Failed to add user: $error"));
       }
       Navigator.of(context)
@@ -96,15 +95,14 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
       print("UserIdExist : $userIdExist");
       if (!userIdExist) {
-        userRef
-            .add({
-              "uid": user.uid,
-              "full_name": user.displayName,
-              "email": user.email,
-              "phone": user.phoneNumber,
-              "photo": user.photoURL
-            })
-            .then((value) => print("User Added $value"))
+        userRef.doc(user.uid).set({
+          "uid": user.uid,
+          "full_name": user.displayName,
+          "email": user.email,
+          "phone": user.phoneNumber,
+          "photo": user.photoURL
+        })
+            // .then((value) => print("User Added $value"))
             .catchError((error) => print("Failed to add user: $error"));
       }
       Navigator.of(context)

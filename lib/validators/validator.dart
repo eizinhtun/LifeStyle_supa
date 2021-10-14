@@ -26,11 +26,19 @@ class Validator {
 
   static Future<bool> checkUserIdIsExist(String uid) async {
     var userRef = FirebaseFirestore.instance.collection(userCollection);
-    QuerySnapshot snaptData = await userRef.where('uid', isEqualTo: uid).get();
-    if (snaptData.docs.length > 0) {
-      return true;
-    } else {
-      return false;
+    // userRef.
+    // QuerySnapshot snaptData = await userRef.where('uid', isEqualTo: uid).get();
+    // if (snaptData.docs.length > 0) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
+
+    try {
+      var doc = await userRef.doc(uid).get();
+      return doc.exists;
+    } catch (e) {
+      throw e;
     }
   }
 

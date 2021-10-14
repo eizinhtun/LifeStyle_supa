@@ -35,7 +35,7 @@ class WalletState extends State<Wallet> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-        child: Stack(
+      child: Stack(
         children: <Widget>[
           CustomScrollView(
             slivers: <Widget>[
@@ -96,7 +96,8 @@ class WalletState extends State<Wallet> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Container(
-                              margin: EdgeInsets.only(left: 10,right: 10,top: 10),
+                              margin:
+                                  EdgeInsets.only(left: 10, right: 10, top: 10),
                               child: Row(
                                 children: [
                                   Icon(Icons.account_balance_wallet),
@@ -111,7 +112,8 @@ class WalletState extends State<Wallet> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(left: 10,right: 10,top: 10),
+                              margin:
+                                  EdgeInsets.only(left: 10, right: 10, top: 10),
                               child: Row(
                                 children: [
                                   Text("2000000.00",
@@ -123,20 +125,25 @@ class WalletState extends State<Wallet> {
                               margin: EdgeInsets.all(10),
                               color: Colors.transparent,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Expanded(
                                     child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                             // primary: Colors.white,
                                             padding: EdgeInsets.only(
-                                              left: 15,
-                                              right:  15,
-                                              top: 10,
-                                              bottom: 10,)  // foreground
-                                        ),
+                                          left: 15,
+                                          right: 15,
+                                          top: 10,
+                                          bottom: 10,
+                                        ) // foreground
+                                            ),
                                         onPressed: () {
-                                          Navigator.of(context).push(MaterialPageRoute(builder: (contex)=>TopUpPage()));
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (contex) =>
+                                                      TopUpPage()));
                                         },
                                         child: Row(
                                           children: [
@@ -144,19 +151,19 @@ class WalletState extends State<Wallet> {
                                             SizedBox(width: 5),
                                             Text("Top Up"),
                                           ],
-                                        )
-                                    ),
+                                        )),
                                   ),
                                   SizedBox(width: 5),
                                   Expanded(
                                     child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                             padding: EdgeInsets.only(
-                                              left: 15,
-                                              right:  15,
-                                              top: 10,
-                                              bottom: 10,) // foreground
-                                        ),
+                                          left: 15,
+                                          right: 15,
+                                          top: 10,
+                                          bottom: 10,
+                                        ) // foreground
+                                            ),
                                         onPressed: () {},
                                         child: Row(
                                           children: [
@@ -164,8 +171,7 @@ class WalletState extends State<Wallet> {
                                             SizedBox(width: 5),
                                             Text("Withdrawal"),
                                           ],
-                                        )
-                                    ),
+                                        )),
                                   ),
                                   // ElevatedButton(
                                   //     style: ElevatedButton.styleFrom(

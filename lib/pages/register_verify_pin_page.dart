@@ -277,8 +277,8 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
       userModel.uid = user.uid;
       print("UserModel: $userModel");
       userRef
-          .add(userModel.toJson())
-          .then((value) => print("User Added $value"))
+          .doc(user.uid)
+          .set(userModel.toJson())
           .catchError((error) => print("Failed to add user: $error"));
 
       // if (user?.uid != null) {

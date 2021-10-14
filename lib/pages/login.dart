@@ -29,8 +29,6 @@ class _LoginPageState extends State<LoginPage> {
 
   var userRef = FirebaseFirestore.instance.collection(userCollection);
   String verificationId = "";
-
-  AccessToken _accessToken;
   String lang = "en";
 
   Color langEnBtnColor = Colors.black38;
