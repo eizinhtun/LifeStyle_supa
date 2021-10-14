@@ -7,6 +7,7 @@ import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/validators/validator.dart';
 
 class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<void> logOut(BuildContext context) async {
@@ -62,10 +63,19 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (user.uid != null) {
       DatabaseHelper.setAppLoggedIn(context, true);
       notifyListeners();
-      userRef
-          .add({"uid": user.uid})
-          .then((value) => print("User Added $value"))
-          .catchError((error) => print("Failed to add user: $error"));
+
+      // if (!Validator.checkUserIdIsExist(user.uid)) {
+      //   userRef
+      //       .add({
+      //         "uid": user.uid,
+      //         "full_name": user.displayName,
+      //         "email": user.email,
+      //         "phone": user.phoneNumber,
+      //         "photo": user.photoURL
+      //       })
+      //       .then((value) => print("User Added $value"))
+      //       .catchError((error) => print("Failed to add user: $error"));
+      // }
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     } else {
@@ -81,15 +91,20 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       DatabaseHelper.setAppLoggedIn(context, true);
       notifyListeners();
       userRef
-          .add({"uid": user.uid})
+          .add({
+            "uid": user.uid,
+            "full_name": user.displayName,
+            "email": user.email,
+            "phone": user.phoneNumber,
+            "photo": user.photoURL
+          })
           .then((value) => print("User Added $value"))
           .catchError((error) => print("Failed to add user: $error"));
-      // Navigator.of(context)
-      //     .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    } else {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
     }
-    //  else {
-    //   Navigator.of(context)
-    //       .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-    // }
   }
 }

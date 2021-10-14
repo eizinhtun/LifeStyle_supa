@@ -24,6 +24,16 @@ class Validator {
     }
   }
 
+  static Future<bool> checkUserIdIsExist(String uid) async {
+    var userRef = FirebaseFirestore.instance.collection(userCollection);
+    QuerySnapshot snaptData = await userRef.where('uid', isEqualTo: uid).get();
+    if (snaptData.docs.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static String registerPhone(String value) {
     // String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     // RegExp regExp =  RegExp(patttern);
