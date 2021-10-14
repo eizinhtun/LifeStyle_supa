@@ -1,35 +1,20 @@
 // @dart=2.9
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:left_style/pages/firebase_verify_pin_page.dart';
-import 'package:left_style/pages/home_screen.dart';
+import 'package:left_style/pages/init_screen.dart';
 import 'package:left_style/pages/login.dart';
-import 'package:left_style/pages/otp_auto_fill.dart';
-import 'package:left_style/pages/verify_pin_page.dart';
-import 'package:left_style/pages/phone_number_page.dart';
-import 'package:left_style/pages/sign_in_screen.dart';
-import 'package:left_style/pages/upload_images.dart';
-import 'package:left_style/splash.dart';
 import 'package:provider/provider.dart';
-import 'package:left_style/widgets/profile_image.dart';
-
-import 'Test/auth_login.dart';
-import 'package:left_style/splash.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'datas/constants.dart';
 import 'localization/LocalizationsDelegate.dart';
 import 'providers/login_provider.dart';
 
 void main() async {
   //firebase messaging
   WidgetsFlutterBinding.ensureInitialized();
-  // await di.init();
 
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
@@ -76,11 +61,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: colorCustom,
       ),
-      //  home: LoginPage(),
+      // home: FirebaseAuth.instance.currentUser?.uid != null
+      //     ? HomeScreen()
+      //     : LoginPage(),
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => HomeScreen(),
+        '/': (context) => InitScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/login': (context) {
           return LoginPage();
@@ -111,7 +98,7 @@ class MyApp extends StatelessWidget {
       //    }
       // );
 
-      // FirebaseVerifyPinPage(),
+      // RegisterVerifyPinPage(),
       // OTPFill()
       //home: SignInScreen(),
       //home: AuthLogin(),
@@ -166,7 +153,7 @@ class MyApp extends StatelessWidget {
 //             //    }
 //             // );
 
-//             // FirebaseVerifyPinPage(),
+//             // RegisterVerifyPinPage(),
 //             // OTPFill()
 //             //home: SignInScreen(),
 //             //home: AuthLogin(),
@@ -209,7 +196,7 @@ class MyApp extends StatelessWidget {
 // //                 // );
 
 // //                 home: LoginPage()
-// //                 // FirebaseVerifyPinPage(),
+// //                 // RegisterVerifyPinPage(),
 // //                 // OTPFill()
 // //                 //home: SignInScreen(),
 // //                 //home: AuthLogin(),
@@ -249,7 +236,7 @@ class MyApp extends StatelessWidget {
 // //                 // );
 
 // //                 home: HomeScreen()
-// //                 // FirebaseVerifyPinPage(),
+// //                 // RegisterVerifyPinPage(),
 // //                 // OTPFill()
 // //                 //home: SignInScreen(),
 // //                 //home: AuthLogin(),

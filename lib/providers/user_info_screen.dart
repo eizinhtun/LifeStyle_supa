@@ -5,8 +5,6 @@ import 'package:left_style/pages/upload_images.dart';
 import 'package:left_style/res/custom_colors.dart';
 import 'package:left_style/utils/authentication.dart';
 
-
-
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({Key? key, required User user})
       : _user = user,
@@ -31,7 +29,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         var curve = Curves.ease;
 
         var tween =
-        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),
@@ -55,7 +53,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CustomColors.firebaseNavy,
-
       ),
       body: SafeArea(
         child: Padding(
@@ -67,35 +64,37 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              RaisedButton(onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UploadImageFirebase()));
-              },child: Text("Upload Image")),
+              RaisedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => UploadImageFirebase()));
+                  },
+                  child: Text("Upload Image")),
               Row(),
               _user.photoURL != null
                   ? ClipOval(
-                child: Material(
-                  color: CustomColors.firebaseGrey.withOpacity(0.3),
-                  child: Image.network(
-                    _user.photoURL!.toString(),
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-              )
+                      child: Material(
+                        color: CustomColors.firebaseGrey.withOpacity(0.3),
+                        child: Image.network(
+                          _user.photoURL!.toString(),
+                          fit: BoxFit.fitHeight,
+                        ),
+                      ),
+                    )
                   : ClipOval(
-                child: Material(
-                  color: CustomColors.firebaseGrey.withOpacity(0.3),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Icon(
-                      Icons.person,
-                      size: 60,
-                      color: CustomColors.firebaseGrey,
+                      child: Material(
+                        color: CustomColors.firebaseGrey.withOpacity(0.3),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Icon(
+                            Icons.person,
+                            size: 60,
+                            color: CustomColors.firebaseGrey,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
               SizedBox(height: 16.0),
-
               SizedBox(height: 8.0),
               Text(
                 _user.displayName!,
@@ -114,47 +113,46 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 ),
               ),
               SizedBox(height: 24.0),
-
               SizedBox(height: 16.0),
               _isSigningOut
                   ? CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              )
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
                   : ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    Colors.redAccent,
-                  ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Colors.redAccent,
+                        ),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+                        setState(() {
+                          _isSigningOut = true;
+                        });
+                        await Authentication.signOut(context: context);
+                        setState(() {
+                          _isSigningOut = false;
+                        });
+                        Navigator.of(context)
+                            .pushReplacement(_routeToSignInScreen());
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                        child: Text(
+                          'Sign Out',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                onPressed: () async {
-                  setState(() {
-                    _isSigningOut = true;
-                  });
-                  await Authentication.signOut(context: context);
-                  setState(() {
-                    _isSigningOut = false;
-                  });
-                  Navigator.of(context)
-                      .pushReplacement(_routeToSignInScreen());
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: Text(
-                    'Sign Out',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -163,13 +161,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   }
 }
 
-
 Widget _ProfileImage() => FlatButton(
-  onPressed: ( ){
-
-  },
-  child: Row(
-
-  ),
-
-);
+      onPressed: () {},
+      child: Row(),
+    );

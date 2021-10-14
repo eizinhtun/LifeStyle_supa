@@ -1,6 +1,5 @@
 // @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dbcrypt/dbcrypt.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
@@ -9,7 +8,7 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/validators/validator.dart';
 
-import 'firebase_verify_pin_page.dart';
+import 'register_verify_pin_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key key}) : super(key: key);
@@ -287,8 +286,8 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_registerformKey.currentState.validate()) {
       print("Validate");
 
-      var pass = new DBCrypt()
-          .hashpw(_passwordController.text, new DBCrypt().gensalt());
+      // var pass = new DBCrypt()
+      //     .hashpw(_passwordController.text, new DBCrypt().gensalt());
       // var isCorrect = new DBCrypt().checkpw(plain, hashed);
       UserModel user = UserModel(
         fullName: _nameController.text,
@@ -325,7 +324,7 @@ class _RegisterPageState extends State<RegisterPage> {
               verificationId = verificationId;
               print("Before: $verificationId");
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => FirebaseVerifyPinPage(
+                  builder: (context) => RegisterVerifyPinPage(
                       user: user, verificationId: verificationId)));
             },
             // codeSent,
@@ -338,7 +337,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
         // print("Before: $verificationId");
         // Navigator.of(context).push(MaterialPageRoute(
-        //     builder: (context) => FirebaseVerifyPinPage(
+        //     builder: (context) => RegisterVerifyPinPage(
         //         user: user, verificationId: verificationId)));
 
       } catch (e) {

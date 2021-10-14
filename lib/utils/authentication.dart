@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:left_style/pages/user_info_screen.dart';
+import 'package:left_style/providers/user_info_screen.dart';
 
 class Authentication {
   static SnackBar customSnackBar({required String content}) {
@@ -126,7 +126,7 @@ class Authentication {
       final LoginResult result = await FacebookAuth.instance.login();
       switch (result.status) {
         case LoginStatus.success:
-          final AuthCredential facebookCredential =
+          final OAuthCredential facebookCredential =
               FacebookAuthProvider.credential(result.accessToken!.token);
           final userCredential =
               await _auth.signInWithCredential(facebookCredential);

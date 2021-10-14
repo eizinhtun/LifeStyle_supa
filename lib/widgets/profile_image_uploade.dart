@@ -1,6 +1,4 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,8 +16,6 @@ class UploadProfileImage extends StatefulWidget {
 }
 
 class _UploadProfileImageState extends State<UploadProfileImage> {
-
-
   FirebaseStorage storage = FirebaseStorage.instance;
 
   // Select and image from the gallery or take a picture with the camera
@@ -72,7 +68,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
         "path": file.fullPath,
         "uploaded_by": fileMeta.customMetadata?['uploaded_by'] ?? 'Nobody',
         "description":
-        fileMeta.customMetadata?['description'] ?? 'No description'
+            fileMeta.customMetadata?['description'] ?? 'No description'
       });
     });
 
@@ -120,7 +116,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                       itemCount: snapshot.data?.length ?? 0,
                       itemBuilder: (context, index) {
                         final Map<String, dynamic> image =
-                        snapshot.data![index];
+                            snapshot.data![index];
 
                         return Card(
                           margin: EdgeInsets.symmetric(vertical: 10),
@@ -160,59 +156,58 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
 }
 
 class ProfileImage extends StatelessWidget {
-
-  const ProfileImage({Key? key,required this.imageurl, this.onChanged,this.width=100,this.height=100,this.borderColor=Colors.white}) : super(key: key);
+  const ProfileImage(
+      {Key? key,
+      required this.imageurl,
+      this.onChanged,
+      this.width = 100,
+      this.height = 100,
+      this.borderColor = Colors.white})
+      : super(key: key);
   final String imageurl;
   final ValueChanged<String>? onChanged;
-  final double width,height;
+  final double width, height;
   final Color borderColor;
 
   @override
   Widget build(BuildContext context) {
-
     return InkWell(
       onTap: () async {
-        if(imageurl!=null && imageurl.length>0){
-          var newImageUrl=await   Navigator.push(
+        if (imageurl != null && imageurl.length > 0) {
+          var newImageUrl = await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => CommonExampleRouteWrapper(
-                imageProvider:  NetworkImage(
+                imageProvider: NetworkImage(
                   imageurl,
                 ),
-
               ),
             ),
           );
 
-          if(newImageUrl==null){
-
-            onChanged!("https://image.freepik.com/free-vector/honey-comb-cartoon-vector-icon-illustration-food-nature-icon-concept-isolated-premium-vector-flat-cartoon-style_138676-3660.jpg");
+          if (newImageUrl == null) {
+            onChanged!(
+                "https://image.freepik.com/free-vector/honey-comb-cartoon-vector-icon-illustration-food-nature-icon-concept-isolated-premium-vector-flat-cartoon-style_138676-3660.jpg");
           }
         }
-
       },
-      child:CachedNetworkImage(
-
+      child: CachedNetworkImage(
         width: width,
         height: height,
         imageUrl: imageurl,
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
-            border:
-            Border.all(color: borderColor, width: 1.0),
-            borderRadius:
-            new BorderRadius.all(const Radius.circular(80.0)),
+            border: Border.all(color: borderColor, width: 1.0),
+            borderRadius: new BorderRadius.all(const Radius.circular(80.0)),
             image: DecorationImage(
                 image: imageProvider,
                 fit: BoxFit.cover,
-                colorFilter:
-                ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+                colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
           ),
         ),
         placeholder: (context, url) => CircularProgressIndicator(),
         errorWidget: (context, url, error) => Icon(Icons.error),
-      ),/* Container(
+      ), /* Container(
           height: height,
           width: width,
           decoration: new BoxDecoration(
