@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:left_style/pages/login.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
+import 'package:left_style/widgets/wallet.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 
@@ -114,7 +115,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         child: Container(
                             child: Column(
                           children: [
-                            SizedBox(height: 60.0),
+                            SizedBox(height: 80.0),
                             Text(
                               _user.displayName,
                               style: TextStyle(
@@ -185,6 +186,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   setState(() {});
                                 },
                                 child: Text("Choose From Album")),
+                            //text wallet page
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => Wallet()));
+                                },
+                                child: Text("Wallet")),
                           ],
                         ))),
                   ),

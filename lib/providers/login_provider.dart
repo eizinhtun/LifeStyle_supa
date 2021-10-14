@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/database_helper.dart';
+import 'package:left_style/pages/user_info_screen.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/utils/message_handler.dart';
 
@@ -86,10 +87,11 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
           .catchError((error) => print("Failed to add user: $error"));
       // Navigator.of(context)
       //     .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UserInfoScreen()));
     }
-    //  else {
-    //   Navigator.of(context)
-    //       .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-    // }
+     else {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+    }
   }
 }
