@@ -70,10 +70,24 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
       var doc = await userRef.doc(uid).get();
-      return doc.data()["balance"];
+      return doc.data()["balance"] ?? 0;
     }
     return 0;
   }
 
-  void addTransaction() {}
+  Future<List<TransactionModel>> getTransactionList(
+      BuildContext context) async {
+    List<TransactionModel> list = [];
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      await tracRef.where("uid", isEqualTo: uid).get().then((value) {
+        value.docs.forEach((result) {
+          print(result.data());
+          list.add(TransactionModel.fromJson(result.data()));
+        });
+      });
+    }
+    notifyListeners();
+    return list;
+  }
 }

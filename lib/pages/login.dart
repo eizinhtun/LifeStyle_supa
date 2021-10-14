@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/localization/Translate.dart';
@@ -145,14 +144,6 @@ class _LoginPageState extends State<LoginPage> {
                           if (_loginformKey.currentState.validate()) {
                             print("Validate");
                             await login();
-                            // userRef
-                            //     .doc(userId)
-                            //     .get()
-                            //     .then((DocumentSnapshot documentSnapshot) {
-                            //   if (documentSnapshot.exists) {
-                            //     print('Document exists on the database');
-                            //   }
-                            // });
                           }
                         },
                         child: Text(
@@ -199,10 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 20,
                     ),
                     InkWell(
-                      onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => ForgotPasswordPage()));
-                      },
+                      onTap: () {},
                       child: Text(
                         // "Forgot Password",
                         "${Tran.of(context)?.text("forgot_password")}",
@@ -280,21 +268,6 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
-//  void performLogin(String emailId, String password) {
-//     firebaseRef.authWithPassword(emailId,password, new Firebase.AuthResultHandler() {
-//         @Override
-//         public void onAuthenticated(AuthData authData) {
-//             uid = authData.getUid() ;
-//             Toast.makeText(getBaseContext(), authData.toString(), Toast.LENGTH_SHORT).show();
-//         }
-
-//         @Override
-//         public void onAuthenticationError(FirebaseError firebaseError) {
-//             Toast.makeText(getBaseContext(), firebaseError.toString(), Toast.LENGTH_SHORT).show();
-//         }
-//     });
-// }
-
   String phNoFormat() {
     String phoneNumber = _phoneController.text;
     if (phoneNumber.startsWith("0")) {
@@ -312,24 +285,7 @@ class _LoginPageState extends State<LoginPage> {
           phoneNumber: phone,
           timeout: const Duration(seconds: 120),
           verificationCompleted:
-              (PhoneAuthCredential phoneAuthCredential) async {
-            await _auth
-                .signInWithCredential(phoneAuthCredential)
-                .then((UserCredential result) => {
-                      if (result != null && result.user != null)
-                        {print("Authentication is Successful")}
-                      else
-                        {print("Authentication failed!")}
-                    })
-                .catchError((error) {
-              print(error);
-            });
-
-            // MessageHandler.showSnackbar(
-            //     "Phone number automatically verified and user signed in: ${_auth.currentUser.uid}",
-            //     context,
-            //     6);
-          },
+              (PhoneAuthCredential phoneAuthCredential) async {},
           verificationFailed: (FirebaseAuthException authException) {
             print(
                 'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
@@ -362,7 +318,7 @@ class _LoginPageState extends State<LoginPage> {
           });
     } catch (e) {
       MessageHandler.showSnackbar(
-          "Failed to Verify Phone Number: ${e}", context, 6);
+          "Failed to Verify Phone Number: $e", context, 6);
     }
   }
 
@@ -392,24 +348,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // Future<void> _fblogin() async {
-  //   final LoginResult result = await FacebookAuth.instance.login();
-  //
-  //   if (result.status == LoginStatus.success) {
-  //     _accessToken = result.accessToken;
-  //     final userData = await FacebookAuth.instance.getUserData();
-  //     _printCredentials();
-  //     Navigator.of(context).push(
-  //       MaterialPageRoute(builder: (context) => FacebookUserInfoScreen()),
-  //     );
-  //   } else {
-  //     print(result.status);
-  //     print(result.message);
-  //   }
-  //
-  //   setState(() {});
-  // }
-
   Future<void> _fblogin() async {
     await context.read<LoginProvider>().fbLogin(context);
   }
@@ -417,12 +355,6 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _googlelogin() async {
     await context.read<LoginProvider>().googleLogin(context);
   }
-
-  // void _printCredentials() {
-  //   print(
-  //     prettyPrint(_accessToken.toJson()),
-  //   );
-  // }
 
   String prettyPrint(Map json) {
     JsonEncoder encoder = new JsonEncoder.withIndent('  ');

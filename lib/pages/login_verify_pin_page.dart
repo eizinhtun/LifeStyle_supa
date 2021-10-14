@@ -36,37 +36,16 @@ class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
   @override
   void initState() {
     super.initState();
-    // OTPInteractor.hint
-    // OTPInteractor.startListenOnlyStrategies()
-    // String codeString = "";
-//     controller = OTPTextEditController(
-//         codeLength: 6,
-//         //ignore: avoid_print
-//         onCodeReceive: (code)=>(){
-//  print('Your Application receive code - $code');
-//  codeString=code;
-//         },)
-//       ..startListenOnlyStrategies([], codeExtractor(codeString));
-    // OTPInteractor _oTPInteractor = OTPInteractor();
-    // _oTPInteractor.startListenRetriever().then((value) => () {
-    //       return value;
-    //     });
-
-    // controller = OTPTextEditController(
-    //   codeLength: 6,
-    //   //ignore: avoid_print
-    //   onCodeReceive: (code) => print('Your Application receive code - $code'),
-    // )..startListenRetriever(() => null)
 
     OTPInteractor.getAppSignature()
         //ignore: avoid_print
         .then((value) => print('signature - $value'));
     controller = OTPTextEditController(
       codeLength: 6,
-      autoStop: false,
-      onTimeOutException: () {
-        print("Time OUt");
-      },
+      // autoStop: false,
+      // onTimeOutException: () {
+      //   print("Time OUt");
+      // },
       //ignore: avoid_print
       onCodeReceive: (code) => print('Your Application receive code - $code'),
     )..startListenUserConsent(
@@ -93,10 +72,6 @@ class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
   Widget build(BuildContext context) {
     controller = OTPTextEditController(
       codeLength: 6,
-      autoStop: false,
-      onTimeOutException: () {
-        print("Time OUt");
-      },
       //ignore: avoid_print
       onCodeReceive: (code) => print('Your Application receive code - $code'),
     )..startListenUserConsent(
@@ -135,52 +110,12 @@ class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
                           padding: EdgeInsets.all(30.0),
                           child: Column(
                             children: <Widget>[
-//                               PinCodeTextField(
-//                                 autofocus: true,
-//                                 controller: controller,
-//                                 hideCharacter: true,
-//                                 highlight: true,
-//                                 highlightColor: Colors.blue,
-//                                 defaultBorderColor: Colors.black,
-//                                 hasTextBorderColor: Colors.green,
-//                                 highlightPinBoxColor: Colors.orange,
-//                                 maxLength: 6,
-//                                 hasError: hasError,
-//                                 maskCharacter: "😎",
-//                                 onTextChanged: (text) {
-//                                   setState(() {
-//                                     hasError = false;
-//                                   });
-//                                 },
-//                                 onDone: (text) {
-//                                   print("DONE $text");
-//                                   print("DONE CONTROLLER ${controller.text}");
-//                                 },
-//                                 pinBoxWidth: 50,
-//                                 pinBoxHeight: 64,
-//                                 hasUnderline: true,
-//                                 wrapAlignment: WrapAlignment.spaceAround,
-//                                 pinBoxDecoration: ProvidedPinBoxDecoration
-//                                     .defaultPinBoxDecoration,
-//                                 pinTextStyle: TextStyle(fontSize: 22.0),
-//                                 pinTextAnimatedSwitcherTransition:
-//                                     ProvidedPinBoxTextAnimation
-//                                         .scalingTransition,
-// //                    pinBoxColor: Colors.green[100],
-//                                 pinTextAnimatedSwitcherDuration:
-//                                     Duration(milliseconds: 300),
-// //                    highlightAnimation: true,
-//                                 highlightAnimationBeginColor: Colors.black,
-//                                 highlightAnimationEndColor: Colors.white12,
-//                                 keyboardType: TextInputType.number,
-//                               ),
-
                               PinCodeTextField(
                                 appContext: context,
-                                // pastedTextStyle: TextStyle(
-                                //   color: Colors.green.shade600,
-                                //   fontWeight: FontWeight.bold,
-                                // ),
+                                pastedTextStyle: TextStyle(
+                                  color: Colors.green.shade600,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 length: 6,
                                 obscureText: false,
 
@@ -224,9 +159,7 @@ class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
                                 onCompleted: (v) {
                                   print("Completed");
                                 },
-                                // onTap: () {
-                                //   print("Pressed");
-                                // },
+
                                 onChanged: (value) {
                                   print(value);
                                   setState(() {
@@ -240,11 +173,9 @@ class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
                                   return true;
                                 },
                               ),
-
                               SizedBox(
                                 height: 20,
                               ),
-
                               ArgonTimerButton(
                                 initialTimer: 120,
                                 highlightColor: Colors.transparent,
@@ -264,7 +195,7 @@ class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
                                     //   widget.otpSms.status =
                                     //       returnResult.status;
                                     // }
-                                    // startTimer(120);
+                                    startTimer(120);
                                   }
                                 },
                                 child: Text(
@@ -299,11 +230,9 @@ class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
                                     color: Colors.black.withOpacity(0.2),
                                     width: 1.5),
                               ),
-
                               SizedBox(
                                 height: 20,
                               ),
-
                               Container(
                                 constraints: BoxConstraints(
                                     minHeight: 50,
@@ -338,13 +267,6 @@ class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  void showSnackbar(String message) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 6),
-    ));
-  }
 
   void resendOTP(String phone) async {
     try {
@@ -428,27 +350,5 @@ class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
     await context
         .read<LoginProvider>()
         .login(context, widget.verificationId, controller.text);
-
-    // try {
-    //   print("After: ${widget.verificationId}");
-    //   final AuthCredential credential = PhoneAuthProvider.credential(
-    //     verificationId: widget.verificationId,
-    //     smsCode: controller.text,
-    //   );
-    //   final User user = (await _auth.signInWithCredential(credential)).user;
-    //   print("Successfully signed in UID: ${user.uid}");
-    //   showSnackbar("Successfully signed in UID: ${user.uid}");
-    //   bool isLogin = await context.read<LoginProvider>().login(context);
-    //   if (isLogin) {
-    //     Navigator.of(context)
-    //         .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-    //   } else {
-    //     Navigator.of(context)
-    //         .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-    //   }
-    // } catch (e) {
-    //   print(e.toString());
-    //   showSnackbar("Failed to sign in: " + e.toString());
-    // }
   }
 }

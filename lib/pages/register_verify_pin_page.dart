@@ -1,14 +1,13 @@
 // @dart=2.9
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/user_model.dart';
+import 'package:left_style/providers/login_provider.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:otp_autofill/otp_autofill.dart';
-
-// import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:provider/provider.dart';
 
 class RegisterVerifyPinPage extends StatefulWidget {
   const RegisterVerifyPinPage(
@@ -51,8 +50,8 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
 
   @override
   Future<void> dispose() async {
-    await controller.stopListen();
     super.dispose();
+    await controller.stopListen();
   }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -84,52 +83,12 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                           padding: EdgeInsets.all(30.0),
                           child: Column(
                             children: <Widget>[
-//                               PinCodeTextField(
-//                                 autofocus: true,
-//                                 controller: controller,
-//                                 hideCharacter: true,
-//                                 highlight: true,
-//                                 highlightColor: Colors.blue,
-//                                 defaultBorderColor: Colors.black,
-//                                 hasTextBorderColor: Colors.green,
-//                                 highlightPinBoxColor: Colors.orange,
-//                                 maxLength: 6,
-//                                 hasError: hasError,
-//                                 maskCharacter: "😎",
-//                                 onTextChanged: (text) {
-//                                   setState(() {
-//                                     hasError = false;
-//                                   });
-//                                 },
-//                                 onDone: (text) {
-//                                   print("DONE $text");
-//                                   print("DONE CONTROLLER ${controller.text}");
-//                                 },
-//                                 pinBoxWidth: 50,
-//                                 pinBoxHeight: 64,
-//                                 hasUnderline: true,
-//                                 wrapAlignment: WrapAlignment.spaceAround,
-//                                 pinBoxDecoration: ProvidedPinBoxDecoration
-//                                     .defaultPinBoxDecoration,
-//                                 pinTextStyle: TextStyle(fontSize: 22.0),
-//                                 pinTextAnimatedSwitcherTransition:
-//                                     ProvidedPinBoxTextAnimation
-//                                         .scalingTransition,
-// //                    pinBoxColor: Colors.green[100],
-//                                 pinTextAnimatedSwitcherDuration:
-//                                     Duration(milliseconds: 300),
-// //                    highlightAnimation: true,
-//                                 highlightAnimationBeginColor: Colors.black,
-//                                 highlightAnimationEndColor: Colors.white12,
-//                                 keyboardType: TextInputType.number,
-//                               ),
-
                               PinCodeTextField(
                                 appContext: context,
-                                // pastedTextStyle: TextStyle(
-                                //   color: Colors.green.shade600,
-                                //   fontWeight: FontWeight.bold,
-                                // ),
+                                pastedTextStyle: TextStyle(
+                                  color: Colors.green.shade600,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 length: 6,
                                 obscureText: false,
 
@@ -189,7 +148,6 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                                   return true;
                                 },
                               ),
-
                               SizedBox(
                                 height: 20,
                               ),
@@ -226,15 +184,6 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
     );
   }
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  void showSnackbar(String message) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 6),
-    ));
-  }
-
   void signInWithPhoneNumber() async {
     // var recaptchaVerifier = RecaptchaVerifier(
     //   container: null,
@@ -264,33 +213,8 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
     //   },
     // );
 
-    try {
-      print("After: ${widget.verificationId}");
-      final AuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: widget.verificationId,
-        smsCode: controller.text,
-      );
-      final User user = (await _auth.signInWithCredential(credential)).user;
-      print("Successfully signed in UID: ${user.uid}");
-      showSnackbar("Successfully signed in UID: ${user.uid}");
-      UserModel userModel = widget.user;
-      userModel.uid = user.uid;
-      print("UserModel: $userModel");
-      userRef
-          .doc(user.uid)
-          .set(userModel.toJson())
-          .catchError((error) => print("Failed to add user: $error"));
-
-      // if (user?.uid != null) {
-      //   await DatabaseHelper.setAppLoggedIn(context, true);
-      //   Navigator.of(context)
-      //       .push(MaterialPageRoute(builder: (context) => HomeScreen()));
-      // } else {
-      //   await DatabaseHelper.setAppLoggedIn(context, false);
-      // }
-    } catch (e) {
-      print(e.toString());
-      showSnackbar("Failed to sign in: " + e.toString());
-    }
+    await context
+        .read<LoginProvider>()
+        .register(context, widget.verificationId, controller.text, widget.user);
   }
 }

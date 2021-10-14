@@ -60,7 +60,8 @@ class Validator {
   static String requiredField(
       BuildContext context, String value, String fileName) {
     if (value.isEmpty) {
-      return "${Tran.of(context)?.text("requiredField").replaceAll("@value", fileName)}";
+      return "${Tran.of(context)?.text("requiredField")}"
+          .replaceAll("@value", fileName);
     }
     return null;
   }
@@ -69,7 +70,8 @@ class Validator {
       BuildContext context, String value, String fileName, bool isRequired) {
     if (isRequired) {
       if (value.isEmpty) {
-        return "${Tran.of(context)?.text("requiredField").replaceAll("@value", fileName)}";
+        return "${Tran.of(context)?.text("requiredField")}"
+            .replaceAll("@value", fileName);
       }
     }
     Pattern pattern =
@@ -86,7 +88,8 @@ class Validator {
       BuildContext context, String value, String fileName, bool isRequired) {
     if (isRequired) {
       if (value.isEmpty) {
-        return "${Tran.of(context)?.text("requiredField").replaceAll("@value", fileName)}";
+        return "${Tran.of(context)?.text("requiredField")}"
+            .replaceAll("@value", fileName);
       }
     }
     if (value.length < 4) {

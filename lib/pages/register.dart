@@ -51,10 +51,6 @@ class _RegisterPageState extends State<RegisterPage> {
             snap: false,
             floating: false,
             expandedHeight: 0.0,
-            // flexibleSpace: FlexibleSpaceBar(
-            //   title: Text('Register',
-            //       style: TextStyle(color: Colors.black), textScaleFactor: 1),
-            // ),
           ),
           SliverToBoxAdapter(
             child: Center(
@@ -67,14 +63,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: EdgeInsets.all(30.0),
                           child: Column(
                             children: <Widget>[
-                              // CircleAvatar(
-                              //     radius: 40,
-                              //     backgroundImage: AssetImage(
-                              //       "assets/icon/icon.png",
-                              //     )),
-                              // SizedBox(
-                              //   height: 20,
-                              // ),
                               Form(
                                 key: _registerformKey,
                                 child: Container(
@@ -282,10 +270,8 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void register() async {
-    // _auth.setSettings(appVerificationDisabledForTesting: true);
     if (_registerformKey.currentState.validate()) {
       print("Validate");
-
       // var pass = new DBCrypt()
       //     .hashpw(_passwordController.text, new DBCrypt().gensalt());
       // var isCorrect = new DBCrypt().checkpw(plain, hashed);
@@ -297,15 +283,9 @@ class _RegisterPageState extends State<RegisterPage> {
       try {
         await _auth.verifyPhoneNumber(
             phoneNumber: phone,
-            timeout: const Duration(seconds: 5),
+            timeout: const Duration(seconds: 120),
             verificationCompleted:
-                (PhoneAuthCredential phoneAuthCredential) async {
-              // await _auth.signInWithCredential(phoneAuthCredential);
-              // MessageHandler.showSnackbar(
-              //     "Phone number automatically verified and user signed in: ${_auth.currentUser.uid}",
-              //     context,
-              //     6);
-            },
+                (PhoneAuthCredential phoneAuthCredential) async {},
             verificationFailed: (FirebaseAuthException authException) {
               print(
                   'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
@@ -334,12 +314,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   "verification code: " + verificationId, context, 6);
               verificationId = verificationId;
             });
-
-        // print("Before: $verificationId");
-        // Navigator.of(context).push(MaterialPageRoute(
-        //     builder: (context) => RegisterVerifyPinPage(
-        //         user: user, verificationId: verificationId)));
-
       } catch (e) {
         MessageHandler.showSnackbar(
             "Failed to Verify Phone Number: $e", context, 6);

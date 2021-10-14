@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
@@ -111,6 +112,22 @@ class WalletState extends State<Wallet> {
                               children: [
                                 Text("20000.00",
                                     style: TextStyle(fontSize: 20)),
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        padding: EdgeInsets.only(
+                                            left: 35,
+                                            right: 35,
+                                            top: 10,
+                                            bottom: 10) // foreground
+                                        ),
+                                    onPressed: () async {
+                                      List<TransactionModel> list =
+                                          await context
+                                              .read<WalletProvider>()
+                                              .getTransactionList(context);
+                                      print(list);
+                                    },
+                                    child: Text("Get List")),
                               ],
                             ),
                             Row(
