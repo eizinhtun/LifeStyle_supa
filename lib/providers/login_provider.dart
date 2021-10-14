@@ -1,15 +1,14 @@
 // @dart=2.9
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/database_helper.dart';
+import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/utils/message_handler.dart';
-import 'package:provider/provider.dart';
 
 class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
-  LoginProvider() {}
-
   Future<void> logOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut().then((value) {
       Navigator.of(context)
@@ -41,6 +40,8 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
         MessageHandler.showSnackbar(
             "Successfully signed in UID: ${user.uid}", context, 5);
         if (user.uid != null) {
+          DatabaseHelper.setAppLoggedIn(context, true);
+          notifyListeners();
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
         } else {
@@ -53,5 +54,42 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       MessageHandler.showSnackbar(
           "Failed to sign in: " + e.toString(), context, 5);
     }
+  }
+
+  Future<void> fbLogin(BuildContext context) async {
+    User user = await Authentication.signInWithFacebook(context: context);
+    var userRef = FirebaseFirestore.instance.collection(userCollection);
+    if (user.uid != null) {
+      DatabaseHelper.setAppLoggedIn(context, true);
+      notifyListeners();
+      userRef
+          .add({"uid": user.uid})
+          .then((value) => print("User Added $value"))
+          .catchError((error) => print("Failed to add user: $error"));
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    } else {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+    }
+  }
+
+  Future<void> googleLogin(BuildContext context) async {
+    User user = await Authentication.signInWithGoogle(context: context);
+    var userRef = FirebaseFirestore.instance.collection(userCollection);
+    if (user.uid != null) {
+      DatabaseHelper.setAppLoggedIn(context, true);
+      notifyListeners();
+      userRef
+          .add({"uid": user.uid})
+          .then((value) => print("User Added $value"))
+          .catchError((error) => print("Failed to add user: $error"));
+      // Navigator.of(context)
+      //     .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    }
+    //  else {
+    //   Navigator.of(context)
+    //       .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+    // }
   }
 }

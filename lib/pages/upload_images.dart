@@ -12,7 +12,6 @@ import 'package:image_picker/image_picker.dart';
 
 //import 'save_as/save_as.dart';
 
-
 /// Enum representing the upload task types the example app supports.
 enum UploadType {
   /// Uploads a randomly generated string (as a file) to Storage.
@@ -24,6 +23,7 @@ enum UploadType {
   /// Clears any tasks from the list.
   clear,
 }
+
 class UploadImageFirebase extends StatefulWidget {
   const UploadImageFirebase({Key key}) : super(key: key);
 
@@ -92,7 +92,7 @@ class _UploadImageFirebaseState extends State<UploadImageFirebase> {
         break;
       case UploadType.file:
         PickedFile file =
-        await ImagePicker().getImage(source: ImageSource.gallery);
+            await ImagePicker().getImage(source: ImageSource.gallery);
         firebase_storage.UploadTask task = await uploadFile(file);
         if (task != null) {
           setState(() {
@@ -147,8 +147,8 @@ class _UploadImageFirebaseState extends State<UploadImageFirebase> {
       SnackBar(
         content: Text(
           'Success!\n Downloaded ${ref.name} \n from bucket: ${ref.bucket}\n '
-              'at path: ${ref.fullPath} \n'
-              'Wrote "${ref.fullPath}" to tmp-${ref.name}.txt',
+          'at path: ${ref.fullPath} \n'
+          'Wrote "${ref.fullPath}" to tmp-${ref.name}.txt',
         ),
       ),
     );
@@ -165,16 +165,16 @@ class _UploadImageFirebaseState extends State<UploadImageFirebase> {
             icon: const Icon(Icons.add),
             itemBuilder: (context) => [
               const PopupMenuItem(
-                // ignore: sort_child_properties_last
+                  // ignore: sort_child_properties_last
                   child: Text('Upload string'),
                   value: UploadType.string),
               const PopupMenuItem(
-                // ignore: sort_child_properties_last
+                  // ignore: sort_child_properties_last
                   child: Text('Upload local file'),
                   value: UploadType.file),
               if (_uploadTasks.isNotEmpty)
                 const PopupMenuItem(
-                  // ignore: sort_child_properties_last
+                    // ignore: sort_child_properties_last
                     child: Text('Clear list'),
                     value: UploadType.clear)
             ],
@@ -184,22 +184,22 @@ class _UploadImageFirebaseState extends State<UploadImageFirebase> {
       body: _uploadTasks.isEmpty
           ? const Center(child: Text("Press the '+' button to add a new file."))
           : ListView.builder(
-        itemCount: _uploadTasks.length,
-        itemBuilder: (context, index) => UploadTaskListTile(
-          task: _uploadTasks[index],
-          onDismissed: () => _removeTaskAtIndex(index),
-          onDownloadLink: () {
-            return _downloadLink(_uploadTasks[index].snapshot.ref);
-          },
-          onDownload: () {
-            if (kIsWeb) {
-              return _downloadBytes(_uploadTasks[index].snapshot.ref);
-            } else {
-              return _downloadFile(_uploadTasks[index].snapshot.ref);
-            }
-          },
-        ),
-      ),
+              itemCount: _uploadTasks.length,
+              itemBuilder: (context, index) => UploadTaskListTile(
+                task: _uploadTasks[index],
+                onDismissed: () => _removeTaskAtIndex(index),
+                onDownloadLink: () {
+                  return _downloadLink(_uploadTasks[index].snapshot.ref);
+                },
+                onDownload: () {
+                  if (kIsWeb) {
+                    return _downloadBytes(_uploadTasks[index].snapshot.ref);
+                  } else {
+                    return _downloadFile(_uploadTasks[index].snapshot.ref);
+                  }
+                },
+              ),
+            ),
     );
   }
 }
@@ -237,9 +237,9 @@ class UploadTaskListTile extends StatelessWidget {
     return StreamBuilder<firebase_storage.TaskSnapshot>(
       stream: task.snapshotEvents,
       builder: (
-          BuildContext context,
-          AsyncSnapshot<firebase_storage.TaskSnapshot> asyncSnapshot,
-          ) {
+        BuildContext context,
+        AsyncSnapshot<firebase_storage.TaskSnapshot> asyncSnapshot,
+      ) {
         Widget subtitle = const Text('---');
         firebase_storage.TaskSnapshot snapshot = asyncSnapshot.data;
         firebase_storage.TaskState state = snapshot?.state;

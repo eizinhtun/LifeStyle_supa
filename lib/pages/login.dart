@@ -8,13 +8,11 @@ import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/pages/register.dart';
-import 'package:left_style/utils/authentication.dart';
+import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:left_style/utils/message_handler.dart';
-import 'facebook_user_info_screen.dart';
-import 'firebase_verify_pin_page.dart';
 import 'login_verify_pin_page.dart';
-import 'user_info_screen.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -46,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
     getLang();
   }
 
-  getLang() async {
+  void getLang() async {
     lang = await DatabaseHelper.getLanguage();
   }
 
@@ -314,7 +312,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await _auth.verifyPhoneNumber(
           phoneNumber: phone,
-          timeout: const Duration(seconds: 5),
+          timeout: const Duration(seconds: 120),
           verificationCompleted:
               (PhoneAuthCredential phoneAuthCredential) async {
             await _auth
@@ -352,8 +350,10 @@ class _LoginPageState extends State<LoginPage> {
             verificationId = verificationId;
             print("Before: $verificationId");
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    LoginVerifyPinPage(verificationId: verificationId)));
+                builder: (context) => LoginVerifyPinPage(
+                      verificationId: verificationId,
+                      phone: phone,
+                    )));
           },
           // codeSent,
           codeAutoRetrievalTimeout: (String verificationId) {
@@ -362,11 +362,6 @@ class _LoginPageState extends State<LoginPage> {
                 "verification code: " + verificationId, context, 6);
             verificationId = verificationId;
           });
-
-      print("Before: $verificationId");
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>
-              LoginVerifyPinPage(verificationId: verificationId)));
     } catch (e) {
       MessageHandler.showSnackbar(
           "Failed to Verify Phone Number: ${e}", context, 6);
@@ -416,32 +411,20 @@ class _LoginPageState extends State<LoginPage> {
   //
   //   setState(() {});
   // }
-  Future<void> _fblogin() async {
-    User user = await Authentication.signInWithFacebook(context: context);
 
-    if (user != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => UserInfoScreen(user: user)),
-      );
-    }
+  Future<void> _fblogin() async {
+    await context.read<LoginProvider>().fbLogin(context);
   }
 
   Future<void> _googlelogin() async {
-    //User user = await Authentication.signInWithFacebook(context: context);
-    User user = await Authentication.signInWithGoogle(context: context);
-
-    if (user != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => UserInfoScreen(user: user)),
-      );
-    }
+    await context.read<LoginProvider>().googleLogin(context);
   }
 
-  void _printCredentials() {
-    print(
-      prettyPrint(_accessToken.toJson()),
-    );
-  }
+  // void _printCredentials() {
+  //   print(
+  //     prettyPrint(_accessToken.toJson()),
+  //   );
+  // }
 
   String prettyPrint(Map json) {
     JsonEncoder encoder = new JsonEncoder.withIndent('  ');

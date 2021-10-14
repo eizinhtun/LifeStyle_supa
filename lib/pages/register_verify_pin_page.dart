@@ -4,26 +4,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/models/user_model.dart';
-import 'package:left_style/pages/phone_auth_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:otp_autofill/otp_autofill.dart';
 
 // import 'package:pin_code_text_field/pin_code_text_field.dart';
 
-class FirebaseVerifyPinPage extends StatefulWidget {
-  const FirebaseVerifyPinPage(
+class RegisterVerifyPinPage extends StatefulWidget {
+  const RegisterVerifyPinPage(
       {Key key, @required this.user, @required this.verificationId})
       : super(key: key);
   final UserModel user;
   final String verificationId;
 
   @override
-  _FirebaseVerifyPinPageState createState() => _FirebaseVerifyPinPageState();
+  _RegisterVerifyPinPageState createState() => _RegisterVerifyPinPageState();
 }
 
-class _FirebaseVerifyPinPageState extends State<FirebaseVerifyPinPage> {
+class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
   OTPTextEditController controller;
   StreamController<ErrorAnimationType> errorController;
