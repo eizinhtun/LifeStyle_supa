@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
+import '../providers/login_provider.dart';
 
 class Wallet extends StatefulWidget {
   @override
@@ -53,6 +54,14 @@ class WalletState extends State<Wallet> {
                   preferredSize: Size.fromHeight(100),
                   child: Container(),
                 ),
+                actions: [
+                  IconButton(
+                      onPressed: () async {
+                        await context.read<LoginProvider>().logOut(context);
+                        setState(() {});
+                      },
+                      icon: Icon(Icons.logout))
+                ],
               ),
               SliverToBoxAdapter(
                 child: Container(

@@ -16,7 +16,6 @@ import 'providers/login_provider.dart';
 void main() async {
   //firebase messaging
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
   if (kIsWeb) {

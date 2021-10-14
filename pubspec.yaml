@@ -61,7 +61,7 @@ dependencies:
   image_picker: ^0.8.4+1
   permission_handler: ^8.1.4+2
   pull_to_refresh: ^2.0.0
-
+  url_strategy: ^0.2.0
 
 
 dev_dependencies:
