@@ -1,6 +1,5 @@
+// @dart=2.9
 import 'package:flutter/material.dart';
-import 'package:left_style/utils/authentication.dart';
-import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:photo_view/photo_view.dart';
 
 class CommonExampleRouteWrapper extends StatelessWidget {
@@ -18,16 +17,16 @@ class CommonExampleRouteWrapper extends StatelessWidget {
     this.errorBuilder,
   });
 
-  final ImageProvider? imageProvider;
-  final LoadingBuilder? loadingBuilder;
-  final BoxDecoration? backgroundDecoration;
+  final ImageProvider imageProvider;
+  final LoadingBuilder loadingBuilder;
+  final BoxDecoration backgroundDecoration;
   final dynamic minScale;
   final dynamic maxScale;
   final dynamic initialScale;
   final Alignment basePosition;
   final FilterQuality filterQuality;
-  final bool? disableGestures;
-  final ImageErrorWidgetBuilder? errorBuilder;
+  final bool disableGestures;
+  final ImageErrorWidgetBuilder errorBuilder;
 
   @override
   Widget build(BuildContext context) {
