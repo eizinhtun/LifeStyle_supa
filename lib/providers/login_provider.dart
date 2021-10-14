@@ -10,6 +10,8 @@ import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/validators/validator.dart';
 
 class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
+  var userRef = FirebaseFirestore.instance.collection(userCollection);
+
   Future<void> logOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut().then((value) {
       Navigator.of(context)
@@ -59,23 +61,24 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   Future<void> fbLogin(BuildContext context) async {
     User user = await Authentication.signInWithFacebook(context: context);
-    var userRef = FirebaseFirestore.instance.collection(userCollection);
+
     if (user.uid != null) {
       DatabaseHelper.setAppLoggedIn(context, true);
       notifyListeners();
-
-      // if (!Validator.checkUserIdIsExist(user.uid)) {
-      //   userRef
-      //       .add({
-      //         "uid": user.uid,
-      //         "full_name": user.displayName,
-      //         "email": user.email,
-      //         "phone": user.phoneNumber,
-      //         "photo": user.photoURL
-      //       })
-      //       .then((value) => print("User Added $value"))
-      //       .catchError((error) => print("Failed to add user: $error"));
-      // }
+      bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
+      print("UserIdExist : $userIdExist");
+      if (!userIdExist) {
+        userRef
+            .add({
+              "uid": user.uid,
+              "full_name": user.displayName,
+              "email": user.email,
+              "phone": user.phoneNumber,
+              "photo": user.photoURL
+            })
+            .then((value) => print("User Added $value"))
+            .catchError((error) => print("Failed to add user: $error"));
+      }
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     } else {
@@ -86,20 +89,23 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   Future<void> googleLogin(BuildContext context) async {
     User user = await Authentication.signInWithGoogle(context: context);
-    var userRef = FirebaseFirestore.instance.collection(userCollection);
     if (user.uid != null) {
       DatabaseHelper.setAppLoggedIn(context, true);
       notifyListeners();
-      userRef
-          .add({
-            "uid": user.uid,
-            "full_name": user.displayName,
-            "email": user.email,
-            "phone": user.phoneNumber,
-            "photo": user.photoURL
-          })
-          .then((value) => print("User Added $value"))
-          .catchError((error) => print("Failed to add user: $error"));
+      bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
+      print("UserIdExist : $userIdExist");
+      if (!userIdExist) {
+        userRef
+            .add({
+              "uid": user.uid,
+              "full_name": user.displayName,
+              "email": user.email,
+              "phone": user.phoneNumber,
+              "photo": user.photoURL
+            })
+            .then((value) => print("User Added $value"))
+            .catchError((error) => print("Failed to add user: $error"));
+      }
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     } else {
