@@ -15,10 +15,11 @@ class ProfileImage extends StatelessWidget {
 
     return Row(
       children: [
+
         InkWell(
           onTap: () async {
             if(imageurl!=null && imageurl.length>0){
-           var newImageUrl=await   Navigator.push(
+           var newImageUrl=await  Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => CommonExampleRouteWrapper(
@@ -38,7 +39,6 @@ class ProfileImage extends StatelessWidget {
           },
 
           child:CachedNetworkImage(
-
             width: width,
             height: height,
             imageUrl: imageurl,
@@ -58,22 +58,8 @@ class ProfileImage extends StatelessWidget {
             placeholder: (context, url) => CircularProgressIndicator(),
             errorWidget: (context, url, error) => Icon(Icons.error),
 
-          ),/*
-           Container(
-              height: height,
-              width: width,
-              decoration: new BoxDecoration(
-                color: const Color(0xff7c94b6),
-                image: new DecorationImage(
-                  image: CachedNetworkImageProvider(imageurl),
-                  fit: BoxFit.cover,
-                ),
-                border:
-                Border.all(color: borderColor, width: 1.0),
-                borderRadius:
-                new BorderRadius.all(const Radius.circular(80.0)),
-              ),
-          )*/
+          ),
+
         ),
 
 

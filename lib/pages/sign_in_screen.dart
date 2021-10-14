@@ -13,7 +13,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   // bool _isLoggedIn = false;
   // Map _userObj = {};
-  var _imageUrl="https://image.freepik.com/free-psd/stationery-dark-copper-mockup_23-2149052439.jpg";
+
   @override
   Widget build(BuildContext context) {
 
@@ -36,20 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>Wallet()));
 
               },),
-
-              ProfileImage(
-                onChanged: (url){
-                  _imageUrl=url;
-                  setState(() {
-
-                  });
-                },
-                width: 80,
-                height: 80,
-                borderColor: Colors.white,
-
-                imageurl: _imageUrl,),
-              /*FutureBuilder(
+              FutureBuilder(
                 future: Authentication.initializeFirebase(context: context),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -63,7 +50,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   );
                 },
-              ),*/
+              ),
 
             ],
           ),

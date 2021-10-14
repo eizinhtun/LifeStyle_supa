@@ -74,6 +74,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(home: Splash());
         } else {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
               title: 'Unifine',
               theme: ThemeData(
                 primarySwatch: colorCustom,
@@ -104,10 +105,10 @@ class MyApp extends StatelessWidget {
               //    }
               // );
 
-              home: LoginPage()
+              //home: LoginPage()
               // FirebaseVerifyPinPage(),
               // OTPFill()
-              //home: SignInScreen(),
+              home: SignInScreen(),
               //home: AuthLogin(),
               // PhoneNumberPage(),
               //home: UploadImageFirebase(),

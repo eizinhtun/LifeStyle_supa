@@ -1,12 +1,19 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:image_picker/image_picker.dart';
 import 'package:left_style/pages/user_info_screen.dart';
+import 'package:left_style/widgets/user-info_screen_photo.dart';
 
 class Authentication {
+
+
   static SnackBar customSnackBar({required String content}) {
     return SnackBar(
       backgroundColor: Colors.black,
@@ -144,4 +151,79 @@ class Authentication {
       throw e;
     }
   }
+
+  static Future<String?> updatePhoto() async{
+   String? url="";
+    var user = FirebaseAuth.instance.currentUser;
+      final picker = ImagePicker();
+      final pickedFile = await picker.getImage(source: ImageSource. gallery);
+       var link= FirebaseStorage.instance.ref("profile/"+user!.uid).putFile(File(pickedFile!.path))
+            .then((TaskSnapshot taskSnapshot) {
+          if (taskSnapshot.state == TaskState.success) {
+           taskSnapshot.ref.getDownloadURL().then(
+                    (imageURL) {
+                      // print(imageURL.toString());
+                      user.updatePhotoURL(imageURL.toString());
+                   url=imageURL.toString();
+                   return url;
+
+                });
+          }
+          // else if (taskSnapshot.state == TaskState.running) {
+          //  print("Running");
+          // }
+          // else if (taskSnapshot.state == TaskState.error) {
+          //   print("Error");
+          // }
+
+        });
+
+
+        // var ref = FirebaseStorage.instance.ref("profile/"+user.uid);
+        // String? url=await ref.getDownloadURL();
+
+
+
+
+  }
+
+  static Future<String> uploadphotofile() async {
+    var user = FirebaseAuth.instance.currentUser;
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource. gallery);
+    final ref = FirebaseStorage.instance
+        .ref('profile')
+        .child(user!.uid);
+
+    final uploadTask = ref.putFile(File(pickedFile!.path));
+    String downloadUrl = await (await uploadTask).ref.getDownloadURL();
+    if(downloadUrl != null){
+      user.updatePhotoURL(downloadUrl);
+      return downloadUrl;
+    }else{
+      return '';
+    }
+
+
+  }
+  static Future<String> uploadphotofilecamera() async {
+    var user = FirebaseAuth.instance.currentUser;
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource. camera);
+    final ref = FirebaseStorage.instance
+        .ref('profile')
+        .child(user!.uid);
+
+    final uploadTask = ref.putFile(File(pickedFile!.path));
+    String downloadUrl = await (await uploadTask).ref.getDownloadURL();
+    if(downloadUrl != null){
+      user.updatePhotoURL(downloadUrl);
+      return downloadUrl;
+    }else{
+      return '';
+    }
+
+
+  }
+
 }
