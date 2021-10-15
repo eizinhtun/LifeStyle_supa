@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/models/transaction_model.dart';
+import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
@@ -18,7 +19,11 @@ class Wallet extends StatefulWidget {
 class WalletState extends State<Wallet> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  List<TransactionModel> totalList = [];
   List<TransactionModel> tracList = [];
+  UserModel userModel = UserModel();
+  int end = 10;
+  static int i = 1;
 
   @override
   void initState() {
@@ -33,21 +38,37 @@ class WalletState extends State<Wallet> {
 
   void _onRefresh() async {
     // monitor network fetch
-    getData();
+    // getData();
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
+    userModel = await context.read<LoginProvider>().getUser(context);
     _refreshController.refreshCompleted();
     setState(() {});
   }
 
   getData() async {
-    tracList = await context.read<WalletProvider>().getTransactionList(context);
+    totalList =
+        await context.read<WalletProvider>().getTransactionList(context);
+    if (totalList.length < end) {
+      end = totalList.length;
+    }
+    tracList = totalList.sublist(0, end);
+    userModel = await context.read<LoginProvider>().getUser(context);
+    print("User: ${userModel.fullName}");
     print("TracList: ${tracList.length}");
   }
 
   void _onLoading() async {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
+    // items.add((items.length + 1).toString());
+    i++;
+    end = end * i;
+    if (totalList.length < end) {
+      end = totalList.length;
+    }
+    tracList = totalList.sublist(0, end);
+
     if (mounted) setState(() {});
     _refreshController.loadComplete();
   }
@@ -137,7 +158,9 @@ class WalletState extends State<Wallet> {
                                   EdgeInsets.only(left: 10, right: 10, top: 10),
                               child: Row(
                                 children: [
-                                  Text("2000000.00",
+                                  Text(
+                                      Formatter.balanceFormat(
+                                          userModel.balance ?? 0),
                                       style: TextStyle(fontSize: 20)),
                                 ],
                               ),
@@ -349,7 +372,8 @@ class WalletState extends State<Wallet> {
                                   ],
                                 ),
                                 Spacer(),
-                                Text(tracList[i].amount.toString(),
+                                Text(
+                                    Formatter.balanceFormat(tracList[i].amount),
                                     style: TextStyle(fontSize: 12)),
                               ],
                             ),
