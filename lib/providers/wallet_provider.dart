@@ -11,7 +11,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var tracRef = FirebaseFirestore.instance.collection(transactions);
   var userRef = FirebaseFirestore.instance.collection(userCollection);
 
-  Future<void> topup(BuildContext context, double amount) async {
+  Future<void> topup(BuildContext context, PaymentType paymentType,double amount) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       double balance = await getBalance();
@@ -23,7 +23,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
         MessageHandler.showMessage(
             context, "Success", "Your topup is successful");
         TransactionModel transactionModel = TransactionModel(
-            uid: uid, type: TransactionType.Topup, amount: amount);
+            uid: uid, type: TransactionType.Topup,paymentType:paymentType , amount: amount);
         tracRef.add(transactionModel.toJson()).catchError((error) {
           print("Failed to add topup transaction: $error");
         });
@@ -36,7 +36,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  Future<void> withdrawl(BuildContext context, double amount) async {
+  Future<void> withdrawl(BuildContext context,PaymentType paymentType, double amount) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       double balance = await getBalance();
@@ -51,7 +51,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 context, "Success", "Your withdrawl is successful");
           });
           TransactionModel transactionModel = TransactionModel(
-              uid: uid, type: TransactionType.Withdraw, amount: amount);
+              uid: uid, type: TransactionType.Withdraw, paymentType: paymentType,amount: amount);
           tracRef.add(transactionModel.toJson()).catchError((error) {
             print("Failed to add withdrawl transaction: $error");
           });

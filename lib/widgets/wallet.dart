@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/widgets/topup_widget.dart';
+import 'package:left_style/widgets/withdrawal_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
@@ -164,7 +165,12 @@ class WalletState extends State<Wallet> {
                                           bottom: 10,
                                         ) // foreground
                                             ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (contex) =>
+                                                      WithdrawalPage()));
+                                        },
                                         child: Row(
                                           children: [
                                             Icon(Icons.payments),
