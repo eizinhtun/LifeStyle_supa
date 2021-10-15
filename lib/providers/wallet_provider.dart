@@ -44,31 +44,35 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       BuildContext context, PaymentType paymentType, double amount) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
-      double balance = await getBalance();
-      if (amount > balance) {
-        MessageHandler.showErrMessage(context, "Insufficient Balance",
-            "Your withdraw amount is higher than your balance");
-      } else {
-        try {
-          userRef.doc(uid).update({"balance": balance - amount}).then((_) {
-            print("withdrawl success!");
-            MessageHandler.showMessage(
-                context, "Success", "Your withdrawl is successful");
-          });
-          TransactionModel transactionModel = TransactionModel(
-              uid: uid,
-              type: TransactionType.Withdraw,
-              amount: amount,
-              createdDate: DateTime.now());
-          tracRef.add(transactionModel.toJson()).catchError((error) {
-            print("Failed to add withdrawl transaction: $error");
-          });
-        } catch (e) {
-          print("Failed to withdrawl: $e");
-          MessageHandler.showErrMessage(
-              context, "Fail", "Your withdrawl is fail");
+      // double balance = await getBalance();
+      userRef.doc(uid).get().then((value) {
+        double balance = value.data()["balance"];
+
+        if (amount > balance) {
+          MessageHandler.showErrMessage(context, "Insufficient Balance",
+              "Your withdraw amount is higher than your balance");
+        } else {
+          try {
+            userRef.doc(uid).update({"balance": balance - amount}).then((_) {
+              print("withdrawl success!");
+              MessageHandler.showMessage(
+                  context, "Success", "Your withdrawl is successful");
+            });
+            TransactionModel transactionModel = TransactionModel(
+                uid: uid,
+                type: TransactionType.Withdraw,
+                amount: amount,
+                createdDate: DateTime.now());
+            tracRef.add(transactionModel.toJson()).catchError((error) {
+              print("Failed to add withdrawl transaction: $error");
+            });
+          } catch (e) {
+            print("Failed to withdrawl: $e");
+            MessageHandler.showErrMessage(
+                context, "Fail", "Your withdrawl is fail");
+          }
         }
-      }
+      });
     }
     notifyListeners();
   }
@@ -78,7 +82,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
       await userRef.doc(uid).get().then((value) {
-        return value.data()["balance"] ?? 0;
+        return value.data()["balance"];
       });
       // return doc.data()["balance"] ?? 0;
     }

@@ -66,7 +66,6 @@ class _TopUpPageState extends State<TopUpPage> {
                   constraints: BoxConstraints.expand(
                     height: MediaQuery.of(context).size.height,
                   ),
-
                 ),
               ),
             ],
@@ -229,13 +228,14 @@ class _TopUpPageState extends State<TopUpPage> {
                 ),
                 child: TextField(
                   controller: _amountController,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Transfer Amount',
                   ),
                   onChanged: (text) {
                     setState(() {
-                      amount = double.parse(_amountController.text);
+                      amount = double.parse(_amountController.text.toString());
                     });
                   },
                 )),
