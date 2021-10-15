@@ -13,6 +13,21 @@ import 'package:left_style/validators/validator.dart';
 class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
 
+  Future<UserModel> getUser(BuildContext context) async {
+    UserModel userModel = UserModel();
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+
+      await userRef.doc(uid).get().then((value) {
+        userModel = UserModel.fromJson(value.data());
+        notifyListeners();
+        return userModel;
+      });
+    }
+    notifyListeners();
+    return userModel;
+  }
+
   Future<void> logOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut().then((value) {
       Navigator.of(context)
@@ -69,13 +84,25 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
       print("UserIdExist : $userIdExist");
       if (!userIdExist) {
-        userRef.doc(user.uid).set({
-          "uid": user.uid,
-          "full_name": user.displayName,
-          "email": user.email,
-          "phone": user.phoneNumber,
-          "photo": user.photoURL
-        })
+        UserModel userModel = UserModel(
+            uid: user.uid,
+            fullName: user.displayName,
+            email: user.email,
+            phone: user.phoneNumber,
+            photoUrl: user.photoURL,
+            balance: 0.0,
+            createdDate: DateTime.now());
+        userRef
+            .doc(user.uid)
+            .set(userModel.toJson()
+                //   {
+                //   "uid": user.uid,
+                //   "full_name": user.displayName,
+                //   "email": user.email,
+                //   "phone": user.phoneNumber,
+                //   "photo": user.photoURL
+                // }
+                )
             // .then((value) => print("User Added $value"))
             .catchError((error) => print("Failed to add user: $error"));
       }
@@ -95,13 +122,26 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
       print("UserIdExist : $userIdExist");
       if (!userIdExist) {
-        userRef.doc(user.uid).set({
-          "uid": user.uid,
-          "full_name": user.displayName,
-          "email": user.email,
-          "phone": user.phoneNumber,
-          "photo": user.photoURL
-        })
+        UserModel userModel = UserModel(
+            uid: user.uid,
+            fullName: user.displayName,
+            email: user.email,
+            phone: user.phoneNumber,
+            photoUrl: user.photoURL,
+            balance: 0.0,
+            createdDate: DateTime.now());
+        userRef
+            .doc(user.uid)
+            .set(userModel.toJson()
+                //   {
+                //   "uid": user.uid,
+                //   "full_name": user.displayName,
+                //   "email": user.email,
+                //   "phone": user.phoneNumber,
+                //   "photo": user.photoURL,
+                // }
+
+                )
             // .then((value) => print("User Added $value"))
             .catchError((error) => print("Failed to add user: $error"));
       }

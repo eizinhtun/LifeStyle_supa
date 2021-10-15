@@ -15,26 +15,30 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       BuildContext context, PaymentType paymentType, double amount) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
-      double balance = await getBalance();
 
-      try {
-        userRef.doc(uid).update({"balance": balance + amount}).then((_) {
-          print("topup success!");
-        });
-        MessageHandler.showMessage(
-            context, "Success", "Your topup is successful");
-        TransactionModel transactionModel = TransactionModel(
-            uid: uid,
-            type: TransactionType.Topup,
-            amount: amount,
-            createdDate: DateTime.now());
-        tracRef.add(transactionModel.toJson()).catchError((error) {
-          print("Failed to add topup transaction: $error");
-        });
-      } catch (e) {
-        print("Failed to topup: $e");
-        MessageHandler.showErrMessage(context, "Fail", "Your topup is fail");
-      }
+      userRef.doc(uid).get().then((value) {
+        double balance = value.data()["balance"];
+
+        try {
+          userRef.doc(uid).update({"balance": balance + amount}).then((_) {
+            print("topup success!");
+          });
+          MessageHandler.showMessage(
+              context, "Success", "Your topup is successful");
+          TransactionModel transactionModel = TransactionModel(
+              uid: uid,
+              type: TransactionType.Topup,
+              amount: amount,
+              createdDate: DateTime.now());
+          tracRef.add(transactionModel.toJson()).catchError((error) {
+            print("Failed to add topup transaction: $error");
+          });
+          notifyListeners();
+        } catch (e) {
+          print("Failed to topup: $e");
+          MessageHandler.showErrMessage(context, "Fail", "Your topup is fail");
+        }
+      });
 
       notifyListeners();
     }
@@ -66,6 +70,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
             tracRef.add(transactionModel.toJson()).catchError((error) {
               print("Failed to add withdrawl transaction: $error");
             });
+            notifyListeners();
           } catch (e) {
             print("Failed to withdrawl: $e");
             MessageHandler.showErrMessage(
@@ -77,17 +82,17 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  Future<double> getBalance() async {
-    if (FirebaseAuth.instance.currentUser?.uid != null) {
-      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+  // Future<double> getBalance() async {
+  //   if (FirebaseAuth.instance.currentUser?.uid != null) {
+  //     String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
-      await userRef.doc(uid).get().then((value) {
-        return value.data()["balance"];
-      });
-      // return doc.data()["balance"] ?? 0;
-    }
-    return 0;
-  }
+  //     await userRef.doc(uid).get().then((value) {
+  //       return value.data()["balance"];
+  //     });
+  //     // return doc.data()["balance"] ?? 0;
+  //   }
+  //   return 0;
+  // }
 
   Future<List<TransactionModel>> getTransactionList(
       BuildContext context) async {

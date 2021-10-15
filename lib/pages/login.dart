@@ -84,6 +84,8 @@ class _LoginPageState extends State<LoginPage> {
                                   border: Border(
                                       bottom: BorderSide(color: Colors.grey))),
                               child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 controller: _phoneController,
                                 validator: (val) {
                                   return Validator.registerPhone(
@@ -102,6 +104,8 @@ class _LoginPageState extends State<LoginPage> {
                             Container(
                               padding: EdgeInsets.all(8.0),
                               child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 controller: _passwordController,
                                 obscureText: _obscureText,
                                 validator: (val) {

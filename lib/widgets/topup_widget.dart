@@ -1,8 +1,8 @@
 // @dart=2.9
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
+import 'package:left_style/validators/validator.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 
@@ -14,9 +14,8 @@ class TopUpPage extends StatefulWidget {
 }
 
 class _TopUpPageState extends State<TopUpPage> {
+  final _topupformKey = GlobalKey<FormState>();
   TextEditingController _amountController = TextEditingController();
-  double amount;
-  var _user = FirebaseAuth.instance.currentUser;
   bool viewVisible = false;
   String pay = "";
   double kbzOpacity = 0.5;
@@ -218,58 +217,68 @@ class _TopUpPageState extends State<TopUpPage> {
       visible: viewVisible,
       child: Container(
         margin: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.transparent,
-                ),
-                child: TextField(
-                  controller: _amountController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Transfer Amount',
+        child: Form(
+          key: _topupformKey,
+          child: Column(
+            children: [
+              Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.transparent,
                   ),
-                  onChanged: (text) {
-                    setState(() {
-                      amount = double.parse(_amountController.text.toString());
-                    });
+                  child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    controller: _amountController,
+                    keyboardType: TextInputType.number,
+                    validator: (val) {
+                      return Validator.requiredField(
+                          context, val, "topup amount");
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Transfer Amount',
+                    ),
+                  )),
+              SizedBox(height: 20),
+              Text("1.Please top up at least 1000 Ks to one of the following " +
+                  pay +
+                  " accounts.\n2.Then click on Submit."),
+              Text(
+                "We only accept payment with following accounts.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      padding: EdgeInsets.only(
+                        left: 50,
+                        right: 50,
+                        top: 10,
+                        bottom: 10,
+                      ) // foreground
+                      ),
+                  onPressed: () async {
+                    if (_topupformKey.currentState.validate()) {
+                      print("Validate");
+
+                      await context.read<WalletProvider>().topup(
+                          context,
+                          paymentType,
+                          double.parse(_amountController.text.toString()));
+                      clearText();
+                    }
                   },
-                )),
-            SizedBox(height: 20),
-            Text("1.Please top up at least 1000 Ks to one of the following " +
-                pay +
-                " accounts.\n2.Then click on Submit."),
-            Text(
-              "We only accept payment with following accounts.",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.red, fontSize: 13, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    padding: EdgeInsets.only(
-                      left: 50,
-                      right: 50,
-                      top: 10,
-                      bottom: 10,
-                    ) // foreground
-                    ),
-                onPressed: () async {
-                  clearText();
-                  await context
-                      .read<WalletProvider>()
-                      .topup(context, paymentType, amount);
-                },
-                child: Text("Submit")),
-          ],
+                  child: Text("Submit")),
+            ],
+          ),
         ),
       ));
   void showWidget() {
