@@ -7,12 +7,14 @@ class TransactionModel {
   TransactionType type;
   PaymentType paymentType;
   double amount;
+  DateTime createdDate;
 
   TransactionModel({
     this.uid,
     this.type,
     this.paymentType,
     this.amount,
+    this.createdDate,
   });
 
   TransactionModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class TransactionModel {
     type = getType(json['type']);
     paymentType = getPayType(json['paymentType']);
     amount = json['amount'];
+    createdDate = DateTime.parse(json['createdDate']);
   }
 
   Map<String, dynamic> toJson() {
@@ -28,6 +31,7 @@ class TransactionModel {
     data['type'] = getString(this.type);
     data['paymentType'] = getPayString(this.paymentType);
     data['amount'] = this.amount;
+    data['createdDate'] = this.createdDate.toString();
     return data;
   }
 

@@ -22,7 +22,7 @@ class _TopUpPageState extends State<TopUpPage> {
   double kbzOpacity = 0.5;
   double cbOpacity = 0.5;
   double waveOpacity = 0.5;
-  PaymentType paymentType=PaymentType.KPay;
+  PaymentType paymentType = PaymentType.KPay;
 
   @override
   void initState() {
@@ -63,132 +63,132 @@ class _TopUpPageState extends State<TopUpPage> {
               ),
               SliverToBoxAdapter(
                 child: Container(
-                    constraints: BoxConstraints.expand(
-                      height: MediaQuery.of(context).size.height,
-                    ),
-                    // child: Container(
-                    //   margin: EdgeInsets.only(top: 80),
-                    //   width: double.infinity,
-                    //   child: Card(
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(15.0),
-                    //     ),
-                    //     color: Colors.white,
-                    //     elevation: 10,
-                    //     child: Container(
-                    //       margin: EdgeInsets.all(20),
-                    //       child: Column(
-                    //         mainAxisSize: MainAxisSize.min,
-                    //         children: <Widget>[
-                    //           Text("Please select a bank to top up"),
-                    //           Row(
-                    //             mainAxisAlignment: MainAxisAlignment.center,
-                    //             children: [
-                    //               InkWell(
-                    //                 onTap: () {
-                    //                   paymentType=PaymentType.KPay;
-                    //                   showWidget();
-                    //                   pay = "KBZ Pay";
-                    //                   kbzOpacity = 1;
-                    //                   cbOpacity = 0.5;
-                    //                   waveOpacity = 0.5;
-                    //                   setState(() {});
-                    //                 },
-                    //                 child: Container(
-                    //                   width: 80,
-                    //                   height: 80,
-                    //                   decoration: BoxDecoration(
-                    //                     color: Colors.black,
-                    //                     image: DecorationImage(
-                    //                         fit: BoxFit.cover,
-                    //                         colorFilter: ColorFilter.mode(
-                    //                             Colors.black
-                    //                                 .withOpacity(kbzOpacity),
-                    //                             BlendMode.dstATop),
-                    //                         image: AssetImage(
-                    //                             "assets/payment/kbzpay.png")),
-                    //                     borderRadius: BorderRadius.all(
-                    //                         Radius.circular(8.0)),
-                    //                     // color: Colors.redAccent,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //               SizedBox(width: 10),
-                    //               InkWell(
-                    //                 onTap: () {
-                    //                   paymentType=PaymentType.CbPay;
-                    //                   showWidget();
-                    //                   pay = "CB Pay";
-                    //                   kbzOpacity = 0.5;
-                    //                   cbOpacity = 1;
-                    //                   waveOpacity = 0.5;
-                    //                   setState(() {});
-                    //                 },
-                    //                 child: Container(
-                    //                   width: 80,
-                    //                   height: 80,
-                    //                   decoration: BoxDecoration(
-                    //                     color: Colors.black,
-                    //                     image: DecorationImage(
-                    //                         fit: BoxFit.cover,
-                    //                         colorFilter: ColorFilter.mode(
-                    //                             Colors.black
-                    //                                 .withOpacity(cbOpacity),
-                    //                             BlendMode.dstATop),
-                    //                         image: AssetImage(
-                    //                             "assets/payment/cbpay.png")),
-                    //                     borderRadius: BorderRadius.all(
-                    //                         Radius.circular(8.0)),
-                    //                     // color: Colors.redAccent,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //               SizedBox(width: 10),
-                    //               InkWell(
-                    //                 onTap: () {
-                    //                   paymentType=PaymentType.WavePay;
-                    //                   showWidget();
-                    //                   pay = "WAVE Pay";
-                    //                   kbzOpacity = 0.5;
-                    //                   cbOpacity = 0.5;
-                    //                   waveOpacity = 1;
-                    //
-                    //                   setState(() {});
-                    //                 },
-                    //                 child: Container(
-                    //                   width: 80,
-                    //                   height: 80,
-                    //                   decoration: BoxDecoration(
-                    //                     color: Colors.black,
-                    //                     image: DecorationImage(
-                    //                         fit: BoxFit.cover,
-                    //                         colorFilter: ColorFilter.mode(
-                    //                             Colors.black
-                    //                                 .withOpacity(waveOpacity),
-                    //                             BlendMode.dstATop),
-                    //                         image: AssetImage(
-                    //                             "assets/payment/wavepay.png")),
-                    //                     borderRadius: BorderRadius.all(
-                    //                         Radius.circular(8.0)),
-                    //                     // color: Colors.redAccent,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //           Container(
-                    //             margin: EdgeInsets.only(top: 20),
-                    //             child: Column(
-                    //               children: [
-                    //                 _showTopUp(pay),
-                    //               ],
-                    //             ),
-                    //           )
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+                  constraints: BoxConstraints.expand(
+                    height: MediaQuery.of(context).size.height,
+                  ),
+                  // child: Container(
+                  //   margin: EdgeInsets.only(top: 80),
+                  //   width: double.infinity,
+                  //   child: Card(
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(15.0),
+                  //     ),
+                  //     color: Colors.white,
+                  //     elevation: 10,
+                  //     child: Container(
+                  //       margin: EdgeInsets.all(20),
+                  //       child: Column(
+                  //         mainAxisSize: MainAxisSize.min,
+                  //         children: <Widget>[
+                  //           Text("Please select a bank to top up"),
+                  //           Row(
+                  //             mainAxisAlignment: MainAxisAlignment.center,
+                  //             children: [
+                  //               InkWell(
+                  //                 onTap: () {
+                  //                   paymentType=PaymentType.KPay;
+                  //                   showWidget();
+                  //                   pay = "KBZ Pay";
+                  //                   kbzOpacity = 1;
+                  //                   cbOpacity = 0.5;
+                  //                   waveOpacity = 0.5;
+                  //                   setState(() {});
+                  //                 },
+                  //                 child: Container(
+                  //                   width: 80,
+                  //                   height: 80,
+                  //                   decoration: BoxDecoration(
+                  //                     color: Colors.black,
+                  //                     image: DecorationImage(
+                  //                         fit: BoxFit.cover,
+                  //                         colorFilter: ColorFilter.mode(
+                  //                             Colors.black
+                  //                                 .withOpacity(kbzOpacity),
+                  //                             BlendMode.dstATop),
+                  //                         image: AssetImage(
+                  //                             "assets/payment/kbzpay.png")),
+                  //                     borderRadius: BorderRadius.all(
+                  //                         Radius.circular(8.0)),
+                  //                     // color: Colors.redAccent,
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //               SizedBox(width: 10),
+                  //               InkWell(
+                  //                 onTap: () {
+                  //                   paymentType=PaymentType.CbPay;
+                  //                   showWidget();
+                  //                   pay = "CB Pay";
+                  //                   kbzOpacity = 0.5;
+                  //                   cbOpacity = 1;
+                  //                   waveOpacity = 0.5;
+                  //                   setState(() {});
+                  //                 },
+                  //                 child: Container(
+                  //                   width: 80,
+                  //                   height: 80,
+                  //                   decoration: BoxDecoration(
+                  //                     color: Colors.black,
+                  //                     image: DecorationImage(
+                  //                         fit: BoxFit.cover,
+                  //                         colorFilter: ColorFilter.mode(
+                  //                             Colors.black
+                  //                                 .withOpacity(cbOpacity),
+                  //                             BlendMode.dstATop),
+                  //                         image: AssetImage(
+                  //                             "assets/payment/cbpay.png")),
+                  //                     borderRadius: BorderRadius.all(
+                  //                         Radius.circular(8.0)),
+                  //                     // color: Colors.redAccent,
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //               SizedBox(width: 10),
+                  //               InkWell(
+                  //                 onTap: () {
+                  //                   paymentType=PaymentType.WavePay;
+                  //                   showWidget();
+                  //                   pay = "WAVE Pay";
+                  //                   kbzOpacity = 0.5;
+                  //                   cbOpacity = 0.5;
+                  //                   waveOpacity = 1;
+                  //
+                  //                   setState(() {});
+                  //                 },
+                  //                 child: Container(
+                  //                   width: 80,
+                  //                   height: 80,
+                  //                   decoration: BoxDecoration(
+                  //                     color: Colors.black,
+                  //                     image: DecorationImage(
+                  //                         fit: BoxFit.cover,
+                  //                         colorFilter: ColorFilter.mode(
+                  //                             Colors.black
+                  //                                 .withOpacity(waveOpacity),
+                  //                             BlendMode.dstATop),
+                  //                         image: AssetImage(
+                  //                             "assets/payment/wavepay.png")),
+                  //                     borderRadius: BorderRadius.all(
+                  //                         Radius.circular(8.0)),
+                  //                     // color: Colors.redAccent,
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //           Container(
+                  //             margin: EdgeInsets.only(top: 20),
+                  //             child: Column(
+                  //               children: [
+                  //                 _showTopUp(pay),
+                  //               ],
+                  //             ),
+                  //           )
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ),
               ),
             ],
@@ -258,7 +258,7 @@ class _TopUpPageState extends State<TopUpPage> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    paymentType=PaymentType.KPay;
+                                    paymentType = PaymentType.KPay;
                                     showWidget();
 
                                     pay = "KBZ Pay";
@@ -289,7 +289,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                 SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    paymentType=PaymentType.CbPay;
+                                    paymentType = PaymentType.CbPay;
                                     showWidget();
                                     pay = "CB Pay";
                                     kbzOpacity = 0.5;
@@ -319,7 +319,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                 SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    paymentType=PaymentType.WavePay;
+                                    paymentType = PaymentType.WavePay;
                                     showWidget();
                                     pay = "WAVE Pay";
                                     kbzOpacity = 0.5;
@@ -380,7 +380,6 @@ class _TopUpPageState extends State<TopUpPage> {
         margin: EdgeInsets.all(10),
         child: Column(
           children: [
-
             Container(
                 height: 50,
                 decoration: BoxDecoration(
@@ -392,15 +391,13 @@ class _TopUpPageState extends State<TopUpPage> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Transfer Amount',
-
                   ),
                   onChanged: (text) {
                     setState(() {
                       amount = double.parse(_amountController.text);
                     });
                   },
-                )
-            ),
+                )),
             SizedBox(height: 20),
             Text("1.Please top up at least 1000 Ks to one of the following " +
                 pay +
@@ -426,7 +423,9 @@ class _TopUpPageState extends State<TopUpPage> {
                     ),
                 onPressed: () async {
                   clearText();
-                 await context.read<WalletProvider>().topup(context,paymentType, amount);
+                  await context
+                      .read<WalletProvider>()
+                      .topup(context, paymentType, amount);
                 },
                 child: Text("Submit")),
           ],
@@ -437,8 +436,8 @@ class _TopUpPageState extends State<TopUpPage> {
       viewVisible = true;
     });
   }
+
   void clearText() {
     _amountController.clear();
   }
-
 }

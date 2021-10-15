@@ -11,7 +11,8 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var tracRef = FirebaseFirestore.instance.collection(transactions);
   var userRef = FirebaseFirestore.instance.collection(userCollection);
 
-  Future<void> topup(BuildContext context, PaymentType paymentType,double amount) async {
+  Future<void> topup(
+      BuildContext context, PaymentType paymentType, double amount) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       double balance = await getBalance();
@@ -23,7 +24,10 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
         MessageHandler.showMessage(
             context, "Success", "Your topup is successful");
         TransactionModel transactionModel = TransactionModel(
-            uid: uid, type: TransactionType.Topup,paymentType:paymentType , amount: amount);
+            uid: uid,
+            type: TransactionType.Topup,
+            amount: amount,
+            createdDate: DateTime.now());
         tracRef.add(transactionModel.toJson()).catchError((error) {
           print("Failed to add topup transaction: $error");
         });
@@ -36,7 +40,8 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  Future<void> withdrawl(BuildContext context,PaymentType paymentType, double amount) async {
+  Future<void> withdrawl(
+      BuildContext context, PaymentType paymentType, double amount) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       double balance = await getBalance();
@@ -51,7 +56,10 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 context, "Success", "Your withdrawl is successful");
           });
           TransactionModel transactionModel = TransactionModel(
-              uid: uid, type: TransactionType.Withdraw, paymentType: paymentType,amount: amount);
+              uid: uid,
+              type: TransactionType.Withdraw,
+              amount: amount,
+              createdDate: DateTime.now());
           tracRef.add(transactionModel.toJson()).catchError((error) {
             print("Failed to add withdrawl transaction: $error");
           });
@@ -69,8 +77,10 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
-      var doc = await userRef.doc(uid).get();
-      return doc.data()["balance"] ?? 0;
+      await userRef.doc(uid).get().then((value) {
+        return value.data()["balance"] ?? 0;
+      });
+      // return doc.data()["balance"] ?? 0;
     }
     return 0;
   }
@@ -79,7 +89,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       BuildContext context) async {
     List<TransactionModel> list = [];
     if (FirebaseAuth.instance.currentUser?.uid != null) {
-      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      String uid = FirebaseAuth.instance.currentUser.uid;
       await tracRef.where("uid", isEqualTo: uid).get().then((value) {
         value.docs.forEach((result) {
           print(result.data());
