@@ -77,135 +77,135 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       preferredSize: Size.fromHeight(50),
                       child: Container(),
                     ),
-                    actions: [
-                      _isSigningOut
-                          ? CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            )
-                          : IconButton(
-                              icon: Icon(
-                                Icons.logout,
-                                color: Colors.white,
-                              ),
-                              tooltip: 'Sign Out',
-                              onPressed: () async {
-                                setState(() {
-                                  _isSigningOut = true;
-                                });
-                                await context
-                                    .read<LoginProvider>()
-                                    .logOut(context);
-                                // await Authentication.signOut(context: context);
-                                setState(() {
-                                  _isSigningOut = false;
-                                });
-                                Navigator.of(context)
-                                    .pushReplacement(_routeToSignInScreen());
-                              },
-                            ),
-                    ],
+                    // actions: [
+                    //   _isSigningOut
+                    //       ? CircularProgressIndicator(
+                    //           valueColor:
+                    //               AlwaysStoppedAnimation<Color>(Colors.white),
+                    //         )
+                    //       : IconButton(
+                    //           icon: Icon(
+                    //             Icons.logout,
+                    //             color: Colors.white,
+                    //           ),
+                    //           tooltip: 'Sign Out',
+                    //           onPressed: () async {
+                    //             setState(() {
+                    //               _isSigningOut = true;
+                    //             });
+                    //             await context
+                    //                 .read<LoginProvider>()
+                    //                 .logOut(context);
+                    //             // await Authentication.signOut(context: context);
+                    //             setState(() {
+                    //               _isSigningOut = false;
+                    //             });
+                    //             Navigator.of(context)
+                    //                 .pushReplacement(_routeToSignInScreen());
+                    //           },
+                    //         ),
+                    // ],
                   ),
                   SliverToBoxAdapter(
-                    child: Container(
-                        constraints: BoxConstraints.expand(
-                          height: MediaQuery.of(context).size.height,
-                        ),
-                        child: Container(
-                            child: Column(
-                          children: [
-                            SizedBox(height: 80.0),
-                            Text(
-                              _user.displayName,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 30,
-                              ),
-                            ),
-                            SizedBox(height: 8.0),
-                            // Text(
-                            //   ' ${_user.email!}',
-                            //   style: TextStyle(
-                            //     color: CustomColors.firebaseOrange,
-                            //     fontSize: 16,
-                            //     letterSpacing: 0.5,
-                            //   ),
-                            // ),
-                            SizedBox(height: 24.0),
-                            ElevatedButton(
-                                style: ButtonStyle(
-                                  padding:
-                                      MaterialStateProperty.all<EdgeInsets>(
-                                          EdgeInsets.only(
-                                              left: 100,
-                                              right: 100,
-                                              top: 10,
-                                              bottom: 10)),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Colors.blue,
-                                  ),
-                                  shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  url = await Authentication
-                                      .uploadphotofilecamera();
-
-                                  setState(() {});
-                                },
-                                child: Text("Take a Photo")),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            ElevatedButton(
-                                style: ButtonStyle(
-                                  padding:
-                                      MaterialStateProperty.all<EdgeInsets>(
-                                          EdgeInsets.only(
-                                              left: 76,
-                                              right: 76,
-                                              top: 10,
-                                              bottom: 10)),
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Colors.blue,
-                                  ),
-                                  shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  url = await Authentication.uploadphotofile();
-                                  //url=await Authentication.updatePhoto();
-                                  setState(() {});
-                                },
-                                child: Text("Choose From Album")),
-                          ],
-                        ))),
+                    // child: Container(
+                    //     constraints: BoxConstraints.expand(
+                    //       height: MediaQuery.of(context).size.height,
+                    //     ),
+                    //     child: Container(
+                    //         child: Column(
+                    //       children: [
+                    //         SizedBox(height: 80.0),
+                    //         Text(
+                    //           _user.displayName,
+                    //           style: TextStyle(
+                    //             color: Colors.black,
+                    //             fontWeight: FontWeight.w800,
+                    //             fontSize: 30,
+                    //           ),
+                    //         ),
+                    //         SizedBox(height: 8.0),
+                    //         // Text(
+                    //         //   ' ${_user.email!}',
+                    //         //   style: TextStyle(
+                    //         //     color: CustomColors.firebaseOrange,
+                    //         //     fontSize: 16,
+                    //         //     letterSpacing: 0.5,
+                    //         //   ),
+                    //         // ),
+                    //         SizedBox(height: 24.0),
+                    //         ElevatedButton(
+                    //             style: ButtonStyle(
+                    //               padding:
+                    //                   MaterialStateProperty.all<EdgeInsets>(
+                    //                       EdgeInsets.only(
+                    //                           left: 100,
+                    //                           right: 100,
+                    //                           top: 10,
+                    //                           bottom: 10)),
+                    //               backgroundColor: MaterialStateProperty.all(
+                    //                 Colors.blue,
+                    //               ),
+                    //               shape: MaterialStateProperty.all(
+                    //                 RoundedRectangleBorder(
+                    //                   borderRadius: BorderRadius.circular(50),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             onPressed: () async {
+                    //               url = await Authentication
+                    //                   .uploadphotofilecamera();
+                    //
+                    //               setState(() {});
+                    //             },
+                    //             child: Text("Take a Photo")),
+                    //         SizedBox(
+                    //           height: 20,
+                    //         ),
+                    //         ElevatedButton(
+                    //             style: ButtonStyle(
+                    //               padding:
+                    //                   MaterialStateProperty.all<EdgeInsets>(
+                    //                       EdgeInsets.only(
+                    //                           left: 76,
+                    //                           right: 76,
+                    //                           top: 10,
+                    //                           bottom: 10)),
+                    //               backgroundColor: MaterialStateProperty.all(
+                    //                 Colors.blue,
+                    //               ),
+                    //               shape: MaterialStateProperty.all(
+                    //                 RoundedRectangleBorder(
+                    //                   borderRadius: BorderRadius.circular(50),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             onPressed: () async {
+                    //               url = await Authentication.uploadphotofile();
+                    //               //url=await Authentication.updatePhoto();
+                    //               setState(() {});
+                    //             },
+                    //             child: Text("Choose From Album")),
+                    //       ],
+                    //     ))),
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  margin: EdgeInsets.only(top: 70),
-                  height: 120,
-                  width: 120,
-                  child: url != null
-                      ? UserInfoScreenPhoto(
-                          imageurl: url.toString(),
-                          width: 80,
-                          height: 80,
-                          borderColor: Colors.white,
-                        )
-                      : Text('No user'),
-                ),
-              ),
+              // Align(
+              //   alignment: Alignment.topCenter,
+              //   child: Container(
+              //     margin: EdgeInsets.only(top: 70),
+              //     height: 120,
+              //     width: 120,
+              //     child: url != null
+              //         ? UserInfoScreenPhoto(
+              //             imageurl: url.toString(),
+              //             width: 80,
+              //             height: 80,
+              //             borderColor: Colors.white,
+              //           )
+              //         : Text('No user'),
+              //   ),
+              // ),
             ],
           ),
         ));
