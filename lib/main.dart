@@ -38,6 +38,7 @@ Future<void> _messageHandler(RemoteMessage message) async {
   print('background message ${message.notification.body}');
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   Map<int, Color> color = {

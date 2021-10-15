@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/database_helper.dart';
-import 'package:left_style/pages/user_info_screen.dart';
+import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/validators/validator.dart';
@@ -33,7 +33,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
-      print("After: $vId");
+      print("Provider After: $vId");
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: vId,
         smsCode: vCode,
@@ -110,6 +110,43 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     } else {
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+    }
+  }
+
+  Future<void> register(BuildContext context, String vId, String vCode,
+      UserModel userModel) async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    try {
+      print("After: $vId");
+      final AuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: vId,
+        smsCode: vCode,
+      );
+      final User user = (await _auth.signInWithCredential(credential)).user;
+      print("Successfully signed in UID: ${user.uid}");
+      MessageHandler.showSnackbar(
+          "Successfully signed in UID: ${user.uid}", context, 5);
+
+      if (user.uid != null) {
+        DatabaseHelper.setAppLoggedIn(context, true);
+        userModel.uid = user.uid;
+        print("UserModel: $userModel");
+        userRef
+            .doc(user.uid)
+            .set(userModel.toJson())
+            .catchError((error) => print("Failed to add user: $error"));
+        notifyListeners();
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      } else {
+        notifyListeners();
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+      }
+    } catch (e) {
+      print(e.toString());
+      MessageHandler.showErrSnackbar(
+          "Failed to sign in: " + e.toString(), context, 5);
     }
   }
 }
