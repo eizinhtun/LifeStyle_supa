@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:left_style/providers/wallet_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 
@@ -16,7 +17,6 @@ class _TopUpPageState extends State<TopUpPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -221,7 +221,9 @@ class _TopUpPageState extends State<TopUpPage> {
                       bottom: 10,
                     ) // foreground
                     ),
-                onPressed: () {},
+                onPressed: () async {
+                  await context.read<WalletProvider>().topup(context, 3000);
+                },
                 child: Text("Submit")),
           ],
         ),
