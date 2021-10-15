@@ -1,6 +1,9 @@
 // @dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/models/transaction_model.dart';
+import 'package:left_style/providers/wallet_provider.dart';
+import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
@@ -14,19 +17,36 @@ class Wallet extends StatefulWidget {
 class WalletState extends State<Wallet> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  List<TransactionModel> tracList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void _onRefresh() async {
     // monitor network fetch
+    getData();
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
+    setState(() {});
+  }
+
+  getData() async {
+    tracList = await context.read<WalletProvider>().getTransactionList(context);
+    print("TracList: ${tracList.length}");
   }
 
   void _onLoading() async {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    items.add((items.length + 1).toString());
     if (mounted) setState(() {});
     _refreshController.loadComplete();
   }
@@ -301,26 +321,36 @@ class WalletState extends State<Wallet> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                Icon(Icons.phone, size: 20),
+                                Icon(
+                                    tracList[i].type == TransactionType.Topup
+                                        ? Icons.add
+                                        : Icons.minimize,
+                                    size: 20),
                                 SizedBox(width: 10),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text("Top Up",
+                                    Text(
+                                        tracList[i].type ==
+                                                TransactionType.Topup
+                                            ? "Top Up"
+                                            : "Withdraw",
                                         style: TextStyle(fontSize: 12)),
-                                    Text("08/10/ 20:54:02",
+                                    Text(
+                                        Formatter.dateTimeFormat(
+                                            tracList[i].createdDate),
                                         style: TextStyle(fontSize: 12)),
                                   ],
                                 ),
                                 Spacer(),
-                                Text("-1000.00",
+                                Text(tracList[i].amount.toString(),
                                     style: TextStyle(fontSize: 12)),
                               ],
                             ),
                           ),
                         ),
                         itemExtent: 100.0,
-                        itemCount: items.length,
+                        itemCount: tracList.length,
                       ),
                     ),
                   ),

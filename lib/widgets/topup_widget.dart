@@ -94,9 +94,9 @@ class _TopUpPageState extends State<TopUpPage> {
                               backgroundColor: Colors.transparent,
                               child: CircleAvatar(
                                 radius: 50,
-                                backgroundImage: NetworkImage(
-                                  _user.photoURL,
-                                ),
+                                // backgroundImage: NetworkImage(
+                                //   _user.photoURL,
+                                // ),
                               ),
                             ),
                             Column(
