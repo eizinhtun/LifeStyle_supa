@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:left_style/pages/login.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
-import 'package:left_style/widgets/wallet.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 

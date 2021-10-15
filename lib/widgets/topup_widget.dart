@@ -1,26 +1,28 @@
+// @dart=2.9
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/widgets/topup_amount_widget.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 
 class TopUpPage extends StatefulWidget {
-  const TopUpPage({Key? key}) : super(key: key);
+  const TopUpPage({Key key}) : super(key: key);
 
   @override
   _TopUpPageState createState() => _TopUpPageState();
 }
 
 class _TopUpPageState extends State<TopUpPage> {
+  var _user = FirebaseAuth.instance.currentUser;
   bool viewVisible = false;
   String pay = "";
-  dynamic kbzOpacity = 0.5, cbOpacity = 0.5, waveOpacity = 0.5;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  double kbzOpacity=0.5;
+  double cbOpacity=0.5;
+  double waveOpacity=0.5;
 
-  @override
+
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
@@ -80,20 +82,58 @@ class _TopUpPageState extends State<TopUpPage> {
                       elevation: 10,
                       child: Container(
                         margin: EdgeInsets.all(20),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            CircleAvatar(
+                              radius: 55,
+                              backgroundColor: Colors.transparent,
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundImage: NetworkImage(
+                                _user.photoURL,
+                                 ),
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                Text("Balance",style: TextStyle(fontSize: 20),),
+                                Text("20000 Ks"),
+                              ],
+                            )
+
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      color: Colors.white,
+                      elevation: 10,
+                      child: Container(
+                        margin: EdgeInsets.all(20),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
+                            Text("Please select a bank to top up"),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 InkWell(
                                   onTap: () {
                                     showWidget();
+                                    pay = "KBZ Pay";
+                                    kbzOpacity=1;
+                                    cbOpacity=0.5;
+                                    waveOpacity=0.5;
                                     setState(() {
-                                      pay = "kbz Pay";
-                                      kbzOpacity = 1;
-                                      cbOpacity = 0.5;
-                                      waveOpacity = 0.5;
+
                                     });
                                   },
                                   child: Container(
@@ -119,11 +159,12 @@ class _TopUpPageState extends State<TopUpPage> {
                                 InkWell(
                                   onTap: () {
                                     showWidget();
+                                    pay = "CB Pay";
+                                    kbzOpacity=0.5;
+                                    cbOpacity=1;
+                                    waveOpacity=0.5;
                                     setState(() {
-                                      pay = "Wave Pay";
-                                      kbzOpacity = 0.5;
-                                      cbOpacity = 1;
-                                      waveOpacity = 0.5;
+
                                     });
                                   },
                                   child: Container(
@@ -138,7 +179,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                                   .withOpacity(cbOpacity),
                                               BlendMode.dstATop),
                                           image: AssetImage(
-                                              "assets/payment/wavepay.png")),
+                                              "assets/payment/cbpay.png")),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(8.0)),
                                       // color: Colors.redAccent,
@@ -149,11 +190,13 @@ class _TopUpPageState extends State<TopUpPage> {
                                 InkWell(
                                   onTap: () {
                                     showWidget();
+                                    pay = "WAVE Pay";
+                                    kbzOpacity=0.5;
+                                    cbOpacity=0.5;
+                                    waveOpacity=1;
+
                                     setState(() {
-                                      pay = "Cb Pay";
-                                      kbzOpacity = 0.5;
-                                      cbOpacity = 0.5;
-                                      waveOpacity = 1;
+
                                     });
                                   },
                                   child: Container(
@@ -163,19 +206,30 @@ class _TopUpPageState extends State<TopUpPage> {
                                       color: Colors.black,
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
-                                          colorFilter: new ColorFilter.mode(
-                                              waveOpacity, BlendMode.dstATop),
+                                          colorFilter: ColorFilter.mode(
+                                              Colors.black
+                                                  .withOpacity(waveOpacity),
+                                              BlendMode.dstATop),
                                           image: AssetImage(
-                                              "assets/payment/cbpay.png")),
+                                              "assets/payment/wavepay.png")),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(8.0)),
                                       // color: Colors.redAccent,
                                     ),
                                   ),
                                 ),
+
                               ],
                             ),
-                            _showTopUp(pay),
+                            Container(
+                              margin: EdgeInsets.only(top: 20),
+                              child: Column(
+                                children: [
+                                  _showTopUp(pay),
+                                ],
+                              ),
+                            )
+
                           ],
                         ),
                       ),
@@ -221,7 +275,13 @@ class _TopUpPageState extends State<TopUpPage> {
                       bottom: 10,
                     ) // foreground
                     ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>TopupAmount()));
+
+                  setState(() {
+
+                  });
+                },
                 child: Text("Submit")),
           ],
         ),
