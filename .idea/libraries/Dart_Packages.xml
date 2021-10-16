@@ -135,6 +135,13 @@
             </list>
           </value>
         </entry>
+        <entry key="curved_navigation_bar">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/curved_navigation_bar-1.0.1/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="dbcrypt">
           <value>
             <list>
@@ -857,6 +864,7 @@
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/cross_file-0.3.1+5/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.1/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.3/lib" />
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/curved_navigation_bar-1.0.1/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/dbcrypt-1.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/dbus-0.5.6/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0/lib" />

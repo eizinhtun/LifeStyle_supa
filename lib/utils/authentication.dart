@@ -128,7 +128,18 @@ class Authentication {
       throw e;
     }
   }
-
+  static Future<String> uploadphotofile(imageFile) async {
+    var user = FirebaseAuth.instance.currentUser;
+    final ref = FirebaseStorage.instance.ref('profile').child(user.uid);
+    final uploadTask = ref.putFile(File(imageFile.path));
+    String downloadUrl = await (await uploadTask).ref.getDownloadURL();
+    if (downloadUrl != null) {
+      user.updatePhotoURL(downloadUrl);
+      return downloadUrl;
+    } else {
+      return '';
+    }
+  }
   static Future<String> uploadphotofilegallery() async {
     var user = FirebaseAuth.instance.currentUser;
     final picker = ImagePicker();
@@ -140,6 +151,7 @@ class Authentication {
       user.updatePhotoURL(downloadUrl);
       return downloadUrl;
     } else {
+
       return '';
     }
   }
@@ -159,4 +171,5 @@ class Authentication {
       return '';
     }
   }
+
 }

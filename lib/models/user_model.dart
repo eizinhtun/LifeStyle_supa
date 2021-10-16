@@ -7,6 +7,7 @@ class UserModel {
   String photoUrl;
   double balance;
   DateTime createdDate;
+  String address;
 
   UserModel({
     this.fullName,
@@ -16,6 +17,7 @@ class UserModel {
     this.uid,
     this.balance,
     this.createdDate,
+    this.address,
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class UserModel {
     balance = json['balance'];
     createdDate =
         DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
+    address = json['address'];
     //  DateTime.parse(json['createdDate']);
   }
 
@@ -39,6 +42,7 @@ class UserModel {
     data['uid'] = this.uid;
     data['balance'] = this.balance;
     data['createdDate'] = this.createdDate.microsecondsSinceEpoch.toString();
+    data['address'] = this.address;
     return data;
   }
 }

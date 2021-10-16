@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:left_style/pages/init_screen.dart';
 import 'package:left_style/pages/login.dart';
@@ -14,6 +15,10 @@ import 'localization/LocalizationsDelegate.dart';
 import 'providers/login_provider.dart';
 
 void main() async {
+  //statusbar hide
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
   //firebase messaging
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -59,6 +64,7 @@ class MyApp extends StatelessWidget {
     MaterialColor colorCustom = MaterialColor(0xFFfa2e73, color);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Unifine',
       theme: ThemeData(
         primarySwatch: colorCustom,
