@@ -129,12 +129,11 @@ class Authentication {
     }
   }
 
-  static Future<String> uploadphotofile() async {
+  static Future<String> uploadphotofilegallery() async {
     var user = FirebaseAuth.instance.currentUser;
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     final ref = FirebaseStorage.instance.ref('profile').child(user.uid);
-
     final uploadTask = ref.putFile(File(pickedFile.path));
     String downloadUrl = await (await uploadTask).ref.getDownloadURL();
     if (downloadUrl != null) {
