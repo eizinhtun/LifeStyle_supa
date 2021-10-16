@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:left_style/pages/init_screen.dart';
 import 'package:left_style/pages/login.dart';
+import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localization/LocalizationsDelegate.dart';
+import 'pages/noti_screen.dart';
 import 'providers/login_provider.dart';
 
 void main() async {
@@ -31,6 +33,7 @@ void main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LoginProvider()),
     ChangeNotifierProvider(create: (_) => WalletProvider()),
+    ChangeNotifierProvider(create: (_) => NotiProvider()),
   ], child: MyApp()));
 }
 
