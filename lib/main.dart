@@ -25,6 +25,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
+
   if (kIsWeb) {
     // initialiaze the facebook javascript SDK
     FacebookAuth.i.webInitialize(

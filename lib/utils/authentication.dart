@@ -8,7 +8,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
-import 'package:left_style/pages/user_info_screen.dart';
+
 
 class Authentication {
   static SnackBar customSnackBar({String content}) {
@@ -26,15 +26,7 @@ class Authentication {
 
     User user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => UserInfoScreen(
-              // user: user,
-              ),
-        ),
-      );
-    }
+
 
     return firebaseApp;
   }

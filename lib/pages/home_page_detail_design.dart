@@ -30,7 +30,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           children: <Widget>[
             HomePage(),
             Wallet(),
-            UserProfilePage(),
+            MePage(),
           ],
           onPageChanged: (int index) {
             setState(() {
