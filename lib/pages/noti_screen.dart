@@ -34,7 +34,7 @@ class _NotiScreenState extends State<NotiScreen> {
                 child: Center(
                   child: ElevatedButton(
                     onPressed: () async {
-                      // await context.read<NotiProvider>().sendNoti(context);
+                      await context.read<NotiProvider>().sendNoti(context);
                     },
                     child: Text("Send Notification"),
                   ),

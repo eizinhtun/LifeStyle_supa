@@ -34,39 +34,42 @@ class NotiProvider with ChangeNotifier, DiagnosticableTreeMixin {
     return list;
   }
 
-  // Future<void> sendNoti(BuildContext context) async {
-  //   try {
-  //     await userRef.get().then((value) {
-  //       value.docs.forEach((result) async {
-  //         http.Response response = await http.post(
-  //           Uri.parse('https://fcm.googleapis.com/fcm/send'),
-  //           headers: <String, String>{
-  //             'Content-Type': 'application/json',
-  //             'Authorization': 'key=$serverKey',
-  //           },
-  //           body: json.encode(
-  //             <String, dynamic>{
-  //               'notification': <String, dynamic>{
-  //                 'body': 'this is a body',
-  //                 'title': 'this is a title'
-  //               },
-  //               'priority': 'high',
-  //               'data': <String, dynamic>{
-  //                 'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-  //                 'id': '1',
-  //                 'status': 'done'
-  //               },
-  //               'to': result.data()['tokenID'],
-  //             },
-  //           ),
-  //         );
-  //       });
-  //     });
-  //   } catch (e) {
-  //     print("error push notification");
-  //   }
-  //   notifyListeners();
-  // }
+  Future<void> sendNoti(BuildContext context) async {
+    // NotiModel notiModel = NotiModel(title:'this is a title',body:'this is a body',  );
+    try {
+      await userRef.get().then((value) {
+        value.docs.forEach((result) async {
+          http.Response response = await http.post(
+            Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': 'key=$serverKey',
+            },
+            body: json.encode(
+              <String, dynamic>{
+                'notification': <String, dynamic>{
+                  'body': 'this is a body',
+                  'title': 'this is a title'
+                },
+                'priority': 'high',
+                'data': <String, dynamic>{
+                  'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+                  'id': '1',
+                  'status': 'done'
+                },
+                'to': result.data()['fcmtoken'],
+              },
+            ),
+          );
+          print(response.statusCode);
+          print(response.body);
+        });
+      });
+    } catch (e) {
+      print("error push notification");
+    }
+    notifyListeners();
+  }
 
   Future<int> notiCount(BuildContext context, int count) async {
     SystemData.notiCount = count;

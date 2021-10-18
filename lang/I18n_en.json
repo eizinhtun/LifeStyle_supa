@@ -1,7 +1,7 @@
 {
   "phone":"Phone number",
   "password":"Password",
-  "login":"Login",
+  "login":"Login with Phone",
   "login_with":"Login With",
   "forgot_password":"Forgot Password",
   "register_now":"Register Now",

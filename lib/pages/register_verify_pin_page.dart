@@ -185,7 +185,18 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
   }
 
   void signInWithPhoneNumber() async {
-    // var recaptchaVerifier = RecaptchaVerifier(
+    bool isSuccess = await context
+        .read<LoginProvider>()
+        .register(context, widget.verificationId, controller.text, widget.user);
+    if (isSuccess) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+    }
+  }
+}
+
+
+// var recaptchaVerifier = RecaptchaVerifier(
     //   container: null,
     //   size: RecaptchaVerifierSize.compact,
     //   theme: RecaptchaVerifierTheme.dark,
@@ -212,9 +223,3 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
     //     // });
     //   },
     // );
-
-    await context
-        .read<LoginProvider>()
-        .register(context, widget.verificationId, controller.text, widget.user);
-  }
-}

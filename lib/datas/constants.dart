@@ -5,6 +5,8 @@ const String smsToken =
     "SzhDl_-ytQEe2tTnRdg2UW4U7rFIbMmonUUQF8uJ1nAVxH5D08vNz8X_vA5TBLR1";
 const String backendUrl = "https://api.thai2d3d.com/api";
 const String version = "1.2.1";
+const String serverKey =
+    "AAAAp5abKQ0:APA91bG6Vl7FxmbqOqM1mCeZUzSpI-nJ3ieMC_-YVCQF7CW5jzAs10u1iu5asZ5HnwCDKd5v8mCMYPGYw6cRVf8j-uU6hjP9AONShIM5Sgijgh6tODZym01C5-KmJB2QiHX7hMhvegjd";
 
 Future<Map<String, String>> getHeaders() async {
   //timezone
