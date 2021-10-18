@@ -28,7 +28,7 @@ class _MePageState extends State<MePage> {
         var curve = Curves.ease;
 
         var tween =
-        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),
@@ -42,6 +42,7 @@ class _MePageState extends State<MePage> {
     url = _user.photoURL.toString();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +64,6 @@ class _MePageState extends State<MePage> {
                         bottom: new Radius.elliptical(200, 56.0),
                       ),
                     ),
-
                     bottom: PreferredSize(
                       preferredSize: Size.fromHeight(50),
                       child: Container(),
@@ -103,75 +103,69 @@ class _MePageState extends State<MePage> {
                         ),
                         child: Container(
                             child: Column(
-                              children: [
-                                SizedBox(height: 80.0),
-                                Text(
-                                  _user.displayName,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 30,
+                          children: [
+                            SizedBox(height: 80.0),
+                            Text(
+                              "${_user.displayName}",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 30,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                  padding:
+                                      MaterialStateProperty.all<EdgeInsets>(
+                                          EdgeInsets.only(
+                                              left: 100,
+                                              right: 100,
+                                              top: 10,
+                                              bottom: 10)),
+                                  backgroundColor: MaterialStateProperty.all(
+                                    Colors.blue,
+                                  ),
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
                                   ),
                                 ),
-                                SizedBox(height: 8.0),
-
-                                ElevatedButton(
-                                    style: ButtonStyle(
-                                      padding:
-                                          MaterialStateProperty.all<EdgeInsets>(
-                                              EdgeInsets.only(
-                                                  left: 100,
-                                                  right: 100,
-                                                  top: 10,
-                                                  bottom: 10)),
-                                      backgroundColor: MaterialStateProperty.all(
-                                        Colors.blue,
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(50),
-                                        ),
-                                      ),
+                                onPressed: () async {
+                                  url = await Authentication
+                                      .uploadphotofilecamera();
+                                  setState(() {});
+                                },
+                                child: Text("Take a Photo")),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                  padding:
+                                      MaterialStateProperty.all<EdgeInsets>(
+                                          EdgeInsets.only(
+                                              left: 76,
+                                              right: 76,
+                                              top: 10,
+                                              bottom: 10)),
+                                  backgroundColor: MaterialStateProperty.all(
+                                    Colors.blue,
+                                  ),
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
                                     ),
-                                    onPressed: () async {
-                                      url = await Authentication
-                                          .uploadphotofilecamera();
-                                      setState(() {
-
-                                      });
-
-                                    },
-                                    child: Text("Take a Photo")),
-                                SizedBox(
-                                  height: 20,
+                                  ),
                                 ),
-                                ElevatedButton(
-                                    style: ButtonStyle(
-                                      padding:
-                                          MaterialStateProperty.all<EdgeInsets>(
-                                              EdgeInsets.only(
-                                                  left: 76,
-                                                  right: 76,
-                                                  top: 10,
-                                                  bottom: 10)),
-                                      backgroundColor: MaterialStateProperty.all(
-                                        Colors.blue,
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      url = await Authentication.uploadphotofilegallery();
-                                      setState(() {
-
-                                      });
-
-                                    },
-                                    child: Text("Choose From Album")),
-                              ],
+                                onPressed: () async {
+                                  url = await Authentication
+                                      .uploadphotofilegallery();
+                                  setState(() {});
+                                },
+                                child: Text("Choose From Album")),
+                          ],
                         ))),
                   ),
                 ],
@@ -194,7 +188,6 @@ class _MePageState extends State<MePage> {
               ),
             ],
           ),
-
         ));
   }
 }

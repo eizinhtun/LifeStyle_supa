@@ -73,6 +73,8 @@ class WalletState extends State<Wallet> {
     _refreshController.loadComplete();
   }
 
+  // MaterialColor(0xFFfa2e73
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +85,8 @@ class WalletState extends State<Wallet> {
             slivers: <Widget>[
               SliverAppBar(
                 iconTheme: IconThemeData(color: Colors.white),
-                backgroundColor: Colors.blue,
+                backgroundColor: Color(0xfffa2e73),
+                // Colors.blue,
                 pinned: true,
                 snap: false,
                 floating: false,

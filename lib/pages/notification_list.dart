@@ -18,10 +18,10 @@ class NotificationListsPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _NotificationPage createState() => new _NotificationPage();
+  _NotificationListPage createState() => new _NotificationListPage();
 }
 
-class _NotificationPage extends State<NotificationListsPage>
+class _NotificationListPage extends State<NotificationListsPage>
     with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   RefreshController _refreshController =

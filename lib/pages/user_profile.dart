@@ -1,57 +1,46 @@
 // @dart=2.9
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dbcrypt/dbcrypt.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:left_style/datas/constants.dart';
-import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/user_model.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/validators/validator.dart';
+import 'package:provider/provider.dart';
 
-import 'register_verify_pin_page.dart';
-
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key key}) : super(key: key);
+class UserProfileScreen extends StatefulWidget {
+  const UserProfileScreen({Key key}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _UserProfileScreenState createState() => _UserProfileScreenState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  final _registerformKey = GlobalKey<FormState>();
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  final _profileformKey = GlobalKey<FormState>();
   bool _obscureText = true;
+  // bool isEnabled = true;
 
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   bool isPhoneToken = false;
-  String phone = "";
 
-  var userRef = FirebaseFirestore.instance.collection(userCollection);
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseMessaging _messaging = FirebaseMessaging.instance;
-
-  String verificationId = "";
-  String fcmtoken = "";
   @override
   void initState() {
     super.initState();
+    _phoneController.text = FirebaseAuth.instance.currentUser.phoneNumber;
   }
 
   @override
   Widget build(BuildContext context) {
-    // SmsApi _smsApi = SmsApi(this.context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
             title: Text(
-              "Register",
+              "User Profile",
               style: TextStyle(fontSize: 20, color: Colors.black54),
             ),
             iconTheme: IconThemeData(color: Colors.black),
@@ -72,8 +61,18 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: EdgeInsets.all(30.0),
                           child: Column(
                             children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.all(4),
+                                child: Center(
+                                  child: Text(
+                                    "Add User Profile",
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black54),
+                                  ),
+                                ),
+                              ),
                               Form(
-                                key: _registerformKey,
+                                key: _profileformKey,
                                 child: Container(
                                   padding: EdgeInsets.all(5),
                                   decoration: BoxDecoration(
@@ -95,6 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 bottom: BorderSide(
                                                     color: Colors.grey))),
                                         child: TextFormField(
+                                          // enabled: isEnabled,
                                           autovalidateMode: AutovalidateMode
                                               .onUserInteraction,
                                           controller: _phoneController,
@@ -230,14 +230,30 @@ class _RegisterPageState extends State<RegisterPage> {
                                     maxHeight: 400),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    bool isTaken = await checkPhoneIsTaken();
-                                    phone = phNoFormat();
-                                    if (!isTaken) {
-                                      register();
-                                    }
+                                    // bool isTaken = await checkPhoneIsTaken();
+                                    // phone = phNoFormat();
+                                    // if (!isTaken) {
+                                    //   register();
+                                    // }
+                                    var pass = DBCrypt().hashpw(
+                                        _passwordController.text,
+                                        DBCrypt().gensalt());
+                                    // var isCorrect = new DBCrypt().checkpw(plain, hashed);
+                                    UserModel userModel = UserModel(
+                                        uid: FirebaseAuth
+                                            .instance.currentUser.uid,
+                                        fullName:
+                                            _nameController.text.toString(),
+                                        phone: _phoneController.text.toString(),
+                                        password: pass,
+                                        isActive: true,
+                                        createdDate: DateTime.now());
+                                    await context
+                                        .read<LoginProvider>()
+                                        .addUserProfile(context, userModel);
                                   },
                                   child: Text(
-                                    "${Tran.of(context)?.text('register')}",
+                                    "Add User Profile",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -257,108 +273,5 @@ class _RegisterPageState extends State<RegisterPage> {
         ],
       ),
     );
-  }
-
-  String phNoFormat() {
-    String phoneNumber = _phoneController.text;
-    if (phoneNumber.startsWith("0")) {
-      phoneNumber = phoneNumber.substring(1, phoneNumber.length);
-    }
-    phoneNumber = "+95" + phoneNumber;
-    return phoneNumber;
-  }
-
-  Future<bool> checkPhoneIsTaken() async {
-    isPhoneToken =
-        phone == null ? false : await Validator.checkUserIsExist(phone);
-
-    if (isPhoneToken) {
-      setState(() {});
-    }
-    return isPhoneToken;
-  }
-
-  Future<String> checkToken(String fcmtoken) async {
-    String tokenStr = "";
-    if (!kIsWeb) {
-      if (fcmtoken == null || fcmtoken == "") {
-        tokenStr = await _messaging.getToken();
-        if (tokenStr == null || tokenStr == "") {
-          tokenStr = await checkToken(tokenStr);
-        } else {
-          SystemData.fcmtoken = tokenStr;
-        }
-        return tokenStr;
-      } else {
-        return fcmtoken;
-      }
-    } else {
-      return null;
-    }
-  }
-
-  void register() async {
-    if (_registerformKey.currentState.validate()) {
-      print("Validate");
-      // var pass = new DBCrypt()
-      //     .hashpw(_passwordController.text, new DBCrypt().gensalt());
-      // var isCorrect = new DBCrypt().checkpw(plain, hashed);
-
-      String token = await checkToken(fcmtoken);
-      UserModel user = UserModel(
-          fullName: _nameController.text,
-          phone: phone,
-          fcmtoken: token,
-          createdDate: DateTime.now());
-
-      try {
-        await _auth.verifyPhoneNumber(
-            phoneNumber: phone,
-            timeout: const Duration(seconds: 120),
-            verificationCompleted:
-                (PhoneAuthCredential phoneAuthCredential) async {},
-            verificationFailed: (FirebaseAuthException authException) {
-              print(
-                  'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-              MessageHandler.showSnackbar(
-                  'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
-                  context,
-                  6);
-            },
-            codeSent: (String verificationId, [int forceResendingToken]) async {
-              print('Please check your phone for the verification code.' +
-                  verificationId);
-              MessageHandler.showSnackbar(
-                  'Please check your phone for the verification code.',
-                  context,
-                  6);
-              verificationId = verificationId;
-              print("Before: $verificationId");
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => RegisterVerifyPinPage(
-                      user: user, verificationId: verificationId)));
-            },
-            // codeSent,
-            codeAutoRetrievalTimeout: (String verificationId) {
-              print("verification code: " + verificationId);
-              MessageHandler.showSnackbar(
-                  "verification code: " + verificationId, context, 6);
-              verificationId = verificationId;
-            });
-      } catch (e) {
-        MessageHandler.showSnackbar(
-            "Failed to Verify Phone Number: $e", context, 6);
-      }
-    }
-  }
-
-  Future<bool> checkUserIsExist(String phoneNumber) async {
-    QuerySnapshot snaptData =
-        await userRef.where('phone', isEqualTo: phoneNumber).get();
-    if (snaptData.docs.length > 0) {
-      return true;
-    } else {
-      return true;
-    }
   }
 }

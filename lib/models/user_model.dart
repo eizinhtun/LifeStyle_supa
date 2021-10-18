@@ -6,6 +6,9 @@ class UserModel {
   String phone;
   String photoUrl;
   double balance;
+  String fcmtoken;
+  String password;
+  bool isActive;
   DateTime createdDate;
 
   UserModel({
@@ -15,6 +18,9 @@ class UserModel {
     this.photoUrl,
     this.uid,
     this.balance,
+    this.fcmtoken,
+    this.password,
+    this.isActive,
     this.createdDate,
   });
 
@@ -25,6 +31,9 @@ class UserModel {
     photoUrl = json['photoUrl'];
     uid = json['uid'];
     balance = json['balance'];
+    fcmtoken = json['fcmtoken'];
+    password = json['password'];
+    isActive = json['isActive'];
     createdDate =
         DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
     //  DateTime.parse(json['createdDate']);
@@ -38,6 +47,9 @@ class UserModel {
     data['photoUrl'] = this.photoUrl;
     data['uid'] = this.uid;
     data['balance'] = this.balance;
+    data['fcmtoken'] = this.fcmtoken;
+    data['password'] = this.password;
+    data['isActive'] = this.isActive;
     data['createdDate'] = this.createdDate.microsecondsSinceEpoch.toString();
     return data;
   }
