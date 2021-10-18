@@ -40,7 +40,6 @@ class _HomePageDetailState extends State<HomePageDetail> {
       body: PageView(
         children: _list,
         scrollDirection: Axis.horizontal,
-
         // reverse: true,
         // physics: BouncingScrollPhysics(),
         controller: controller,

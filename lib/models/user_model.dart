@@ -10,6 +10,7 @@ class UserModel {
   String password;
   bool isActive;
   DateTime createdDate;
+  String address;
 
   UserModel({
     this.fullName,
@@ -22,6 +23,7 @@ class UserModel {
     this.password,
     this.isActive,
     this.createdDate,
+    this.address,
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -36,6 +38,7 @@ class UserModel {
     isActive = json['isActive'];
     createdDate =
         DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
+    address = json['address'];
     //  DateTime.parse(json['createdDate']);
   }
 
@@ -51,6 +54,7 @@ class UserModel {
     data['password'] = this.password;
     data['isActive'] = this.isActive;
     data['createdDate'] = this.createdDate.microsecondsSinceEpoch.toString();
+    data['address'] = this.address;
     return data;
   }
 }

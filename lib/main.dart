@@ -1,8 +1,6 @@
 // @dart=2.9
 
 import 'dart:io';
-
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -55,6 +53,10 @@ Future<void> cancelNotification() async {
 // }
 
 void main() async {
+  //statusbar hide
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
   //firebase messaging
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -412,6 +414,7 @@ class _MyAppState extends State<MyApp> {
     MaterialColor colorCustom = MaterialColor(0xFFfa2e73, color);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Unifine',
       theme: ThemeData(
         primarySwatch: colorCustom,
