@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:left_style/pages/me_page.dart';
+import 'package:left_style/pages/notification_list.dart';
 
 import 'package:left_style/widgets/wallet.dart';
 
@@ -18,12 +19,16 @@ class _HomePageDetailState extends State<HomePageDetail> {
   static MePage _mePage = MePage();
   static HomePage _homePage = HomePage();
   static Wallet _walletPage = Wallet();
+  static NotificationListPage _notification = NotificationListPage();
 
   PageController controller = PageController();
   List<Widget> _list = <Widget>[
     new Center(child: _homePage),
     new Center(child: _walletPage),
     new Center(child: _mePage),
+    Center(
+      child: _notification,
+    )
   ];
   int bottomSelectedIndex = 0;
 
@@ -74,6 +79,10 @@ class _HomePageDetailState extends State<HomePageDetail> {
                 activeIcon: Icon(FontAwesomeIcons.user),
                 icon: Icon(FontAwesomeIcons.user),
                 label: "Me"),
+            BottomNavigationBarItem(
+                activeIcon: Icon(FontAwesomeIcons.bell),
+                icon: Icon(FontAwesomeIcons.bell),
+                label: "Noti"),
           ],
         ),
       ),
