@@ -12,8 +12,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class NotificationListsPage extends StatefulWidget {
-  NotificationListsPage({
+class NotificationListPage extends StatefulWidget {
+  NotificationListPage({
     Key key,
   }) : super(key: key);
 
@@ -21,7 +21,7 @@ class NotificationListsPage extends StatefulWidget {
   _NotificationListPage createState() => new _NotificationListPage();
 }
 
-class _NotificationListPage extends State<NotificationListsPage>
+class _NotificationListPage extends State<NotificationListPage>
     with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   RefreshController _refreshController =
@@ -163,7 +163,7 @@ class _NotificationListPage extends State<NotificationListsPage>
                                                 fit: BoxFit.fill,
                                               )
                                             : Image.asset(
-                                                'assets/icon.png',
+                                                'assets/icon/icon.png',
                                                 width: 60.0,
                                                 height: 60.0,
                                                 fit: BoxFit.fill,

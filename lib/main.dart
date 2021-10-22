@@ -13,6 +13,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:left_style/pages/home_page_detail.dart';
 import 'package:left_style/pages/init_screen.dart';
 import 'package:left_style/pages/login.dart';
+import 'package:left_style/pages/notification_list.dart';
 import 'package:left_style/pages/user_not_active.dart';
 import 'package:left_style/pages/user_profile.dart';
 import 'package:left_style/providers/noti_provider.dart';
@@ -25,6 +26,7 @@ import 'datas/system_data.dart';
 import 'localization/LocalizationsDelegate.dart';
 import 'models/noti_model.dart';
 import 'pages/noti_screen.dart';
+import 'pages/notification_detail.dart';
 import 'providers/login_provider.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -335,13 +337,15 @@ class _MyAppState extends State<MyApp> {
 
       // await Navigator.push(
       //     context,
-      //     new MaterialPageRoute(
-      //       builder: (BuildContext context) =>
-      //           //new NotificationDetailPage(items:NotiModel.fromJson(message.data)),//
-      //           new NotificationDetailPage(
-      //               items: _notification, status: "false"), //
-      //       //new NotificationListsPage()
+      //     MaterialPageRoute(
+      //       builder: (BuildContext context) => NotificationDetailPage(
+      //           items: _notification, status: "false"), //
       //     ));
+      await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()
+              //  NotificationListsPage(), //
+              ));
       setState(() {
         SystemData.notiCount = SystemData.notiCount + 1;
       });
