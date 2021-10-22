@@ -1,39 +1,58 @@
 // @dart=2.9
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:left_style/models/user_model.dart';
+import 'package:left_style/pages/me_page.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
+import 'package:left_style/widgets/wallet.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 
-class UserProfilePage extends StatefulWidget {
-  const UserProfilePage({Key key}) : super(key: key);
-
+class EditUserProfilePage extends StatefulWidget {
+  final String fullName;
+  final String photoUrl;
+  final String address;
+  const EditUserProfilePage(this.fullName,this.photoUrl,this.address, {Key key}) : super(key: key);
   @override
-  _UserProfilePageState createState() => _UserProfilePageState();
+  _EditUserProfilePageState createState() => _EditUserProfilePageState(fullName: this.fullName,photoUrl: this.photoUrl,address: this.address);
 }
 
-class _UserProfilePageState extends State<UserProfilePage> {
-  var _newImage;
-  UserModel user=UserModel();
+class _EditUserProfilePageState extends State<EditUserProfilePage> {
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
+  var newImage;
+  UserModel user=UserModel();
+  TextEditingController _nameController ;
+  TextEditingController _addressController;
+  FocusNode nameFocusNode;
+  FocusNode addressFocusNode;
+  final String fullName,photoUrl,address;
+  _EditUserProfilePageState({this.fullName, this.photoUrl, this.address});
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUser();
-
+    // getUser();
+    _nameController = TextEditingController(text: fullName);
+    _addressController = TextEditingController(text: address);
   }
-  Future<UserModel> getUser() async {
-    user= await context.read<LoginProvider>().getUser(context);
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    nameFocusNode.dispose();
+    addressFocusNode.dispose();
+    super.dispose();
   }
+  // Future<UserModel> getUser() async {
+  //   user= await context.read<LoginProvider>().getUser(context);
+  //   _nameController = TextEditingController(text: user.fullName);
+  //   _addressController = TextEditingController(text: user.address);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -75,48 +94,44 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               padding: EdgeInsets.all(20),
                               child: Column(
                                 children: [
-                                  // Text(
-                                  //   "${user.fullName}",
-                                  //   style: TextStyle(
-                                  //     color: Colors.black,
-                                  //     fontWeight: FontWeight.w800,
-                                  //     fontSize: 30,
-                                  //   ),
-                                  // ),
+
                                   TextFormField(
+                                      autofocus: false,
+                                      focusNode: nameFocusNode,
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
                                       controller: _nameController,
                                       keyboardType: TextInputType.text,
                                       validator: (val) {
                                         return Validator.requiredField(
-                                            context, user.fullName, '');
+                                            context, val, '');
                                       },
-                                     decoration: InputDecoration(
-                                       filled: true,
-                                       contentPadding:
-                                       EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                       hintText: user.fullName,
-                                       disabledBorder: OutlineInputBorder(
-                                         borderSide: BorderSide(
-                                             color: Colors.grey, width: 0.5),
-                                         borderRadius: BorderRadius.circular(40.0),
-                                       ),
-                                     ),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      contentPadding:
+                                      EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                      disabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.grey, width: 0.5),
+                                        borderRadius: BorderRadius.circular(40.0),
+                                      ),
+                                    ),
                                     ),
                                   SizedBox(height: 20,),
                                   TextFormField(
+                                    autofocus: false,
+                                    focusNode: addressFocusNode,
                                     autovalidateMode: AutovalidateMode.onUserInteraction,
                                     controller: _addressController,
                                     keyboardType: TextInputType.text,
                                     validator: (val) {
                                       return Validator.requiredField(
-                                          context, user.address, '');
+                                          context, address, '');
                                     },
                                     decoration: InputDecoration(
                                       filled: true,
                                       contentPadding:
                                       EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      hintText: user.address,
+
                                       disabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                             color: Colors.grey, width: 0.5),
@@ -148,7 +163,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                           },
                                           child: Text("Cancel")),),
                                       SizedBox(width: 10),
-                                      Expanded(child: ElevatedButton(
+                                     Expanded(child: ElevatedButton(
                                           style: ButtonStyle(
                                             padding:
                                             MaterialStateProperty.all<EdgeInsets>(
@@ -165,8 +180,22 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                             ),
                                           ),
                                           onPressed: () async {
-                                            await Authentication.uploadphotofile(_newImage);
-                                            setState(() {});
+                                            var imgUrl=await Authentication.uploadphotofile(newImage);
+                                            if(imgUrl != null){
+
+                                              user.photoUrl= imgUrl;
+                                              user.fullName=_nameController.text.toString();
+                                              user.address= _addressController.text.toString();
+
+                                              //UserModel();
+                                              await context.read<LoginProvider>().updateUserInfo(context,user);
+                                            }
+
+                                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MePage()));
+
+                                            setState(() async {
+
+                                            });
                                           },
                                           child: Text("Save")),)
                                     ],
@@ -184,16 +213,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     width: 120,
                     child: Stack(
                       children: [
-                        _newImage != null?Container(
-                          height: 120,
-                          width: 120,
-                          child: CircleAvatar(
-                            backgroundImage: Image.file(File(_newImage)).image,
-                            radius: 50,
-                          ),
-                        )
+                        newImage != null?_showImageCircle()
                         :UserInfoScreenPhoto(
-                          imageurl: user.photoUrl,
+                          imageurl: photoUrl, width: 120,height: 120,
                          ),
                         Positioned(
                             top: 80,
@@ -204,15 +226,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(80),
                                 color: Colors.blue,
-                                // border: Border.all(
-                                //   color: Colors.white,
-                                //   width: 2,
-                                // )
                               ),
                               child: IconButton(onPressed: (){
                                 showImage();
                                 setState(() {
-
                                 });
                               },
                                   icon: Icon(Icons.photo_camera,size: 20,color: Colors.white,)),
@@ -227,12 +244,24 @@ class _UserProfilePageState extends State<UserProfilePage> {
           ),
         ));
   }
+  _showImageCircle() => Container(
+    height: 120,
+    width: 120,
+    child: CircleAvatar(
+      backgroundColor: Colors.white,
+      backgroundImage: Image.file(
+          File(newImage.path)).image,
+      radius: 50,
+    ),
+  );
+
   Future<String> showImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker _picker = ImagePicker();
+    final XFile image = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
-      _newImage = pickedFile;
+      newImage = image;
     });
   }
+
 
 }

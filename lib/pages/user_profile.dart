@@ -248,9 +248,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         password: pass,
                                         isActive: true,
                                         createdDate: DateTime.now());
-                                    await context
-                                        .read<LoginProvider>()
-                                        .addUserProfile(context, userModel);
+                                    // await context
+                                    //     .read<LoginProvider>()
+                                    //     .addUserProfile(context, userModel);
                                   },
                                   child: Text(
                                     "Add User Profile",

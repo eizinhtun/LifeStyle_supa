@@ -42,8 +42,8 @@ class UserInfoScreenPhoto extends StatelessWidget {
                 ),
               ),
               CachedNetworkImage(
-                width: 120,
-                height: 120,
+                width: width,
+                height: height,
                 imageUrl: imageurl,
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(

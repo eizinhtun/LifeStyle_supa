@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:left_style/models/user_model.dart';
+import 'package:left_style/pages/user_profile_page.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +20,7 @@ class MePage extends StatefulWidget {
 }
 
 class _MePageState extends State<MePage> {
-  var _user = FirebaseAuth.instance.currentUser;
+  UserModel user = UserModel();
   bool _isSigningOut = false;
   String url = "";
   bool _loading = false;
@@ -42,182 +44,364 @@ class _MePageState extends State<MePage> {
     );
   }
 
+  String fullName;
+  String photoUrl;
+  String address;
   void initState() {
-    url = _user.photoURL.toString();
     super.initState();
+    getUser();
+  }
+
+  Future<UserModel> getUser() async {
+    user = await context.read<LoginProvider>().getUser(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        body: (_loading)
-            ? Container(
-                width: double.infinity,
-                color: Colors.black12,
-                child: SizedBox(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [CircularProgressIndicator()],
-                  ),
-                ))
-            : Container(
-                child: Center(
-                  child: Stack(
-                    children: <Widget>[
-                      CustomScrollView(
-                        slivers: <Widget>[
-                          SliverAppBar(
-                            iconTheme: IconThemeData(color: Colors.black),
-                            backgroundColor: Colors.blue,
-                            pinned: true,
-                            snap: false,
-                            floating: false,
-                            expandedHeight: 0.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.vertical(
-                                bottom: new Radius.elliptical(200, 56.0),
-                              ),
-                            ),
-                            bottom: PreferredSize(
-                              preferredSize: Size.fromHeight(50),
-                              child: Container(),
-                            ),
-                            actions: [
-                              _isSigningOut
-                                  ? CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.white),
-                                    )
-                                  : IconButton(
-                                      icon: Icon(
-                                        Icons.logout,
-                                        color: Colors.white,
-                                      ),
-                                      tooltip: 'Sign Out',
-                                      onPressed: () async {
-                                        setState(() {
-                                          _isSigningOut = true;
-                                        });
-                                        await context
-                                            .read<LoginProvider>()
-                                            .logOut(context);
-                                        setState(() {
-                                          _isSigningOut = false;
-                                        });
-                                        Navigator.of(context)
-                                            .pushReplacement(_routeToLogin());
-                                      },
-                                    ),
-                            ],
-                          ),
-                          SliverToBoxAdapter(
-                            child: Container(
-                                constraints: BoxConstraints.expand(
-                                  height: MediaQuery.of(context).size.height,
+        body: Container(
+          child: Center(
+              child: user.fullName != null &&
+                      user.photoUrl != null &&
+                      user.address != null
+                  ? Stack(
+                      children: <Widget>[
+                        CustomScrollView(
+                          slivers: <Widget>[
+                            SliverAppBar(
+                              iconTheme: IconThemeData(color: Colors.black),
+                              backgroundColor: Colors.blue,
+                              pinned: true,
+                              snap: false,
+                              floating: false,
+                              expandedHeight: 0.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.vertical(
+                                  bottom: new Radius.elliptical(200, 56.0),
                                 ),
-                                child: Container(
-                                    child: Column(
-                                  children: [
-                                    SizedBox(height: 80.0),
-                                    Text(
-                                      _user.displayName,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 30,
-                                      ),
-                                    ),
-                                    SizedBox(height: 8.0),
-                                    ElevatedButton(
-                                        style: ButtonStyle(
-                                          padding: MaterialStateProperty
-                                              .all<EdgeInsets>(EdgeInsets.only(
-                                                  left: 100,
-                                                  right: 100,
-                                                  top: 10,
-                                                  bottom: 10)),
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                            Colors.blue,
-                                          ),
-                                          shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                            ),
-                                          ),
+                              ),
+                              bottom: PreferredSize(
+                                preferredSize: Size.fromHeight(50),
+                                child: Container(),
+                              ),
+                              actions: [
+                                _isSigningOut
+                                    ? CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
+                                      )
+                                    : IconButton(
+                                        icon: Icon(
+                                          Icons.logout,
+                                          color: Colors.white,
                                         ),
+                                        tooltip: 'Sign Out',
                                         onPressed: () async {
-                                          url = await Authentication
-                                              .uploadphotofilecamera();
-                                          setState(() {});
-                                        },
-                                        child: Text("Take a Photo")),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    ElevatedButton(
-                                        style: ButtonStyle(
-                                          padding: MaterialStateProperty
-                                              .all<EdgeInsets>(EdgeInsets.only(
-                                                  left: 76,
-                                                  right: 76,
-                                                  top: 10,
-                                                  bottom: 10)),
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                            Colors.blue,
-                                          ),
-                                          shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                            ),
-                                          ),
-                                        ),
-                                        onPressed: () async {
-                                          url = await Authentication
-                                              .uploadphotofilegallery();
                                           setState(() {
-                                            _loading = true;
-                                            Timer(Duration(seconds: 10), () {
-                                              setState(() {
-                                                _loading = false;
-                                              });
-                                            });
+                                            _isSigningOut = true;
                                           });
-                                          // Future.delayed(new Duration(seconds: 3), () {
-                                          // });
-                                          // setState(() {
-                                          //   _loading=false;
-                                          // });
+                                          await context
+                                              .read<LoginProvider>()
+                                              .logOut(context);
+                                          setState(() {
+                                            _isSigningOut = false;
+                                          });
+                                          Navigator.of(context)
+                                              .pushReplacement(_routeToLogin());
                                         },
-                                        child: Text("Choose From Album")),
-                                  ],
-                                ))),
+                                      ),
+                              ],
+                            ),
+                            SliverToBoxAdapter(
+                              child: Container(
+                                  constraints: BoxConstraints.expand(
+                                    height: MediaQuery.of(context).size.height,
+                                  ),
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: 300),
+                                    child: Column(
+                                      children: [
+                                        _isSigningOut
+                                            ? CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(Colors.white),
+                                              )
+                                            : Card(
+                                                margin: EdgeInsets.only(
+                                                    top: 10.0,
+                                                    left: 10,
+                                                    right: 10,
+                                                    bottom: 20),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                ),
+                                                child: ListTile(
+                                                  onTap: () async {
+                                                    await showLogoutConfirmDialog(
+                                                        context);
+                                                    // await MessageHandel.comfirmLogoutDialg(context);
+
+                                                    // if (_confirm != null && _confirm) {
+                                                    //   await sysData.logout(context);
+                                                    // }
+                                                  },
+                                                  title: new Container(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Expanded(
+                                                          child: Row(
+                                                            children: <Widget>[
+                                                              Image.asset(
+                                                                "assets/image/logout.png",
+                                                                width: 25,
+                                                                height: 25,
+                                                              ),
+                                                              Container(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              20.0),
+                                                                  child: Text(
+                                                                    "Logout",
+                                                                    style: TextStyle(
+                                                                        color: Color(
+                                                                            0xFF313131),
+                                                                        fontSize:
+                                                                            15),
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                        // IconButton(
+                                        //   icon: Icon(
+                                        //     Icons.logout,
+                                        //     color: Colors.white,
+                                        //   ),
+                                        //   tooltip: 'Sign Out',
+                                        //   onPressed: () async {
+                                        //     setState(() {
+                                        //       _isSigningOut = true;
+                                        //     });
+                                        //     await context
+                                        //         .read<LoginProvider>()
+                                        //         .logOut(context);
+                                        //     setState(() {
+                                        //       _isSigningOut = false;
+                                        //     });
+                                        //     Navigator.of(context)
+                                        //         .pushReplacement(_routeToLogin());
+                                        //   },
+                                        // ),
+                                        //
+                                      ],
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ),
+                        Positioned(
+                          top: 100,
+                          left: 0,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            width: MediaQuery.of(context).size.width - 20,
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      color: Colors.white,
+                                      elevation: 2,
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 5),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: 20),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        UserInfoScreenPhoto(
+                                                          imageurl:
+                                                              user.photoUrl,
+                                                          width: 80,
+                                                          height: 80,
+                                                        ),
+                                                        Text(
+                                                          user.fullName,
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Spacer(),
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: 20),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.blue,
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                          width: 2.0,
+                                                          color: Colors.white),
+                                                    ),
+                                                    child: IconButton(
+                                                        onPressed: () {
+                                                          fullName = user
+                                                              .fullName
+                                                              .toString();
+                                                          photoUrl = user
+                                                              .photoUrl
+                                                              .toString();
+                                                          address = user.address
+                                                              .toString();
+                                                          Navigator.of(context).push(MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  EditUserProfilePage(
+                                                                      fullName,
+                                                                      photoUrl,
+                                                                      address)));
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.edit_outlined,
+                                                          color: Colors.white,
+                                                          size: 25,
+                                                        )),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                border: Border(
+                                                  top: BorderSide(
+                                                      width: 2.0,
+                                                      color: Colors.black12),
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 40,
+                                                    vertical: 10),
+                                                child: Row(
+                                                  children: [
+                                                    Text("Balance",
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    Spacer(),
+                                                    Text(
+                                                        user.balance
+                                                                .toString() +
+                                                            " Ks",
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )),
+                                ),
+                              ],
+                            ),
                           ),
+                        ),
+                      ],
+                    )
+                  : Container(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
                         ],
                       ),
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          margin: EdgeInsets.only(top: 70),
-                          height: 120,
-                          width: 120,
-                          child: url != null
-                              ? UserInfoScreenPhoto(
-                                  imageurl: url,
-                                  width: 80,
-                                  height: 80,
-                                  borderColor: Colors.white,
-                                )
-                              : Text(""),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ));
+                    )),
+        ));
+  }
+
+  showLogoutConfirmDialog(BuildContext context) {
+    // set up the buttons
+    Widget continueButton = TextButton(
+      child: Text("Confirm"),
+      onPressed: () async {
+        setState(() {
+          _isSigningOut = true;
+        });
+        await context.read<LoginProvider>().logOut(context);
+        setState(() {
+          _isSigningOut = false;
+        });
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => LoginPage()));
+      },
+    );
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        setState(() {});
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => super.widget));
+
+        //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MePage()));
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(
+        "Are you sure logout?",
+        style: TextStyle(fontSize: 20),
+      ),
+      //content: Text(""),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

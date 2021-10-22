@@ -9,6 +9,7 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/validators/validator.dart';
+import 'package:left_style/widgets/wallet.dart';
 
 class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
@@ -18,6 +19,20 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
+      await userRef.doc(uid).get().then((value) {
+        userModel = UserModel.fromJson(value.data());
+        notifyListeners();
+        return userModel;
+      });
+    }
+    notifyListeners();
+    return userModel;
+  }
+
+  Future<UserModel> getUserScanData(BuildContext context, uid) async {
+    UserModel userModel = UserModel();
+    if (uid != null) {
+      uid = uid.toString();
       await userRef.doc(uid).get().then((value) {
         userModel = UserModel.fromJson(value.data());
         notifyListeners();
@@ -178,30 +193,8 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<void> updateUserInfo(BuildContext context, UserModel userModel) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
-
       try {
-        userRef.doc(uid).set(userModel.toJson()).then((_) {
-          print("add user profile success!");
-          MessageHandler.showMessage(
-              context, "Success", "Adding user profile is successful");
-        });
-
-        notifyListeners();
-      } catch (e) {
-        print("Failed to add user profile: $e");
-        MessageHandler.showErrMessage(
-            context, "Fail", "Adding User Profile is fail");
-      }
-    }
-    notifyListeners();
-  }
-
-  Future<void> addUserProfile(BuildContext context, UserModel userModel) async {
-    if (FirebaseAuth.instance.currentUser?.uid != null) {
-      String uid = FirebaseAuth.instance.currentUser.uid.toString();
-
-      try {
-        userRef.doc(uid).set(userModel.toJson()).then((_) {
+        userRef.doc(uid).update(userModel.toJson()).then((value) {
           print("update user success!");
           MessageHandler.showMessage(
               context, "Success", "Updating User Info is successful");
