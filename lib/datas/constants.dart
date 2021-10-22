@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 const String smsUrl = "https://verify.smspoh.com/api/";
 const String token =
     "VcDFsbOAZ3xpFVql7yLczsbAZmihyV9eZnUBdJHiz6-4k7_ggfNVllQxie5gEPMc";
@@ -63,6 +65,8 @@ Future<Map<String, String>> getHeadersWithOutToken() async {
     return headers;
   }
 }
+
+const Color mainColor = Color(0xFFfa2e73);
 
 const String userCollection = "users";
 const String transactions = "transactions";

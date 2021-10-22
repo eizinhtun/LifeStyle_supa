@@ -190,8 +190,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  Future<UserModel> addUserProfile(
-      BuildContext context, UserModel userModel) async {
+  Future<void> addUserProfile(BuildContext context, UserModel userModel) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       try {

@@ -48,7 +48,7 @@ class _NotificationListPage extends State<NotificationListPage>
   }
 
   getData() async {
-    items = await context.watch<NotiProvider>().getNotiList(context);
+    items = await context.read<NotiProvider>().getNotiList(context);
     if (items != null && items.length > 0) {
       SystemData.notiCount = items.where((e) => e.status == "0").length;
     } else {
@@ -155,19 +155,22 @@ class _NotificationListPage extends State<NotificationListPage>
                                       ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(8.0),
-                                        child: items[index].imageUrl != null
-                                            ? Image.network(
-                                                items[index].imageUrl,
-                                                width: 60.0,
-                                                height: 60.0,
-                                                fit: BoxFit.fill,
-                                              )
-                                            : Image.asset(
-                                                'assets/icon/icon.png',
-                                                width: 60.0,
-                                                height: 60.0,
-                                                fit: BoxFit.fill,
-                                              ),
+                                        child:
+                                            // items[index].imageUrl != null ||
+                                            //         items[index].imageUrl != ""
+                                            //     ? Image.network(
+                                            //         items[index].imageUrl,
+                                            //         width: 60.0,
+                                            //         height: 60.0,
+                                            //         fit: BoxFit.fill,
+                                            //       )
+                                            //     :
+                                            Image.asset(
+                                          'assets/icon/icon.png',
+                                          width: 60.0,
+                                          height: 60.0,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -213,9 +216,14 @@ class _NotificationListPage extends State<NotificationListPage>
                                               items[index].currentdate != null
                                                   ? Text(
                                                       timeago.format(
-                                                          DateTime.parse(
-                                                              items[index]
-                                                                  .currentdate),
+                                                          DateTime.fromMicrosecondsSinceEpoch(
+                                                              int.parse(items[
+                                                                      index]
+                                                                  .currentdate)),
+                                                          // DateTime.parse(
+
+                                                          //     items[index]
+                                                          //         .currentdate),
                                                           locale: "en",
                                                           // SystemData.language,
                                                           allowFromNow: true),

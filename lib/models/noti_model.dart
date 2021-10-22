@@ -72,7 +72,7 @@ class NotiModel {
     createdDate = json['created_date'];
     createdDateTimeStr = json['created_date_time_Str'];
     title = json['title'];
-    userId = json['user_id'];
+    userId = json['userId'];
     type = json['type'];
     refid = json['refid'];
     content = json['content'];
@@ -110,7 +110,7 @@ class NotiModel {
     data['created_date'] = this.createdDate;
     data['created_date_time_Str'] = this.createdDateTimeStr;
     data['title'] = this.title;
-    data['user_id'] = this.userId;
+    data['userId'] = this.userId;
     data['type'] = this.type;
     data['refid'] = this.refid;
     data['content'] = this.content;
