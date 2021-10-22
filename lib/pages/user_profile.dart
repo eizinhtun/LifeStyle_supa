@@ -244,7 +244,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                             .instance.currentUser.uid,
                                         fullName:
                                             _nameController.text.toString(),
-                                        phone: _phoneController.text.toString(),
+                                        phone: phNoFormat(),
                                         password: pass,
                                         isActive: true,
                                         createdDate: DateTime.now());
@@ -273,5 +273,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ],
       ),
     );
+  }
+  String phNoFormat() {
+    String phoneNumber = _phoneController.text;
+    if (phoneNumber.startsWith("0")) {
+      phoneNumber = phoneNumber.substring(1, phoneNumber.length);
+    }
+    phoneNumber = "+95" + phoneNumber;
+    return phoneNumber;
   }
 }
