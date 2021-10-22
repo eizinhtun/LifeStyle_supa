@@ -190,6 +190,27 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
+  Future<UserModel> addUserProfile(
+      BuildContext context, UserModel userModel) async {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      try {
+        userRef.doc(uid).set(userModel.toJson()).then((value) {
+          print("Add user success!");
+          MessageHandler.showMessage(
+              context, "Success", "Updating User Info is successful");
+        });
+
+        notifyListeners();
+      } catch (e) {
+        print("Failed to update user: $e");
+        MessageHandler.showErrMessage(
+            context, "Fail", "Updating User Info is fail");
+      }
+    }
+    notifyListeners();
+  }
+
   Future<void> updateUserInfo(BuildContext context, UserModel userModel) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();

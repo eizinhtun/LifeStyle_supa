@@ -113,7 +113,8 @@ class _GenerateQRState extends State<GenerateQR> {
                                           margin: EdgeInsets.only(bottom: 50),
                                             width: 200,
                                             height: 200,
-                                            child: QrImage(data: qrData)
+                                            //child: QrImage(data: qrData)
+                                            child: _qrImage(),
                                         ),
                                       ],
                                     ),
@@ -164,5 +165,17 @@ class _GenerateQRState extends State<GenerateQR> {
               ),
           ),
         ));
+  }
+  _qrImage(){
+    QrImage(
+      data: qrData,
+      version: QrVersions.auto,
+      size: 320,
+      gapless: false,
+      embeddedImage: NetworkImage(user.photoUrl),
+      embeddedImageStyle: QrEmbeddedImageStyle(
+        size: Size(80, 80),
+      ),
+    );
   }
 }
