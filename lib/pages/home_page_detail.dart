@@ -9,7 +9,6 @@ import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/pages/me_page.dart';
-import 'package:left_style/pages/meter_list.dart';
 import 'package:left_style/pages/notification_list.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
@@ -26,7 +25,7 @@ class HomePageDetail extends StatefulWidget {
 }
 
 class _HomePageDetailState extends State<HomePageDetail> {
-  static MeterListPage _mePage = MeterListPage(); //MePage();
+  // static MeterListPage _mePage = MeterListPage(); //MePage();
   FirebaseMessaging _messaging;
   static const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'id', // id
@@ -451,19 +450,19 @@ class _HomePageDetailState extends State<HomePageDetail> {
     }
   }
 
-  // static MePage _mePage = MePage();
+  static MePage _mePage = MePage();
   static HomePage _homePage = HomePage();
   static Wallet _walletPage = Wallet();
   static NotificationListPage _notification = NotificationListPage();
 
   PageController controller = PageController();
   List<Widget> _list = <Widget>[
-    new Center(child: _homePage),
-    new Center(child: _walletPage),
-    new Center(child: _mePage),
+    Center(child: _homePage),
+    Center(child: _walletPage),
+    Center(child: _mePage),
     Center(
       child: _notification,
-    )
+    ),
   ];
   int bottomSelectedIndex = 0;
 
