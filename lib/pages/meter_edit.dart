@@ -67,12 +67,11 @@ class MeterEditPageState extends State<MeterEditPage>
       setState(() {
         isExist = true;
         Meter meter = Meter.fromJson(value.data());
-        autoPay=meter.autoPay==null?false:meter.autoPay;
-        selfScan=meter.selfScan==null?false:meter.selfScan;
+        autoPay = meter.autoPay == null ? false : meter.autoPay;
+        selfScan = meter.selfScan == null ? false : meter.selfScan;
       });
 
       return true;
-
     } else {
       setState(() {
         isExist = false;
@@ -110,7 +109,7 @@ class MeterEditPageState extends State<MeterEditPage>
       ),
       body: Column(
         children: [
-          new Divider(
+          Divider(
             height: 1.0,
             color: Colors.grey.withOpacity(0.3),
           ),
@@ -625,31 +624,37 @@ class MeterEditPageState extends State<MeterEditPage>
                                           CupertinoSwitch(
                                             value: autoPay,
                                             onChanged: (bool value) async {
-                                              setState(() {
-                                                autoPay=value;
-                                              });
-
-
-
                                               if (FirebaseAuth.instance
                                                       .currentUser?.uid !=
                                                   null) {
                                                 String uid = FirebaseAuth
                                                     .instance.currentUser.uid
                                                     .toString();
-                                               // String docId = "7324392739";
+                                                // String docId = "7324392739";
                                                 await meterRef
                                                     .doc(uid)
                                                     .collection(
                                                         userMeterCollection)
                                                     .doc(widget.obj.customerId)
-                                                    .update(
-                                                        {"AutoPay": value}).catchError((e){
+                                                    .get(GetOptions(
+                                                        source: Source.server))
+                                                    .then((valueData) {
+                                                  valueData.reference.update(
+                                                      {"AutoPay": value});
                                                   setState(() {
-                                                    autoPay=!value;
+                                                    autoPay = value;
                                                   });
+                                                }).catchError((e) {
+                                                  setState(() {
+                                                    autoPay = !value;
+                                                  });
+                                                  MessageHandler.showErrMessage(
+                                                      context,
+                                                      "Unavailable",
+                                                      e.toString().replaceAll(
+                                                          "[cloud_firestore/unavailable]",
+                                                          ""));
                                                 });
-
                                               }
                                             },
                                           ),
@@ -670,33 +675,43 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 fontSize: 13),
                                           ),
                                           CupertinoSwitch(
-                                            value: selfScan,
-                                            onChanged: (bool value) async {
-                                              setState(() {
-                                                selfScan=value;
-                                              });
-                                              if (FirebaseAuth.instance
-                                                  .currentUser?.uid !=
-                                                  null) {
-                                                String uid = FirebaseAuth
-                                                    .instance.currentUser.uid
-                                                    .toString();
-                                                // String docId = "7324392739";
-                                                await meterRef
-                                                    .doc(uid)
-                                                    .collection(
-                                                    userMeterCollection)
-                                                    .doc(widget.obj.customerId)
-                                                    .update(
-                                                    {"SelfScan": value}).catchError((e){
-                                                  setState(() {
-                                                    selfScan=!value;
-                                                  });
-                                                });
+                                              value: selfScan,
+                                              onChanged: (bool value) async {
+                                                if (FirebaseAuth.instance
+                                                        .currentUser?.uid !=
+                                                    null) {
+                                                  String uid = FirebaseAuth
+                                                      .instance.currentUser.uid
+                                                      .toString();
 
-                                              }
-                                            },
-                                          ),
+                                                  await meterRef
+                                                      .doc(uid)
+                                                      .collection(
+                                                          userMeterCollection)
+                                                      .doc(
+                                                          widget.obj.customerId)
+                                                      .get(GetOptions(
+                                                          source:
+                                                              Source.server))
+                                                      .then((valueData) {
+                                                    valueData.reference.update(
+                                                        {"SelfScan": value});
+                                                    setState(() {
+                                                      selfScan = value;
+                                                    });
+                                                  }).catchError((e) {
+                                                    setState(() {
+                                                      selfScan = !value;
+                                                    });
+                                                    MessageHandler.showErrMessage(
+                                                        context,
+                                                        "Unavailable",
+                                                        e.toString().replaceAll(
+                                                            "[cloud_firestore/unavailable]",
+                                                            ""));
+                                                  });
+                                                }
+                                              }),
                                           //Checkbox
                                         ], //<Widget>[]
                                       ), //R

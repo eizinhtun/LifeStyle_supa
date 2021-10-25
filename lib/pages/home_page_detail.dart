@@ -25,7 +25,6 @@ class HomePageDetail extends StatefulWidget {
 }
 
 class _HomePageDetailState extends State<HomePageDetail> {
-  // static MeterListPage _mePage = MeterListPage(); //MePage();
   FirebaseMessaging _messaging;
   static const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'id', // id
@@ -453,16 +452,12 @@ class _HomePageDetailState extends State<HomePageDetail> {
   static MePage _mePage = MePage();
   static HomePage _homePage = HomePage();
   static Wallet _walletPage = Wallet();
-  static NotificationListPage _notification = NotificationListPage();
 
   PageController controller = PageController();
   List<Widget> _list = <Widget>[
     Center(child: _homePage),
     Center(child: _walletPage),
     Center(child: _mePage),
-    Center(
-      child: _notification,
-    ),
   ];
   int bottomSelectedIndex = 0;
 
@@ -513,10 +508,6 @@ class _HomePageDetailState extends State<HomePageDetail> {
                 activeIcon: Icon(FontAwesomeIcons.user),
                 icon: Icon(FontAwesomeIcons.user),
                 label: "Me"),
-            BottomNavigationBarItem(
-                activeIcon: Icon(FontAwesomeIcons.bell),
-                icon: Icon(FontAwesomeIcons.bell),
-                label: "Noti"),
           ],
         ),
       ),

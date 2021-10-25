@@ -48,8 +48,10 @@ class WalletState extends State<Wallet> {
   }
 
   getData() async {
-    totalList =
-        await context.read<WalletProvider>().getTransactionList(context);
+    if (mounted) {
+      totalList =
+          await context.read<WalletProvider>().getTransactionList(context);
+    }
     if (totalList.length < end) {
       end = totalList.length;
     }
@@ -92,34 +94,29 @@ class WalletState extends State<Wallet> {
                 snap: false,
                 floating: false,
                 expandedHeight: 0.0,
+                stretchTriggerOffset: 70.0,
                 shape: ContinuousRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(200),
-                        bottomRight: Radius.circular(200))),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(80),
+                    bottomRight: Radius.circular(80),
+                  ),
+                ),
                 bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(100),
+                  preferredSize: Size.fromHeight(50),
                   child: Container(),
                 ),
-                actions: [
-                  IconButton(
-                      onPressed: () async {
-                        await context.read<LoginProvider>().logOut(context);
-                        setState(() {});
-                      },
-                      icon: Icon(Icons.logout))
-                ],
               ),
-              SliverToBoxAdapter(
-                child: Container(
-                    constraints: BoxConstraints.expand(
-                      height: MediaQuery.of(context).size.height,
-                    ),
-                    child: Container()),
-              ),
+              // SliverToBoxAdapter(
+              //   child: Container(
+              //       constraints: BoxConstraints.expand(
+              //         height: MediaQuery.of(context).size.height,
+              //       ),
+              //       child: Container()),
+              // ),
             ],
           ),
           Positioned(
-            top: 100,
+            top: 30,
             left: 0,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 15),
@@ -202,17 +199,16 @@ class WalletState extends State<Wallet> {
                                         )),
                                   ),
                                   SizedBox(width: 5),
-
                                   Expanded(
                                     child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                             padding: EdgeInsets.only(
-                                              left: 15,
-                                              right: 15,
-                                              top: 10,
-                                              bottom: 10,
-                                            ) // foreground
-                                        ),
+                                          left: 15,
+                                          right: 15,
+                                          top: 10,
+                                          bottom: 10,
+                                        ) // foreground
+                                            ),
                                         onPressed: () {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
@@ -227,7 +223,6 @@ class WalletState extends State<Wallet> {
                                           ],
                                         )),
                                   ),
-
                                 ],
                               ),
                             ),
