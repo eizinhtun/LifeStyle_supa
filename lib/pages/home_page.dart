@@ -11,6 +11,7 @@ import 'package:left_style/pages/my_meterBill_list.dart';
 import 'package:left_style/pages/my_uploadUnit_list.dart';
 import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/providers/login_provider.dart';
+import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/widgets/qr_code_demo.dart';
 import 'package:left_style/widgets/scan_qr.dart';
 import 'package:left_style/widgets/scan_qr_data.dart';
@@ -195,7 +196,19 @@ class _HomePageState extends State<HomePage> {
                         }
                       }
                     },
-                    child: Text("Go to QR Page"))
+                    child: Text("Go to QR Page")),
+                // onPressed: () {
+                //   Navigator.of(context).push(
+                //       MaterialPageRoute(builder: (context) => QRCodePage()));
+                // },
+                // child: Text("Go to QR Page"),
+
+                ElevatedButton(
+                  onPressed: () async {
+                    await context.read<NotiProvider>().sendNoti(context);
+                  },
+                  child: Text("Send Notification"),
+                )
               ],
             ),
           ),

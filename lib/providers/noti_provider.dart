@@ -34,6 +34,38 @@ class NotiProvider with ChangeNotifier, DiagnosticableTreeMixin {
     return list;
   }
 
+  Future<void> addNotiToStore(NotiModel noti) async {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser?.uid;
+      await notiRef
+          .doc(uid)
+          .collection(notilist)
+          .doc(noti.messageId)
+          .set(noti.toJson());
+      notifyListeners();
+    }
+    notifyListeners();
+  }
+
+  Future<NotiModel> getNotiById(BuildContext context, String id) async {
+    NotiModel noti = NotiModel();
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser?.uid;
+      await notiRef
+          .doc(uid)
+          .collection(notilist)
+          .where("message_id", isEqualTo: id)
+          .get()
+          .then((value) {
+        noti = NotiModel.fromJson(value.docs.first.data());
+      });
+      notifyListeners();
+      return noti;
+    }
+    notifyListeners();
+    return noti;
+  }
+
   Future<void> sendNoti(BuildContext context) async {
     // NotiModel notiModel = NotiModel(title:'this is a title',body:'this is a body',  );
     try {

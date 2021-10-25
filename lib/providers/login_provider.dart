@@ -8,8 +8,6 @@ import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/utils/message_handler.dart';
-import 'package:left_style/validators/validator.dart';
-import 'package:left_style/widgets/wallet.dart';
 
 class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
@@ -190,6 +188,26 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
+  Future<void> addUserProfile(BuildContext context, UserModel userModel) async {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      try {
+        userRef.doc(uid).set(userModel.toJson()).then((value) {
+          print("Add user success!");
+          MessageHandler.showMessage(
+              context, "Success", "Updating User Info is successful");
+        });
+
+        notifyListeners();
+      } catch (e) {
+        print("Failed to update user: $e");
+        MessageHandler.showErrMessage(
+            context, "Fail", "Updating User Info is fail");
+      }
+    }
+    notifyListeners();
+  }
+
   Future<void> updateUserInfo(BuildContext context, UserModel userModel) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
@@ -217,8 +235,10 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       try {
         userRef.doc(uid).update({"fcmToken": fcmtoken}).then((_) {
           print("update token success!");
+
           MessageHandler.showMessage(
               context, "Success", "Updating token is successful");
+          return true;
         });
 
         notifyListeners();
@@ -228,6 +248,8 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
             context, "Fail", "Updating token is fail");
       }
     }
+
     notifyListeners();
+    return false;
   }
 }

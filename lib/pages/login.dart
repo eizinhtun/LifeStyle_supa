@@ -10,12 +10,10 @@ import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/user_model.dart';
-import 'package:left_style/pages/register.dart';
 import 'package:left_style/pages/register_verify_pin_page.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:left_style/utils/message_handler.dart';
-import 'login_verify_pin_page.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -27,7 +25,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _loginformKey = GlobalKey<FormState>();
-  bool _obscureText = true;
+
   TextEditingController _phoneController = TextEditingController();
   var userRef = FirebaseFirestore.instance.collection(userCollection);
   String verificationId = "";

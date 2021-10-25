@@ -26,13 +26,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   bool isPhoneToken = false;
-  User _user=   null;
+  User _user = null;
   @override
   void initState() {
     super.initState();
-    _user=   FirebaseAuth .instance.currentUser;
+    _user = FirebaseAuth.instance.currentUser;
     _phoneController.text = _user.phoneNumber;
-    _nameController.text=_user.displayName;
+    _nameController.text = _user.displayName;
   }
 
   @override
@@ -42,11 +42,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-
             title: Center(
               child: Text(
                 "User Profile",
-                style: TextStyle(fontSize: 20, color: Colors.black54,),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black54,
+                ),
               ),
             ),
             iconTheme: IconThemeData(color: Colors.black),
@@ -67,7 +69,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           padding: EdgeInsets.all(30.0),
                           child: Column(
                             children: <Widget>[
-                           /*   Container(
+                              /*   Container(
                                 padding: EdgeInsets.all(4),
                                 child: Center(
                                   child: Text(
@@ -235,17 +237,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     minWidth: double.infinity,
                                     maxHeight: 400),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           primary: Colors.grey,
-                                          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 30, vertical: 15),
                                           textStyle: TextStyle(
                                               fontWeight: FontWeight.bold)),
-
                                       onPressed: () async {
-                                        await context.read<LoginProvider>().logOut(context);
+                                        await context
+                                            .read<LoginProvider>()
+                                            .logOut(context);
                                       },
                                       child: Text(
                                         "Cancel",
@@ -256,38 +261,39 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     ),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                                         ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 15),
+                                      ),
                                       onPressed: () async {
                                         // bool isTaken = await checkPhoneIsTaken();
                                         // phone = phNoFormat();
                                         // if (!isTaken) {
                                         //   register();
                                         // }
-                                        if(_profileformKey.currentState.validate()) {
-
+                                        if (_profileformKey.currentState
+                                            .validate()) {
                                           var pass = DBCrypt().hashpw(
                                               _passwordController.text,
                                               DBCrypt().gensalt());
                                           // var isCorrect = new DBCrypt().checkpw(plain, hashed);
 
-
                                           UserModel userModel = UserModel(
                                               uid: _user.uid,
-                                              fullName:_nameController.text.toString(),
-                                              phone:Formatter.formatPhone( _phoneController.text.toString()),
+                                              fullName: _nameController.text
+                                                  .toString(),
+                                              phone: Formatter.formatPhone(
+                                                  _phoneController.text
+                                                      .toString()),
                                               password: pass,
-                                              photoUrl:_user.photoURL,
+                                              photoUrl: _user.photoURL,
                                               email: _user.email,
-
                                               isActive: true,
                                               createdDate: DateTime.now());
                                           await context
                                               .read<LoginProvider>()
                                               .updateUserInfo(
-                                              context, userModel);
+                                                  context, userModel);
                                         }
-
                                       },
                                       child: Text(
                                         "Add User Profile",
@@ -297,11 +303,45 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       ),
                                     ),
                                   ],
+                                  // child: ElevatedButton(
+                                  //   onPressed: () async {
+                                  //     // bool isTaken = await checkPhoneIsTaken();
+                                  //     // phone = phNoFormat();
+                                  //     // if (!isTaken) {
+                                  //     //   register();
+                                  //     // }
+                                  //     var pass = DBCrypt().hashpw(
+                                  //         _passwordController.text,
+                                  //         DBCrypt().gensalt());
+                                  //     // var isCorrect = new DBCrypt().checkpw(plain, hashed);
+                                  //     UserModel userModel = UserModel(
+                                  //         uid: FirebaseAuth
+                                  //             .instance.currentUser.uid,
+                                  //         fullName:
+                                  //             _nameController.text.toString(),
+                                  //         phone: phNoFormat(),
+                                  //         password: pass,
+                                  //         isActive: true,
+                                  //         createdDate: DateTime.now());
+                                  //     await context
+                                  //         .read<LoginProvider>()
+                                  //         .addUserProfile(context, userModel);
+                                  //   },
+                                  //   child: Text(
+                                  //     "Add User Profile",
+                                  //     style: TextStyle(
+                                  //         color: Colors.white,
+                                  //         fontWeight: FontWeight.bold),
+                                  //   ),
+                                  // ),
+
+                                  // ),
+                                  // ],
                                 ),
                               ),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -312,5 +352,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ],
       ),
     );
+  }
+
+  String phNoFormat() {
+    String phoneNumber = _phoneController.text;
+    if (phoneNumber.startsWith("0")) {
+      phoneNumber = phoneNumber.substring(1, phoneNumber.length);
+    }
+    phoneNumber = "+95" + phoneNumber;
+    return phoneNumber;
   }
 }
