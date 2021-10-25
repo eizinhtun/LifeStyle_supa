@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/models/Meter.dart';
 import 'package:left_style/pages/meter_search_result.dart';
 import 'package:left_style/pages/my_meterBill_list.dart';
 import 'package:left_style/pages/my_uploadUnit_list.dart';
@@ -13,8 +12,7 @@ import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/widgets/qr_code_demo.dart';
-import 'package:left_style/widgets/scan_qr.dart';
-import 'package:left_style/widgets/scan_qr_data.dart';
+import 'package:left_style/widgets/test_crud.dart';
 import 'package:provider/provider.dart';
 
 import 'meter_city.dart';
