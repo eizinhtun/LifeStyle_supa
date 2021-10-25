@@ -8,8 +8,6 @@ import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/utils/message_handler.dart';
-import 'package:left_style/validators/validator.dart';
-import 'package:left_style/widgets/wallet.dart';
 
 class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
@@ -190,8 +188,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  Future<UserModel> addUserProfile(
-      BuildContext context, UserModel userModel) async {
+  Future<void> addUserProfile(BuildContext context, UserModel userModel) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       try {
@@ -215,7 +212,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       try {
-        userRef.doc(uid).update(userModel.toJson()).then((value) {
+        userRef.doc(uid).set(userModel.toJson()).then((value) {
           print("update user success!");
           MessageHandler.showMessage(
               context, "Success", "Updating User Info is successful");
@@ -238,8 +235,10 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       try {
         userRef.doc(uid).update({"fcmToken": fcmtoken}).then((_) {
           print("update token success!");
+
           MessageHandler.showMessage(
               context, "Success", "Updating token is successful");
+          return true;
         });
 
         notifyListeners();
@@ -249,6 +248,8 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
             context, "Fail", "Updating token is fail");
       }
     }
+
     notifyListeners();
+    return false;
   }
 }

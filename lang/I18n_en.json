@@ -10,5 +10,11 @@
   "userInvaild":"Account is not correct",
   "full_name":"Full Name",
   "confirm_password":"Confirm Password",
-  "register":"Register"
+  "register":"Register",
+  "meter_rearch": "Search Meter",
+  "meter_detail": "Meter Details",
+  "my_meters": "My meters",
+  "current_unit": "Current Unit",
+  "my_uploaded_unit": "My uploaded ",
+  "my_meter_bills": "My meter bills"
 }

@@ -1,10 +1,8 @@
 // @dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
+
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/providers/noti_provider.dart';
@@ -12,13 +10,15 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import 'notification_detail.dart';
+
 class NotificationListPage extends StatefulWidget {
   NotificationListPage({
     Key key,
   }) : super(key: key);
 
   @override
-  _NotificationListPage createState() => new _NotificationListPage();
+  _NotificationListPage createState() => _NotificationListPage();
 }
 
 class _NotificationListPage extends State<NotificationListPage>
@@ -48,7 +48,7 @@ class _NotificationListPage extends State<NotificationListPage>
   }
 
   getData() async {
-    items = await context.watch<NotiProvider>().getNotiList(context);
+    items = await context.read<NotiProvider>().getNotiList(context);
     if (items != null && items.length > 0) {
       SystemData.notiCount = items.where((e) => e.status == "0").length;
     } else {
@@ -60,33 +60,49 @@ class _NotificationListPage extends State<NotificationListPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        elevation: 0.0,
-        title: Center(
-          child: Container(
-              margin: EdgeInsets.only(right: 40), child: Text("Notifications")),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF001950),
-              Color(0xFF04205a),
-              Color(0xFF0b2b6a),
-              Color(0xFF0b2b6a),
-              Color(0xFF2253a2),
-              Color(0xFF2253a2)
-            ],
-          )),
-        ),
-      ),
+
+      //   appBar: AppBar(
+      //     elevation: 0.0,
+      //     title: Center(
+      //       child: Container(
+      //           margin: EdgeInsets.only(right: 40), child: Text("Notifications")),
+      //     ),
+      //     flexibleSpace: Container(
+      //       decoration: BoxDecoration(
+      //           gradient: LinearGradient(
+      //         begin: Alignment.topLeft,
+      //         end: Alignment.bottomRight,
+      //         colors: [
+      //           Color(0xFF001950),
+      //           Color(0xFF04205a),
+      //           Color(0xFF0b2b6a),
+      //           Color(0xFF0b2b6a),
+      //           Color(0xFF2253a2),
+      //           Color(0xFF2253a2)
+      //         ],
+      //       )),
+      //     ),
+      //   ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          new Divider(
+          SizedBox(
+            height: 30,
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              "Notifications",
+              style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          Divider(
             height: 1.0,
             color: Colors.grey.withOpacity(0.3),
           ),
@@ -124,25 +140,23 @@ class _NotificationListPage extends State<NotificationListPage>
                                 padding: EdgeInsets.only(top: 10, bottom: 10),
                                 child: ListTile(
                                   onTap: () {
-                                    // print();
-                                    // setState(() {
-                                    //   if (items[index].status == "0") {
-                                    //     items[index].status = '1';
-                                    //     // SystemData.notiCount--;
-                                    //     context.read<NotiProvider>().notiCount(
-                                    //         context, SystemData.notiCount);
-                                    //   }
-                                    // });
-                                    // Navigator.push(
-                                    //     context,
-                                    //     new MaterialPageRoute(
-                                    //       builder: (BuildContext context) =>
-                                    //           //new NotificationNotiResultPage()
-                                    //           new NotificationDetailPage(
-                                    //               items: items[index],
-                                    //               status:
-                                    //                   "true"), // ,//TopupTransationPage(),//
-                                    //     ));
+                                    setState(() {
+                                      if (items[index].status == "0") {
+                                        items[index].status = '1';
+                                        SystemData.notiCount--;
+                                        context.read<NotiProvider>().notiCount(
+                                            context, SystemData.notiCount);
+                                      }
+                                    });
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            NotificationDetailPage(
+                                                noti: items[index],
+                                                status: "true"),
+                                      ),
+                                    );
                                   },
                                   leading: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -155,19 +169,22 @@ class _NotificationListPage extends State<NotificationListPage>
                                       ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(8.0),
-                                        child: items[index].imageUrl != null
-                                            ? Image.network(
-                                                items[index].imageUrl,
-                                                width: 60.0,
-                                                height: 60.0,
-                                                fit: BoxFit.fill,
-                                              )
-                                            : Image.asset(
-                                                'assets/icon/icon.png',
-                                                width: 60.0,
-                                                height: 60.0,
-                                                fit: BoxFit.fill,
-                                              ),
+                                        child:
+                                            // items[index].imageUrl != null ||
+                                            //         items[index].imageUrl != ""
+                                            //     ? Image.network(
+                                            //         items[index].imageUrl,
+                                            //         width: 60.0,
+                                            //         height: 60.0,
+                                            //         fit: BoxFit.fill,
+                                            //       )
+                                            //     :
+                                            Image.asset(
+                                          'assets/icon/icon.png',
+                                          width: 60.0,
+                                          height: 60.0,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -213,9 +230,14 @@ class _NotificationListPage extends State<NotificationListPage>
                                               items[index].currentdate != null
                                                   ? Text(
                                                       timeago.format(
-                                                          DateTime.parse(
-                                                              items[index]
-                                                                  .currentdate),
+                                                          DateTime.fromMicrosecondsSinceEpoch(
+                                                              int.parse(items[
+                                                                      index]
+                                                                  .currentdate)),
+                                                          // DateTime.parse(
+
+                                                          //     items[index]
+                                                          //         .currentdate),
                                                           locale: "en",
                                                           // SystemData.language,
                                                           allowFromNow: true),

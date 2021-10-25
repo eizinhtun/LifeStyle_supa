@@ -25,6 +25,7 @@ class LoginVerifyPinPage extends StatefulWidget {
 class _LoginVerifyPinPageState extends State<LoginVerifyPinPage> {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
   OTPTextEditController controller;
+  // ignore: close_sinks
   StreamController<ErrorAnimationType> errorController;
   bool hasError = false;
   String currentText = "";

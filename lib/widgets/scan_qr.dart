@@ -2,16 +2,14 @@
 
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';
-import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/widgets/scan_qr_data.dart';
-import 'package:provider/provider.dart';
+
 class ScanQR extends StatefulWidget {
   @override
   _ScanQRState createState() => _ScanQRState();
 }
 
 class _ScanQRState extends State<ScanQR> {
-
   String qrCodeResult = "Not Yet Scanned";
 
   @override
@@ -36,25 +34,17 @@ class _ScanQRState extends State<ScanQR> {
                           bottom: new Radius.elliptical(200, 56.0),
                         ),
                       ),
-
                       bottom: PreferredSize(
                         preferredSize: Size.fromHeight(50),
                         child: Container(),
                       ),
-
                     ),
                     SliverToBoxAdapter(
                       child: Container(
                           constraints: BoxConstraints.expand(
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height,
+                            height: MediaQuery.of(context).size.height,
                           ),
-                          child: Container(
-
-                          )
-                      ),
+                          child: Container()),
                     ),
                   ],
                 ),
@@ -80,35 +70,38 @@ class _ScanQRState extends State<ScanQR> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                Container(
+                                  Container(
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        String codeSanner = await BarcodeScanner
+                                            .scan(); //barcode scanner
+                                        qrCodeResult = codeSanner;
+                                        if (qrCodeResult != null) {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ScanQRData(
+                                                          qrcodeuid:
+                                                              qrCodeResult)));
+                                        } else {
+                                          String codeSanner =
+                                              await BarcodeScanner.scan();
+                                        }
 
-                                  child: ElevatedButton(
-                                            onPressed: () async {
-                                              String codeSanner = await BarcodeScanner.scan(); //barcode scanner
-                                              qrCodeResult = codeSanner;
-                                              if(qrCodeResult !=null){
-                                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ScanQRData(qrcodeuid: qrCodeResult)));
-                                              }
-                                              else{
-                                                String codeSanner = await BarcodeScanner.scan();
-                                              }
-
-                                              setState(() {
-
-                                              });
-                                            },
-                                            child: Text("Open Scanner",style: TextStyle(color: Colors.white),),
-                                            //Button having rounded rectangle border
-
-                                          ),
-                                ),
-
+                                        setState(() {});
+                                      },
+                                      child: Text(
+                                        "Open Scanner",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      //Button having rounded rectangle border
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),

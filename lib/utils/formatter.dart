@@ -9,4 +9,22 @@ class Formatter {
   static String balanceFormat(double balance) {
     return NumberFormat.decimalPattern().format(balance);
   }
+
+  static String formatPhone(String phone) {
+   if(phone.startsWith("+95")){
+     return phone;
+   }
+   if(phone.startsWith("95")){
+     return "+"+phone;
+   }
+   if(phone.startsWith("+950")){
+     return phone.replaceAll("+950", "+95");
+   }
+   if(phone.startsWith("09")){
+     return "+95"+phone.substring(1,phone.length);
+   }
+   return phone;
+  }
+
+
 }

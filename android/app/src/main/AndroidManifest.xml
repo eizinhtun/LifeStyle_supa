@@ -6,6 +6,8 @@
    <application
         android:label="left_style"
         android:icon="@mipmap/launcher_icon">
+         <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyA7TRogvV360fOZNbhcjaa3fioVzNH3Qug"/>
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" 
         android:value="@string/facebook_app_id"/>

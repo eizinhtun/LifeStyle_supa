@@ -1,12 +1,8 @@
 // @dart=2.9
 import 'dart:async';
-import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/user_profile_page.dart';
-import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
@@ -23,7 +19,6 @@ class _MePageState extends State<MePage> {
   UserModel user = UserModel();
   bool _isSigningOut = false;
   String url = "";
-  bool _loading = false;
 
   Route _routeToLogin() {
     return PageRouteBuilder(
@@ -54,6 +49,7 @@ class _MePageState extends State<MePage> {
 
   Future<UserModel> getUser() async {
     user = await context.read<LoginProvider>().getUser(context);
+    return user;
   }
 
   @override

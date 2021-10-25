@@ -9,7 +9,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
 
-
 class Authentication {
   static SnackBar customSnackBar({String content}) {
     return SnackBar(
@@ -23,10 +22,6 @@ class Authentication {
 
   static Future<FirebaseApp> initializeFirebase({BuildContext context}) async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
-
-    User user = FirebaseAuth.instance.currentUser;
-
-
 
     return firebaseApp;
   }
@@ -120,6 +115,7 @@ class Authentication {
       throw e;
     }
   }
+
   static Future<String> uploadphotofile(imageFile) async {
     var user = FirebaseAuth.instance.currentUser;
     final ref = FirebaseStorage.instance.ref('profile').child(user.uid);
@@ -132,6 +128,7 @@ class Authentication {
       return '';
     }
   }
+
   static Future<String> uploadphotofilegallery() async {
     var user = FirebaseAuth.instance.currentUser;
     final picker = ImagePicker();
@@ -143,7 +140,6 @@ class Authentication {
       user.updatePhotoURL(downloadUrl);
       return downloadUrl;
     } else {
-
       return '';
     }
   }
@@ -163,5 +159,4 @@ class Authentication {
       return '';
     }
   }
-
 }
