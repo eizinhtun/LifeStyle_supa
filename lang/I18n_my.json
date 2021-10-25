@@ -10,5 +10,11 @@
   "userInvaild": "အကောင့်နံပါတ်မှားယွင်းနေပါသည်",
   "full_name":"အမည်",
   "confirm_password":"အတည်ပြုလျှို့ဝှက်နံပါတ်", 
-  "register":"အကောင့်အသစ်ဖွင့်ရန် "
+  "register":"အကောင့်အသစ်ဖွင့်ရန် ",
+  "meter_rearch": "Search Meter",
+  "meter_detail": "Meter Details",
+  "my_meters": "My meters",
+  "current_unit": "Current Unit",
+  "my_uploaded_unit": "My uploaded ",
+  "my_meter_bills": "My meter bills"
 }

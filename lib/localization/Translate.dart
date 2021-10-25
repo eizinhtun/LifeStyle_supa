@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:left_style/datas/database_helper.dart';
+import 'package:left_style/datas/system_data.dart';
 
 class Tran {
   Tran(this.locale);
@@ -22,10 +23,12 @@ class Tran {
 
   Future<bool> load() async {
     String savedCode = "en";
+    SystemData.language=savedCode;
     try {
       savedCode = await DatabaseHelper.getLanguage();
     } catch (e) {
       savedCode = "en";
+      SystemData.language=savedCode;
     }
 
     String data = await rootBundle.loadString('lang/I18n_$savedCode.json');

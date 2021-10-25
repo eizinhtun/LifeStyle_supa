@@ -194,7 +194,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       try {
-        userRef.doc(uid).update(userModel.toJson()).then((value) {
+        userRef.doc(uid).set(userModel.toJson()).then((value) {
           print("update user success!");
           MessageHandler.showMessage(
               context, "Success", "Updating User Info is successful");

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:left_style/pages/me_page.dart';
+import 'package:left_style/pages/meter_list.dart';
 
 import 'package:left_style/widgets/wallet.dart';
 
@@ -15,7 +16,7 @@ class HomePageDetail extends StatefulWidget {
 }
 
 class _HomePageDetailState extends State<HomePageDetail> {
-  static MePage _mePage = MePage();
+  static MeterListPage _mePage = MeterListPage();//MePage();
   static HomePage _homePage = HomePage();
   static Wallet _walletPage = Wallet();
 

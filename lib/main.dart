@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:left_style/pages/home_page_detail.dart';
 import 'package:left_style/pages/init_screen.dart';
 import 'package:left_style/pages/login.dart';
@@ -413,7 +414,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     MaterialColor colorCustom = MaterialColor(0xFFfa2e73, color);
 
-    return MaterialApp(
+    return    ScreenUtilInit(
+        designSize: Size(360, 690),
+    builder: () =>MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Unifine',
       theme: ThemeData(
@@ -499,6 +502,6 @@ class _MyAppState extends State<MyApp> {
       //home: AuthLogin(),
       // PhoneNumberPage(),
       //home: UploadImageFirebase(),
-    );
+    ),);
   }
 }
