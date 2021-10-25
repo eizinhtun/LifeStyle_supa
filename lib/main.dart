@@ -16,6 +16,7 @@ import 'package:left_style/pages/login.dart';
 import 'package:left_style/pages/notification_list.dart';
 import 'package:left_style/pages/user_not_active.dart';
 import 'package:left_style/pages/user_profile.dart';
+import 'package:left_style/providers/firebase_crud_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:provider/provider.dart';
@@ -91,6 +92,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => LoginProvider()),
     ChangeNotifierProvider(create: (_) => WalletProvider()),
     ChangeNotifierProvider(create: (_) => NotiProvider()),
+    ChangeNotifierProvider(create: (_) => FirebaseCRUDProvider()),
   ], child: MyApp()));
 }
 

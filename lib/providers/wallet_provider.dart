@@ -10,6 +10,10 @@ import 'package:left_style/utils/message_handler.dart';
 class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var tracRef = FirebaseFirestore.instance.collection(transactions);
   var userRef = FirebaseFirestore.instance.collection(userCollection);
+  var balance;
+
+
+
 
   Future<void> topup(
       BuildContext context, PaymentType paymentType, double amount) async {
@@ -17,27 +21,36 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
       userRef.doc(uid).get().then((value) {
-        double balance = value.data()["balance"];
+        balance= value.data()["balance"];
 
-        try {
-          userRef.doc(uid).update({"balance": balance + amount}).then((_) {
-            print("topup success!");
-          });
-          MessageHandler.showMessage(
-              context, "Success", "Your topup is successful");
-          TransactionModel transactionModel = TransactionModel(
-              uid: uid,
-              type: TransactionType.Topup,
-              amount: amount,
-              createdDate: DateTime.now());
-          tracRef.add(transactionModel.toJson()).catchError((error) {
-            print("Failed to add topup transaction: $error");
-          });
-          notifyListeners();
-        } catch (e) {
-          print("Failed to topup: $e");
-          MessageHandler.showErrMessage(context, "Fail", "Your topup is fail");
+        if(balance != null){
+          try {
+            print('try');
+            userRef.doc(uid).update({"balance":  balance + amount }).then((_) {
+              print("topup success!");
+            });
+            MessageHandler.showMessage(context, "Success", "Your topup is successful");
+            TransactionModel transactionModel = TransactionModel(
+                uid: uid,
+                type: TransactionType.Topup,
+                amount: amount,
+                paymentType: paymentType,
+                createdDate: DateTime.now());
+            tracRef.add(transactionModel.toJson()).catchError((error) {
+              print("Failed to add topup transaction: $error");
+            });
+            notifyListeners();
+          } catch (e) {
+            print("Failed to topup: $e");
+            MessageHandler.showErrMessage(context, "Fail", "Your topup is fail");
+          }
+        }else{
+          MessageHandler.showErrMessage(context, "Fail", "Balance Type null");
         }
+
+
+
+
       });
 
       notifyListeners();
@@ -109,4 +122,6 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
     return list;
   }
+
+
 }

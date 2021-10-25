@@ -21,11 +21,12 @@ class _TopUpPageState extends State<TopUpPage> {
   double kbzOpacity = 0.5;
   double cbOpacity = 0.5;
   double waveOpacity = 0.5;
-  PaymentType paymentType = PaymentType.KPay;
+  PaymentType paymentType;
 
   @override
   void initState() {
     super.initState();
+    paymentType = PaymentType.KPay;
   }
 
   @override
@@ -99,12 +100,13 @@ class _TopUpPageState extends State<TopUpPage> {
                                   onTap: () {
                                     paymentType = PaymentType.KPay;
                                     showWidget();
-
                                     pay = "KBZ Pay";
                                     kbzOpacity = 1;
                                     cbOpacity = 0.5;
                                     waveOpacity = 0.5;
-                                    setState(() {});
+                                    setState(() {
+
+                                    });
                                   },
                                   child: Container(
                                     width: 80,
@@ -268,12 +270,11 @@ class _TopUpPageState extends State<TopUpPage> {
                   onPressed: () async {
                     if (_topupformKey.currentState.validate()) {
                       print("Validate");
-
                       await context.read<WalletProvider>().topup(
                           context,
                           paymentType,
                           double.parse(_amountController.text.toString()));
-                      clearText();
+                     clearText();
                     }
                   },
                   child: Text("Submit")),

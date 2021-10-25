@@ -16,6 +16,9 @@ class _GenerateQRState extends State<GenerateQR> {
   //String qrData= FirebaseAuth.instance.currentUser.uid.toString();
   UserModel user=UserModel();
   String qrData;
+  String photo;
+  String fullName;
+
 
   @override
   void initState() {
@@ -26,6 +29,9 @@ class _GenerateQRState extends State<GenerateQR> {
   Future<UserModel> getUser() async {
     user= await context.read<LoginProvider>().getUser(context);
     qrData=user.uid;
+    photo= user.photoUrl;
+    fullName= user.fullName.toUpperCase();
+
   }
   @override
   Widget build(BuildContext context) {
@@ -80,7 +86,8 @@ class _GenerateQRState extends State<GenerateQR> {
                       width: MediaQuery.of(context).size.width - 30,
                       child: Column(
                         children: [
-                          Container(
+                          (qrData !=null)?
+                           Container(
                             width: double.infinity,
                             child: Card(
                               shape: RoundedRectangleBorder(
@@ -99,7 +106,7 @@ class _GenerateQRState extends State<GenerateQR> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-                                          child: user.fullName !=null ?Text(user.fullName.toUpperCase(),style: TextStyle(fontSize: 18,color: Colors.grey)):Text("loading..."),
+                                          child: Text(fullName,style: TextStyle(fontSize: 18,color: Colors.grey)),
                                         ),
                                       ],
                                     ),
@@ -111,10 +118,10 @@ class _GenerateQRState extends State<GenerateQR> {
                                         ),
                                         Container(
                                           margin: EdgeInsets.only(bottom: 50),
-                                            width: 200,
-                                            height: 200,
-                                            //child: QrImage(data: qrData)
-                                            child: _qrImage(),
+                                          width: 200,
+                                          height: 200,
+                                          //child: QrImage(data: qrData)
+                                          child: _qrImage(),
                                         ),
                                       ],
                                     ),
@@ -122,59 +129,48 @@ class _GenerateQRState extends State<GenerateQR> {
                                 ),
                               ),
                             ),
-                          ),
+                          )
+                           :Container(child: Text("loading..."))
                         ],
                       ),
                     ),
                   ),
-                  // Positioned(
-                  //   top: 100,
-                  //   child: Container(
-                  //     constraints: BoxConstraints.expand(
-                  //       height: MediaQuery
-                  //           .of(context)
-                  //           .size
-                  //           .height,
-                  //     ),
-                  //
-                  //       child: Card(
-                  //           shape: RoundedRectangleBorder(
-                  //             borderRadius: BorderRadius.circular(15.0),
-                  //           ),
-                  //           color: Colors.white,
-                  //           elevation: 2,
-                  //           child: Container(
-                  //             color: Colors.red,
-                  //             child: Column(
-                  //               children: [
-                  //                 user.fullName !=null ?Text(user.fullName.toUpperCase(),style: TextStyle(fontSize: 20,color: Colors.grey)):Text("loading..."),
-                  //                 Container(
-                  //                     width: 200,
-                  //                     height: 200,
-                  //                     child: QrImage(data: qrData)
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           )
-                  //       ),
-                  //     ),
-                  //
-                  // ),
                 ],
               ),
           ),
         ));
   }
-  _qrImage(){
-    QrImage(
-      data: qrData,
-      version: QrVersions.auto,
-      size: 320,
-      gapless: false,
-      embeddedImage: NetworkImage(user.photoUrl),
-      embeddedImageStyle: QrEmbeddedImageStyle(
-        size: Size(80, 80),
-      ),
-    );
+
+ _qrImage() {
+    if( photo == null){
+     return QrImage(
+        data: qrData,
+        version: QrVersions.auto,
+        size: 320,
+        gapless: false,
+        embeddedImage: AssetImage("assets/image/user-photo.png"),
+        embeddedImageStyle: QrEmbeddedImageStyle(
+          size: Size(50, 50),
+
+        ),
+      );
+    }
+    else{
+      return QrImage(
+        data: qrData,
+        version: QrVersions.auto,
+        size: 320,
+        gapless: false,
+        embeddedImage: NetworkImage(photo),
+        embeddedImageStyle: QrEmbeddedImageStyle(
+          size: Size(50, 50),
+
+        ),
+      );
+
+    }
+
   }
+
+
 }

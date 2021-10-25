@@ -67,3 +67,5 @@ Future<Map<String, String>> getHeadersWithOutToken() async {
 const String userCollection = "users";
 const String transactions = "transactions";
 const String notifications = "notifications";
+const String testCollection = "tests";
+

@@ -1,7 +1,9 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:left_style/providers/firebase_crud_provider.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/widgets/qr_code_demo.dart';
+import 'package:left_style/widgets/test_crud.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,7 +41,12 @@ class _HomePageState extends State<HomePage> {
                 ElevatedButton(onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>QRCodePage()));
                   
-                }, child: Text("Go to QR Page"))
+                }, child: Text("Go to QR Page")),
+                ElevatedButton(onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Test()));
+
+                }, child: Text("Test")),
+
               ],
             ),
           ),

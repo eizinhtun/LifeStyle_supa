@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/models/user_model.dart';
+import 'package:left_style/providers/firebase_crud_provider.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
@@ -201,16 +202,17 @@ class WalletState extends State<Wallet> {
                                         )),
                                   ),
                                   SizedBox(width: 5),
+
                                   Expanded(
                                     child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                             padding: EdgeInsets.only(
-                                          left: 15,
-                                          right: 15,
-                                          top: 10,
-                                          bottom: 10,
-                                        ) // foreground
-                                            ),
+                                              left: 15,
+                                              right: 15,
+                                              top: 10,
+                                              bottom: 10,
+                                            ) // foreground
+                                        ),
                                         onPressed: () {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
@@ -225,26 +227,7 @@ class WalletState extends State<Wallet> {
                                           ],
                                         )),
                                   ),
-                                  // ElevatedButton(
-                                  //     style: ElevatedButton.styleFrom(
-                                  //         padding: EdgeInsets.only(
-                                  //             left: 35,
-                                  //             right: 35,
-                                  //             top: 10,
-                                  //             bottom: 10) // foreground
-                                  //         ),
-                                  //     onPressed: () {},
-                                  //     child: Text("Cash In")),
-                                  // ElevatedButton(
-                                  //     style: ElevatedButton.styleFrom(
-                                  //         padding: EdgeInsets.only(
-                                  //             left: 35,
-                                  //             right: 35,
-                                  //             top: 10,
-                                  //             bottom: 10) // foreground
-                                  //         ),
-                                  //     onPressed: () {},
-                                  //     child: Text("Cash Out")),
+
                                 ],
                               ),
                             ),
