@@ -33,6 +33,15 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
           tracRef.add(transactionModel.toJson()).catchError((error) {
             print("Failed to add topup transaction: $error");
           });
+
+          tracRef
+              .doc(uid)
+              .collection(myTransactions)
+              .add(transactionModel.toJson())
+              .catchError((error) {
+            print("Failed to add topup transaction: $error");
+          });
+
           notifyListeners();
         } catch (e) {
           print("Failed to topup: $e");

@@ -71,3 +71,5 @@ const Color mainColor = Color(0xFFfa2e73);
 const String userCollection = "users";
 const String transactions = "transactions";
 const String notifications = "notifications";
+const String notilist = "notilist";
+const String myTransactions = "myTransactions";

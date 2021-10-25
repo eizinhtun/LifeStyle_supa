@@ -12,8 +12,8 @@ import 'package:provider/provider.dart';
 class NotificationDetailPage extends StatefulWidget {
   NotificationDetailPage({Key key, @required this.noti, @required this.status})
       : super(key: key);
-  NotiModel noti;
-  String status;
+  final NotiModel noti;
+  final String status;
 
   @override
   _NotificationDetailPage createState() => _NotificationDetailPage();
@@ -27,14 +27,13 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     //sysData.notiCount = 0;
     widget.status == "false"
         ? ""
         : context
             .read<NotiProvider>()
-            .getNotiById(context, widget.noti.id.toString());
+            .getNotiById(context, widget.noti.messageId.toString());
     //context.read<BetProvider>().notiCount(context,sysData.notiCount);
     if (!kIsWeb) {
       markAsRead();
@@ -66,19 +65,20 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
               margin: EdgeInsets.only(right: 40), child: Text("Meter Pay")),
         ),
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF001950),
-              Color(0xFF04205a),
-              Color(0xFF0b2b6a),
-              Color(0xFF0b2b6a),
-              Color(0xFF2253a2),
-              Color(0xFF2253a2)
-            ],
-          )),
+          decoration: BoxDecoration(color: mainColor
+              //     gradient: LinearGradient(
+              //   begin: Alignment.topLeft,
+              //   end: Alignment.bottomRight,
+              //   colors: [
+              //     Color(0xFF001950),
+              //     Color(0xFF04205a),
+              //     Color(0xFF0b2b6a),
+              //     Color(0xFF0b2b6a),
+              //     Color(0xFF2253a2),
+              //     Color(0xFF2253a2)
+              //   ],
+              // ),
+              ),
         ),
       ),
       body: //widget.notification==null?Center(child: SpinKitChasingDots(color: sysData.mainColor,),):
@@ -88,8 +88,9 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
           child: Column(
             children: [
               Visibility(
-                visible:
-                    widget.noti.type != null && widget.noti.type == "welcome",
+                visible: true,
+                // visible:
+                //     widget.noti.type != null && widget.noti.type == "welcome",
                 child: Stack(fit: StackFit.loose, children: <Widget>[
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -137,7 +138,7 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
                                   alignment: Alignment.center,
                                   child: RichText(
                                     text: TextSpan(
-                                      text: "Created Date",
+                                      text: "Created Date : ",
                                       style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.black,
@@ -211,11 +212,5 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
         DateFormat("dd/MM/yyyy"); // you can change the format here
     var result = dateFormat1.format(tempDate1);
     return result;
-  }
-
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
   }
 }

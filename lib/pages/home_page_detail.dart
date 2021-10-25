@@ -42,13 +42,19 @@ class _HomePageDetailState extends State<HomePageDetail> {
 
   @override
   void initState() {
-    if (!kIsWeb) {
-      registerNotification();
-    }
     super.initState();
+    if (!kIsWeb) {
+      registerNotification(context);
+    }
   }
 
-  void registerNotification() async {
+  @override
+  void dispose() {
+    // controller.dispose();
+    super.dispose();
+  }
+
+  void registerNotification(BuildContext context) async {
     _messaging = FirebaseMessaging.instance;
 
     await flutterLocalNotificationsPlugin
@@ -108,7 +114,7 @@ class _HomePageDetailState extends State<HomePageDetail> {
 
       checkForInitialMessage();
       onMessage();
-      onMessageOpenedApp();
+      onMessageOpenedApp(context);
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
       //print('User granted permission');
@@ -116,7 +122,7 @@ class _HomePageDetailState extends State<HomePageDetail> {
           _firebaseMessagingBackgroundHandler);
       await checkForInitialMessage();
       await onMessage();
-      onMessageOpenedApp();
+      onMessageOpenedApp(context);
     } else {
       //print('User declined or has not accepted permission');
     }
@@ -184,16 +190,17 @@ class _HomePageDetailState extends State<HomePageDetail> {
         // transactionNo: initialMessage.data['transaction_no'].toString(),
         // odd: int.parse(initialMessage.data['odd']),
         // guid: initialMessage.data['guid'].toString(),
-        // messageId: initialMessage.data['message_id'].toString(),
+        // messageId: initialMessage.notification.hashCode.toString(),
       );
-      await context.read<NotiProvider>().addNotiToStore(_notification);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) =>
-                // NotificationListPage()
-                NotificationDetailPage(noti: _notification, status: "false"), //
-          ));
+      // await context.read<NotiProvider>().addNotiToStore(_notification);
+
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (BuildContext context) =>
+      //           // NotificationListPage()
+      //           NotificationDetailPage(noti: _notification, status: "false"), //
+      //     ));
       SystemData.notiCount = SystemData.notiCount + 1;
       // setState(() {
       //   SystemData.notiCount = SystemData.notiCount + 1;
@@ -204,42 +211,78 @@ class _HomePageDetailState extends State<HomePageDetail> {
   onMessage() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print(message.data);
-      NotiModel _notification = NotiModel(
-        // id: int.parse(message.data['id']),
-        // userId: int.parse(message.data['userId']),
-        // messageId: message.data[''],
-        title: message.data['title'].toString(),
-        body: message.data['body'].toString(),
-        imageUrl: message.data['imageUrl'].toString(),
-        type: message.data['type'].toString(),
-        status: message.data['status'].toString(),
-        currentdate: message.data['currentdate'].toString(),
-        // sound: message.data['sound'].toString(),
-        // createdDateTimeStr:
-        //     message.data['created_date_time_Str'].toString(),
-        // clickAction: message.data["click_action"].toString(),
-        // accountNo: message.data['account_no'].toString(),
-        // bodyValue: message.data['body_value'].toString(),
-        // content: message.data['content'].toString(),
-        // number: message.data['number'].toString(),
-        // balance: int.parse(message.data['balance']),
-        // refid: int.parse(message.data['refid']),
-        // state: message.data['state'].toString(),
-        // requestDateStr: message.data['request_date_Str'].toString(),
-        // amount: int.parse(message.data['amount']),
-        // bill: message.data['bill'].toString(),
-        // phoneno: message.data['phoneno'].toString(),
-        // currentDateStr: message.data['current_date_Str'].toString(),
-        // fortime: message.data['fortime'].toString(),
-        // requestDate: message.data['request_date'].toString(),
-        // time: message.data['time'].toString(),
-        // createdDate: message.data['created_date'].toString(),
-        // category: message.data['category'].toString(),
-        // transactionNo: message.data['transaction_no'].toString(),
-        // odd: int.parse(message.data['odd']),
-        // guid: message.data['guid'].toString(),
-        // messageId: message.data['message_id'].toString(),
-      );
+      // NotiModel _notification = NotiModel(
+      // id: int.parse(message.data['id']),
+      // userId: int.parse(message.data['userId']),
+      // messageId: message.notification.hashCode.toString(),
+      // title: message.data['title'].toString(),
+      // body: message.data['body'].toString(),
+      // imageUrl: message.data['imageUrl'].toString(),
+      // type: message.data['type'].toString(),
+      // status: message.data['status'].toString(),
+      // currentdate: message.data['currentdate'].toString(),
+      // sound: message.data['sound'].toString(),
+      // createdDateTimeStr:
+      //     message.data['created_date_time_Str'].toString(),
+      // clickAction: message.data["click_action"].toString(),
+      // accountNo: message.data['account_no'].toString(),
+      // bodyValue: message.data['body_value'].toString(),
+      // content: message.data['content'].toString(),
+      // number: message.data['number'].toString(),
+      // balance: int.parse(message.data['balance']),
+      // refid: int.parse(message.data['refid']),
+      // state: message.data['state'].toString(),
+      // requestDateStr: message.data['request_date_Str'].toString(),
+      // amount: int.parse(message.data['amount']),
+      // bill: message.data['bill'].toString(),
+      // phoneno: message.data['phoneno'].toString(),
+      // currentDateStr: message.data['current_date_Str'].toString(),
+      // fortime: message.data['fortime'].toString(),
+      // requestDate: message.data['request_date'].toString(),
+      // time: message.data['time'].toString(),
+      // createdDate: message.data['created_date'].toString(),
+      // category: message.data['category'].toString(),
+      // transactionNo: message.data['transaction_no'].toString(),
+      // odd: int.parse(message.data['odd']),
+      // guid: message.data['guid'].toString(),
+      // messageId: message.notification.hashCode.toString(),
+      // );
+      // NotiModel _notification = NotiModel(
+      //   // id: int.parse(initialMessage.data['id']),
+      //   // userId: int.parse(initialMessage.data['userId']),
+      //   title: message.data['title'].toString(),
+      //   body: message.data['body'].toString(),
+      //   imageUrl: message.data['imageUrl'].toString(),
+      //   type: message.data['type'].toString(),
+      //   status: message.data['status'].toString(),
+      //   currentdate: message.data['currentdate'].toString(),
+      //   // sound: initialMessage.data['sound'].toString(),
+      //   // createdDateTimeStr:
+      //   //     initialMessage.data['created_date_time_Str'].toString(),
+      //   // clickAction: initialMessage.data["click_action"].toString(),
+      //   // accountNo: initialMessage.data['account_no'].toString(),
+      //   // bodyValue: initialMessage.data['body_value'].toString(),
+      //   // content: initialMessage.data['content'].toString(),
+      //   // number: initialMessage.data['number'].toString(),
+      //   // balance: int.parse(initialMessage.data['balance']),
+      //   // refid: int.parse(initialMessage.data['refid']),
+      //   // state: initialMessage.data['state'].toString(),
+      //   // requestDateStr: initialMessage.data['request_date_Str'].toString(),
+      //   // amount: int.parse(initialMessage.data['amount']),
+      //   // bill: initialMessage.data['bill'].toString(),
+      //   // phoneno: initialMessage.data['phoneno'].toString(),
+      //   // currentDateStr: initialMessage.data['current_date_Str'].toString(),
+      //   // fortime: initialMessage.data['fortime'].toString(),
+      //   // requestDate: initialMessage.data['request_date'].toString(),
+      //   // time: initialMessage.data['time'].toString(),
+      //   // createdDate: initialMessage.data['created_date'].toString(),
+      //   // category: initialMessage.data['category'].toString(),
+      //   // transactionNo: initialMessage.data['transaction_no'].toString(),
+      //   // odd: int.parse(initialMessage.data['odd']),
+      //   // guid: initialMessage.data['guid'].toString(),
+      //   messageId: message.notification.hashCode.toString(),
+      // );
+
       // await context.read<NotiProvider>().addNotiToStore(_notification);
       SystemData.notiCount = SystemData.notiCount + 1;
       // setState(() {
@@ -249,7 +292,7 @@ class _HomePageDetailState extends State<HomePageDetail> {
     });
   }
 
-  onMessageOpenedApp() {
+  onMessageOpenedApp(BuildContext context) {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       print(
           'Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');
@@ -303,50 +346,75 @@ class _HomePageDetailState extends State<HomePageDetail> {
       //   status: message.data['status'].toString(),
       //   odd: int.parse(message.data['odd']),
       //   guid: message.data['guid'].toString(),
-      //   messageId: message.data['message_id'].toString(),
+      //   messageId:message.notification.hashCode.toString(),
       // );
+      // NotiModel _notification = NotiModel(
+      //   // id: int.parse(message.data['id']),
+      //   // userId: int.parse(message.data['userId']),
+      //   title: message.data['title'].toString(),
+      //   body: message.data['body'].toString(),
+      //   imageUrl: message.data['imageUrl'].toString(),
+      //   type: message.data['type'].toString(),
+      //   status: message.data['status'].toString(),
+      //   currentdate: message.data['currentdate'].toString(),
+      //   // sound: message.data['sound'].toString(),
+      //   // createdDateTimeStr:
+      //   //     message.data['created_date_time_Str'].toString(),
+      //   // clickAction: message.data["click_action"].toString(),
+      //   // accountNo: message.data['account_no'].toString(),
+      //   // bodyValue: message.data['body_value'].toString(),
+      //   // content: message.data['content'].toString(),
+      //   // number: message.data['number'].toString(),
+      //   // balance: int.parse(message.data['balance']),
+      //   // refid: int.parse(message.data['refid']),
+      //   // state: message.data['state'].toString(),
+      //   // requestDateStr: message.data['request_date_Str'].toString(),
+      //   // amount: int.parse(message.data['amount']),
+      //   // bill: message.data['bill'].toString(),
+      //   // phoneno: message.data['phoneno'].toString(),
+      //   // currentDateStr: message.data['current_date_Str'].toString(),
+      //   // fortime: message.data['fortime'].toString(),
+      //   // requestDate: message.data['request_date'].toString(),
+      //   // time: message.data['time'].toString(),
+      //   // createdDate: message.data['created_date'].toString(),
+      //   // category: message.data['category'].toString(),
+      //   // transactionNo: message.data['transaction_no'].toString(),
+      //   // odd: int.parse(message.data['odd']),
+      //   // guid: message.data['guid'].toString(),
+      // messageId: message.notification.hashCode.toString(),
+      // );
+
       NotiModel _notification = NotiModel(
-        // id: int.parse(message.data['id']),
-        // userId: int.parse(message.data['userId']),
-        title: message.data['title'].toString(),
-        body: message.data['body'].toString(),
-        imageUrl: message.data['imageUrl'].toString(),
-        type: message.data['type'].toString(),
-        status: message.data['status'].toString(),
-        currentdate: message.data['currentdate'].toString(),
-        // sound: message.data['sound'].toString(),
-        // createdDateTimeStr:
-        //     message.data['created_date_time_Str'].toString(),
-        // clickAction: message.data["click_action"].toString(),
-        // accountNo: message.data['account_no'].toString(),
-        // bodyValue: message.data['body_value'].toString(),
-        // content: message.data['content'].toString(),
-        // number: message.data['number'].toString(),
-        // balance: int.parse(message.data['balance']),
-        // refid: int.parse(message.data['refid']),
-        // state: message.data['state'].toString(),
-        // requestDateStr: message.data['request_date_Str'].toString(),
-        // amount: int.parse(message.data['amount']),
-        // bill: message.data['bill'].toString(),
-        // phoneno: message.data['phoneno'].toString(),
-        // currentDateStr: message.data['current_date_Str'].toString(),
-        // fortime: message.data['fortime'].toString(),
-        // requestDate: message.data['request_date'].toString(),
-        // time: message.data['time'].toString(),
-        // createdDate: message.data['created_date'].toString(),
-        // category: message.data['category'].toString(),
-        // transactionNo: message.data['transaction_no'].toString(),
-        // odd: int.parse(message.data['odd']),
-        // guid: message.data['guid'].toString(),
-        // messageId: message.data['message_id'].toString(),
-      );
+          // id: int.parse(message.data['id']),
+          // userId: int.parse(message.data['userId']),
+          title: message.notification.title,
+          // title: message.data['title'].toString(),
+          body: message.notification.body,
+          imageUrl: message.notification.android.imageUrl,
+          type: message.messageType,
+          status: "true",
+          messageId: message.notification.hashCode.toString()
+          // message.data['message_id'].toString(),
+// currentdate:DateTime. message.sentTime.
+//  content:message.sentTime,
+
+          // imageUrl: message.data['imageUrl'].toString(),
+          // type: message.data['type'].toString(),
+          // status: message.data['status'].toString(),
+          // currentdate: message.data['currentdate'].toString(),
+          );
+
+      print(_notification);
       await context.read<NotiProvider>().addNotiToStore(_notification);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) =>
-                NotificationDetailPage(noti: _notification, status: "false"), //
-          ));
+      // Navigator.pushNamed(context, routeName)
+      Future.delayed(Duration(milliseconds: 1000)).then((value) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => NotificationDetailPage(
+                  noti: _notification, status: "true"), //
+            ));
+      });
 
       // await Navigator.push(
       //   context,

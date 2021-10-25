@@ -8,8 +8,6 @@ import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/utils/message_handler.dart';
-import 'package:left_style/validators/validator.dart';
-import 'package:left_style/widgets/wallet.dart';
 
 class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
@@ -237,8 +235,10 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       try {
         userRef.doc(uid).update({"fcmToken": fcmtoken}).then((_) {
           print("update token success!");
+
           MessageHandler.showMessage(
               context, "Success", "Updating token is successful");
+          return true;
         });
 
         notifyListeners();
@@ -248,6 +248,8 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
             context, "Fail", "Updating token is fail");
       }
     }
+
     notifyListeners();
+    return false;
   }
 }
