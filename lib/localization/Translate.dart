@@ -23,14 +23,17 @@ class Tran {
 
   Future<bool> load() async {
     String savedCode = "en";
-    SystemData.language=savedCode;
+    savedCode = SystemData.language;
+    SystemData.language = savedCode;
     try {
       savedCode = await DatabaseHelper.getLanguage();
+      SystemData.language = savedCode;
     } catch (e) {
       savedCode = "en";
-      SystemData.language=savedCode;
+      SystemData.language = savedCode;
     }
 
+    print(savedCode);
     String data = await rootBundle.loadString('lang/I18n_$savedCode.json');
     Map<String, dynamic> _result = json.decode(data);
     this._sentences = new Map();

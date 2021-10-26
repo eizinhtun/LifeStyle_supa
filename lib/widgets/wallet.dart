@@ -145,7 +145,8 @@ class WalletState extends State<Wallet> {
                                 children: [
                                   Icon(Icons.account_balance_wallet),
                                   SizedBox(width: 10),
-                                  Text("Wallet Balance (Ks) "),
+                                  Text(
+                                      "Wallet Balance ( ${Formatter.balanceFormat(userModel.balance ?? 0)} Ks) "),
                                   Spacer(),
                                   Icon(
                                     Icons.chevron_right,
@@ -154,18 +155,7 @@ class WalletState extends State<Wallet> {
                                 ],
                               ),
                             ),
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 10, right: 10, top: 10),
-                              child: Row(
-                                children: [
-                                  Text(
-                                      Formatter.balanceFormat(
-                                          userModel.balance ?? 0),
-                                      style: TextStyle(fontSize: 20)),
-                                ],
-                              ),
-                            ),
+
                             Container(
                               margin: EdgeInsets.all(10),
                               color: Colors.transparent,
