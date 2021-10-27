@@ -1,6 +1,5 @@
 // @dart=2.9
 
-
 import 'package:left_style/datas/constants.dart';
 
 class TransactionModel {
@@ -36,9 +35,4 @@ class TransactionModel {
     data['createdDate'] = this.createdDate.microsecondsSinceEpoch.toString();
     return data;
   }
-
-
-
-
-
 }

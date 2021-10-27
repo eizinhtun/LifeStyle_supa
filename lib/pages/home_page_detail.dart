@@ -12,8 +12,10 @@ import 'package:left_style/pages/me_page.dart';
 import 'package:left_style/pages/notification_list.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:left_style/widgets/wallet.dart';
+
+import 'package:provider/provider.dart';
+
 import 'home_page.dart';
 import 'notification_detail.dart';
 

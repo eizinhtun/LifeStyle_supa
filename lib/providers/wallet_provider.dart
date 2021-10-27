@@ -8,6 +8,7 @@ import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/widgets/wallet.dart';
+import 'package:left_style/widgets/wallet.dart';
 
 class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var tracRef = FirebaseFirestore.instance.collection(transactions);
@@ -108,7 +109,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 print("withdrawl success!");
                 MessageHandler.showMessage(
                     context, "Success", "Your withdrawl is successful");
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Wallet()));
+               // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Wallet()));
               });
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
