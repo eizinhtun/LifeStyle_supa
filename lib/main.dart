@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:left_style/pages/home_page.dart';
 import 'package:left_style/pages/home_page_detail.dart';
 import 'package:left_style/pages/login.dart';
-import 'package:left_style/pages/meter_list.dart';
 import 'package:left_style/pages/user_not_active.dart';
 import 'package:left_style/pages/user_profile.dart';
 import 'package:left_style/providers/firebase_crud_provider.dart';
@@ -102,6 +100,7 @@ class _MyAppState extends State<MyApp> {
 
               if (user == null) {
                 return LoginPage();
+                // setState(() {});
               }
               return StreamBuilder<DocumentSnapshot>(
                   stream: FirebaseFirestore.instance
@@ -111,7 +110,6 @@ class _MyAppState extends State<MyApp> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.active) {
                       if (snapshot.hasData && snapshot.data.exists) {
-                        print(snapshot.data["isActive"]);
                         if (snapshot.data["isActive"]) {
                           return HomePageDetail();
                         } else {

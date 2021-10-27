@@ -120,6 +120,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     User user = await Authentication.signInWithGoogle(context: context);
     if (user.uid != null) {
       DatabaseHelper.setAppLoggedIn(context, true);
+      // FirebaseAuth.instance.currentUser.
       notifyListeners();
       // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
       // print("UserIdExist : $userIdExist");

@@ -56,7 +56,6 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

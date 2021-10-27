@@ -3,21 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Meter.dart';
-import 'package:left_style/models/MeterPageObj.dart';
-import 'package:left_style/providers/meter_presenter.dart';
-import 'package:left_style/providers/meter_provider.dart';
-import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/utils/message_handler.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_dash/flutter_dash.dart';
-import 'package:provider/provider.dart';
-
 import 'map_screen.dart';
 
 class MeterEditScreen extends StatelessWidget {

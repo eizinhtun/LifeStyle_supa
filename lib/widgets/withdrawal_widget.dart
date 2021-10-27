@@ -1,8 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
-import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/transaction_model.dart';
-import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
@@ -17,8 +15,6 @@ class WithdrawalPage extends StatefulWidget {
 class _WithdrawalPageState extends State<WithdrawalPage> {
   final _withdrawformKey = GlobalKey<FormState>();
   TextEditingController _amountController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
   bool viewVisible = false;
   String pay = "";
   double kbzOpacity = 0.5;
@@ -244,9 +240,11 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                     ),
                   )),
               SizedBox(height: 20),
-              ElevatedButton(onPressed: (){
-                _show(context);
-              }, child: Text("Test")),
+              ElevatedButton(
+                  onPressed: () {
+                    _show(context);
+                  },
+                  child: Text("Test")),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -285,6 +283,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   void clearText() {
     _amountController.clear();
   }
+
   _show(BuildContext context) {
     return showDialog(
       context: context,
@@ -294,7 +293,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
           children: [
             SimpleDialogOption(
               child: Text('Option 1'),
-              onPressed: (){
+              onPressed: () {
                 // Do something
                 print('You have selected the option 1');
                 Navigator.of(context).pop();
@@ -302,7 +301,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
             ),
             SimpleDialogOption(
               child: Text('Option 2'),
-              onPressed: (){
+              onPressed: () {
                 // Do something
                 print('You have selected the option 2');
                 Navigator.of(context).pop();
@@ -312,8 +311,5 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         );
       },
     );
-
   }
-
-
 }

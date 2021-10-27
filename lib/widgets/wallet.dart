@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/models/user_model.dart';
-import 'package:left_style/providers/firebase_crud_provider.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';

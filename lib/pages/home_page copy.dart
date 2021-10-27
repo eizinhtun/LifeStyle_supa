@@ -25,7 +25,6 @@ class HomePageCopy extends StatefulWidget {
 class _HomePageCopyState extends State<HomePageCopy> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

@@ -26,7 +26,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   bool isPhoneToken = false;
-  User _user = null;
+  User _user;
   @override
   void initState() {
     super.initState();

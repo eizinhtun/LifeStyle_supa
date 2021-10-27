@@ -105,10 +105,15 @@ class _MePageState extends State<MePage> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  CircleAvatar(
-                                    radius: 40,
-                                    backgroundImage: AssetImage(
-                                        "assets/image/user-photo.png"),
+                                  // CircleAvatar(
+                                  //   radius: 40,
+                                  //   backgroundImage: AssetImage(
+                                  //       "assets/image/user-photo.png"),
+                                  // ),
+                                  UserInfoScreenPhoto(
+                                    imageurl: user.photoUrl,
+                                    width: 80,
+                                    height: 80,
                                   ),
                                   SizedBox(
                                     width: 20,
@@ -217,7 +222,7 @@ class _MePageState extends State<MePage> {
                               builder: (context) => MeterListPage()));
                         },
                         leading: Icon(
-                          Icons.person,
+                          Icons.list,
                           color: mainColor,
                         ),
                         title: Text(

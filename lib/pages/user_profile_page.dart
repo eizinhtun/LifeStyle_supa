@@ -36,9 +36,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // getUser();
     _nameController = TextEditingController(text: fullName);
     _addressController = TextEditingController(text: address);
   }
