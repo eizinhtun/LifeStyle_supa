@@ -111,8 +111,8 @@ class _TopUpPageState extends State<TopUpPage> {
                                     });
                                   },
                                   child: Container(
-                                    width: 80,
-                                    height: 80,
+                                    width: 50,
+                                    height: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       image: DecorationImage(
@@ -141,8 +141,8 @@ class _TopUpPageState extends State<TopUpPage> {
                                     setState(() {});
                                   },
                                   child: Container(
-                                    width: 80,
-                                    height: 80,
+                                    width: 50,
+                                    height: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       image: DecorationImage(
@@ -172,8 +172,8 @@ class _TopUpPageState extends State<TopUpPage> {
                                     setState(() {});
                                   },
                                   child: Container(
-                                    width: 80,
-                                    height: 80,
+                                    width: 50,
+                                    height: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       image: DecorationImage(

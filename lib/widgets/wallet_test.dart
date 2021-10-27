@@ -47,7 +47,7 @@ class _WalletTestState extends State<WalletTest> {
   }
 
   void _onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 100));
+    //await Future.delayed(Duration(milliseconds: 100));
     // if failed,use refreshFailed()
     // userModel = await context.read<LoginProvider>().getUser(context);
     _refreshController.refreshCompleted();
@@ -55,7 +55,7 @@ class _WalletTestState extends State<WalletTest> {
   }
 
   getData() async {
-    await Future.delayed(Duration(milliseconds: 100));
+   // await Future.delayed(Duration(milliseconds: 100));
     totalList =
     await context.read<WalletProvider>().getManyTransactionList(context);
     print(totalList);
