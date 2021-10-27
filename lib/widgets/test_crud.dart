@@ -1,3 +1,4 @@
+/*
 // @dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +23,9 @@ class _TestState extends State<Test> {
 
   int end = 10;
   static int i = 1;
-  final _passwordformKey = GlobalKey<FormState>();
-  TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
+  // final _passwordformKey = GlobalKey<FormState>();
+  // TextEditingController _passwordController = TextEditingController();
+  // bool _obscureText = true;
 
   @override
   void initState() {
@@ -93,7 +94,7 @@ class _TestState extends State<Test> {
 
                               }, child: Text("Topup")),
                               ElevatedButton(onPressed: () async{
-                                _showSimpleDialog(context);
+                                // _showSimpleDialog(context);
                                 setState(() {
                                 });
                               }, child: Text("Withdrawal")),
@@ -112,82 +113,83 @@ class _TestState extends State<Test> {
         ));
 
   }
-
-  _showSimpleDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (_) {
-        return SimpleDialog(
-          title: Text('Enter Password'),
-          children: [
-            SimpleDialogOption(
-              child: Form(
-                key: _passwordformKey,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 230,
-                      height: 100,
-                      padding: EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        autovalidateMode: AutovalidateMode
-                            .onUserInteraction,
-                        controller: _passwordController,
-                        obscureText: _obscureText,
-                        validator: (val) {
-                          return Validator.password(
-                              context,
-                              val.toString(),
-                              "Password",
-                              true);
-                        },
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText:
-                            "Password",
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _obscureText =
-                                  !_obscureText;
-                                });
-                              },
-                              child: Icon(_obscureText
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
-                            ),
-                            hintStyle: TextStyle(
-                                color: Colors.grey[400])),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        ElevatedButton(onPressed: (){
-                          Navigator.of(context).pop();
-                        }, child: Text("Close")),
-                        SizedBox(width: 20),
-                        ElevatedButton(onPressed: () async {
-                         await context.read<FirebaseCRUDProvider>().checkPassword(context, _passwordController.text);
-                         Navigator.of(context).pop();
-                        }, child: Text("Confirm")),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            // SimpleDialogOption(
-            //   child: Text('Option 2'),
-            //   onPressed: (){
-            //     // Do something
-            //     print('You have selected the option 2');
-            //     Navigator.of(context).pop();
-            //   },
-            // )
-          ],
-        );
-      },
-    );
-  }
+  //
+  // _showSimpleDialog(BuildContext context) {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (_) {
+  //       return SimpleDialog(
+  //         title: Text('Enter Password'),
+  //         children: [
+  //           SimpleDialogOption(
+  //             child: Form(
+  //               key: _passwordformKey,
+  //               child: Column(
+  //                 children: [
+  //                   Container(
+  //                     width: 230,
+  //                     height: 100,
+  //                     padding: EdgeInsets.all(8.0),
+  //                     child: TextFormField(
+  //                       autovalidateMode: AutovalidateMode
+  //                           .onUserInteraction,
+  //                       controller: _passwordController,
+  //                       obscureText: _obscureText,
+  //                       validator: (val) {
+  //                         return Validator.password(
+  //                             context,
+  //                             val.toString(),
+  //                             "Password",
+  //                             true);
+  //                       },
+  //                       decoration: InputDecoration(
+  //                           border: InputBorder.none,
+  //                           hintText:
+  //                           "Password",
+  //                           suffixIcon: GestureDetector(
+  //                             onTap: () {
+  //                               setState(() {
+  //                                 _obscureText =
+  //                                 !_obscureText;
+  //                               });
+  //                             },
+  //                             child: Icon(_obscureText
+  //                                 ? Icons.visibility
+  //                                 : Icons.visibility_off),
+  //                           ),
+  //                           hintStyle: TextStyle(
+  //                               color: Colors.grey[400])),
+  //                     ),
+  //                   ),
+  //                   Row(
+  //                     children: [
+  //                       ElevatedButton(onPressed: (){
+  //                         Navigator.of(context).pop();
+  //                       }, child: Text("Close")),
+  //                       SizedBox(width: 20),
+  //                       ElevatedButton(onPressed: () async {
+  //                        await context.read<FirebaseCRUDProvider>().checkPassword(context, _passwordController.text);
+  //
+  //                       }, child: Text("Confirm")),
+  //                     ],
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //           // SimpleDialogOption(
+  //           //   child: Text('Option 2'),
+  //           //   onPressed: (){
+  //           //     // Do something
+  //           //     print('You have selected the option 2');
+  //           //     Navigator.of(context).pop();
+  //           //   },
+  //           // )
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
 }
+*/

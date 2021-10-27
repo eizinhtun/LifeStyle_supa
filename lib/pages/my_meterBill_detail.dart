@@ -94,7 +94,6 @@ import 'package:left_style/models/meter_bill.dart';
             MeterBill bill=MeterBill.fromJson(snapshot.data.data());
             return SingleChildScrollView(
               child: Container(
-
                 color: Colors.white,
                 margin: const EdgeInsets.all(0.0),
                 width: ScreenUtil().setSp(900), //

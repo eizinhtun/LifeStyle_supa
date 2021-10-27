@@ -75,8 +75,23 @@ const String meterBillsCollection = "meter_bills";
 const String userMeterCollection = "user_meters";
 const String userReadUnitCollection = "user_read_unit";
 const String transactions = "transactions";
+const String manyTransaction = "manyTransition";
 const String notifications = "notifications";
 const String testCollection = "tests";
 
 const String notilist = "notilist";
 const String myTransactions = "myTransactions";
+class TransactionType {
+  static String Withdraw="Withdraw";
+  static String Topup="Topup";
+}
+class PaymentType {
+  static String WavePay="WavePay";
+
+  static String Topup="Topup";
+
+  static String KPay="KPay";
+
+  static String CbPay="CbPay";
+}
+

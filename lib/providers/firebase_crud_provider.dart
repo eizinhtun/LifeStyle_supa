@@ -1,3 +1,4 @@
+/*
 // @dart=2.9
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -135,20 +136,16 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //   }
   //
   // }
-
-
   Future<void> topup(
       BuildContext context, PaymentType paymentType) async {
+      double amount = 2000.00;
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
-
-      userRef.doc(uid).get().then((value) {
+      userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
         double balance= value.data()["balance"];
-        double amount = 2000.00;
-
         if(balance != null){
           try {
-            userRef.doc(uid).update({"balance":  balance + amount }).then((_) {
+            value.reference.update({"balance":  balance + amount }).then((_) {
               print("topup success!");
             });
             MessageHandler.showMessage(context, "Success", "Your topup is successful");
@@ -159,8 +156,8 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 amount: amount,
                 paymentType: paymentType,
                 createdDate: DateTime.now());
-            testRef.doc("$uid").collection('topup').add(testModel.toJson()).catchError((error) {
-              print("Failed to add topup transaction: $error");
+                value.reference.collection('manyTransition').add(testModel.toJson()).catchError((error) {
+              //print("Failed to add topup transaction: $error");
             });
             notifyListeners();
           } catch (e) {
@@ -171,7 +168,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
           MessageHandler.showErrMessage(context, "Fail", "Balance Type null");
         }
       });
-
+      MessageHandler.showErrMessage(context, "Fail", "No Internet");
       notifyListeners();
     }
   }
@@ -181,8 +178,9 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       // double balance = await getBalance();
-      userRef.doc(uid).get().then((value) {
+      userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
         double balance = value.data()["balance"];
+        checkPassword(context,"22222");
 
         if (amount > balance) {
           MessageHandler.showErrMessage(context, "Insufficient Balance",
@@ -219,7 +217,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
       BuildContext context, String password) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
-      userRef.doc(uid).get().then((value) {
+      userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
        String oldPassword = value.data()["password"];
        var isCorrect = new DBCrypt().checkpw(password, oldPassword);
        if(isCorrect == true){
@@ -229,10 +227,8 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
            MessageHandler.showErrMessage(context, "Insufficient Balance",
                "Your withdraw amount is higher than your balance");
          } else {
-             userRef.doc(uid).update({"balance": balance - amount}).then((_) {
-               // MessageHandler.showMessage(
-               //     context, "Success", "Your withdrawl is successful");
-               notifyListeners();
+             value.reference.update({"balance": balance - amount}).then((_) {
+
              });
              TestModel testModel = TestModel(
                  uid: uid,
@@ -253,10 +249,10 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
          print("Failed to password: $e");
          MessageHandler.showErrMessage(context, "Fail", "Password is fail");
        }
-
       });
+      MessageHandler.showErrMessage(context, "Fail", "No Internet");
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   // Future<List<TransactionModel>> getTransactionList(
@@ -276,3 +272,4 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   // }
 
 }
+*/

@@ -109,7 +109,6 @@ setState(() {
             );
           } else
             return
-
               ListView(
                 children: snapshot.data.docs.map((doc) {
                   MyReadUnit item= MyReadUnit.fromJson(doc.data());
@@ -123,7 +122,6 @@ setState(() {
                       children: [
                         ListTile(
                           onTap: () async {
-
                             Navigator.push(context, MaterialPageRoute(builder: (context)=>new MeterBillDetailPage(docId:doc.id)));
                            // Navigator.push(context, MaterialPageRoute(builder: (context)=>new UploadMyReadScreen(customerId: item.customerId,monthName: item.monthName,)));
                           },
@@ -256,10 +254,6 @@ setState(() {
                   );
                 }).toList(),
               );
-
-
-
-
         },
       )
 

@@ -17,7 +17,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
-      await userRef.doc(uid).get().then((value) {
+      await userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
         userModel = UserModel.fromJson(value.data());
         notifyListeners();
         return userModel;

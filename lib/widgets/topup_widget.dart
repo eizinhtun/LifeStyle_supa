@@ -1,5 +1,7 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:left_style/datas/constants.dart';
+import 'package:left_style/models/test_model.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/validators/validator.dart';
@@ -21,12 +23,12 @@ class _TopUpPageState extends State<TopUpPage> {
   double kbzOpacity = 0.5;
   double cbOpacity = 0.5;
   double waveOpacity = 0.5;
-  PaymentType paymentType;
+  String paymentType;
 
   @override
   void initState() {
     super.initState();
-    paymentType = PaymentType.KPay;
+
   }
 
   @override
@@ -98,7 +100,7 @@ class _TopUpPageState extends State<TopUpPage> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.KPay;
+                                    paymentType = "KPay";
                                     showWidget();
                                     pay = "KBZ Pay";
                                     kbzOpacity = 1;
@@ -130,7 +132,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                 SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.CbPay;
+                                    paymentType = "CbPay";
                                     showWidget();
                                     pay = "CB Pay";
                                     kbzOpacity = 0.5;

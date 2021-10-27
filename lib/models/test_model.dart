@@ -1,3 +1,4 @@
+/*
 // // @dart=2.9
 // class TestModel {
 //   String uid;
@@ -35,12 +36,12 @@
 // }
 // @dart=2.9
 enum TestType { Topup, Withdraw }
-enum PaymentType { KPay, CbPay, WavePay }
+
 
 class TestModel {
   String uid;
   TestType type;
-  PaymentType paymentType;
+  String paymentType;
   double amount;
   DateTime createdDate;
 
@@ -129,3 +130,4 @@ class TestModel {
     return s;
   }
 }
+*/

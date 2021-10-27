@@ -13,6 +13,8 @@ import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/widgets/qr_code_demo.dart';
 import 'package:left_style/widgets/test_crud.dart';
+import 'package:left_style/widgets/wallet_demo.dart';
+import 'package:left_style/widgets/wallet_test.dart';
 import 'package:provider/provider.dart';
 
 import 'meter_city.dart';
@@ -206,7 +208,13 @@ class _HomePageState extends State<HomePage> {
                     await context.read<NotiProvider>().sendNoti(context);
                   },
                   child: Text("Send Notification"),
-                )
+                ),
+                ElevatedButton(onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>WalletTest()));
+
+                }, child: Text("Go to Wallet")),
+
+
               ],
             ),
           ),

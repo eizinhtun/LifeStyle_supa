@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/firebase_crud_provider.dart';
@@ -40,7 +41,7 @@ class WalletState extends State<Wallet> {
   void _onRefresh() async {
     // monitor network fetch
     // getData();
-    await Future.delayed(Duration(milliseconds: 1000));
+   // await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
     userModel = await context.read<LoginProvider>().getUser(context);
     _refreshController.refreshCompleted();
@@ -48,8 +49,9 @@ class WalletState extends State<Wallet> {
   }
 
   getData() async {
-    totalList =
-        await context.read<WalletProvider>().getTransactionList(context);
+    totalList =await context.read<WalletProvider>().getManyTransactionList(context);
+        //await context.read<WalletProvider>().getTransactionList(context);
+    print(totalList);
     if (totalList.length < end) {
       end = totalList.length;
     }
@@ -57,11 +59,12 @@ class WalletState extends State<Wallet> {
     userModel = await context.read<LoginProvider>().getUser(context);
     print("User: ${userModel.fullName}");
     print("TracList: ${tracList.length}");
+
   }
 
   void _onLoading() async {
     // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
+    // await Future.delayed(Duration(milliseconds: 1000));
     // items.add((items.length + 1).toString());
     i++;
     end = end * i;
@@ -146,7 +149,7 @@ class WalletState extends State<Wallet> {
                                   EdgeInsets.only(left: 10, right: 10, top: 10),
                               child: Row(
                                 children: [
-                                  Icon(Icons.account_balance_wallet),
+                                  Image.asset("assets/payment/wallet.png",width: 50,height: 50),
                                   SizedBox(width: 10),
                                   Text("Wallet Balance (Ks) "),
                                   Spacer(),
@@ -231,65 +234,7 @@ class WalletState extends State<Wallet> {
                                 ],
                               ),
                             ),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            //   children: [
-                            //     ElevatedButton(
-                            //         style: ElevatedButton.styleFrom(
-                            //             padding: EdgeInsets.only(
-                            //                 left: 20,
-                            //                 right: 20,
-                            //                 top: 10,
-                            //                 bottom: 10) // foreground
-                            //         ),
-                            //         onPressed: () {},
-                            //         child: Row(
-                            //           children: [
-                            //             Icon(Icons.cached),
-                            //             SizedBox(width: 5),
-                            //             Text("Top Up    "),
-                            //           ],
-                            //         )
-                            //     ),
-                            //     ElevatedButton(
-                            //         style: ElevatedButton.styleFrom(
-                            //             padding: EdgeInsets.only(
-                            //                 left: 20,
-                            //                 right: 20,
-                            //                 top: 10,
-                            //                 bottom: 10) // foreground
-                            //         ),
-                            //         onPressed: () {},
-                            //         child: Row(
-                            //           children: [
-                            //             Icon(Icons.payment),
-                            //             SizedBox(width: 5),
-                            //             Text("Withdrawal"),
-                            //           ],
-                            //         )
-                            //     ),
-                            //     // ElevatedButton(
-                            //     //     style: ElevatedButton.styleFrom(
-                            //     //         padding: EdgeInsets.only(
-                            //     //             left: 35,
-                            //     //             right: 35,
-                            //     //             top: 10,
-                            //     //             bottom: 10) // foreground
-                            //     //         ),
-                            //     //     onPressed: () {},
-                            //     //     child: Text("Cash In")),
-                            //     // ElevatedButton(
-                            //     //     style: ElevatedButton.styleFrom(
-                            //     //         padding: EdgeInsets.only(
-                            //     //             left: 35,
-                            //     //             right: 35,
-                            //     //             top: 10,
-                            //     //             bottom: 10) // foreground
-                            //     //         ),
-                            //     //     onPressed: () {},
-                            //     //     child: Text("Cash Out")),
-                            //   ],
-                            // ),
+
                           ],
                         ),
                       ),
@@ -336,11 +281,13 @@ class WalletState extends State<Wallet> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                Icon(
-                                    tracList[i].type == TransactionType.Topup
-                                        ? Icons.add
-                                        : Icons.minimize,
-                                    size: 20),
+
+                                // Icon(
+                                //     tracList[i].type == TransactionType.Topup
+                                //         ? Icons.add
+                                //         : Icons.minimize,
+                                //     size: 20),
+                                tracList[i].type == TransactionType.Topup?Image.asset("assets/payment/topup.png"):Image.asset("assets/payment/withdraw.png"),
                                 SizedBox(width: 10),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -359,8 +306,9 @@ class WalletState extends State<Wallet> {
                                 ),
                                 Spacer(),
                                 Text(
-                                    Formatter.balanceFormat(tracList[i].amount),
-                                    style: TextStyle(fontSize: 12)),
+                                    tracList[i].type == TransactionType.Topup?Formatter.balanceTopupFormat(tracList[i].amount)
+                                    :Formatter.balanceFormat(tracList[i].amount),
+                                    style: TextStyle(fontSize: 14)),
                               ],
                             ),
                           ),

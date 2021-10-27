@@ -50,7 +50,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => LoginProvider()),
     ChangeNotifierProvider(create: (_) => WalletProvider()),
     ChangeNotifierProvider(create: (_) => NotiProvider()),
-    ChangeNotifierProvider(create: (_) => FirebaseCRUDProvider()),
+   // ChangeNotifierProvider(create: (_) => FirebaseCRUDProvider()),
   ], child: MyApp()));
 }
 
