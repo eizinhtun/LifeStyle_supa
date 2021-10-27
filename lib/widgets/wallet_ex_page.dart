@@ -1,35 +1,32 @@
 // @dart=2.9
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/transaction_model.dart';
-import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
-import 'package:left_style/widgets/wallet.dart';
-import 'package:left_style/widgets/wallet_ex_page.dart';
-import 'package:left_style/widgets/wallet_test.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
-import '../providers/login_provider.dart';
-import 'loading_demo.dart';
 
-class Wallet extends StatefulWidget {
+class WalletExPage extends StatefulWidget {
+  const WalletExPage({Key key}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => WalletState();
+  _loadingPageState createState() => _loadingPageState();
 }
 
-class WalletState extends State<Wallet> {
-
+class _loadingPageState extends State<WalletExPage> {
+  // List<String> totalList=[];
+  // List<String> tracList=[];
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
   List<TransactionModel> totalList = [];
   List<TransactionModel> tracList = [];
-
+  // int end = 5;
   int i = 1;
   int showlist=10;
   int start;
@@ -46,6 +43,10 @@ class WalletState extends State<Wallet> {
     totalList =
     await context.read<WalletProvider>().getManyTransactionList(context);
     print(totalList);
+    // totalList =[];
+    // for(var i = 0;i<25;i++){
+    //   totalList.add((i+1).toString());
+    // }
 
     _onRefresh();
 
@@ -76,7 +77,9 @@ class WalletState extends State<Wallet> {
       }else{
         tracList..addAll(totalList.sublist(start, showlist));
       }
+
     }
+
     // else{
     //   _refreshController.loadNoData();
     // }
@@ -161,7 +164,7 @@ class WalletState extends State<Wallet> {
           ),
           Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height* 0.65,
+            height: MediaQuery.of(context).size.height* 0.7,
             child: SmartRefresher(
               enablePullDown: true,
               enablePullUp: true,
@@ -201,12 +204,12 @@ class WalletState extends State<Wallet> {
                 shrinkWrap: true,
                 itemBuilder: (c, i) =>
                     Card(
-                      child: Center(
-                        child: Column(
-                          children: [
-                            // ListTile(
-                            //   title:  Text(tracList[i].toString()),
-                            // ),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              // ListTile(
+                              //   title:  Text(tracList[i].toString()),
+                              // ),
                             ListTile(
                               title: Column(
                                 children: <Widget>[
@@ -288,9 +291,9 @@ class WalletState extends State<Wallet> {
                               ),
                             ),
 
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
                     ),
                 itemExtent: 100.0,
                 itemCount: tracList.length,
