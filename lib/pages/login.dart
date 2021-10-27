@@ -1,4 +1,5 @@
 // @dart=2.9
+
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,7 +7,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/user_model.dart';
@@ -15,6 +15,7 @@ import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:provider/provider.dart';
+import 'language_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -29,11 +30,6 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _phoneController = TextEditingController();
   var userRef = FirebaseFirestore.instance.collection(userCollection);
   String verificationId = "";
-  String lang = "en";
-
-  Color langEnBtnColor = Colors.black38;
-  Color langMyBtnColor = Colors.black38;
-  Color langZhBtnColor = Colors.black38;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseMessaging _messaging = FirebaseMessaging.instance;
@@ -43,18 +39,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    getLang();
     super.initState();
-  }
-
-  void getLang() async {
-    lang = await DatabaseHelper.getLanguage();
   }
 
   @override
   Widget build(BuildContext context) {
-    changeLangColor();
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -70,7 +59,6 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundImage: AssetImage(
                         "assets/icon/icon.png",
                       )),
-
                   SizedBox(
                     height: 20,
                   ),
@@ -104,9 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                               keyboardType: TextInputType.phone,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  hintText:
-                                      // "Phone",
-                                      Tran.of(context)?.text("phone"),
+                                  hintText: Tran.of(context)?.text("phone"),
                                   hintStyle:
                                       TextStyle(color: Colors.grey[400])),
                             ),
@@ -132,7 +118,6 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       },
                       child: Text(
-                        // "Login",
                         "${Tran.of(context)?.text("login")}",
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
@@ -144,7 +129,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Center(
                     child: Text(
-                      // "Login With",
                       "${Tran.of(context)?.text("login_with")}",
                       style: TextStyle(color: Colors.black26),
                     ),
@@ -171,86 +155,27 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                  // SizedBox(
-                  //   height: 20,
-                  // ),
-                  // InkWell(
-                  //   onTap: () {},
-                  //   child: Text(
-                  //     // "Forgot Password",
-                  //     "${Tran.of(context)?.text("forgot_password")}",
-                  //     style:
-                  //         TextStyle(color: Color.fromRGBO(143, 148, 251, 1)),
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 10,
-                  // ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.of(context).push(MaterialPageRoute(
-                  //         builder: (context) => RegisterPage()));
-                  //   },
-                  //   child: Text(
-                  //     // "Register Now",
-                  //     "${Tran.of(context)?.text("register_now")}",
-                  //     style: TextStyle(color: Color.fromRGBO(143, 148, 251, 1)),
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 30,
-                  // ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Center(
+                    child: InkWell(
+                      onTap: () async {
+                        await Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => LanguagePage()));
+
+                        setState(() {});
+                      },
+                      child: Text(
+                        "Select Language",
+                        style: TextStyle(color: mainColor),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 32),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            InkWell(
-              onTap: () async {
-                print("Myanmar Pressed");
-                await DatabaseHelper.setLanguage(context, "my");
-                setState(() {
-                  lang = "my";
-                });
-              },
-              child: Text(
-                "မြန်မာ",
-                style: TextStyle(color: langMyBtnColor),
-              ),
-            ),
-            InkWell(
-              onTap: () async {
-                print("English Pressed");
-                await DatabaseHelper.setLanguage(context, "en");
-                setState(() {
-                  lang = "en";
-                });
-              },
-              child: Text(
-                "English",
-                style: TextStyle(color: langEnBtnColor),
-              ),
-            ),
-            InkWell(
-              onTap: () async {
-                print("Chinese Pressed");
-                await DatabaseHelper.setLanguage(context, "zh");
-                setState(() {
-                  lang = "zh";
-                });
-              },
-              child: Text(
-                "中文",
-                style: TextStyle(color: langZhBtnColor),
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -278,9 +203,6 @@ class _LoginPageState extends State<LoginPage> {
   void register() async {
     if (_loginformKey.currentState.validate()) {
       print("Validate");
-      // var pass = new DBCrypt()
-      //     .hashpw(_passwordController.text, new DBCrypt().gensalt());
-      // var isCorrect = new DBCrypt().checkpw(plain, hashed);
 
       String token = await checkToken(fcmtoken);
       UserModel user = UserModel(
@@ -316,88 +238,15 @@ class _LoginPageState extends State<LoginPage> {
                   builder: (context) => RegisterVerifyPinPage(
                       user: user, verificationId: verificationId)));
             },
-            // codeSent,
             codeAutoRetrievalTimeout: (String verificationId) {
               print("verification code: " + verificationId);
-              // MessageHandler.showSnackbar(
-              //     "verification code: " + verificationId, context, 6);
+
               verificationId = verificationId;
             });
       } catch (e) {
         MessageHandler.showSnackbar(
             "Failed to Verify Phone Number: $e", context, 6);
       }
-    }
-  }
-
-  // Future<void> login() async {
-  //   FirebaseAuth _auth = FirebaseAuth.instance;
-  //   String phone = phNoFormat();
-  //   try {
-  //     await _auth.verifyPhoneNumber(
-  //         phoneNumber: phone,
-  //         timeout: const Duration(seconds: 120),
-  //         verificationCompleted:
-  //             (PhoneAuthCredential phoneAuthCredential) async {},
-  //         verificationFailed: (FirebaseAuthException authException) {
-  //           print(
-  //               'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-  //           MessageHandler.showSnackbar(
-  //               'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
-  //               context,
-  //               6);
-  //         },
-  //         codeSent: (String verificationId, [int forceResendingToken]) async {
-  //           print('Please check your phone for the verification code.' +
-  //               verificationId);
-  //           MessageHandler.showSnackbar(
-  //               'Please check your phone for the verification code.',
-  //               context,
-  //               6);
-  //           verificationId = verificationId;
-  //           print("Before: $verificationId");
-  //           Navigator.of(context).push(MaterialPageRoute(
-  //               builder: (context) => LoginVerifyPinPage(
-  //                     verificationId: verificationId,
-  //                     phone: phone,
-  //                   )));
-  //         },
-  //         // codeSent,
-  //         codeAutoRetrievalTimeout: (String verificationId) {
-  //           print("verification code: " + verificationId);
-  //           MessageHandler.showSnackbar(
-  //               "verification code: " + verificationId, context, 6);
-  //           verificationId = verificationId;
-  //         });
-  //   } catch (e) {
-  //     MessageHandler.showSnackbar(
-  //         "Failed to Verify Phone Number: $e", context, 6);
-  //   }
-  // }
-
-  changeLangColor() {
-    switch (lang) {
-      case "en":
-        {
-          langEnBtnColor = Color.fromRGBO(143, 148, 251, 1);
-          langMyBtnColor = Colors.black38;
-          langZhBtnColor = Colors.black38;
-        }
-        break;
-      case "my":
-        {
-          langMyBtnColor = Color.fromRGBO(143, 148, 251, 1);
-          langEnBtnColor = Colors.black38;
-          langZhBtnColor = Colors.black38;
-        }
-        break;
-      case "zh":
-        {
-          langZhBtnColor = Color.fromRGBO(143, 148, 251, 1);
-          langEnBtnColor = Colors.black38;
-          langMyBtnColor = Colors.black38;
-        }
-        break;
     }
   }
 

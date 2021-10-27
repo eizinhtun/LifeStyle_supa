@@ -76,6 +76,11 @@ dependencies:
   barcode_flutter: ^1.1.2
   flutter_layout_grid: ^1.0.3
   flutter_screenutil: ^5.0.0+2
+  marquee: ^2.2.0
+  carousel_slider: ^4.0.0
+  optimized_cached_image: ^2.0.1
+  url_launcher: ^6.0.7
+  flutter_html: ^2.1.5
 
 
 

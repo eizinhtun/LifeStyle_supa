@@ -69,11 +69,11 @@ class DatabaseHelper {
     try {
       SystemData.language = lang;
 
-      await DatabaseHelper.setData(lang, "language");
+      await DatabaseHelper.setData(lang, "language").then((value) {});
       await Tran.of(context).load();
       return;
     } catch (ex) {
-      await setData("en", "language");
+      await DatabaseHelper.setData("en", "language");
       return;
     }
   }

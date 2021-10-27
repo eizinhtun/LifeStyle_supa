@@ -7,13 +7,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:left_style/pages/home_page.dart';
 import 'package:left_style/pages/home_page_detail.dart';
 import 'package:left_style/pages/login.dart';
+import 'package:left_style/pages/meter_list.dart';
 import 'package:left_style/pages/user_not_active.dart';
 import 'package:left_style/pages/user_profile.dart';
 import 'package:left_style/providers/firebase_crud_provider.dart';
+import 'package:left_style/providers/language_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +50,7 @@ void main() async {
   // runApp(MyApp());
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LoginProvider()),
+    ChangeNotifierProvider(create: (_) => LanguageProvider()),
     ChangeNotifierProvider(create: (_) => WalletProvider()),
     ChangeNotifierProvider(create: (_) => NotiProvider()),
    // ChangeNotifierProvider(create: (_) => FirebaseCRUDProvider()),
@@ -128,6 +131,14 @@ class _MyAppState extends State<MyApp> {
             }
           },
         ),
+
+        // onGenerateRoute: (RouteSettings settings) {
+        //   if (settings.name == "/meterlist") {
+        //     return MaterialPageRoute(builder: (_) => MeterListPage());
+        //   }
+        //   return MaterialPageRoute(builder: (_) => HomePage());
+        // },
+
         // initialRoute: '/',
         // routes: {
         //   // When navigating to the "/" route, build the FirstScreen widget.

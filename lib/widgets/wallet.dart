@@ -95,34 +95,29 @@ class WalletState extends State<Wallet> {
                 snap: false,
                 floating: false,
                 expandedHeight: 0.0,
+                stretchTriggerOffset: 70.0,
                 shape: ContinuousRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(200),
-                        bottomRight: Radius.circular(200))),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(80),
+                    bottomRight: Radius.circular(80),
+                  ),
+                ),
                 bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(100),
+                  preferredSize: Size.fromHeight(50),
                   child: Container(),
                 ),
-                actions: [
-                  IconButton(
-                      onPressed: () async {
-                        await context.read<LoginProvider>().logOut(context);
-                        setState(() {});
-                      },
-                      icon: Icon(Icons.logout))
-                ],
               ),
-              SliverToBoxAdapter(
-                child: Container(
-                    constraints: BoxConstraints.expand(
-                      height: MediaQuery.of(context).size.height,
-                    ),
-                    child: Container()),
-              ),
+              // SliverToBoxAdapter(
+              //   child: Container(
+              //       constraints: BoxConstraints.expand(
+              //         height: MediaQuery.of(context).size.height,
+              //       ),
+              //       child: Container()),
+              // ),
             ],
           ),
           Positioned(
-            top: 100,
+            top: 30,
             left: 0,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 15),
@@ -151,7 +146,8 @@ class WalletState extends State<Wallet> {
                                 children: [
                                   Image.asset("assets/payment/wallet.png",width: 50,height: 50),
                                   SizedBox(width: 10),
-                                  Text("Wallet Balance (Ks) "),
+                                  Text(
+                                      "Wallet Balance ( ${Formatter.balanceFormat(userModel.balance ?? 0)} Ks) "),
                                   Spacer(),
                                   Icon(
                                     Icons.chevron_right,
@@ -160,18 +156,7 @@ class WalletState extends State<Wallet> {
                                 ],
                               ),
                             ),
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 10, right: 10, top: 10),
-                              child: Row(
-                                children: [
-                                  Text(
-                                      Formatter.balanceFormat(
-                                          userModel.balance ?? 0),
-                                      style: TextStyle(fontSize: 20)),
-                                ],
-                              ),
-                            ),
+
                             Container(
                               margin: EdgeInsets.all(10),
                               color: Colors.transparent,
@@ -205,17 +190,16 @@ class WalletState extends State<Wallet> {
                                         )),
                                   ),
                                   SizedBox(width: 5),
-
                                   Expanded(
                                     child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                             padding: EdgeInsets.only(
-                                              left: 15,
-                                              right: 15,
-                                              top: 10,
-                                              bottom: 10,
-                                            ) // foreground
-                                        ),
+                                          left: 15,
+                                          right: 15,
+                                          top: 10,
+                                          bottom: 10,
+                                        ) // foreground
+                                            ),
                                         onPressed: () {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
@@ -230,7 +214,6 @@ class WalletState extends State<Wallet> {
                                           ],
                                         )),
                                   ),
-
                                 ],
                               ),
                             ),
