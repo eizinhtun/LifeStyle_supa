@@ -4,9 +4,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/Ads.dart';
+import 'package:left_style/models/meter_bill.dart';
+import 'package:left_style/models/meter_bill.dart';
+import 'package:left_style/pages/my_meterBill_list.dart';
 import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/utils/formatter.dart';
+import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/widgets/home_item.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -121,18 +126,22 @@ class _HomePageState extends State<HomePage> {
     HomeItem(
       title: "Add Meter",
       iconData: Icons.qr_code,
+      action:  ActionButton.AddMeter,
     ),
     HomeItem(
       title: "Meter List",
+      action: ActionButton.MeterList,
       iconData: Icons.list,
     ),
     HomeItem(
-      title: "Upload Unit",
+      action: ActionButton.ReadUnit,
+      title: "Read Meter",
       iconData: Icons.file_upload,
     ),
     HomeItem(
-      title: "Meter History",
+      title: "Meter Bills",
       iconData: Icons.history,
+      action: ActionButton.MeterBill
     ),
   ];
 
@@ -167,7 +176,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Positioned(
-            top: 50,
+            top: 60,
             left: 0,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 15),
@@ -176,6 +185,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Container(
+
                     width: double.infinity,
                     child: Card(
                       shape: RoundedRectangleBorder(
@@ -184,6 +194,7 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white,
                       elevation: 10,
                       child: Container(
+
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,11 +367,11 @@ class _HomePageState extends State<HomePage> {
                   title: datalist.elementAt(i).title,
                   iconData: datalist.elementAt(i).iconData,
                   onPress: (context) {
-                    switch (datalist.elementAt(i).title) {
-                      case "Add Meter":
+                    switch (datalist.elementAt(i).action) {
+                      case ActionButton.AddMeter:
                         addNewMeter(context);
                         break;
-                      case "Meter List":
+                      case ActionButton.MeterList:
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -368,15 +379,15 @@ class _HomePageState extends State<HomePage> {
                                   MeterListPage(),
                             ));
                         break;
-                      case "Upload Unit":
+                      case ActionButton.ReadUnit:
                         uploadUnit(context);
                         break;
-                      case "Meter History":
+                      case ActionButton.MeterBill:
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  MeterListPage(),
+                                  MyMeterBillListPage(),
                             ));
                         break;
                     }
@@ -390,11 +401,11 @@ class _HomePageState extends State<HomePage> {
                       title: datalist.elementAt(i + 1).title,
                       iconData: datalist.elementAt(i + 1).iconData,
                       onPress: (context) {
-                        switch (datalist.elementAt(i + 1).title) {
-                          case "Add Meter":
+                        switch (datalist.elementAt(i + 1).action) {
+                          case ActionButton.AddMeter:
                             addNewMeter(context);
                             break;
-                          case "Meter List":
+                          case ActionButton.MeterList:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -402,15 +413,15 @@ class _HomePageState extends State<HomePage> {
                                       MeterListPage(),
                                 ));
                             break;
-                          case "Upload Unit":
+                          case ActionButton.ReadUnit:
                             uploadUnit(context);
                             break;
-                          case "Meter History":
+                          case ActionButton.MeterBill:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      MeterListPage(),
+                                      MyMeterBillListPage(),
                                 ));
                             break;
                         }
@@ -429,22 +440,22 @@ class _HomePageState extends State<HomePage> {
     return list;
   }
 
-  void pressAction(String title, BuildContext context) {
-    switch (title) {
-      case "Add Meter":
+  /*void pressAction(String action, BuildContext context) {
+    switch (action) {
+      case ActionButton.AddMeter:
         addNewMeter(context);
         break;
-      case "Meter List":
+      case ActionButton.MeterList:
         Navigator.push(
             context,
             MaterialPageRoute(
               builder: (BuildContext context) => MeterListPage(),
             ));
         break;
-      case "Upload Unit":
+      case ActionButton.ReadUnit:
         uploadUnit(context);
         break;
-      case "Meter History":
+      case ActionButton.MeterBill:
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -452,16 +463,17 @@ class _HomePageState extends State<HomePage> {
             ));
         break;
     }
-  }
+  }*/
 
   Future<void> uploadUnit(BuildContext context) async {
-    await _showAlertDialog(context);
     String codeSanner = await BarcodeScanner.scan().then((value) {
       if (value != null) {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => UploadMyReadScreen(customerId: value)));
       }
-    }).catchError((error) {});
+    }).catchError((error) {
+      MessageHandler.showErrMessage(context, "", "Please scan QR code");
+    });
   }
 
   Future<void> addNewMeter(BuildContext context) async {
@@ -499,6 +511,7 @@ class _HomePageState extends State<HomePage> {
 class HomeItem {
   final String title;
   final IconData iconData;
+  final String action;
 
   final Function(BuildContext context) onPressed;
 
@@ -506,5 +519,6 @@ class HomeItem {
     this.title,
     this.iconData,
     this.onPressed,
+    this.action
   });
 }

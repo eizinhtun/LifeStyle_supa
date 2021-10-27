@@ -80,3 +80,16 @@ const String testCollection = "tests";
 
 const String notilist = "notilist";
 const String myTransactions = "myTransactions";
+
+
+class ActionButton{
+  static const String ReadUnit="ReadUnit";
+  static const String MeterBill="MeterBill";
+  static const String MeterList="MeterList";
+  static const String AddMeter="AddMeter";
+
+
+
+
+}
+
