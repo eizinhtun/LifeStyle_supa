@@ -7,17 +7,18 @@ import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
-import 'package:left_style/widgets/wallet_test.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 
-class Wallet extends StatefulWidget {
+class WalletTest extends StatefulWidget {
+  const WalletTest({Key key}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => WalletState();
+  _WalletTestState createState() => _WalletTestState();
 }
 
-class WalletState extends State<Wallet> {
+class _WalletTestState extends State<WalletTest> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
@@ -25,7 +26,7 @@ class WalletState extends State<Wallet> {
   List<TransactionModel> tracList = [];
 
   // UserModel userModel = UserModel();
-  int end = 2;
+  int end = 20;
   static int i = 1;
 
   @override
@@ -40,7 +41,7 @@ class WalletState extends State<Wallet> {
   }
 
   void _onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 100));
+    //await Future.delayed(Duration(milliseconds: 100));
     // if failed,use refreshFailed()
     // userModel = await context.read<LoginProvider>().getUser(context);
     _refreshController.refreshCompleted();
@@ -48,6 +49,7 @@ class WalletState extends State<Wallet> {
   }
 
   getData() async {
+    // await Future.delayed(Duration(milliseconds: 100));
     totalList =
         await context.read<WalletProvider>().getManyTransactionList(context);
     print(totalList);
@@ -73,8 +75,6 @@ class WalletState extends State<Wallet> {
 
   @override
   Widget build(BuildContext context) {
-    getData();
-
     return Scaffold(
       body: CustomScrollView(slivers: <Widget>[
         SliverAppBar(
@@ -91,7 +91,7 @@ class WalletState extends State<Wallet> {
               ),
               child: Container(
                 child: Column(
-                  children: [
+                  children: <Widget>[
                     Container(
                       margin: EdgeInsets.all(10),
                       color: Colors.transparent,
@@ -147,12 +147,6 @@ class WalletState extends State<Wallet> {
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => WalletTest()));
-                        },
-                        child: Text("Wallet")),
                     SizedBox(
                       height: 20,
                     ),
@@ -303,151 +297,6 @@ class WalletState extends State<Wallet> {
                 ),
               )),
         ),
-        // SliverToBoxAdapter(
-        //   child: Container(
-        //       constraints: BoxConstraints.expand(
-        //         height: MediaQuery.of(context).size.height,
-        //       ),
-        //       child: Container(
-        //         child: Column(
-        //           children: [
-        //
-        //               Flexible(
-        //               child: SmartRefresher(
-        //                 enablePullDown: true,
-        //                 enablePullUp: true,
-        //                 header: ClassicHeader(),
-        //                 footer: CustomFooter(
-        //                   builder: (BuildContext context, mode) {
-        //                     Widget body;
-        //                     if (mode == LoadStatus.idle) {
-        //                       body = Text("pull up load");
-        //                     } else if (mode == LoadStatus.loading) {
-        //                       body = CupertinoActivityIndicator();
-        //                     } else if (mode == LoadStatus.failed) {
-        //                       body = Text("Load Failed!Click retry!");
-        //                     } else if (mode == LoadStatus.canLoading) {
-        //                       body = Text("release to load more");
-        //                     } else {
-        //                       body = Text("No more Data");
-        //                     }
-        //                     return Container(
-        //                       height: 55.0,
-        //                       child: Center(child: body),
-        //                     );
-        //                   },
-        //                 ),
-        //                 controller: _refreshController,
-        //                 onRefresh: _onRefresh,
-        //                 onLoading: _onLoading,
-        //                 child: Container(
-        //                   child: ListView.builder(
-        //                     itemBuilder: (c, i) => Card(
-        //                       margin:
-        //                       EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        //                       shape: RoundedRectangleBorder(
-        //                         borderRadius: BorderRadius.circular(2.0),
-        //                       ),
-        //                       elevation: 2,
-        //                       child: Center(
-        //                         child: Column(
-        //                           children: [
-        //                             ListTile(
-        //                               title: Column(
-        //                                 children: <Widget>[
-        //                                   Row(
-        //                                     children: [
-        //                                       tracList[i].type ==
-        //                                           TransactionType.topup
-        //                                           ? Image.asset(
-        //                                         "assets/payment/topup.png",
-        //                                         width: 50,
-        //                                         height: 50,
-        //                                       )
-        //                                           : Image.asset(
-        //                                         "assets/payment/withdraw.png",
-        //                                         width: 50,
-        //                                         height: 50,
-        //                                       ),
-        //                                       Column(
-        //                                         mainAxisAlignment:
-        //                                         MainAxisAlignment.center,
-        //                                         children: [
-        //                                           Text(
-        //                                               tracList[i].type ==
-        //                                                   TransactionType.topup
-        //                                                   ? "Top Up"
-        //                                                   : "Withdraw",
-        //                                               style: TextStyle(
-        //                                                   fontSize: 14,
-        //                                                   fontWeight:
-        //                                                   FontWeight.bold)),
-        //                                           Text(
-        //                                               Formatter.dateTimeFormat(
-        //                                                   tracList[i].createdDate),
-        //                                               style: TextStyle(fontSize: 12)),
-        //                                         ],
-        //                                       ),
-        //                                       Spacer(),
-        //                                       Text(tracList[i].amount.toString(),
-        //                                           style: TextStyle(
-        //                                               fontSize: 14,
-        //                                               color: tracList[i].type ==
-        //                                                   TransactionType.topup
-        //                                                   ? Colors.green
-        //                                                   : Colors.red)),
-        //                                       IconButton(
-        //                                           onPressed: () {
-        //                                             //Navigator.push(context, MaterialPageRoute(builder: (context)=>new WalletDetailSuccessPage(docId:doc.id)));
-        //                                           },
-        //                                           icon: Icon(
-        //                                             Icons.arrow_forward_ios_rounded,
-        //                                             size: 18,
-        //                                           ))
-        //                                     ],
-        //                                   ),
-        //                                   Dash(
-        //                                     direction: Axis.horizontal,
-        //                                     length:
-        //                                     MediaQuery.of(context).size.width *
-        //                                         0.7,
-        //                                     dashLength: 2,
-        //                                   ),
-        //                                   Row(
-        //                                     children: [
-        //                                       Column(
-        //                                         children: [
-        //                                           Text("Top up successful",
-        //                                               style: TextStyle(fontSize: 13)),
-        //                                         ],
-        //                                       ),
-        //                                       Spacer(),
-        //                                       Image.asset(
-        //                                           "assets/payment/success.png",
-        //                                           width: 20,
-        //                                           height: 20)
-        //                                     ],
-        //                                   ),
-        //                                 ],
-        //                               ),
-        //                             ),
-        //                           ],
-        //                         ),
-        //                       ),
-        //                     ),
-        //                     itemExtent: 100.0,
-        //                     itemCount: tracList.length,
-        //                   ),
-        //                 ),
-        //               ),
-        //             )
-        //
-        //           ],
-        //         ),
-        //
-        //       ),
-        // ),
-        // ),
       ]),
     );
   }

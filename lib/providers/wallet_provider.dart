@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dbcrypt/dbcrypt.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var tracRef = FirebaseFirestore.instance.collection(transactions);
   var userRef = FirebaseFirestore.instance.collection(userCollection);
   var balance;
+  String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
   Future<void> topup(
       BuildContext context, String paymentType, double amount) async {
@@ -23,7 +25,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
         if (balance != null) {
           try {
             print('try');
-            userRef.doc(uid).update({"balance": balance + amount}).then((_) {
+            value.reference.update({"balance": balance + amount}).then((_) {
               print("topup success!");
             });
             MessageHandler.showMessage(
@@ -34,7 +36,11 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 amount: amount.toInt(),
                 paymentType: paymentType,
                 createdDate: DateTime.now());
-            tracRef.add(transactionModel.toJson()).catchError((error) {
+            tracRef
+                .doc(uid)
+                .collection("manyTransition")
+                .add(transactionModel.toJson())
+                .catchError((error) {
               print("Failed to add topup transaction: $error");
             });
             notifyListeners();
@@ -46,49 +52,114 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
         } else {
           MessageHandler.showErrMessage(context, "Fail", "Balance Type null");
         }
+        //MessageHandler.showErrMessage(context, "Fail", "No Internet");
+        notifyListeners();
       });
 
       notifyListeners();
     }
   }
 
-  Future<void> withdrawl(
-      BuildContext context, PaymentType paymentType, double amount) async {
+  // Future<void> withdrawl(
+  //     BuildContext context, PaymentType paymentType, double amount) async {
+  //   if (FirebaseAuth.instance.currentUser?.uid != null) {
+  //     userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
+  //       double balance = value.data()["balance"];
+  //       if (amount > balance) {
+  //         MessageHandler.showErrMessage(context, "Insufficient Balance",
+  //             "Your withdraw amount is higher than your balance");
+  //       } else {
+  //         try {
+  //           value.reference.update({"balance": balance - amount,}).then((_) {
+  //             print("withdrawl success!");
+  //             MessageHandler.showMessage(
+  //                 context, "Success", "Your withdrawl is successful");
+  //             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Wallet()));
+  //           });
+  //           TransactionModel transactionModel = TransactionModel(
+  //               uid: uid,
+  //               type: TransactionType.Withdraw,
+  //               amount: -amount,
+  //               createdDate: DateTime.now());
+  //           tracRef.doc(uid).collection("manyTransition").add(transactionModel.toJson()).catchError((error) {
+  //             print("Failed to add withdrawl transaction: $error");
+  //           });
+  //           notifyListeners();
+  //         } catch (e) {
+  //           print("Failed to withdrawl: $e");
+  //           MessageHandler.showErrMessage(
+  //               context, "Fail", "Your withdrawl is fail");
+  //         }
+  //       }
+  //     });
+  //   }
+  //   notifyListeners();
+  // }
+  Future<void> withdrawlCheckPassword(BuildContext context, String paymentType,
+      double amount, String password) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
-      String uid = FirebaseAuth.instance.currentUser.uid.toString();
-      // double balance = await getBalance();
-      userRef.doc(uid).get().then((value) {
-        int balance = value.data()["balance"];
-
-        if (amount > balance) {
-          MessageHandler.showErrMessage(context, "Insufficient Balance",
-              "Your withdraw amount is higher than your balance");
-        } else {
-          try {
-            userRef.doc(uid).update({"balance": balance - amount}).then((_) {
-              print("withdrawl success!");
-              MessageHandler.showMessage(
-                  context, "Success", "Your withdrawl is successful");
-            });
-            TransactionModel transactionModel = TransactionModel(
-                uid: uid,
-                type: TransactionType.withdraw,
-                amount: amount.toInt(),
-                createdDate: DateTime.now());
-            tracRef.add(transactionModel.toJson()).catchError((error) {
-              print("Failed to add withdrawl transaction: $error");
-            });
-            notifyListeners();
-          } catch (e) {
-            print("Failed to withdrawl: $e");
-            MessageHandler.showErrMessage(
-                context, "Fail", "Your withdrawl is fail");
+      userRef.doc(uid).get(GetOptions(source: Source.server)).then((value) {
+        String oldPassword = value.data()["password"];
+        var isCorrect = new DBCrypt().checkpw(password, oldPassword);
+        if (isCorrect) {
+          double balance = value.data()["balance"];
+          if (amount > balance) {
+            MessageHandler.showErrMessage(context, "Insufficient Balance",
+                "Your withdraw amount is higher than your balance");
+          } else {
+            try {
+              value.reference.update({
+                "balance": balance - amount,
+              }).then((_) {
+                print("withdrawl success!");
+                MessageHandler.showMessage(
+                    context, "Success", "Your withdrawl is successful");
+                // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Wallet()));
+              });
+              TransactionModel transactionModel = TransactionModel(
+                  uid: uid,
+                  type: TransactionType.withdraw,
+                  amount: (balance - amount).toInt(),
+                  createdDate: DateTime.now());
+              tracRef
+                  .doc(uid)
+                  .collection("manyTransition")
+                  .add(transactionModel.toJson())
+                  .catchError((error) {
+                print("Failed to add withdrawl transaction: $error");
+              });
+              notifyListeners();
+            } catch (e) {
+              print("Failed to withdrawl: $e");
+              MessageHandler.showErrMessage(
+                  context, "Fail", "Your withdrawl is fail");
+            }
           }
+        } else {
+          MessageHandler.showErrMessage(context, "Fail", "Password is fail");
+          notifyListeners();
         }
+        MessageHandler.showMessage(context, "Success", "Password is true");
+        notifyListeners();
       });
+      // MessageHandler.showErrMessage(context, "Fail", "No Internet");
+      // notifyListeners();
     }
-    notifyListeners();
   }
+  // Future<void> checkPassword(
+  //     BuildContext context, String password) async {
+  //   if (FirebaseAuth.instance.currentUser?.uid != null) {
+  //     userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
+  //       String oldPassword = value.data()["password"];
+  //       var isCorrect = new DBCrypt().checkpw(password, oldPassword);
+  //       MessageHandler.showMessage(context, "Success", "Password is true");
+  //       notifyListeners();
+  //
+  //     });
+  //     // MessageHandler.showErrMessage(context, "Fail", "No Internet");
+  //     // notifyListeners();
+  //   }
+  // }
 
   // Future<double> getBalance() async {
   //   if (FirebaseAuth.instance.currentUser?.uid != null) {
@@ -101,6 +172,22 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //   }
   //   return 0;
   // }
+
+  Future<List<TransactionModel>> getManyTransactionList(
+      BuildContext context) async {
+    List<TransactionModel> list = [];
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid;
+      await tracRef.doc(uid).collection(manyTransaction).get().then((value) {
+        print(value.docs);
+        value.docs.forEach((result) {
+          list.add(TransactionModel.fromJson(result.data()));
+        });
+      });
+    }
+    notifyListeners();
+    return list;
+  }
 
   Future<List<TransactionModel>> getTransactionList(
       BuildContext context) async {

@@ -1,7 +1,7 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/models/transaction_model.dart';
+import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
@@ -16,7 +16,11 @@ class WithdrawalPage extends StatefulWidget {
 class _WithdrawalPageState extends State<WithdrawalPage> {
   final _withdrawformKey = GlobalKey<FormState>();
   TextEditingController _amountController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  bool _obscureText = false;
+
   bool viewVisible = false;
+
   String pay = "";
   double kbzOpacity = 0.5;
   double cbOpacity = 0.5;
@@ -107,8 +111,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                     setState(() {});
                                   },
                                   child: Container(
-                                    width: 80,
-                                    height: 80,
+                                    width: 50,
+                                    height: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       image: DecorationImage(
@@ -137,8 +141,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                     setState(() {});
                                   },
                                   child: Container(
-                                    width: 80,
-                                    height: 80,
+                                    width: 50,
+                                    height: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       image: DecorationImage(
@@ -168,8 +172,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                     setState(() {});
                                   },
                                   child: Container(
-                                    width: 80,
-                                    height: 80,
+                                    width: 50,
+                                    height: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       image: DecorationImage(
@@ -242,11 +246,6 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                   )),
               SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () {
-                    _show(context);
-                  },
-                  child: Text("Test")),
-              ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
@@ -259,16 +258,14 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                       ) // foreground
                       ),
                   onPressed: () async {
-                    // if (_withdrawformKey.currentState.validate()) {
-                    //   print("Validate");
-                    //
-                    //
-                    //   // await context.read<WalletProvider>().withdrawl(
-                    //   //     context,
-                    //   //     paymentType,
-                    //   //     double.parse(_amountController.text.toString()));
-                    //   // clearText();
-                    // }
+                    if (_withdrawformKey.currentState.validate()) {
+                      _ShowAlertDialog(
+                          context,
+                          double.parse(_amountController.text.toString()),
+                          paymentType);
+
+                      _amountController.clear();
+                    }
                   },
                   child: Text("Confirm")),
             ],
@@ -281,36 +278,136 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
     });
   }
 
-  void clearText() {
-    _amountController.clear();
-  }
-
-  _show(BuildContext context) {
+  _ShowAlertDialog(BuildContext context, amount, paymentType) {
     return showDialog(
       context: context,
-      builder: (_) {
-        return SimpleDialog(
-          title: Text('The Title'),
-          children: [
-            SimpleDialogOption(
-              child: Text('Option 1'),
-              onPressed: () {
-                // Do something
-                print('You have selected the option 1');
-                Navigator.of(context).pop();
-              },
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: _defaultShape(),
+          insetPadding: EdgeInsets.all(20),
+          elevation: 10,
+          titlePadding: const EdgeInsets.all(0.0),
+          title: SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom:
+                                BorderSide(color: Colors.black12, width: 3)),
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          children: [
+                            _getCloseButton(context),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Text("Enter Password",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 16)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    //_getCloseButton(context),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              controller: _passwordController,
+                              obscureText: _obscureText,
+                              validator: (val) {
+                                return Validator.password(
+                                    context, val.toString(), "Password", true);
+                              },
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Password",
+                                  suffixIcon: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _obscureText = !_obscureText;
+                                      });
+                                    },
+                                    child: Icon(_obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                  ),
+                                  hintStyle:
+                                      TextStyle(color: Colors.grey[400])),
+                              //keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    await context
+                                        .read<WalletProvider>()
+                                        .withdrawlCheckPassword(
+                                            context,
+                                            paymentType,
+                                            amount,
+                                            _passwordController.text);
+                                  },
+                                  child: Text("Yes")),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
-            SimpleDialogOption(
-              child: Text('Option 2'),
-              onPressed: () {
-                // Do something
-                print('You have selected the option 2');
-                Navigator.of(context).pop();
-              },
-            )
-          ],
+          ),
         );
       },
+    );
+  }
+
+  ShapeBorder _defaultShape() {
+    return RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+      side: BorderSide(
+        color: Colors.deepOrange,
+      ),
+    );
+  }
+
+  _getCloseButton(context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+      child: GestureDetector(
+        onTap: () {},
+        child: Container(
+          alignment: FractionalOffset.topLeft,
+          child: GestureDetector(
+            child: Icon(
+              Icons.clear,
+              color: Colors.red,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      ),
     );
   }
 }

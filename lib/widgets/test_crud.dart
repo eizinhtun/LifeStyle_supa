@@ -1,3 +1,4 @@
+/*
 // @dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,9 @@ class _TestState extends State<Test> {
 
   int end = 10;
   static int i = 1;
-  final _passwordformKey = GlobalKey<FormState>();
-  TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
+  // final _passwordformKey = GlobalKey<FormState>();
+  // TextEditingController _passwordController = TextEditingController();
+  // bool _obscureText = true;
 
   @override
   void initState() {
@@ -190,3 +191,4 @@ class _TestState extends State<Test> {
     );
   }
 }
+*/

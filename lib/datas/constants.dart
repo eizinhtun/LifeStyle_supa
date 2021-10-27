@@ -75,6 +75,7 @@ const String meterBillsCollection = "meter_bills";
 const String userMeterCollection = "user_meters";
 const String userReadUnitCollection = "user_read_unit";
 const String transactions = "transactions";
+const String manyTransaction = "manyTransition";
 const String notifications = "notifications";
 const String testCollection = "tests";
 

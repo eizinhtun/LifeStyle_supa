@@ -53,7 +53,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => WalletProvider()),
     ChangeNotifierProvider(create: (_) => MeterBillProvider()),
     ChangeNotifierProvider(create: (_) => NotiProvider()),
-    ChangeNotifierProvider(create: (_) => FirebaseCRUDProvider()),
+   // ChangeNotifierProvider(create: (_) => FirebaseCRUDProvider()),
   ], child: MyApp()));
 }
 

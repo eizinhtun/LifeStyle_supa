@@ -1,3 +1,4 @@
+/*
 // @dart=2.9
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -174,7 +175,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
           MessageHandler.showErrMessage(context, "Fail", "Balance Type null");
         }
       });
-
+      MessageHandler.showErrMessage(context, "Fail", "No Internet");
       notifyListeners();
     }
   }
@@ -184,8 +185,9 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       // double balance = await getBalance();
-      userRef.doc(uid).get().then((value) {
+      userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
         double balance = value.data()["balance"];
+        checkPassword(context,"22222");
 
         if (amount > balance) {
           MessageHandler.showErrMessage(context, "Insufficient Balance",
@@ -264,8 +266,9 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
           MessageHandler.showErrMessage(context, "Fail", "Password is fail");
         }
       });
+      MessageHandler.showErrMessage(context, "Fail", "No Internet");
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   // Future<List<TransactionModel>> getTransactionList(
@@ -285,3 +288,4 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   // }
 
 }
+*/

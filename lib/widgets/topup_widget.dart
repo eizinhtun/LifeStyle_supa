@@ -1,7 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:provider/provider.dart';
@@ -108,8 +107,8 @@ class _TopUpPageState extends State<TopUpPage> {
                                     setState(() {});
                                   },
                                   child: Container(
-                                    width: 80,
-                                    height: 80,
+                                    width: 50,
+                                    height: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       image: DecorationImage(
@@ -138,8 +137,8 @@ class _TopUpPageState extends State<TopUpPage> {
                                     setState(() {});
                                   },
                                   child: Container(
-                                    width: 80,
-                                    height: 80,
+                                    width: 50,
+                                    height: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       image: DecorationImage(
@@ -169,8 +168,8 @@ class _TopUpPageState extends State<TopUpPage> {
                                     setState(() {});
                                   },
                                   child: Container(
-                                    width: 80,
-                                    height: 80,
+                                    width: 50,
+                                    height: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       image: DecorationImage(

@@ -16,6 +16,9 @@ class Formatter {
   static String balanceFormat(int balance) {
     return NumberFormat.decimalPattern().format(balance);
   }
+  static String balanceTopupFormat(double balance) {
+    return "+"+NumberFormat.decimalPattern().format(balance);
+  }
 
   static String formatPhone(String phone) {
     if (phone.startsWith("+95")) {
