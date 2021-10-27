@@ -32,7 +32,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 context, "Success", "Your topup is successful");
             TransactionModel transactionModel = TransactionModel(
                 uid: uid,
-                type: TransactionType.topup,
+                type: TransactionType.Topup,
                 amount: amount.toInt(),
                 paymentType: paymentType,
                 createdDate: DateTime.now());
@@ -118,7 +118,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
               });
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
-                  type: TransactionType.withdraw,
+                  type: TransactionType.Withdraw,
                   amount: (balance - amount).toInt(),
                   createdDate: DateTime.now());
               tracRef

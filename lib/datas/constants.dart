@@ -90,8 +90,8 @@ class ActionButton {
 }
 
 class TransactionType {
-  static const String topup = "topup";
-  static const String withdraw = "withdraw";
+  static const String Topup = "topup";
+  static const String Withdraw = "withdraw";
   static const String meterbill = "meterbill";
 }
 
