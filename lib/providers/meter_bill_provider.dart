@@ -4,26 +4,31 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/models/Meter.dart';
+import 'package:left_style/models/meter_bill.dart';
 import 'package:left_style/utils/message_handler.dart';
 
-class MeterProvider with ChangeNotifier, DiagnosticableTreeMixin {
-  var meterRef = FirebaseFirestore.instance.collection(meterCollection);
+class MeterBillProvider with ChangeNotifier, DiagnosticableTreeMixin {
+  var meterBillRef =
+      FirebaseFirestore.instance.collection(meterBillsCollection);
 
-  Future<bool> AddMeter(BuildContext context, Meter model) async {
+  // .collection(meterBillsCollection).doc(widget.docId).snapshots(),
+
+  Future<bool> updateMeterBill(
+      BuildContext context, MeterBill bill, String docId) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
-      String uid = FirebaseAuth.instance.currentUser.uid.toString();
       try {
-        await meterRef.doc(uid).set(model.toJson());
-        return true;
+        await meterBillRef.doc(docId).set(bill.toJson());
+
         notifyListeners();
+        return true;
       } catch (e) {
-        return false;
         print("Failed to update user: $e");
         MessageHandler.showErrMessage(
             context, "Fail", "Updating User Info is fail");
+        return false;
       }
     }
     notifyListeners();
+    return false;
   }
 }

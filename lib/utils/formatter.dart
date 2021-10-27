@@ -13,7 +13,7 @@ class Formatter {
     return s;
   }
 
-  static String balanceFormat(double balance) {
+  static String balanceFormat(int balance) {
     return NumberFormat.decimalPattern().format(balance);
   }
   static String balanceTopupFormat(double balance) {

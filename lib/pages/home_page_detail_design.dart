@@ -112,7 +112,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
           setState(() {
             _pageController.jumpToPage(index);
             page = index;
-            print(page);
           });
         },
       ),

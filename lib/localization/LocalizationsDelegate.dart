@@ -15,8 +15,6 @@ class MyLocalizationsDelegate extends LocalizationsDelegate<Tran> {
     Tran localizations = new Tran(locale);
     await localizations.load();
 
-    //print("Load ${locale.languageCode}");
-
     return localizations;
   }
 

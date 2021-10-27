@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Meter.dart';
@@ -12,19 +11,6 @@ import 'package:left_style/providers/meter_presenter.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_dash/flutter_dash.dart';
-/*import 'package:userthai2d3d/data/database_helper.dart';
-import 'package:userthai2d3d/localization/Translate.dart';
-import 'package:userthai2d3d/data/sys_data.dart';
-import 'package:userthai2d3d/models/Meter.dart';
-import 'package:userthai2d3d/models/MeterPageObj.dart';
-import 'package:userthai2d3d/page/topup/tutorialVideoPage.dart';
-import 'package:userthai2d3d/page/transcationHistoryDeniedPage.dart';
-import 'package:userthai2d3d/page/transcationHistoryPendingPage.dart';
-import 'package:userthai2d3d/page/transcationHistorySuccessPage.dart';
-import 'package:userthai2d3d/provider/transaction_presenter.dart';
-import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
-import 'package:userthai2d3d/utils/MessageHandel.dart';
-import 'package:flutter_dash/flutter_dash.dart';*/
 
 class MeterSearchResultScreen extends StatelessWidget {
   @override
@@ -169,28 +155,29 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                     controller: _controllerSearch,
                     decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black12, width: 0.8),
+                            borderSide: const BorderSide(
+                                color: Colors.black12, width: 0.8),
                             borderRadius:
-                            BorderRadius.all(Radius.circular(30.0))
-                        ),
-                        focusedBorder:   OutlineInputBorder(
-                            borderSide:  BorderSide( color: Theme.of(context).primaryColor, width: 1),
+                                BorderRadius.all(Radius.circular(30.0))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 1),
                             borderRadius:
-                            BorderRadius.all(Radius.circular(30.0))
-                        ),
+                                BorderRadius.all(Radius.circular(30.0))),
 
                         //labelText: "Search",
                         hintText: "Search",
                         prefixIcon: Icon(Icons.search),
                         contentPadding: EdgeInsets.all(0.0),
                         border: OutlineInputBorder(
-                            borderSide: const BorderSide( width: 0.0),
+                            borderSide: const BorderSide(width: 0.0),
                             gapPadding: 0,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(30.0)))),
                   ),
                 ),
-               /* new Divider(
+                /* new Divider(
                   height: 1.0,
                   color: Colors.grey.withOpacity(0.3),
                 ),*/

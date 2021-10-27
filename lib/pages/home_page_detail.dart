@@ -9,7 +9,6 @@ import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/pages/me_page.dart';
-import 'package:left_style/pages/notification_list.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/widgets/wallet.dart';

@@ -93,7 +93,8 @@ class _MePageState extends State<MePage> {
                         address = user.address.toString();
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => EditUserProfilePage(
-                                fullName, photoUrl, address)));
+                                  user: user,
+                                )));
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
@@ -105,10 +106,15 @@ class _MePageState extends State<MePage> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  CircleAvatar(
-                                    radius: 40,
-                                    backgroundImage: AssetImage(
-                                        "assets/image/user-photo.png"),
+                                  // CircleAvatar(
+                                  //   radius: 40,
+                                  //   backgroundImage: AssetImage(
+                                  //       "assets/image/user-photo.png"),
+                                  // ),
+                                  UserInfoScreenPhoto(
+                                    imageurl: user.photoUrl,
+                                    width: 80,
+                                    height: 80,
                                   ),
                                   SizedBox(
                                     width: 20,
@@ -162,7 +168,8 @@ class _MePageState extends State<MePage> {
                           address = user.address.toString();
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => EditUserProfilePage(
-                                  fullName, photoUrl, address)));
+                                    user: user,
+                                  )));
                         },
                         leading: Icon(
                           Icons.person,
@@ -217,7 +224,7 @@ class _MePageState extends State<MePage> {
                               builder: (context) => MeterListPage()));
                         },
                         leading: Icon(
-                          Icons.person,
+                          Icons.list,
                           color: mainColor,
                         ),
                         title: Text(

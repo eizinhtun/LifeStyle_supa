@@ -33,7 +33,6 @@ class Tran {
       SystemData.language = savedCode;
     }
 
-    print(savedCode);
     String data = await rootBundle.loadString('lang/I18n_$savedCode.json');
     Map<String, dynamic> _result = json.decode(data);
     this._sentences = new Map();

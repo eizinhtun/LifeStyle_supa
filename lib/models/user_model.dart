@@ -36,8 +36,8 @@ class UserModel {
     fcmtoken = json['fcmtoken'];
     password = json['password'];
     isActive = json['isActive'];
-    createdDate =
-        DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
+    // createdDate =
+    //     DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
     address = json['address'];
     //  DateTime.parse(json['createdDate']);
   }
@@ -53,7 +53,7 @@ class UserModel {
     data['fcmtoken'] = this.fcmtoken;
     data['password'] = this.password;
     data['isActive'] = this.isActive;
-    data['createdDate'] = this.createdDate.microsecondsSinceEpoch.toString();
+    // data['createdDate'] = this.createdDate.toString();
     data['address'] = this.address;
     return data;
   }

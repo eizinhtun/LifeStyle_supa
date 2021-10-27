@@ -1,8 +1,11 @@
 // @dart=2.9
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/Ads.dart';
@@ -16,6 +19,7 @@ import 'package:left_style/widgets/home_item.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AdsDetailPage.dart';
+import 'home_page copy.dart';
 import 'meter_city.dart';
 import 'meter_list.dart';
 import 'meter_search_result.dart';
@@ -30,23 +34,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Ads> adsItems = [
     Ads(
-        id: 1,
-        type: "linkurl",
-        linkUrl: "https://wallpapercave.com/wuba-monster-hunt-wallpapers",
-        imageUrl:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROj6_j9-LkJKMmgmLD2HPu9xzJ6T3vl3ep2g&usqp=CAU"),
+      id: 1,
+      type: "linkurl",
+      linkUrl: "https://wallpapercave.com/wuba-monster-hunt-wallpapers",
+      imageUrl:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROj6_j9-LkJKMmgmLD2HPu9xzJ6T3vl3ep2g&usqp=CAU",
+    ),
     Ads(
-        id: 2,
-        type: "linkurl",
-        linkUrl: "https://wallpapercave.com/wuba-monster-hunt-wallpapers",
-        imageUrl:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT594hEdQIZpnbf6fAesGSi7E2FPP2oK-Gf2yEU_1zYOkMtRYSpnqAgqjqNXKitM7qOMNA&usqp=CAU"),
+      id: 2,
+      type: "linkurl",
+      linkUrl: "https://wallpapercave.com/wuba-monster-hunt-wallpapers",
+      imageUrl:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT594hEdQIZpnbf6fAesGSi7E2FPP2oK-Gf2yEU_1zYOkMtRYSpnqAgqjqNXKitM7qOMNA&usqp=CAU",
+    ),
     Ads(
-        id: 3,
-        type: "linkurl",
-        linkUrl: "https://wallpapercave.com/wuba-monster-hunt-wallpapers",
-        imageUrl:
-            "https://w7.pngwing.com/pngs/9/319/png-transparent-common-ivy-virginia-creeper-vine-leaf-plant-vines-are-available-for-free-green-vine-plants-free-logo-design-template-photography-branch-thumbnail.png"),
+      id: 3,
+      type: "linkurl",
+      linkUrl: "https://wallpapercave.com/wuba-monster-hunt-wallpapers",
+      imageUrl:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT594hEdQIZpnbf6fAesGSi7E2FPP2oK-Gf2yEU_1zYOkMtRYSpnqAgqjqNXKitM7qOMNA&usqp=CAU",
+    ),
   ];
 
   @override
@@ -75,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                 child: Text("Close"),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  // return null;
+                  return null;
                 },
               ),
             ],
@@ -330,6 +337,29 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 10,
                   ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      print("Pressed");
+                      var meterRef = FirebaseFirestore.instance
+                          .collection(meterCollection);
+
+                      if (FirebaseAuth.instance.currentUser?.uid != null) {
+                        String uid =
+                            FirebaseAuth.instance.currentUser.uid.toString();
+
+                        await meterRef
+                            .doc(uid)
+                            .collection(userMeterCollection)
+                            .doc("7324392739")
+                            .set(jsonString);
+                      }
+                    },
+                    child: Text(
+                      "Add",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                   Container(
                     padding: EdgeInsets.all(8),
                     child: Column(
@@ -462,15 +492,40 @@ class _HomePageState extends State<HomePage> {
     }
   }*/
 
+  String barcode = "";
+  String meterBarcode = "";
   Future<void> uploadUnit(BuildContext context) async {
-    String codeSanner = await BarcodeScanner.scan().then((value) {
-      if (value != null) {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => UploadMyReadScreen(customerId: value)));
+    String s = await _showAlertDialog(context);
+    if (s != null) {
+      try {
+        String barcode = await BarcodeScanner.scan();
+        setState(() => this.barcode = barcode);
+
+        if (barcode != null) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => UploadMyReadScreen(customerId: barcode)));
+        }
+      } on PlatformException catch (e) {
+        if (e.code == BarcodeScanner.CameraAccessDenied) {
+          setState(() {
+            this.barcode = 'The user did not grant the camera permission!';
+          });
+        } else {
+          setState(() => this.barcode = 'Unknown error: $e');
+        }
+      } on FormatException {
+        setState(() => this.barcode =
+            'null (User returned using the "back"-button before scanning anything. Result)');
+      } catch (e) {
+        setState(() => this.barcode = 'Unknown error: $e');
       }
-    }).catchError((error) {
-      MessageHandler.showErrMessage(context, "", "Please scan QR code");
-    });
+    }
+    // String codeSanner = await BarcodeScanner.scan().then((value) {
+    //   if (value != null) {
+    //     Navigator.of(context).push(MaterialPageRoute(
+    //         builder: (context) => UploadMyReadScreen(customerId: value)));
+    //   }
+    // }).catchError((error) {});
   }
 
   Future<void> addNewMeter(BuildContext context) async {
@@ -481,19 +536,50 @@ class _HomePageState extends State<HomePage> {
       var typeResult = await _showAlertDialog(context);
       if (typeResult != null && typeResult == "QR") {
         try {
-          String codeSanner = await BarcodeScanner.scan().then((value) {
-            if (value != null) {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => MeterSearchResultPage(
-                        searchKey: value,
-                        apiUrl: apiUrl,
-                      )));
-            }
-          }).catchError((error) {}); //barcode scanner
+          String meterBarcode = await BarcodeScanner.scan();
+          setState(() => this.meterBarcode = meterBarcode);
 
-        } catch (ex) {
-          print("cancel scan");
+          if (meterBarcode != null) {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    UploadMyReadScreen(customerId: meterBarcode)));
+          }
+          if (meterBarcode != null) {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => MeterSearchResultPage(
+                      searchKey: meterBarcode,
+                      apiUrl: apiUrl,
+                    )));
+          }
+        } on PlatformException catch (e) {
+          if (e.code == BarcodeScanner.CameraAccessDenied) {
+            setState(() {
+              this.meterBarcode =
+                  'The user did not grant the camera permission!';
+            });
+          } else {
+            setState(() => this.meterBarcode = 'Unknown error: $e');
+          }
+        } on FormatException {
+          setState(() => this.meterBarcode =
+              'null (User returned using the "back"-button before scanning anything. Result)');
+        } catch (e) {
+          setState(() => this.meterBarcode = 'Unknown error: $e');
         }
+        // try {
+        //   String codeSanner = await BarcodeScanner.scan().then((value) {
+        //     if (value != null) {
+        //       Navigator.of(context).push(MaterialPageRoute(
+        //           builder: (context) => MeterSearchResultPage(
+        //                 searchKey: value,
+        //                 apiUrl: apiUrl,
+        //               )));
+        //     }
+        //   }).catchError((error) {}); //barcode scanner
+
+        // } catch (ex) {
+        //   print("cancel scan");
+        // }
       } else if (typeResult != null && typeResult == "Key") {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => MeterSearchResultPage(

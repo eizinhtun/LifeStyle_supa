@@ -19,6 +19,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
       await userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
         userModel = UserModel.fromJson(value.data());
+        print(userModel.isActive);
         notifyListeners();
         return userModel;
       });
@@ -120,6 +121,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     User user = await Authentication.signInWithGoogle(context: context);
     if (user.uid != null) {
       DatabaseHelper.setAppLoggedIn(context, true);
+      // FirebaseAuth.instance.currentUser.
       notifyListeners();
       // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
       // print("UserIdExist : $userIdExist");
@@ -208,11 +210,11 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  Future<void> updateUserInfo(BuildContext context, UserModel userModel) async {
+  Future<void> updateUserInfo(BuildContext context, UserModel user) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       try {
-        userRef.doc(uid).set(userModel.toJson()).then((value) {
+        userRef.doc(uid).set(user.toJson()).then((value) {
           print("update user success!");
           MessageHandler.showMessage(
               context, "Success", "Updating User Info is successful");

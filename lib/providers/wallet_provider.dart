@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/utils/message_handler.dart';
-import 'package:left_style/widgets/wallet.dart';
-import 'package:left_style/widgets/wallet.dart';
 
 class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var tracRef = FirebaseFirestore.instance.collection(transactions);
@@ -21,8 +19,9 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
-      userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
-        balance = value.data()["balance"];
+      userRef.doc(uid).get().then((value) {
+        int balance = value.data()["balance"];
+
         if (balance != null) {
           try {
             print('try');
@@ -33,11 +32,15 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 context, "Success", "Your topup is successful");
             TransactionModel transactionModel = TransactionModel(
                 uid: uid,
-                type: TransactionType.Topup,
-                amount: amount,
+                type: TransactionType.topup,
+                amount: amount.toInt(),
                 paymentType: paymentType,
                 createdDate: DateTime.now());
-            tracRef.doc(uid).collection("manyTransition").add(transactionModel.toJson()).catchError((error) {
+            tracRef
+                .doc(uid)
+                .collection("manyTransition")
+                .add(transactionModel.toJson())
+                .catchError((error) {
               print("Failed to add topup transaction: $error");
             });
             notifyListeners();
@@ -92,31 +95,37 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //   }
   //   notifyListeners();
   // }
-  Future<void> withdrawlCheckPassword(
-      BuildContext context, String paymentType, double amount,String password) async {
+  Future<void> withdrawlCheckPassword(BuildContext context, String paymentType,
+      double amount, String password) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
-      userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
+      userRef.doc(uid).get(GetOptions(source: Source.server)).then((value) {
         String oldPassword = value.data()["password"];
         var isCorrect = new DBCrypt().checkpw(password, oldPassword);
-        if(isCorrect){
+        if (isCorrect) {
           double balance = value.data()["balance"];
           if (amount > balance) {
             MessageHandler.showErrMessage(context, "Insufficient Balance",
                 "Your withdraw amount is higher than your balance");
           } else {
             try {
-              value.reference.update({"balance": balance - amount,}).then((_) {
+              value.reference.update({
+                "balance": balance - amount,
+              }).then((_) {
                 print("withdrawl success!");
                 MessageHandler.showMessage(
                     context, "Success", "Your withdrawl is successful");
-               // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Wallet()));
+                // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Wallet()));
               });
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
-                  type: TransactionType.Withdraw,
-                  amount: -amount,
+                  type: TransactionType.withdraw,
+                  amount: (balance - amount).toInt(),
                   createdDate: DateTime.now());
-              tracRef.doc(uid).collection("manyTransition").add(transactionModel.toJson()).catchError((error) {
+              tracRef
+                  .doc(uid)
+                  .collection("manyTransition")
+                  .add(transactionModel.toJson())
+                  .catchError((error) {
                 print("Failed to add withdrawl transaction: $error");
               });
               notifyListeners();
@@ -126,15 +135,12 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                   context, "Fail", "Your withdrawl is fail");
             }
           }
-
-        }
-        else{
+        } else {
           MessageHandler.showErrMessage(context, "Fail", "Password is fail");
           notifyListeners();
         }
         MessageHandler.showMessage(context, "Success", "Password is true");
         notifyListeners();
-
       });
       // MessageHandler.showErrMessage(context, "Fail", "No Internet");
       // notifyListeners();
@@ -182,6 +188,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
     return list;
   }
+
   Future<List<TransactionModel>> getTransactionList(
       BuildContext context) async {
     List<TransactionModel> list = [];
@@ -198,6 +205,43 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     return list;
   }
 
+  Future<bool> payMeterBill(BuildContext context, double amount) async {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      // double balance = await getBalance();
+      userRef.doc(uid).get().then((value) {
+        double balance = value.data()["balance"];
+
+        if (amount > balance) {
+          MessageHandler.showErrMessage(context, "Insufficient Balance",
+              "Your meter bill is higher than your balance");
+          return Future<bool>.value(false);
+        } else {
+          try {
+            userRef.doc(uid).update({"balance": balance - amount}).then((_) {
+              print("meter bill payment success!");
+              MessageHandler.showMessage(
+                  context, "Success", "Your  meter bill payment is successful");
+            });
+            TransactionModel transactionModel = TransactionModel(
+                uid: uid,
+                type: TransactionType.meterbill,
+                amount: amount.toInt(),
+                createdDate: DateTime.now());
+            tracRef.add(transactionModel.toJson()).catchError((error) {
+              print("Failed to add meter bill payment transaction: $error");
+            });
+            notifyListeners();
+            return Future<bool>.value(true);
+          } catch (e) {
+            print("Failed to meter bill payment: $e");
+            MessageHandler.showErrMessage(
+                context, "Fail", "Your meter bill payment is fail");
+            return Future<bool>.value(false);
+          }
+        }
+      });
+    }
+    notifyListeners();
+  }
 }
-
-

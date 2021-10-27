@@ -145,7 +145,10 @@ class _LoginPageState extends State<LoginPage> {
                           color: Color(0xff3b5998),
                         ),
                         MaterialButton(
-                          onPressed: () => _googlelogin(),
+                          onPressed: () async {
+                            await _googlelogin();
+                            // setState(() {});
+                          },
                           child: Image.asset(
                             "assets/image/google.png",
                             height: 40,
@@ -166,9 +169,12 @@ class _LoginPageState extends State<LoginPage> {
 
                         setState(() {});
                       },
-                      child: Text(
-                        "Select Language",
-                        style: TextStyle(color: mainColor),
+                      child: Container(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          "Select Language",
+                          style: TextStyle(color: mainColor),
+                        ),
                       ),
                     ),
                   ),

@@ -38,14 +38,14 @@ class UserInfoScreenPhoto extends StatelessWidget {
           },
           child: Stack(
             children: [
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Colors.white,
-                ),
-              ),
+              // Container(
+              //   width: 80,
+              //   height: 80,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(100),
+              //     color: Colors.white,
+              //   ),
+              // ),
               CachedNetworkImage(
                 width: width,
                 height: height,

@@ -82,24 +82,21 @@ const String testCollection = "tests";
 const String notilist = "notilist";
 const String myTransactions = "myTransactions";
 
-class TransactionType {
-  static String Withdraw = "Withdraw";
-  static String Topup = "Topup";
-}
-
-class PaymentType {
-  static String WavePay = "WavePay";
-
-  static String Topup = "Topup";
-
-  static String KPay = "KPay";
-
-  static String CbPay = "CbPay";
-}
-
 class ActionButton {
   static const String ReadUnit = "ReadUnit";
   static const String MeterBill = "MeterBill";
   static const String MeterList = "MeterList";
   static const String AddMeter = "AddMeter";
+}
+
+class TransactionType {
+  static const String topup = "topup";
+  static const String withdraw = "withdraw";
+  static const String meterbill = "meterbill";
+}
+
+class PaymentType {
+  static const String kpay = "kpay";
+  static const String cbpay = "cbpay";
+  static const String wavepay = "wavepay";
 }

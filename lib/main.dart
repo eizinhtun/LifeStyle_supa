@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:left_style/pages/home_page.dart';
 import 'package:left_style/pages/home_page_detail.dart';
 import 'package:left_style/pages/login.dart';
-import 'package:left_style/pages/meter_list.dart';
 import 'package:left_style/pages/user_not_active.dart';
 import 'package:left_style/pages/user_profile.dart';
 import 'package:left_style/providers/firebase_crud_provider.dart';
@@ -23,6 +21,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'datas/constants.dart';
 import 'localization/LocalizationsDelegate.dart';
 import 'providers/login_provider.dart';
+import 'providers/meter_bill_provider.dart';
 
 void main() async {
   //statusbar hide
@@ -52,6 +51,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => LoginProvider()),
     ChangeNotifierProvider(create: (_) => LanguageProvider()),
     ChangeNotifierProvider(create: (_) => WalletProvider()),
+    ChangeNotifierProvider(create: (_) => MeterBillProvider()),
     ChangeNotifierProvider(create: (_) => NotiProvider()),
    // ChangeNotifierProvider(create: (_) => FirebaseCRUDProvider()),
   ], child: MyApp()));
@@ -102,6 +102,7 @@ class _MyAppState extends State<MyApp> {
 
               if (user == null) {
                 return LoginPage();
+                // setState(() {});
               }
               return StreamBuilder<DocumentSnapshot>(
                   stream: FirebaseFirestore.instance
@@ -110,8 +111,10 @@ class _MyAppState extends State<MyApp> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.active) {
+                      // && snapshot.data.exists
                       if (snapshot.hasData && snapshot.data.exists) {
-                        print(snapshot.data["isActive"]);
+                        print(snapshot.data);
+                        // print(snapshot.data["isActive"]);
                         if (snapshot.data["isActive"]) {
                           return HomePageDetail();
                         } else {

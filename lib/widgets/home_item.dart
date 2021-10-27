@@ -13,28 +13,26 @@ class HomeItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      child: Column(
-        children: [
-          IconButton(
-            onPressed: () {
-              onPress(context);
-            },
-            icon: Icon(
+    return InkWell(
+      onTap: () => onPress(context),
+      child: Container(
+        width: 100,
+        child: Column(
+          children: [
+            Icon(
               iconData,
               size: 40,
               color: Theme.of(context).primaryColor,
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            title,
-            style: TextStyle(color: Colors.black87),
-          )
-        ],
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              title,
+              style: TextStyle(color: Colors.black87),
+            )
+          ],
+        ),
       ),
     );
   }

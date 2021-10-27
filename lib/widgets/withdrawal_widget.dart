@@ -1,13 +1,8 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/models/test_model.dart';
-import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
-import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/validators/validator.dart';
-import 'package:left_style/widgets/wallet.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 
@@ -22,14 +17,15 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   final _withdrawformKey = GlobalKey<FormState>();
   TextEditingController _amountController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
+  bool _obscureText = false;
+
   bool viewVisible = false;
 
   String pay = "";
   double kbzOpacity = 0.5;
   double cbOpacity = 0.5;
   double waveOpacity = 0.5;
-  String paymentType = PaymentType.KPay;
+  String paymentType = PaymentType.kpay;
 
   @override
   void initState() {
@@ -105,7 +101,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.KPay;
+                                    paymentType = PaymentType.kpay;
                                     showWidget();
 
                                     pay = "KBZ Pay";
@@ -136,7 +132,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                 SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.CbPay;
+                                    paymentType = PaymentType.cbpay;
                                     showWidget();
                                     pay = "CB Pay";
                                     kbzOpacity = 0.5;
@@ -166,7 +162,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                 SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.WavePay;
+                                    paymentType = PaymentType.wavepay;
                                     showWidget();
                                     pay = "WAVE Pay";
                                     kbzOpacity = 0.5;
@@ -263,7 +259,10 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                       ),
                   onPressed: () async {
                     if (_withdrawformKey.currentState.validate()) {
-                     _ShowAlertDialog(context,double.parse(_amountController.text.toString()),paymentType);
+                      _ShowAlertDialog(
+                          context,
+                          double.parse(_amountController.text.toString()),
+                          paymentType);
 
                       _amountController.clear();
                     }
@@ -279,105 +278,109 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
     });
   }
 
-  _ShowAlertDialog(BuildContext context,amount,paymentType) {
+  _ShowAlertDialog(BuildContext context, amount, paymentType) {
     return showDialog(
       context: context,
       builder: (context) {
-        return  AlertDialog(
-            backgroundColor:Colors.white,
-            shape: _defaultShape(),
-            insetPadding: EdgeInsets.all(20),
-            elevation: 10,
-            titlePadding: const EdgeInsets.all(0.0),
-            title: SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Center(
-                  child:  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                        border: Border(bottom: BorderSide(color: Colors.black12, width: 3)),
-                        ),
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 10),
-                          child: Row(
-                              children: [
-                                _getCloseButton(context),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Text("Enter Password",textAlign: TextAlign.center,style: TextStyle(fontSize: 16)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                        ),
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: _defaultShape(),
+          insetPadding: EdgeInsets.all(20),
+          elevation: 10,
+          titlePadding: const EdgeInsets.all(0.0),
+          title: SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom:
+                                BorderSide(color: Colors.black12, width: 3)),
                       ),
-                      //_getCloseButton(context),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Column(
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Row(
                           children: [
-                            Container(
-                              padding: EdgeInsets.all(10.0),
-                              child: TextFormField(
-                                autovalidateMode: AutovalidateMode
-                                    .onUserInteraction,
-                                controller: _passwordController,
-                                obscureText: _obscureText,
-                                validator: (val) {
-                                  return Validator.password(
-                                      context,
-                                      val.toString(),
-                                      "Password",
-                                      true);
-                                },
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText:
-                                    "Password",
-                                    suffixIcon: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          _obscureText =
-                                          !_obscureText;
-                                        });
-                                      },
-                                      child: Icon(_obscureText
-                                          ? Icons.visibility
-                                          : Icons.visibility_off),
-                                    ),
-                                    hintStyle: TextStyle(
-                                        color: Colors.grey[400])),
-                                //keyboardType: TextInputType.number,
+                            _getCloseButton(context),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Text("Enter Password",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 16)),
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(onPressed: () async {
-
-                                  await context.read<WalletProvider>().withdrawlCheckPassword(context, paymentType,
-                                      amount,_passwordController.text);
-
-                                }, child: Text("Yes")),
-                              ],
                             ),
                           ],
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    ),
+                    //_getCloseButton(context),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: TextFormField(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              controller: _passwordController,
+                              obscureText: _obscureText,
+                              validator: (val) {
+                                return Validator.password(
+                                    context, val.toString(), "Password", true);
+                              },
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Password",
+                                  suffixIcon: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _obscureText = !_obscureText;
+                                      });
+                                    },
+                                    child: Icon(_obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                  ),
+                                  hintStyle:
+                                      TextStyle(color: Colors.grey[400])),
+                              //keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    await context
+                                        .read<WalletProvider>()
+                                        .withdrawlCheckPassword(
+                                            context,
+                                            paymentType,
+                                            amount,
+                                            _passwordController.text);
+                                  },
+                                  child: Text("Yes")),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
+          ),
         );
       },
     );
-
   }
+
   ShapeBorder _defaultShape() {
     return RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10.0),
@@ -386,23 +389,25 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
       ),
     );
   }
+
   _getCloseButton(context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
       child: GestureDetector(
-        onTap: () {
-
-        },
+        onTap: () {},
         child: Container(
           alignment: FractionalOffset.topLeft,
-          child: GestureDetector(child: Icon(Icons.clear,color: Colors.red,),
-
-            onTap: (){
+          child: GestureDetector(
+            child: Icon(
+              Icons.clear,
+              color: Colors.red,
+            ),
+            onTap: () {
               Navigator.pop(context);
-            },),
+            },
+          ),
         ),
       ),
     );
   }
-
 }
