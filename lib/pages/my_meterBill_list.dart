@@ -33,7 +33,10 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final db = FirebaseFirestore.instance;
 
-  List<String> customerIds = []; //["7324392739"];//"7324392739"
+  List<String> customerIds =
+      // [];
+      ["7324392739"];
+  // //"7324392739"
   bool _isLoading = true;
 
   @override
@@ -49,9 +52,11 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
         .collection(userMeterCollection)
         .get()
         .then((value) {
-      value.docs.forEach((element) {
-        customerIds.add(element.id);
-      });
+      if (value.docs.isNotEmpty) {
+        value.docs.forEach((element) {
+          customerIds.add(element.id);
+        });
+      }
 
       setState(() {
         _isLoading = false;
@@ -137,12 +142,13 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                 width: 60,
                                 height: 60,
                                 child: new CircleAvatar(
-                                    radius: 100.0,
-                                    // backgroundColor:MyTheme.getPrimaryColor(),
-                                    //backgroundImage: MeScreenState.fileAvatar!=null?
-                                    // FileImage(fileAvatar):
-                                    backgroundImage:
-                                        NetworkImage(item.readImageUrl)),
+                                  radius: 100.0,
+                                  // backgroundColor:MyTheme.getPrimaryColor(),
+                                  //backgroundImage: MeScreenState.fileAvatar!=null?
+                                  // FileImage(fileAvatar):
+                                  backgroundImage:
+                                      NetworkImage(item.readImageUrl),
+                                ),
                               ),
                               title: Container(
                                   alignment: Alignment.centerLeft,
@@ -158,10 +164,12 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                 children: [
                                   Container(
                                     padding: EdgeInsets.only(top: 5),
-                                    child: Text(item.readDate
-                                        .toDate()
-                                        .toString() //yyy-MM-ddTHH:mm:ss
-                                        .toString()),
+                                    child: Text("readDate"
+                                        // item.readDate
+                                        //   .toDate()
+                                        //   .toString() //yyy-MM-ddTHH:mm:ss
+                                        //   .toString(),
+                                        ),
                                   ),
                                   Text(
                                     item.consumerName + " - " + item.mobile,

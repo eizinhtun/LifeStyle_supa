@@ -21,6 +21,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'datas/constants.dart';
 import 'localization/LocalizationsDelegate.dart';
 import 'providers/login_provider.dart';
+import 'providers/meter_bill_provider.dart';
 
 void main() async {
   //statusbar hide
@@ -50,6 +51,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => LoginProvider()),
     ChangeNotifierProvider(create: (_) => LanguageProvider()),
     ChangeNotifierProvider(create: (_) => WalletProvider()),
+    ChangeNotifierProvider(create: (_) => MeterBillProvider()),
     ChangeNotifierProvider(create: (_) => NotiProvider()),
     ChangeNotifierProvider(create: (_) => FirebaseCRUDProvider()),
   ], child: MyApp()));
@@ -109,7 +111,10 @@ class _MyAppState extends State<MyApp> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.active) {
+                      // && snapshot.data.exists
                       if (snapshot.hasData && snapshot.data.exists) {
+                        print(snapshot.data);
+                        // print(snapshot.data["isActive"]);
                         if (snapshot.data["isActive"]) {
                           return HomePageDetail();
                         } else {

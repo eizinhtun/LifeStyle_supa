@@ -1,17 +1,25 @@
 // @dart=2.9
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/Ads.dart';
+import 'package:left_style/models/meter_bill.dart';
+import 'package:left_style/models/meter_bill.dart';
+import 'package:left_style/pages/my_meterBill_list.dart';
 import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/utils/formatter.dart';
+import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/widgets/home_item.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AdsDetailPage.dart';
+import 'home_page copy.dart';
 import 'meter_city.dart';
 import 'meter_list.dart';
 import 'meter_search_result.dart';
@@ -125,19 +133,22 @@ class _HomePageState extends State<HomePage> {
     HomeItem(
       title: "Add Meter",
       iconData: Icons.qr_code,
+      action: ActionButton.AddMeter,
     ),
     HomeItem(
       title: "Meter List",
+      action: ActionButton.MeterList,
       iconData: Icons.list,
     ),
     HomeItem(
-      title: "Upload Unit",
+      action: ActionButton.ReadUnit,
+      title: "Read Meter",
       iconData: Icons.file_upload,
     ),
     HomeItem(
-      title: "Meter History",
-      iconData: Icons.history,
-    ),
+        title: "Meter Bills",
+        iconData: Icons.history,
+        action: ActionButton.MeterBill),
   ];
 
   @override
@@ -171,7 +182,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Positioned(
-            top: 50,
+            top: 60,
             left: 0,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 15),
@@ -326,6 +337,29 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 10,
                   ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      print("Pressed");
+                      var meterRef = FirebaseFirestore.instance
+                          .collection(meterCollection);
+
+                      if (FirebaseAuth.instance.currentUser?.uid != null) {
+                        String uid =
+                            FirebaseAuth.instance.currentUser.uid.toString();
+
+                        await meterRef
+                            .doc(uid)
+                            .collection(userMeterCollection)
+                            .doc("7324392739")
+                            .set(jsonString);
+                      }
+                    },
+                    child: Text(
+                      "Add",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                   Container(
                     padding: EdgeInsets.all(8),
                     child: Column(
@@ -356,20 +390,72 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               HomeItemWidget(
-                context: context,
-                title: datalist.elementAt(i).title,
-                iconData: datalist.elementAt(i).iconData,
-                onPress: (context) =>
-                    pressAction(datalist.elementAt(i).title, context),
-              ),
+                  context: context,
+                  title: datalist.elementAt(i).title,
+                  iconData: datalist.elementAt(i).iconData,
+                  onPress: (context) {
+                    switch (datalist.elementAt(i).action) {
+                      case ActionButton.AddMeter:
+                        addNewMeter(context);
+                        break;
+                      case ActionButton.MeterList:
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  MeterListPage(),
+                            ));
+                        break;
+                      case ActionButton.ReadUnit:
+                        uploadUnit(context);
+                        break;
+                      case ActionButton.MeterBill:
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  MyMeterBillListPage(),
+                            ));
+                        break;
+                    }
+                  }
+                  // =>
+                  //     pressAction(datalist.elementAt(i).title, context),
+                  ),
               (i + 1) < datalist.length
                   ? HomeItemWidget(
                       context: context,
                       title: datalist.elementAt(i + 1).title,
                       iconData: datalist.elementAt(i + 1).iconData,
-                      onPress: (context) =>
-                          pressAction(datalist.elementAt(i + 1).title, context),
-                    )
+                      onPress: (context) {
+                        switch (datalist.elementAt(i + 1).action) {
+                          case ActionButton.AddMeter:
+                            addNewMeter(context);
+                            break;
+                          case ActionButton.MeterList:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      MeterListPage(),
+                                ));
+                            break;
+                          case ActionButton.ReadUnit:
+                            uploadUnit(context);
+                            break;
+                          case ActionButton.MeterBill:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      MyMeterBillListPage(),
+                                ));
+                            break;
+                        }
+                      }
+                      // =>
+                      //     pressAction(datalist.elementAt(i + 1).title, context),
+                      )
                   : Container(
                       color: Colors.red,
                     ),
@@ -381,22 +467,22 @@ class _HomePageState extends State<HomePage> {
     return list;
   }
 
-  void pressAction(String title, BuildContext context) {
-    switch (title) {
-      case "Add Meter":
+  /*void pressAction(String action, BuildContext context) {
+    switch (action) {
+      case ActionButton.AddMeter:
         addNewMeter(context);
         break;
-      case "Meter List":
+      case ActionButton.MeterList:
         Navigator.push(
             context,
             MaterialPageRoute(
               builder: (BuildContext context) => MeterListPage(),
             ));
         break;
-      case "Upload Unit":
+      case ActionButton.ReadUnit:
         uploadUnit(context);
         break;
-      case "Meter History":
+      case ActionButton.MeterBill:
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -404,7 +490,7 @@ class _HomePageState extends State<HomePage> {
             ));
         break;
     }
-  }
+  }*/
 
   String barcode = "";
   String meterBarcode = "";
@@ -508,12 +594,9 @@ class _HomePageState extends State<HomePage> {
 class HomeItem {
   final String title;
   final IconData iconData;
+  final String action;
 
   final Function(BuildContext context) onPressed;
 
-  HomeItem({
-    this.title,
-    this.iconData,
-    this.onPressed,
-  });
+  HomeItem({this.title, this.iconData, this.onPressed, this.action});
 }

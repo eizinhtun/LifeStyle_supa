@@ -13,32 +13,32 @@ import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 
 class EditUserProfilePage extends StatefulWidget {
-  final String fullName;
-  final String photoUrl;
-  final String address;
-  const EditUserProfilePage(this.fullName, this.photoUrl, this.address,
-      {Key key})
-      : super(key: key);
+  final UserModel user;
+
+  const EditUserProfilePage({
+    Key key,
+    this.user,
+  }) : super(key: key);
   @override
-  _EditUserProfilePageState createState() => _EditUserProfilePageState(
-      fullName: this.fullName, photoUrl: this.photoUrl, address: this.address);
+  _EditUserProfilePageState createState() => _EditUserProfilePageState();
 }
 
 class _EditUserProfilePageState extends State<EditUserProfilePage> {
   var newImage;
-  UserModel user = UserModel();
+  String photoUrl;
   TextEditingController _nameController;
   TextEditingController _addressController;
   FocusNode nameFocusNode;
   FocusNode addressFocusNode;
-  final String fullName, photoUrl, address;
-  _EditUserProfilePageState({this.fullName, this.photoUrl, this.address});
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: fullName);
-    _addressController = TextEditingController(text: address);
+    _nameController = TextEditingController(text: widget.user.fullName);
+    _addressController = TextEditingController(text: widget.user.address);
+    photoUrl = widget.user.photoUrl;
   }
 
   @override
@@ -65,8 +65,8 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                 CustomScrollView(
                   slivers: <Widget>[
                     SliverAppBar(
-                      iconTheme: IconThemeData(color: Colors.black),
-                      backgroundColor: Colors.blue,
+                      iconTheme: IconThemeData(color: Colors.white),
+                      backgroundColor: Theme.of(context).primaryColor,
                       pinned: true,
                       snap: false,
                       floating: false,
@@ -81,144 +81,125 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                         child: Container(),
                       ),
                     ),
-                    SliverToBoxAdapter(
+                    SliverFillRemaining(
                       child: Container(
-                          constraints: BoxConstraints.expand(
-                            height: MediaQuery.of(context).size.height,
-                          ),
-                          child: Container(
-                              margin: EdgeInsets.only(top: 50),
-                              padding: EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                  TextFormField(
-                                    autofocus: false,
-                                    focusNode: nameFocusNode,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    controller: _nameController,
-                                    keyboardType: TextInputType.text,
-                                    validator: (val) {
-                                      return Validator.requiredField(
-                                          context, val, '');
-                                    },
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      contentPadding:
-                                          EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.grey, width: 0.5),
-                                        borderRadius:
-                                            BorderRadius.circular(40.0),
+                          margin: EdgeInsets.only(top: 70),
+                          padding: EdgeInsets.all(20),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  autofocus: false,
+                                  focusNode: nameFocusNode,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  controller: _nameController,
+                                  keyboardType: TextInputType.text,
+                                  validator: (val) {
+                                    return Validator.requiredField(
+                                        context, val, '');
+                                  },
+                                  decoration: InputDecoration(
+                                    labelText: "Name",
+                                    labelStyle: TextStyle(),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.black,
                                       ),
                                     ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 12),
                                   ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  TextFormField(
-                                    autofocus: false,
-                                    focusNode: addressFocusNode,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    controller: _addressController,
-                                    keyboardType: TextInputType.text,
-                                    validator: (val) {
-                                      return Validator.requiredField(
-                                          context, address, '');
-                                    },
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      contentPadding:
-                                          EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.grey, width: 0.5),
-                                        borderRadius:
-                                            BorderRadius.circular(40.0),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                TextFormField(
+                                  autofocus: false,
+                                  focusNode: addressFocusNode,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  controller: _addressController,
+                                  keyboardType: TextInputType.text,
+                                  validator: (val) {
+                                    return Validator.requiredField(
+                                        context, val, '');
+                                  },
+                                  decoration: InputDecoration(
+                                    labelText: "Address",
+                                    labelStyle: TextStyle(),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.black,
                                       ),
                                     ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 12),
                                   ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: ElevatedButton(
-                                            style: ButtonStyle(
-                                              padding: MaterialStateProperty
-                                                  .all<EdgeInsets>(
-                                                      EdgeInsets.only(
-                                                          top: 10, bottom: 10)),
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                Colors.blue,
-                                              ),
-                                              shape: MaterialStateProperty.all(
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(50),
-                                                ),
-                                              ),
-                                            ),
-                                            onPressed: () async {
-                                              setState(() {});
-                                            },
-                                            child: Text("Cancel")),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {});
+                                        },
+                                        child: Text("Cancel"),
                                       ),
-                                      SizedBox(width: 10),
-                                      Expanded(
-                                        child: ElevatedButton(
-                                            style: ButtonStyle(
-                                              padding: MaterialStateProperty
-                                                  .all<EdgeInsets>(
-                                                      EdgeInsets.only(
-                                                          top: 10, bottom: 10)),
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                Colors.blue,
-                                              ),
-                                              shape: MaterialStateProperty.all(
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(50),
-                                                ),
-                                              ),
-                                            ),
-                                            onPressed: () async {
-                                              var imgUrl = await Authentication
-                                                  .uploadphotofile(newImage);
-                                              if (imgUrl != null) {
-                                                user.photoUrl = imgUrl;
-                                                user.fullName = _nameController
-                                                    .text
-                                                    .toString();
-                                                user.address =
-                                                    _addressController.text
-                                                        .toString();
-
-                                                //UserModel();
-                                                await context
-                                                    .read<LoginProvider>()
-                                                    .updateUserInfo(
-                                                        context, user);
+                                    ),
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                          onPressed: () async {
+                                            if (_formKey.currentState
+                                                .validate()) {
+                                              String imgUrl =
+                                                  widget.user.photoUrl;
+                                              if (newImage != null) {
+                                                imgUrl = await Authentication
+                                                    .uploadphotofile(newImage);
                                               }
+                                              widget.user.photoUrl = imgUrl;
+                                              widget.user.address =
+                                                  _addressController.text
+                                                      .toString();
+                                              widget.user.fullName =
+                                                  _nameController.text
+                                                      .toString();
+
+                                              print(widget.user.toJson());
+                                              await context
+                                                  .read<LoginProvider>()
+                                                  .updateUserInfo(
+                                                      context, widget.user);
 
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           MePage()));
-
-                                              setState(() async {});
-                                            },
-                                            child: Text("Save")),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ))),
+                                            }
+                                          },
+                                          child: Text("Save")),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )),
                     ),
                   ],
                 ),
@@ -245,7 +226,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                               height: 40,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(80),
-                                color: Colors.blue,
+                                color: Theme.of(context).primaryColor,
                               ),
                               child: IconButton(
                                   onPressed: () {
@@ -272,7 +253,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
         height: 120,
         width: 120,
         child: CircleAvatar(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green,
           backgroundImage: Image.file(File(newImage.path)).image,
           radius: 50,
         ),
@@ -286,3 +267,18 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
     });
   }
 }
+    // style: ButtonStyle(
+    //                                       padding: MaterialStateProperty
+    //                                           .all<EdgeInsets>(EdgeInsets.only(
+    //                                               top: 10, bottom: 10)),
+    //                                       backgroundColor:
+    //                                           MaterialStateProperty.all(
+    //                                         Colors.blue,
+    //                                       ),
+    //                                       shape: MaterialStateProperty.all(
+    //                                         RoundedRectangleBorder(
+    //                                           borderRadius:
+    //                                               BorderRadius.circular(50),
+    //                                         ),
+    //                                       ),
+    //                                     ),

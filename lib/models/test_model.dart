@@ -34,13 +34,13 @@
 //   }
 // }
 // @dart=2.9
-enum TestType { Topup, Withdraw }
-enum PaymentType { KPay, CbPay, WavePay }
+// enum TestType { Topup, Withdraw }
+// enum PaymentType { KPay, CbPay, WavePay }
 
 class TestModel {
   String uid;
-  TestType type;
-  PaymentType paymentType;
+  String type;
+  String paymentType;
   double amount;
   DateTime createdDate;
 
@@ -54,8 +54,8 @@ class TestModel {
 
   TestModel.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
-    type = getType(json['type']);
-    paymentType = getPayType(json['paymentType']);
+    type = json['type'];
+    paymentType = json['paymentType'];
     amount = json['amount'];
     createdDate =
         DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
@@ -64,68 +64,68 @@ class TestModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['uid'] = this.uid;
-    data['type'] = getString(this.type);
-    data['paymentType'] = getPayString(this.paymentType);
+    data['type'] = this.type;
+    data['paymentType'] = this.paymentType;
     data['amount'] = this.amount;
     data['createdDate'] = this.createdDate.microsecondsSinceEpoch.toString();
     return data;
   }
 
-  TestType getType(String s) {
-    TestType type = TestType.Topup;
-    switch (s) {
-      case "Topup":
-        type = TestType.Topup;
-        break;
-      case "Withdraw":
-        type = TestType.Withdraw;
-        break;
-    }
-    return type;
-  }
+  // TestType getType(String s) {
+  //   TestType type = TestType.Topup;
+  //   switch (s) {
+  //     case "Topup":
+  //       type = TestType.Topup;
+  //       break;
+  //     case "Withdraw":
+  //       type = TestType.Withdraw;
+  //       break;
+  //   }
+  //   return type;
+  // }
 
-  String getString(TestType type) {
-    String s = "Topup";
-    switch (type) {
-      case TestType.Topup:
-        s = "Topup";
-        break;
-      case TestType.Withdraw:
-        s = "Withdraw";
-        break;
-    }
-    return s;
-  }
+  // String getString(TestType type) {
+  //   String s = "Topup";
+  //   switch (type) {
+  //     case TestType.Topup:
+  //       s = "Topup";
+  //       break;
+  //     case TestType.Withdraw:
+  //       s = "Withdraw";
+  //       break;
+  //   }
+  //   return s;
+  // }
 
-  PaymentType getPayType(String s) {
-    PaymentType type = PaymentType.CbPay;
-    switch (s) {
-      case "KPay":
-        type = PaymentType.KPay;
-        break;
-      case "CbPay":
-        type = PaymentType.CbPay;
-        break;
-      case "WavePay":
-        type = PaymentType.WavePay;
-        break;
-    }
-    return type;
-  }
+  // PaymentType getPayType(String s) {
+  //   PaymentType type = PaymentType.CbPay;
+  //   switch (s) {
+  //     case "KPay":
+  //       type = PaymentType.KPay;
+  //       break;
+  //     case "CbPay":
+  //       type = PaymentType.CbPay;
+  //       break;
+  //     case "WavePay":
+  //       type = PaymentType.WavePay;
+  //       break;
+  //   }
+  //   return type;
+  // }
 
-  String getPayString(PaymentType type) {
-    String s = "KPay";
-    switch (type) {
-      case PaymentType.KPay:
-        s = "KPay";
-        break;
-      case PaymentType.CbPay:
-        s = "CbPay";
-        break;
-      case PaymentType.WavePay:
-        s = "WavePay";
-        break;
-    }
-    return s;
-  }
+  // String getPayString(PaymentType type) {
+  //   String s = "KPay";
+  //   switch (type) {
+  //     case PaymentType.KPay:
+  //       s = "KPay";
+  //       break;
+  //     case PaymentType.CbPay:
+  //       s = "CbPay";
+  //       break;
+  //     case PaymentType.WavePay:
+  //       s = "WavePay";
+  //       break;
+  //   }
+  //   return s;
+  // }
 }

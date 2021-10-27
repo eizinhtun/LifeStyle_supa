@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   double kbzOpacity = 0.5;
   double cbOpacity = 0.5;
   double waveOpacity = 0.5;
-  PaymentType paymentType = PaymentType.KPay;
+  String paymentType = PaymentType.kpay;
 
   @override
   void initState() {
@@ -96,7 +97,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.KPay;
+                                    paymentType = PaymentType.kpay;
                                     showWidget();
 
                                     pay = "KBZ Pay";
@@ -127,7 +128,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                 SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.CbPay;
+                                    paymentType = PaymentType.cbpay;
                                     showWidget();
                                     pay = "CB Pay";
                                     kbzOpacity = 0.5;
@@ -157,7 +158,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                 SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.WavePay;
+                                    paymentType = PaymentType.wavepay;
                                     showWidget();
                                     pay = "WAVE Pay";
                                     kbzOpacity = 0.5;

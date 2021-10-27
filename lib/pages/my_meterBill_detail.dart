@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/meter_bill.dart';
+import 'package:left_style/pages/pay_bill_page.dart';
 
 class MeterBillDetailPage extends StatefulWidget {
   final String docId;
@@ -60,11 +61,8 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
     return new Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        title: Center(
-          child: Container(
-              margin: EdgeInsets.only(right: 40),
-              child: Text(Tran.of(context).text("my_meters").toString())),
-        ),
+        centerTitle: true,
+        title: Text(Tran.of(context).text("my_meters").toString()),
         /*flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -509,7 +507,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                           ),
 
                           Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
+                            padding: const EdgeInsets.only(top: 16.0),
                             child: Text(
                                 (bill.refundAmount != null &&
                                             bill.refundAmount > 0
@@ -517,9 +515,10 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                             bill.refundAmount.toString() +
                                             "   "
                                         : "") +
+                                    "hotline: " +
                                     bill.hotline,
                                 style: GetTextStyle()),
-                          )
+                          ),
 
                           // Expanded(child: Text('',textAlign: TextAlign.left,)),
 //              SizedBox(height: 12.0),
@@ -528,17 +527,53 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
 //                height: 500.0,
 //                color: Colors.red,
 //              ),
+
+                          bill.isPaid
+                              ? Text("")
+                              : Container(
+                                  padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                  child: Center(
+                                    child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        side: BorderSide(
+                                          width: 1.0,
+                                          color: mainColor,
+                                          style: BorderStyle.solid,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Pay Bill",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PayBillPage(
+                                                bill: bill,
+                                                docId: widget.docId),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
                         ],
                       ),
                       Positioned(
                         top: 0,
                         right: 0,
-                        child: Image.asset(
-                          "assets/image/paid_stamp.png",
-                          height: 40,
-                        ),
+                        child: bill.isPaid
+                            ? Image.asset(
+                                "assets/image/paid_stamp.png",
+                                height: 40,
+                              )
+                            : Container(),
                         //Icon(Icons.check_circle_outline,color: Colors.green,size: 40,)
-                      )
+                      ),
                     ],
                   ),
                 ),

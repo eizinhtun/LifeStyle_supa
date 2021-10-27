@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/validators/validator.dart';
@@ -21,12 +22,12 @@ class _TopUpPageState extends State<TopUpPage> {
   double kbzOpacity = 0.5;
   double cbOpacity = 0.5;
   double waveOpacity = 0.5;
-  PaymentType paymentType;
+  String paymentType;
 
   @override
   void initState() {
     super.initState();
-    paymentType = PaymentType.KPay;
+    paymentType = PaymentType.kpay;
   }
 
   @override
@@ -98,15 +99,13 @@ class _TopUpPageState extends State<TopUpPage> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.KPay;
+                                    paymentType = PaymentType.kpay;
                                     showWidget();
                                     pay = "KBZ Pay";
                                     kbzOpacity = 1;
                                     cbOpacity = 0.5;
                                     waveOpacity = 0.5;
-                                    setState(() {
-
-                                    });
+                                    setState(() {});
                                   },
                                   child: Container(
                                     width: 80,
@@ -130,7 +129,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                 SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.CbPay;
+                                    paymentType = PaymentType.cbpay;
                                     showWidget();
                                     pay = "CB Pay";
                                     kbzOpacity = 0.5;
@@ -160,7 +159,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                 SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    paymentType = PaymentType.WavePay;
+                                    paymentType = PaymentType.wavepay;
                                     showWidget();
                                     pay = "WAVE Pay";
                                     kbzOpacity = 0.5;
@@ -274,7 +273,7 @@ class _TopUpPageState extends State<TopUpPage> {
                           context,
                           paymentType,
                           double.parse(_amountController.text.toString()));
-                     clearText();
+                      clearText();
                     }
                   },
                   child: Text("Submit")),

@@ -1,8 +1,11 @@
 // @dart=2.9
 
+class MeterBill {
+  bool isPaid;
+  String payDate;
+  String remark;
+  String status;
 
-
-class MeterBill{
   String block;
 
   String street;
@@ -105,59 +108,67 @@ class MeterBill{
 
   int readUnit;
   MeterBill(
-      {this.block,
-        this.street,
-        this.billNo,
-        this.ledgerNo,
-        this.ledgerPostFix,
-        this.mainLedgerTitle,
-        this.layerDes1,
-        this.layerDes2,
-        this.layerDes3,
-        this.layerDes4,
-        this.layerDes5,
-        this.layerDes6,
-        this.layerDes7,
-        this.layerRate1,
-        this.layerRate2,
-        this.layerRate3,
-        this.layerRate4,
-        this.layerRate5,
-        this.layerRate6,
-        this.layerRate7,
-        this.layerAmount1,
-        this.layerAmount2,
-        this.layerAmount3,
-        this.layerAmount4,
-        this.layerAmount5,
-        this.layerAmount6,
-        this.layerAmount7,
-        this.oldUnit,
-        this.totalUnitUsed,
-        this.multiplier,
-        this.unitsToPay,
-        this.mHorsePower,
-        this.cost,
-        this.mHorsePowerCost,
-        this.totalCostOrg,
-        this.creditAmount,
-        this.disscountAmt,
-        this.totalCost,
-        this.signUrl,
-        this.refundAmount,
-        this.hotline,
-        this.companyName,
-        this.state,
-        this.monthName,
-        this.consumerName,
-        this.customerId,
-        this.meterNo,
-        this.dueDate,
-        this.readUnit});
+      {this.isPaid,
+      this.remark,
+      this.payDate,
+      this.status,
+      this.block,
+      this.street,
+      this.billNo,
+      this.ledgerNo,
+      this.ledgerPostFix,
+      this.mainLedgerTitle,
+      this.layerDes1,
+      this.layerDes2,
+      this.layerDes3,
+      this.layerDes4,
+      this.layerDes5,
+      this.layerDes6,
+      this.layerDes7,
+      this.layerRate1,
+      this.layerRate2,
+      this.layerRate3,
+      this.layerRate4,
+      this.layerRate5,
+      this.layerRate6,
+      this.layerRate7,
+      this.layerAmount1,
+      this.layerAmount2,
+      this.layerAmount3,
+      this.layerAmount4,
+      this.layerAmount5,
+      this.layerAmount6,
+      this.layerAmount7,
+      this.oldUnit,
+      this.totalUnitUsed,
+      this.multiplier,
+      this.unitsToPay,
+      this.mHorsePower,
+      this.cost,
+      this.mHorsePowerCost,
+      this.totalCostOrg,
+      this.creditAmount,
+      this.disscountAmt,
+      this.totalCost,
+      this.signUrl,
+      this.refundAmount,
+      this.hotline,
+      this.companyName,
+      this.state,
+      this.monthName,
+      this.consumerName,
+      this.customerId,
+      this.meterNo,
+      this.dueDate,
+      this.readUnit});
 
   MeterBill.fromJson(Map<String, dynamic> json) {
+    isPaid = json['isPaid'];
+    remark = json['remark'];
+    payDate = json['payDate'];
+    status = json['status'];
     block = json['block'];
-    dueDate=json['dueDate'];
+    dueDate = json['dueDate'];
     street = json['street'];
     billNo = json['billNo'];
     ledgerNo = json['ledgerNo'];
@@ -210,6 +221,10 @@ class MeterBill{
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['isPaid'] = this.isPaid;
+    data['remark'] = this.remark;
+    data['payDate'] = this.payDate;
+    data['status'] = this.status;
     data['block'] = this.block;
     data['dueDate'] = this.dueDate;
     data['street'] = this.street;

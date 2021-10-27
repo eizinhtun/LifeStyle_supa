@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
@@ -321,7 +322,7 @@ class WalletState extends State<Wallet> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 Icon(
-                                    tracList[i].type == TransactionType.Topup
+                                    tracList[i].type == TransactionType.topup
                                         ? Icons.add
                                         : Icons.minimize,
                                     size: 20),
@@ -331,7 +332,7 @@ class WalletState extends State<Wallet> {
                                   children: [
                                     Text(
                                         tracList[i].type ==
-                                                TransactionType.Topup
+                                                TransactionType.topup
                                             ? "Top Up"
                                             : "Withdraw",
                                         style: TextStyle(fontSize: 12)),

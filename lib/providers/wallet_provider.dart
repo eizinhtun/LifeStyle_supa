@@ -13,12 +13,12 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var balance;
 
   Future<void> topup(
-      BuildContext context, PaymentType paymentType, double amount) async {
+      BuildContext context, String paymentType, double amount) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
       userRef.doc(uid).get().then((value) {
-        balance = value.data()["balance"];
+        int balance = value.data()["balance"];
 
         if (balance != null) {
           try {
@@ -30,8 +30,8 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 context, "Success", "Your topup is successful");
             TransactionModel transactionModel = TransactionModel(
                 uid: uid,
-                type: TransactionType.Topup,
-                amount: amount,
+                type: TransactionType.topup,
+                amount: amount.toInt(),
                 paymentType: paymentType,
                 createdDate: DateTime.now());
             tracRef.add(transactionModel.toJson()).catchError((error) {
@@ -58,7 +58,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       // double balance = await getBalance();
       userRef.doc(uid).get().then((value) {
-        double balance = value.data()["balance"];
+        int balance = value.data()["balance"];
 
         if (amount > balance) {
           MessageHandler.showErrMessage(context, "Insufficient Balance",
@@ -72,8 +72,8 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
             });
             TransactionModel transactionModel = TransactionModel(
                 uid: uid,
-                type: TransactionType.Withdraw,
-                amount: amount,
+                type: TransactionType.withdraw,
+                amount: amount.toInt(),
                 createdDate: DateTime.now());
             tracRef.add(transactionModel.toJson()).catchError((error) {
               print("Failed to add withdrawl transaction: $error");
@@ -116,5 +116,45 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
     notifyListeners();
     return list;
+  }
+
+  Future<bool> payMeterBill(BuildContext context, double amount) async {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      // double balance = await getBalance();
+      userRef.doc(uid).get().then((value) {
+        double balance = value.data()["balance"];
+
+        if (amount > balance) {
+          MessageHandler.showErrMessage(context, "Insufficient Balance",
+              "Your meter bill is higher than your balance");
+          return Future<bool>.value(false);
+        } else {
+          try {
+            userRef.doc(uid).update({"balance": balance - amount}).then((_) {
+              print("meter bill payment success!");
+              MessageHandler.showMessage(
+                  context, "Success", "Your  meter bill payment is successful");
+            });
+            TransactionModel transactionModel = TransactionModel(
+                uid: uid,
+                type: TransactionType.meterbill,
+                amount: amount.toInt(),
+                createdDate: DateTime.now());
+            tracRef.add(transactionModel.toJson()).catchError((error) {
+              print("Failed to add meter bill payment transaction: $error");
+            });
+            notifyListeners();
+            return Future<bool>.value(true);
+          } catch (e) {
+            print("Failed to meter bill payment: $e");
+            MessageHandler.showErrMessage(
+                context, "Fail", "Your meter bill payment is fail");
+            return Future<bool>.value(false);
+          }
+        }
+      });
+    }
+    notifyListeners();
   }
 }

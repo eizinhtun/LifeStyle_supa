@@ -93,7 +93,8 @@ class _MePageState extends State<MePage> {
                         address = user.address.toString();
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => EditUserProfilePage(
-                                fullName, photoUrl, address)));
+                                  user: user,
+                                )));
                       },
                       child: Container(
                         padding: EdgeInsets.all(8),
@@ -167,7 +168,8 @@ class _MePageState extends State<MePage> {
                           address = user.address.toString();
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => EditUserProfilePage(
-                                  fullName, photoUrl, address)));
+                                    user: user,
+                                  )));
                         },
                         leading: Icon(
                           Icons.person,

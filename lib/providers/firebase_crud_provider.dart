@@ -10,7 +10,7 @@ import 'package:left_style/models/test_model.dart';
 import 'package:left_style/utils/message_handler.dart';
 
 class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
- // final CollectionReference userRef = FirebaseFirestore.instance.collection(userCollection);
+  // final CollectionReference userRef = FirebaseFirestore.instance.collection(userCollection);
   //String uid = FirebaseAuth.instance.currentUser.uid.toString();
   var testRef = FirebaseFirestore.instance.collection(testCollection);
   var userRef = FirebaseFirestore.instance.collection(userCollection);
@@ -18,7 +18,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var balance;
   var random = new Random();
   var testData;
-  List getData=[];
+  List getData = [];
   Map<String, dynamic> dataMap;
 
   // Future<List<TestModel>> getItemData(BuildContext context) async {
@@ -136,38 +136,41 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //
   // }
 
-
-  Future<void> topup(
-      BuildContext context, PaymentType paymentType) async {
+  Future<void> topup(BuildContext context, String paymentType) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
       userRef.doc(uid).get().then((value) {
-        double balance= value.data()["balance"];
+        double balance = value.data()["balance"];
         double amount = 2000.00;
 
-        if(balance != null){
+        if (balance != null) {
           try {
-            userRef.doc(uid).update({"balance":  balance + amount }).then((_) {
+            userRef.doc(uid).update({"balance": balance + amount}).then((_) {
               print("topup success!");
             });
-            MessageHandler.showMessage(context, "Success", "Your topup is successful");
+            MessageHandler.showMessage(
+                context, "Success", "Your topup is successful");
             TestModel testModel = TestModel(
                 uid: uid,
-                type: TestType
-                    .Topup,
+                type: TransactionType.topup,
                 amount: amount,
                 paymentType: paymentType,
                 createdDate: DateTime.now());
-            testRef.doc("$uid").collection('topup').add(testModel.toJson()).catchError((error) {
+            testRef
+                .doc("$uid")
+                .collection('topup')
+                .add(testModel.toJson())
+                .catchError((error) {
               print("Failed to add topup transaction: $error");
             });
             notifyListeners();
           } catch (e) {
             print("Failed to topup: $e");
-            MessageHandler.showErrMessage(context, "Fail", "Your topup is fail");
+            MessageHandler.showErrMessage(
+                context, "Fail", "Your topup is fail");
           }
-        }else{
+        } else {
           MessageHandler.showErrMessage(context, "Fail", "Balance Type null");
         }
       });
@@ -177,7 +180,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   Future<void> withdrawl(
-      BuildContext context, PaymentType paymentType, double amount) async {
+      BuildContext context, String paymentType, double amount) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       // double balance = await getBalance();
@@ -196,11 +199,15 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
             });
             TestModel testModel = TestModel(
                 uid: uid,
-                type: TestType.Withdraw,
+                type: TransactionType.withdraw,
                 amount: amount,
                 paymentType: paymentType,
                 createdDate: DateTime.now());
-            testRef.doc("$uid").collection("withdraw").add(testModel.toJson()).catchError((error) {
+            testRef
+                .doc("$uid")
+                .collection("withdraw")
+                .add(testModel.toJson())
+                .catchError((error) {
               print("Failed to add withdrawl transaction: $error");
             });
             notifyListeners();
@@ -215,45 +222,47 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  Future<void> checkPassword(
-      BuildContext context, String password) async {
+  Future<void> checkPassword(BuildContext context, String password) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       userRef.doc(uid).get().then((value) {
-       String oldPassword = value.data()["password"];
-       var isCorrect = new DBCrypt().checkpw(password, oldPassword);
-       if(isCorrect == true){
-         double balance = value.data()["balance"];
-         double amount =200.00;
-         if (amount > balance) {
-           MessageHandler.showErrMessage(context, "Insufficient Balance",
-               "Your withdraw amount is higher than your balance");
-         } else {
-             userRef.doc(uid).update({"balance": balance - amount}).then((_) {
-               // MessageHandler.showMessage(
-               //     context, "Success", "Your withdrawl is successful");
-               notifyListeners();
-             });
-             TestModel testModel = TestModel(
-                 uid: uid,
-                 type: TestType.Withdraw,
-                 amount: amount,
-                 paymentType: PaymentType.KPay,
-                 createdDate: DateTime.now());
-             testRef.doc("$uid").collection("withdraw").add(testModel.toJson()).catchError((error) {
-               print("Failed to add withdrawl transaction: $error");
-             });
-             MessageHandler.showMessage(context, "Success", "Your withdrawl is successful");
-             notifyListeners();
-         }
-         //MessageHandler.showMessage(context, "Success", "Your Password is successful");
-        // notifyListeners();
-       }
-       else{
-         print("Failed to password: $e");
-         MessageHandler.showErrMessage(context, "Fail", "Password is fail");
-       }
-
+        String oldPassword = value.data()["password"];
+        var isCorrect = new DBCrypt().checkpw(password, oldPassword);
+        if (isCorrect == true) {
+          double balance = value.data()["balance"];
+          double amount = 200.00;
+          if (amount > balance) {
+            MessageHandler.showErrMessage(context, "Insufficient Balance",
+                "Your withdraw amount is higher than your balance");
+          } else {
+            userRef.doc(uid).update({"balance": balance - amount}).then((_) {
+              // MessageHandler.showMessage(
+              //     context, "Success", "Your withdrawl is successful");
+              notifyListeners();
+            });
+            TestModel testModel = TestModel(
+                uid: uid,
+                type: TransactionType.withdraw,
+                amount: amount,
+                paymentType: PaymentType.kpay,
+                createdDate: DateTime.now());
+            testRef
+                .doc("$uid")
+                .collection("withdraw")
+                .add(testModel.toJson())
+                .catchError((error) {
+              print("Failed to add withdrawl transaction: $error");
+            });
+            MessageHandler.showMessage(
+                context, "Success", "Your withdrawl is successful");
+            notifyListeners();
+          }
+          //MessageHandler.showMessage(context, "Success", "Your Password is successful");
+          // notifyListeners();
+        } else {
+          print("Failed to password: $e");
+          MessageHandler.showErrMessage(context, "Fail", "Password is fail");
+        }
       });
     }
     notifyListeners();
