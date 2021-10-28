@@ -94,7 +94,7 @@ class WalletDemoPageState extends State<WalletDemoPage>
                           children: [
                             Row(
                               children: [
-                                item.type == TransactionType.topup
+                                item.type == TransactionType.Topup
                                     ? Image.asset(
                                         "assets/payment/topup.png",
                                         width: 50,
@@ -109,7 +109,7 @@ class WalletDemoPageState extends State<WalletDemoPage>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                        item.type == TransactionType.topup
+                                        item.type == TransactionType.Topup
                                             ? "Top Up"
                                             : "Withdraw",
                                         style: TextStyle(
@@ -126,7 +126,7 @@ class WalletDemoPageState extends State<WalletDemoPage>
                                     style: TextStyle(
                                         fontSize: 14,
                                         color:
-                                            item.type == TransactionType.topup
+                                            item.type == TransactionType.Topup
                                                 ? Colors.green
                                                 : Colors.red)),
                                 IconButton(
