@@ -6,6 +6,7 @@ import 'package:flutter_dash/flutter_dash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/utils/formatter.dart';
 class WalletDetailSuccessPage extends StatefulWidget {
@@ -53,7 +54,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset("assets/payment/success.png",width: 80,height: 80,),
-                            Text("Success",style: TextStyle(fontSize: 24)),
+                            Text(Tran.of(context).text("notification_toup_success").toString(),style: TextStyle(fontSize: 24)),
                             Text(item.amount.toString()+" (Ks)"),
                             SizedBox(height: 10),
                             Dash(
@@ -169,7 +170,9 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: SpinKitDoubleBounce(color: Theme.of(context).primaryColor,));
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
             else {
               return Center(child: Text("No data"));

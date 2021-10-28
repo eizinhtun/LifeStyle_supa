@@ -87,9 +87,9 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [Color(0xFF001950),Color(0xFF04205a),Color(0xFF0b2b6a),
-                  Color(0xFF0b2b6a),Color(0xFF2253a2), Color(0xFF2253a2)],
+                   Color(0xFF0b2b6a),Color(0xFF2253a2), Color(0xFF2253a2)],
               )
-          ),
+         ),
         ),*/
       ),
       body: _isLoading

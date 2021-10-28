@@ -18,5 +18,13 @@
   "my_uploaded_unit": "My uploaded ",
   "my_meter_bills": "My meter bills",
   "helloword":"hello word",
-  "pay_bill":"Pay Bill"
+  "pay_bill":"Pay Bill",
+
+  "notification_toup_success": "ငွေဖြည့်အောင်မြင်သည်",
+  "notification_toup_denied": "အပယ်ခံရသည်",
+  "notification_withdrawal_success": "ငွေထုတ်အောင်မြင်သည်",
+  "notification_withdrawal_denied": "အပယ်ခံရသည်",
+
+  "ks": " ကျပ်",
+  "payment_method_list": "Select Payment"
 }

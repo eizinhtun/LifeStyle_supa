@@ -1,4 +1,6 @@
 // @dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
@@ -7,6 +9,7 @@ import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
+import 'package:left_style/widgets/wallet_detail_success_page.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +24,8 @@ class WalletState extends State<Wallet> {
       RefreshController(initialRefresh: false);
   List<TransactionModel> totalList = [];
   List<TransactionModel> tracList = [];
-
+  List<String> docList = [];
+  final db = FirebaseFirestore.instance;
   int i = 1;
   int showlist = 10;
   int start;
@@ -38,6 +42,16 @@ class WalletState extends State<Wallet> {
     totalList =
         await context.read<WalletProvider>().getTransactionList(context);
     print(totalList);
+    db
+        .collection(transactions)
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .collection(manyTransaction)
+        .get()
+        .then((value) {
+      value.docs.forEach((result) {
+        docList.add(result.id);
+      });
+    });
 
     _onRefresh();
   }
@@ -67,9 +81,7 @@ class WalletState extends State<Wallet> {
         tracList..addAll(totalList.sublist(start, showlist));
       }
     }
-    // else{
-    //   _refreshController.loadNoData();
-    // }
+
     _refreshController.loadComplete();
 
     if (mounted) setState(() {});
@@ -171,88 +183,94 @@ class WalletState extends State<Wallet> {
               child: ListView.builder(
                 physics: BouncingScrollPhysics(),
                 shrinkWrap: true,
-                itemBuilder: (c, i) {
-                  getTypeInfo(tracList[i].type.toString());
-                  print(title);
-                  return Card(
-                    child: Center(
-                      child: Column(
-                        children: [
-                          // ListTile(
-                          //   title:  Text(tracList[i].toString()),
-                          // ),
-                          ListTile(
-                            title: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: [
-                                    Image.asset(
-                                      imgUrl,
-                                      width: 50,
-                                      height: 50,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          title,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                itemBuilder: (c, i) => Card(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Column(
+                            children: <Widget>[
+                              Row(
+                                children: [
+                                  tracList[i].type == TransactionType.Topup
+                                      ? Image.asset(
+                                          "assets/payment/topup.png",
+                                          width: 50,
+                                          height: 50,
+                                        )
+                                      : Image.asset(
+                                          "assets/payment/withdraw.png",
+                                          width: 50,
+                                          height: 50,
                                         ),
-                                        Text(
-                                            Formatter.dateTimeFormat(
-                                                tracList[i].createdDate),
-                                            style: TextStyle(fontSize: 12)),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      tracList[i].amount.toString(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: textColor,
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        tracList[i].type ==
+                                                TransactionType.Topup
+                                            ? "Top Up"
+                                            : "Withdraw",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          //Navigator.push(context, MaterialPageRoute(builder: (context)=>new WalletDetailSuccessPage(docId:doc.id)));
-                                        },
-                                        icon: Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          size: 18,
-                                        ))
-                                  ],
-                                ),
-                                Dash(
-                                  direction: Axis.horizontal,
-                                  length:
-                                      MediaQuery.of(context).size.width * 0.7,
-                                  dashLength: 2,
-                                ),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text("Top up successful",
-                                            style: TextStyle(fontSize: 13)),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                    Image.asset("assets/payment/success.png",
-                                        width: 20, height: 20)
-                                  ],
-                                ),
-                              ],
-                            ),
+                                      Text(
+                                          Formatter.dateTimeFormat(
+                                              tracList[i].createdDate),
+                                          style: TextStyle(fontSize: 12)),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Text(tracList[i].amount.toString(),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: tracList[i].type ==
+                                                  TransactionType.Topup
+                                              ? Colors.green
+                                              : Colors.red)),
+                                  IconButton(
+                                      onPressed: () {
+                                        print(docList[i]);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    new WalletDetailSuccessPage(
+                                                        docId: docList[i])));
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        size: 18,
+                                      ))
+                                ],
+                              ),
+                              Dash(
+                                direction: Axis.horizontal,
+                                length: MediaQuery.of(context).size.width * 0.7,
+                                dashLength: 2,
+                              ),
+                              Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text("Top up successful",
+                                          style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Image.asset("assets/payment/success.png",
+                                      width: 20, height: 20)
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  );
-                },
+                  ),
+                ),
                 itemExtent: 100.0,
                 itemCount: tracList.length,
               ),

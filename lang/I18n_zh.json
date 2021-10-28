@@ -18,5 +18,13 @@
   "my_uploaded_unit": "My uploaded ",
   "my_meter_bills": "My meter bills",
   "helloword":"hello word",
-  "pay_bill":"Pay Bill"
+  "pay_bill":"Pay Bill",
+
+  "notification_toup_success": "充值成功",
+  "notification_toup_denied": "充值拒绝",
+  "notification_withdrawal_success": "提现成功",
+  "notification_withdrawal_denied": "提现拒绝",
+
+  "ks": " KS",
+  "payment_method_list": "Select Payment"
 }
