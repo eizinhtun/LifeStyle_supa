@@ -4,7 +4,7 @@ class TransactionModel {
   String uid;
   String type;
   String paymentType;
-  int amount;
+  var amount;
   DateTime createdDate;
 
   TransactionModel({
