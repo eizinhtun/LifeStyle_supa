@@ -350,7 +350,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               "date",
-                                              // getDate(widget.obj.readDate),
+                                              // Formatter.getDate(widget.obj.readDate),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -385,7 +385,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               "date",
-                                              // getDate(widget.obj.dueDate),
+                                              // Formatter.getDate(widget.obj.dueDate),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -420,7 +420,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               "date",
-                                              // getDate(widget.obj.dueDate),
+                                              // Formatter.getDate(widget.obj.dueDate),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -737,7 +737,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                       //   padding: EdgeInsets.only(top:0,bottom: 5),
                                       //   alignment: Alignment.centerLeft,
                                       //   child: Text(
-                                      //                                       getDate(widget.obj.readDate),
+                                      //                                       Formatter.getDate(widget.obj.readDate),
                                       //     style: TextStyle(
                                       //       fontWeight: FontWeight.bold,
                                       //         color: Colors.black54,fontSize: 13),
@@ -821,13 +821,6 @@ class MeterEditPageState extends State<MeterEditPage>
         ],
       ),
     );
-  }
-
-  getDate(date) {
-    DateTime tempDate = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date);
-    var dateFormat =
-        DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
-    return dateFormat.format(tempDate);
   }
 
   @override

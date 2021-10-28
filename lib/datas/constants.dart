@@ -100,3 +100,8 @@ class PaymentType {
   static const String cbpay = "cbpay";
   static const String wavepay = "wavepay";
 }
+
+class MeterBillStatus {
+  static const String paid = "Paid";
+  static const String unpaid = "Unpaid";
+}

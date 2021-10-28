@@ -6,17 +6,20 @@ import 'CommonExampleRouteWrapper.dart';
 class UserInfoScreenPhoto extends StatelessWidget {
   const UserInfoScreenPhoto(
       {Key key,
+      this.name,
       this.imageurl,
       this.width = 100,
       this.height = 100,
       this.borderColor = Colors.white})
       : super(key: key);
+  final String name;
   final String imageurl;
   final double width, height;
   final Color borderColor;
 
   @override
   Widget build(BuildContext context) {
+    print(imageurl != null);
     return Row(
       children: [
         InkWell(
@@ -46,27 +49,47 @@ class UserInfoScreenPhoto extends StatelessWidget {
               //     color: Colors.white,
               //   ),
               // ),
-              CachedNetworkImage(
-                width: width,
-                height: height,
-                imageUrl: imageurl,
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white, width: 3.0),
-                    borderRadius:
-                        new BorderRadius.all(const Radius.circular(100.0)),
-                    image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                            Colors.white, BlendMode.colorBurn)),
-                  ),
-                ),
-                placeholder: (context, url) => CircularProgressIndicator(
-                  color: Colors.blue,
-                ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              ),
+              imageurl != null
+                  ? CachedNetworkImage(
+                      width: width,
+                      height: height,
+                      imageUrl: imageurl,
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 3.0),
+                          borderRadius: new BorderRadius.all(
+                              const Radius.circular(100.0)),
+                          image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                              colorFilter: ColorFilter.mode(
+                                  Colors.white, BlendMode.colorBurn)),
+                        ),
+                      ),
+                      placeholder: (context, url) => CircularProgressIndicator(
+                        color: Colors.blue,
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    )
+                  : Container(
+                      width: width,
+                      height: height,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        border: Border.all(color: Colors.white, width: 3.0),
+                        borderRadius:
+                            BorderRadius.all(const Radius.circular(100.0)),
+                      ),
+                      child: Center(
+                        child: Text(
+                          name,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),

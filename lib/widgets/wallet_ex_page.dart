@@ -41,7 +41,7 @@ class _loadingPageState extends State<WalletExPage> {
   getData() async {
     await Future.delayed(Duration(milliseconds: 100));
     totalList =
-        await context.read<WalletProvider>().getManyTransactionList(context);
+        await context.read<WalletProvider>().getTransactionList(context);
     print(totalList);
     // totalList =[];
     // for(var i = 0;i<25;i++){

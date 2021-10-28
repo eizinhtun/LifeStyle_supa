@@ -316,7 +316,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                                       EdgeInsets.only(top: 5),
                                                   child: Text(
                                                       "${items[index].insertDate}"
-                                                      // getDate(items[index].insertDate)//yyy-MM-ddTHH:mm:ss
+                                                      // Formatter.getDate(items[index].insertDate)//yyy-MM-ddTHH:mm:ss
                                                       // .toString()
                                                       ),
                                                 ),
@@ -432,13 +432,6 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
               ],
             ),
     );
-  }
-
-  getDate(date) {
-    DateTime tempDate = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date);
-    var dateFormat =
-        DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
-    return dateFormat.format(tempDate);
   }
 
   @override

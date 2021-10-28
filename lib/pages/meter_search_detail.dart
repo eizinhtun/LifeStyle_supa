@@ -339,7 +339,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         "date",
-                                        // getDate(widget.obj.readDate),
+                                        // Formatter.getDate(widget.obj.readDate),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -373,7 +373,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         "date",
-                                        // getDate(widget.obj.dueDate),
+                                        // Formatter.getDate(widget.obj.dueDate),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -407,7 +407,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         "date",
-                                        // getDate(widget.obj.dueDate),
+                                        // Formatter.getDate(widget.obj.dueDate),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,

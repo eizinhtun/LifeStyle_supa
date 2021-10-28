@@ -14,22 +14,19 @@ class NotiProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var notiRef = FirebaseFirestore.instance.collection(notifications);
   var userRef = FirebaseFirestore.instance.collection(userCollection);
 
-  bool _isNotiList = false;
-  bool get isNotiList => _isNotiList;
-
   Future<List<NotiModel>> getNotiList(BuildContext context) async {
-    _isNotiList = true;
     List<NotiModel> list = [];
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid;
-      await notiRef.where("uid", isEqualTo: uid).get().then((value) {
+
+      // await notiRef.where("uid", isEqualTo: uid).get()
+      await notiRef.doc(uid).collection(notilist).get().then((value) {
         value.docs.forEach((result) {
           print(result.data());
           list.add(NotiModel.fromJson(result.data()));
         });
       });
     }
-    _isNotiList = false;
     notifyListeners();
     return list;
   }
