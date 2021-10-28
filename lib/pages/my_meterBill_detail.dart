@@ -77,7 +77,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
               appBar: AppBar(
                 elevation: 0.0,
                 centerTitle: true,
-                title: Text(Tran.of(context).text("my_meters").toString()),
+                title: Text(Tran.of(context).text("my_meter_bill").toString()),
               ),
               body: SingleChildScrollView(
                 child: Container(
@@ -638,7 +638,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
     } else {
       if (bill.status == MeterBillStatus.paid) {
         return Icon(
-          Icons.warning,
+          Icons.error,
           color: Colors.red,
           size: 50,
         );
