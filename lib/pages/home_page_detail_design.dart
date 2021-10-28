@@ -1,8 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:left_style/pages/me_page.dart';
-import 'package:left_style/widgets/wallet.dart';
-import 'package:left_style/widgets/wallet.dart';
 import 'home_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
@@ -29,7 +27,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           controller: _pageController,
           children: <Widget>[
             HomePage(),
-           // Wallet(),
+            // Wallet(),
             MePage(),
           ],
           onPageChanged: (int index) {

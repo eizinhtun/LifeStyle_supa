@@ -46,6 +46,7 @@ class WalletState extends State<Wallet> {
     tracList.clear();
     await Future.delayed(Duration(milliseconds: 100));
     showlist = 10;
+    if (totalList.length < showlist) showlist = totalList.length;
     tracList = totalList.sublist(0, showlist);
     setState(() {});
     _refreshController.refreshCompleted();
