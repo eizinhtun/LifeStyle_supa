@@ -1,9 +1,13 @@
 // @dart=2.9
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/utils/message_handler.dart';
@@ -15,47 +19,57 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
   Future<void> topup(
-      BuildContext context, String paymentType, double amount) async {
+      BuildContext context, String paymentType, double amount, int transactionId,imageFile) async {
+    print(imageFile);
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
-
-      userRef.doc(uid).get().then((value) {
-        int balance = value.data()["balance"];
-
-        if (balance != null) {
-          try {
-            print('try');
-            value.reference.update({"balance": balance + amount}).then((_) {
-              print("topup success!");
-            });
-            MessageHandler.showMessage(
-                context, "Success", "Your topup is successful");
-            TransactionModel transactionModel = TransactionModel(
-                uid: uid,
-                type: TransactionType.Topup,
-                amount: amount.toInt(),
-                paymentType: paymentType,
-                createdDate: DateTime.now());
-            tracRef
-                .doc(uid)
-                .collection("manyTransition")
-                .add(transactionModel.toJson())
-                .catchError((error) {
-              print("Failed to add topup transaction: $error");
-            });
-            notifyListeners();
-          } catch (e) {
-            print("Failed to topup: $e");
-            MessageHandler.showErrMessage(
-                context, "Fail", "Your topup is fail");
+      var dateTime = DateTime.now();
+      var dateFormat= DateFormat("yyyy-MM-dd HH:mm:ss").format(dateTime);
+      print(dateFormat.toString());
+      final ref = FirebaseStorage.instance.ref('user_topup').child(dateFormat.toString()+"_"+uid+".jpg");
+      final uploadTask = ref.putFile(File(imageFile.path));
+      String downloadUrl = await (await uploadTask).ref.getDownloadURL();
+      if (downloadUrl != null) {
+        userRef.doc(uid).get().then((value) {
+          double balance = value.data()["balance"];
+          print(balance);
+          if (balance != null) {
+            print(balance + amount);
+            try {
+              value.reference.update({"balance": balance + amount}).then((_) {
+                print("topup success!");
+              });
+              MessageHandler.showMessage(
+                  context, "Success", "Your topup is successful");
+              TransactionModel transactionModel = TransactionModel(
+                  uid: uid,
+                  type: TransactionType.Topup,
+                  amount: amount,
+                  paymentType: paymentType,
+                  imageUrl: downloadUrl,
+                  transactionId: transactionId,
+                  createdDate: DateTime.now());
+              tracRef
+                  .doc(uid)
+                  .collection("manyTransition")
+                  .add(transactionModel.toJson())
+                  .catchError((error) {
+                print("Failed to add topup transaction: $error");
+              });
+              notifyListeners();
+            } catch (e) {
+              print("Failed to topup: $e");
+              MessageHandler.showErrMessage(
+                  context, "Fail", "Your topup is fail");
+            }
+          } else {
+            MessageHandler.showErrMessage(context, "Fail", "Balance Type null");
           }
-        } else {
-          MessageHandler.showErrMessage(context, "Fail", "Balance Type null");
-        }
-        //MessageHandler.showErrMessage(context, "Fail", "No Internet");
-        notifyListeners();
-      });
+          //MessageHandler.showErrMessage(context, "Fail", "No Internet");
+          notifyListeners();
+        });
 
+      }
       notifyListeners();
     }
   }
@@ -119,7 +133,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
                   type: TransactionType.Withdraw,
-                  amount: (balance - amount).toInt(),
+                  //amount: (balance - amount).toInt(),
                   createdDate: DateTime.now());
               tracRef
                   .doc(uid)
@@ -226,7 +240,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
             TransactionModel transactionModel = TransactionModel(
                 uid: uid,
                 type: TransactionType.meterbill,
-                amount: amount.toInt(),
+                //amount: amount.toInt(),
                 createdDate: DateTime.now());
             tracRef.add(transactionModel.toJson()).catchError((error) {
               print("Failed to add meter bill payment transaction: $error");

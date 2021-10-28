@@ -78,6 +78,7 @@ const String transactions = "transactions";
 const String manyTransaction = "manyTransition";
 const String notifications = "notifications";
 const String testCollection = "tests";
+const String paymentMethodCollection = "payment_method";
 
 const String notilist = "notilist";
 const String myTransactions = "myTransactions";

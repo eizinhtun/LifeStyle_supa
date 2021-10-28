@@ -1,4 +1,6 @@
 // @dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
@@ -7,6 +9,7 @@ import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
+import 'package:left_style/widgets/wallet_detail_success_page.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +24,8 @@ class WalletState extends State<Wallet> {
       RefreshController(initialRefresh: false);
   List<TransactionModel> totalList = [];
   List<TransactionModel> tracList = [];
-
+  List<String> docList=[];
+  final db = FirebaseFirestore.instance;
   int i = 1;
   int showlist = 10;
   int start;
@@ -38,6 +42,11 @@ class WalletState extends State<Wallet> {
     totalList =
         await context.read<WalletProvider>().getManyTransactionList(context);
     print(totalList);
+    db.collection(transactions).doc(FirebaseAuth.instance.currentUser.uid).collection(manyTransaction).get().then((value) {
+      value.docs.forEach((result) {
+        docList.add(result.id);
+      });
+    });
 
     _onRefresh();
   }
@@ -67,9 +76,7 @@ class WalletState extends State<Wallet> {
         tracList..addAll(totalList.sublist(start, showlist));
       }
     }
-    // else{
-    //   _refreshController.loadNoData();
-    // }
+
     _refreshController.loadComplete();
 
     if (mounted) setState(() {});
@@ -184,9 +191,6 @@ class WalletState extends State<Wallet> {
                   child: Center(
                     child: Column(
                       children: [
-                        // ListTile(
-                        //   title:  Text(tracList[i].toString()),
-                        // ),
                         ListTile(
                           title: Column(
                             children: <Widget>[
@@ -230,7 +234,8 @@ class WalletState extends State<Wallet> {
                                               : Colors.red)),
                                   IconButton(
                                       onPressed: () {
-                                        //Navigator.push(context, MaterialPageRoute(builder: (context)=>new WalletDetailSuccessPage(docId:doc.id)));
+                                        print(docList[i]);
+                                       Navigator.push(context, MaterialPageRoute(builder: (context)=>new WalletDetailSuccessPage(docId: docList[i])));
                                       },
                                       icon: Icon(
                                         Icons.arrow_forward_ios_rounded,

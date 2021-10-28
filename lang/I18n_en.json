@@ -18,5 +18,13 @@
   "my_uploaded_unit": "My uploaded ",
   "my_meter_bills": "My meter bills",
   "helloword":"hello word",
-  "pay_bill":"Pay Bill"
+  "pay_bill":"Pay Bill",
+
+  "notification_toup_success": "Top up Successful ",
+  "notification_toup_denied": "Top up denied ",
+  "notification_withdrawal_success": "Withdrawal successful ",
+  "notification_withdrawal_denied": "Withdrawal denied ",
+
+  "ks": " KS",
+  "payment_method_list": "Select Payment"
 }
