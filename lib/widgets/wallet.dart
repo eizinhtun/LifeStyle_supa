@@ -20,7 +20,7 @@ class Wallet extends StatefulWidget {
 }
 
 class WalletState extends State<Wallet> {
-  RefreshController _refreshController ;
+  RefreshController _refreshController;
 
   List<TransactionModel> totalList = [];
   List<TransactionModel> tracList = [];
@@ -34,12 +34,12 @@ class WalletState extends State<Wallet> {
   @override
   void initState() {
     super.initState();
-    _refreshController= RefreshController(initialRefresh: false,initialLoadStatus: LoadStatus.loading);
-   // getData();
+    _refreshController = RefreshController(
+        initialRefresh: false, initialLoadStatus: LoadStatus.loading);
+    // getData();
   }
 
   getData() async {
-
     totalList =
         await context.read<WalletProvider>().getTransactionList(context);
     print(totalList);
@@ -68,7 +68,7 @@ class WalletState extends State<Wallet> {
   }
 
   void _onLoading() async {
-   // await Future.delayed(Duration(milliseconds: 1000));
+    // await Future.delayed(Duration(milliseconds: 1000));
     start = showlist;
     showlist = showlist + 10; //start +showlist;
     end = totalList.length;
@@ -94,7 +94,6 @@ class WalletState extends State<Wallet> {
       body: SafeArea(
         child: Column(
           children: [
-
             Container(
               height: 60,
               padding: EdgeInsets.only(left: 20, right: 20, bottom: 0, top: 10),
@@ -134,23 +133,28 @@ class WalletState extends State<Wallet> {
                       icon: Icon(Icons.more_horiz_rounded),
                       itemBuilder: (context) => [
                             PopupMenuItem(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                          padding: const EdgeInsets.only(
-                                              right: 8.0, top: 10, bottom: 10),
-                                          child: Icon(
-                                            Icons.add_circle,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          )),
-                                      Text("Top up"),
-                                    ],
-                                  ),
-                                  Divider()
-                                ],
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0,
+                                                top: 10,
+                                                bottom: 10),
+                                            child: Icon(
+                                              Icons.add_circle,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            )),
+                                        Text("Top up"),
+                                      ],
+                                    ),
+                                    Divider()
+                                  ],
+                                ),
                               ),
                               value: 1,
                             ),
@@ -243,10 +247,11 @@ class WalletState extends State<Wallet> {
                       return body;
                     } else if (mode == LoadStatus.loading) {
                       body = Container(
-                        color: Colors.red,
+                          color: Colors.red,
                           height: 100,
                           width: 100,
-                          child:Text("Load Failed!Click retry!"));// CupertinoActivityIndicator());
+                          child: Text(
+                              "Load Failed!Click retry!")); // CupertinoActivityIndicator());
                       return body;
                     } else if (mode == LoadStatus.failed) {
                       body = Text("Load Failed!Click retry!");
@@ -278,13 +283,13 @@ class WalletState extends State<Wallet> {
                       child: Column(
                         children: [
                           ListTile(
-                            onTap: (){
+                            onTap: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                      new WalletDetailSuccessPage(
-                                          docId: docList[i])));
+                                          new WalletDetailSuccessPage(
+                                              docId: docList[i])));
                             },
                             title: Column(
                               children: <Widget>[
@@ -329,7 +334,6 @@ class WalletState extends State<Wallet> {
                                                     TransactionType.Topup
                                                 ? Colors.green
                                                 : Colors.red)),
-
                                   ],
                                 ),
                                 Dash(
@@ -343,7 +347,9 @@ class WalletState extends State<Wallet> {
                                     Column(
                                       children: [
                                         Text("Top up successful",
-                                            style: TextStyle(fontSize: 13,color: Colors.green)),
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.green)),
                                       ],
                                     ),
                                     Spacer(),
