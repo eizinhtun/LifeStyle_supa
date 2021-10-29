@@ -159,7 +159,7 @@ class _MePageState extends State<MePage> {
                       ),
                     ),
                     Divider(
-                      thickness: 1,
+                      thickness: 0.5,
                       height: 1,
                     ),
                     Container(
@@ -191,7 +191,7 @@ class _MePageState extends State<MePage> {
                     ),
                     Divider(
                       height: 1,
-                      thickness: 1,
+                      thickness: 0.5,
                     ),
                     Container(
                       height: titleHeight,
@@ -216,8 +216,9 @@ class _MePageState extends State<MePage> {
                       ),
                     ),
                     Divider(
-                      thickness: 1,
+                      thickness: 0.5,
                       height: 1,
+
                     ),
                     Container(
                       height: titleHeight,
@@ -242,7 +243,7 @@ class _MePageState extends State<MePage> {
                       ),
                     ),
                     Divider(
-                      thickness: 1,
+                      thickness: 0.5,
                       height: 1,
                     ),
                     Container(
@@ -263,7 +264,7 @@ class _MePageState extends State<MePage> {
                       ),
                     ),
                     Divider(
-                      thickness: 1,
+                      thickness: 0.5,
                       height: 1,
                     ),
                     Container(
@@ -289,7 +290,7 @@ class _MePageState extends State<MePage> {
                       ),
                     ),
                     Divider(
-                      thickness: 1,
+                      thickness: 0.5,
                       height: 1,
                     ),
                     Container(
@@ -312,7 +313,7 @@ class _MePageState extends State<MePage> {
                       ),
                     ),
                     Divider(
-                      thickness: 1,
+                      thickness: 0.5,
                       height: 1,
                     ),
                     SizedBox(

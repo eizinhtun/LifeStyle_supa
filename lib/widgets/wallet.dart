@@ -90,193 +90,257 @@ class WalletState extends State<Wallet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.fromLTRB(10, 40, 10, 20),
-            color: Colors.transparent,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          // primary: Colors.white,
-                          padding: EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                        top: 10,
-                        bottom: 10,
-                      ) // foreground
-                          ),
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (contex) => TopUpPage()));
-                      },
-                      child: Row(
-                        children: [
-                          Icon(Icons.cached),
-                          SizedBox(width: 5),
-                          Text("Top Up"),
-                        ],
-                      )),
-                ),
-                SizedBox(width: 5),
-                Expanded(
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                        top: 10,
-                        bottom: 10,
-                      ) // foreground
-                          ),
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (contex) => WithdrawalPage()));
-                      },
-                      child: Row(
-                        children: [
-                          Icon(Icons.payments),
-                          SizedBox(width: 5),
-                          Text("Withdrawal"),
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.65,
-            child: SmartRefresher(
-              enablePullDown: true,
-              enablePullUp: true,
-              header: WaterDropHeader(),
-              footer: CustomFooter(
-                builder: (BuildContext context, LoadStatus mode) {
-                  Widget body;
-                  if (mode == LoadStatus.idle) {
-                    body = Text("pull up load");
-                  } else if (mode == LoadStatus.loading) {
-                    body = CupertinoActivityIndicator();
-                  } else if (mode == LoadStatus.failed) {
-                    body = Text("Load Failed!Click retry!");
-                  } else if (mode == LoadStatus.canLoading) {
-                    body = Text("release to load more");
-                  } else {
-                    body = Text("No more Data");
-                  }
-                  if (tracList.length == end) {
-                    body = Text("No more Data");
-                  }
-                  return Container(
-                    height: 55.0,
-                    child: Center(child: body),
-                  );
-                },
-              ),
-              controller: _refreshController,
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (c, i) => Card(
-                  child: Center(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: Column(
-                            children: <Widget>[
+      body: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              height: 60,
+              padding: EdgeInsets.only(left: 20,right: 20,bottom: 0,top: 10),
+              alignment: Alignment.bottomCenter,
+              color: Colors.transparent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton.icon(onPressed: (){}, icon: Icon(Icons.account_balance_wallet,color: Colors.black38,size: 35,), label:
+                  Row(
+                    children: [
+                      Text(
+                        "${Formatter.balanceFormat(1098765)} Ks",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,color: Colors.black),
+                      ),
+                      InkWell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.remove_red_eye_rounded,size: 15,),
+                        ),
+
+
+                      ),
+                    ],
+                  )),
+                  PopupMenuButton(
+                    icon: Icon(Icons.more_horiz_rounded),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Column(
+                            children: [
                               Row(
                                 children: [
-                                  tracList[i].type == TransactionType.Topup
-                                      ? Image.asset(
-                                          "assets/payment/topup.png",
-                                          width: 50,
-                                          height: 50,
-                                        )
-                                      : Image.asset(
-                                          "assets/payment/withdraw.png",
-                                          width: 50,
-                                          height: 50,
-                                        ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        tracList[i].type ==
-                                                TransactionType.Topup
-                                            ? "Top Up"
-                                            : "Withdraw",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                          Formatter.dateTimeFormat(
-                                              tracList[i].createdDate),
-                                          style: TextStyle(fontSize: 12)),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  Text(tracList[i].amount.toString(),
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: tracList[i].type ==
-                                                  TransactionType.Topup
-                                              ? Colors.green
-                                              : Colors.red)),
-                                  IconButton(
-                                      onPressed: () {
-                                        print(docList[i]);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    new WalletDetailSuccessPage(
-                                                        docId: docList[i])));
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        size: 18,
-                                      ))
+                                  Container(
+                                      padding: const EdgeInsets.only(right: 8.0,top: 10,bottom: 10),
+                                      child: Icon(Icons.add_circle,color: Theme.of(context).primaryColor,)),
+                                  Text("Top up"),
                                 ],
                               ),
-                              Dash(
-                                direction: Axis.horizontal,
-                                length: MediaQuery.of(context).size.width * 0.7,
-                                dashLength: 2,
-                              ),
+                              Divider()
+                            ],
+
+                          ),
+                          value: 1,
+                        ),
+                        PopupMenuItem(
+                          child: Column(
+                            children: [
                               Row(
                                 children: [
-                                  Column(
-                                    children: [
-                                      Text("Top up successful",
-                                          style: TextStyle(fontSize: 13)),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  Image.asset("assets/payment/success.png",
-                                      width: 20, height: 20)
+                                  Container(  padding: const EdgeInsets.only(right: 8.0,top: 10,bottom: 10),
+                                      child: Icon(Icons.remove_circle,color: Colors.grey.withOpacity(0.5),)),
+                                  Text("Withdraw"),
                                 ],
                               ),
+                              Divider()
                             ],
                           ),
-                        ),
-                      ],
-                    ),
+                          value: 2,
+                        )
+                      ]
+                  )
+
+                 /* Expanded(
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            // primary: Colors.white,
+                            padding: EdgeInsets.only(
+                          left: 15,
+                          right: 15,
+                          top: 10,
+                          bottom: 10,
+                        ) // foreground
+                            ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (contex) => TopUpPage()));
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.cached),
+                            SizedBox(width: 5),
+                            Text("Top Up"),
+                          ],
+                        )),
                   ),
-                ),
-                itemExtent: 100.0,
-                itemCount: tracList.length,
+                  SizedBox(width: 5),
+                  Expanded(
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.only(
+                          left: 15,
+                          right: 15,
+                          top: 10,
+                          bottom: 10,
+                        ) // foreground
+                            ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (contex) => WithdrawalPage()));
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.payments),
+                            SizedBox(width: 5),
+                            Text("Withdrawal"),
+                          ],
+                        )),
+                  ),*/
+                ],
               ),
             ),
-          ),
-        ],
+            Divider(
+              //length: MediaQuery.of(context).size.width,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.65,
+              child: SmartRefresher(
+                enablePullDown: true,
+                enablePullUp: true,
+                header: WaterDropHeader(),
+                footer: CustomFooter(
+                  builder: (BuildContext context, LoadStatus mode) {
+                    Widget body;
+                    if (mode == LoadStatus.idle) {
+                      body = Text("pull up load");
+                    } else if (mode == LoadStatus.loading) {
+                      body = CupertinoActivityIndicator();
+                    } else if (mode == LoadStatus.failed) {
+                      body = Text("Load Failed!Click retry!");
+                    } else if (mode == LoadStatus.canLoading) {
+                      body = Text("release to load more");
+                    } else {
+                      body = Text("No more Data");
+                    }
+                    if (tracList.length == end) {
+                      body = Text("No more Data");
+                    }
+                    return Container(
+                      height: 55.0,
+                      child: Center(child: body),
+                    );
+                  },
+                ),
+                controller: _refreshController,
+                onRefresh: _onRefresh,
+                onLoading: _onLoading,
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (c, i) => Card(
+                    child: Center(
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Column(
+                              children: <Widget>[
+                                Row(
+                                  children: [
+                                    tracList[i].type == TransactionType.Topup
+                                        ? Image.asset(
+                                            "assets/payment/topup.png",
+                                            width: 50,
+                                            height: 50,
+                                          )
+                                        : Image.asset(
+                                            "assets/payment/withdraw.png",
+                                            width: 50,
+                                            height: 50,
+                                          ),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          tracList[i].type ==
+                                                  TransactionType.Topup
+                                              ? "Top Up"
+                                              : "Withdraw",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                            Formatter.dateTimeFormat(
+                                                tracList[i].createdDate),
+                                            style: TextStyle(fontSize: 12)),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    Text(tracList[i].amount.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: tracList[i].type ==
+                                                    TransactionType.Topup
+                                                ? Colors.green
+                                                : Colors.red)),
+                                    IconButton(
+                                        onPressed: () {
+                                          print(docList[i]);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      new WalletDetailSuccessPage(
+                                                          docId: docList[i])));
+                                        },
+                                        icon: Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          size: 18,
+                                        ))
+                                  ],
+                                ),
+                                Dash(
+                                  direction: Axis.horizontal,
+                                  length: MediaQuery.of(context).size.width * 0.7,
+                                  dashLength: 2,
+                                ),
+                                Row(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text("Top up successful",
+                                            style: TextStyle(fontSize: 13)),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    Image.asset("assets/payment/success.png",
+                                        width: 20, height: 20)
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  itemExtent: 100.0,
+                  itemCount: tracList.length,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
