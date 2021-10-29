@@ -90,6 +90,7 @@ class WalletState extends State<Wallet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
       body: SafeArea(
         child: Column(
           children: [
@@ -126,6 +127,108 @@ class WalletState extends State<Wallet> {
                         PopupMenuItem(
                           child: Column(
                             children: [
+=======
+      body: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 40, 10, 20),
+            color: Colors.transparent,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          // primary: Colors.white,
+                          padding: EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        top: 10,
+                        bottom: 10,
+                      ) // foreground
+                          ),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (contex) => TopUpPage()));
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.cached),
+                          SizedBox(width: 5),
+                          Text("Top Up"),
+                        ],
+                      )),
+                ),
+                SizedBox(width: 5),
+                Expanded(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        top: 10,
+                        bottom: 10,
+                      ) // foreground
+                          ),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => WithdrawalPage()));
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.payments),
+                          SizedBox(width: 5),
+                          Text("Withdrawal"),
+                        ],
+                      )),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.65,
+            child: SmartRefresher(
+              enablePullDown: true,
+              enablePullUp: true,
+              header: WaterDropHeader(),
+              footer: CustomFooter(
+                builder: (BuildContext context, LoadStatus mode) {
+                  Widget body;
+                  if (mode == LoadStatus.idle) {
+                    body = Text("pull up load");
+                  } else if (mode == LoadStatus.loading) {
+                    body = CupertinoActivityIndicator();
+                  } else if (mode == LoadStatus.failed) {
+                    body = Text("Load Failed!Click retry!");
+                  } else if (mode == LoadStatus.canLoading) {
+                    body = Text("release to load more");
+                  } else {
+                    body = Text("No more Data");
+                  }
+                  if (tracList.length == end) {
+                    body = Text("No more Data");
+                  }
+                  return Container(
+                    height: 55.0,
+                    child: Center(child: body),
+                  );
+                },
+              ),
+              controller: _refreshController,
+              onRefresh: _onRefresh,
+              onLoading: _onLoading,
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (c, i) => Card(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Column(
+                            children: <Widget>[
+>>>>>>> 0e71294675106d725d6f5a0d2bea35e8a12603b6
                               Row(
                                 children: [
                                   Container(
