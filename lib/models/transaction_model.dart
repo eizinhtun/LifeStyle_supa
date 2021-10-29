@@ -10,12 +10,14 @@ class TransactionModel {
   int amount;
   Timestamp createdDate;
   String imageUrl;
+  String status;
   String transactionId;
 
 
   TransactionModel({
     this.uid,
     this.type,
+    this.status,
     this.paymentType,
     this.amount,
     this.createdDate,
@@ -30,6 +32,7 @@ class TransactionModel {
     paymentType = json['paymentType'];
     amount = json['amount'];
     createdDate =json['createdDate'];// Timestamp.fromDate();
+    status =json['status']??"verifying";
    // DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
 
         //DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
@@ -47,6 +50,7 @@ class TransactionModel {
     data['createdDate'] = this.createdDate;
    data['imageUrl'] = this.imageUrl;
    data['transactionId'] = this.transactionId;
+   data['status']=this.status;
     return data;
   }
 

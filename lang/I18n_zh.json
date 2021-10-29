@@ -1,4 +1,8 @@
 {
+  "verifying": "verfying ...",
+  "approved": "Top up successful",
+  "rejected": "Your topup is rejected",
+
   "phone":"Phone number",
   "password":"Password",
   "login":"Login with Phone",

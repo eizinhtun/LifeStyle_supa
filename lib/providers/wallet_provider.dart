@@ -22,7 +22,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var balance;
   String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
-  Future<void> topup(BuildContext context, String paymentType, double amount,
+  Future<bool> topup(BuildContext context, String paymentType, double amount,
       String transactionId, imageFile) async {
     print(imageFile);
     if (FirebaseAuth.instance.currentUser?.uid != null) {
@@ -37,7 +37,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String downloadUrl = await (await uploadTask).ref.getDownloadURL();
       if (downloadUrl != null) {
         userRef.doc(uid).get().then((value) {
-          double balance = value.data()["balance"];
+          double balance = value.data()["balance"]??0;
           print(balance);
           if (balance != null) {
             print(balance + amount);
@@ -45,12 +45,12 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
               value.reference.update({"balance": balance + amount}).then((_) {
                 print("topup success!");
               });
-              MessageHandler.showMessage(
-                  context, "Success", "Your topup is successful");
+
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
                   type: TransactionType.Topup,
                   amount: amount.toInt(),
+                  status: "verifying",
                   paymentType: paymentType,
                   imageUrl: downloadUrl,
                   transactionId: transactionId,
@@ -63,10 +63,14 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 print("Failed to add topup transaction: $error");
               });
               notifyListeners();
+              MessageHandler.showMessage(
+                  context, "Success", "Your topup is successful");
+              return true;
             } catch (e) {
               print("Failed to topup: $e");
               MessageHandler.showErrMessage(
                   context, "Fail", "Your topup is fail");
+              return false;
             }
           } else {
             MessageHandler.showErrMessage(context, "Fail", "Balance Type null");
@@ -76,6 +80,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
         });
       }
       notifyListeners();
+
     }
   }
 

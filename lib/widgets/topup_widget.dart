@@ -31,6 +31,7 @@ class _TopUpPageState extends State<TopUpPage> {
   String status = '';
   String base64Image;
   XFile tmpFile;
+  bool _submiting=false;
 
   PaymentMethod _paymentMethod;
   FocusNode transferAmountFoucusNode;
@@ -179,7 +180,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                       bottom: 10,
                                     ) // foreground
                                 ),
-                                onPressed: () async {
+                                onPressed:_submiting?null: () async {
                                   if (file == null) {
                                     myMsg.MessageHandler.showErrMessage(
                                         context,
@@ -188,11 +189,23 @@ class _TopUpPageState extends State<TopUpPage> {
                                     return;
                                   }
                                   if (_topupformKey.currentState.validate()) {
-                                    print("Validate");
-                                    await context.read<WalletProvider>().topup(
+                                  setState(() {
+                                    _submiting=true;
+                                    if(file!=null){
+                                      _isuploadingPicture=true;
+                                    }
+                                  });
+                                  var result=  await context.read<WalletProvider>().topup(
                                         context,
                                         _paymentMethod.id,
                                         double.parse(_transferAmountController.text),_transactionIdController.text, file);
+                                  if(result){
+                                    Navigator.of(context).pop(true);
+                                  }
+                                  setState(() {
+                                    _submiting=false;
+                                    _isuploadingPicture=false;
+                                  });
 
                                   }
                                 },
@@ -249,7 +262,7 @@ class _TopUpPageState extends State<TopUpPage> {
               top: 5,
               right: 5,
               child: IconButton(
-                  onPressed: chooseImage,
+                  onPressed:_submiting?null: chooseImage,
                   icon: Icon(
                     Icons.photo,
                     color: Colors.red,

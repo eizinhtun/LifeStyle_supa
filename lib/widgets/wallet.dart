@@ -31,12 +31,12 @@ class WalletState extends State<Wallet> {
   //List<TransactionModel> tracList = [];
 
   int showlist = 5;
-
+bool _isLoading=true;
 
   @override
   void initState() {
     super.initState();
-    _refreshController= RefreshController(initialRefresh: true);
+    _refreshController= RefreshController(initialRefresh: false);
     _onRefresh();
   }
 
@@ -53,7 +53,7 @@ class WalletState extends State<Wallet> {
         tracList.add(TransactionModel.fromJson(result.data(),doc: result.id));
       });
       setState(() {
-
+        _isLoading=false;
       });
 
     } on SocketException {
@@ -164,8 +164,12 @@ class WalletState extends State<Wallet> {
                         PopupMenuButton(
                             onSelected: (val){
                               if(val==1){
-                                Navigator.of(context).push(MaterialPageRoute(
+                              var result=  Navigator.of(context).push(MaterialPageRoute(
                                     builder: (contex) => TopUpPage()));
+                              if(result!=null && result==true){
+                                _isLoading=true;
+                                _onRefresh();
+                              }
                               }
                               if(val==2){
                                 Navigator.of(context).push(MaterialPageRoute(
@@ -319,7 +323,7 @@ class WalletState extends State<Wallet> {
 
 
 
-                  child: ListView.builder(
+                  child:_isLoading?Center(child:CupertinoActivityIndicator() ,): ListView.builder(
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (c, i) => Card(
@@ -393,13 +397,15 @@ class WalletState extends State<Wallet> {
                                     children: [
                                       Column(
                                         children: [
-                                          Text("Top up successful",
-                                              style: TextStyle(fontSize: 13,color: Colors.green)),
+                                          Text("${Tran.of(context)?.text(tracList[i].status)}",
+                                              style: TextStyle(fontSize: 13,color:tracList[i].status.trim().toLowerCase()=="approved"? Colors.green:Colors.red))
+
+                                          ,
                                         ],
                                       ),
                                       Spacer(),
-                                      Image.asset("assets/payment/success.png",
-                                          width: 20, height: 20)
+                                      tracList[i].status.trim().toLowerCase()=="approved"? Image.asset("assets/payment/success.png",
+                                          width: 20, height: 20):Text("")
                                     ],
                                   ),
                                 ],
