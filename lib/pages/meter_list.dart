@@ -49,12 +49,8 @@ class MeterListPageState extends State<MeterListPage>
     return new Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        elevation: 0.0,
-        title: Center(
-          child: Container(
-              margin: EdgeInsets.only(right: 40),
-              child: Text(Tran.of(context).text("my_meters").toString())),
-        ),
+        centerTitle: true,
+        title: Text(Tran.of(context).text("my_meters").toString()),
         /*flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(

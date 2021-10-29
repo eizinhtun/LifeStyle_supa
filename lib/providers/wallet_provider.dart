@@ -49,7 +49,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
                   type: TransactionType.Topup,
-                  amount: amount,
+                  amount: amount.toInt(),
                   paymentType: paymentType,
                   imageUrl: downloadUrl,
                   transactionId: transactionId,
@@ -246,7 +246,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 uid: uid,
                 type: TransactionType.meterbill,
                 // paymentType: ,
-                amount: bill.totalCost.toDouble(),
+                amount: bill.totalCost,
                 createdDate: DateTime.now());
 
             tracRef

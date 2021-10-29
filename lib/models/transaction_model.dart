@@ -4,21 +4,19 @@ class TransactionModel {
   String uid;
   String type;
   String paymentType;
-  double amount;
+  int amount;
   DateTime createdDate;
   String imageUrl;
   int transactionId;
 
-
-  TransactionModel({
-    this.uid,
-    this.type,
-    this.paymentType,
-    this.amount,
-    this.createdDate,
-    this.imageUrl,
-    this.transactionId
-  });
+  TransactionModel(
+      {this.uid,
+      this.type,
+      this.paymentType,
+      this.amount,
+      this.createdDate,
+      this.imageUrl,
+      this.transactionId});
 
   TransactionModel.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
@@ -27,9 +25,8 @@ class TransactionModel {
     amount = json['amount'];
     createdDate =
         DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
-    imageUrl= json['imageUrl'];
-    transactionId= json['transactionId'];
-
+    imageUrl = json['imageUrl'];
+    transactionId = json['transactionId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -39,8 +36,8 @@ class TransactionModel {
     data['paymentType'] = this.paymentType;
     data['amount'] = this.amount;
     data['createdDate'] = this.createdDate.microsecondsSinceEpoch.toString();
-   data['imageUrl'] = this.imageUrl;
-   data['transactionId'] = this.transactionId;
+    data['imageUrl'] = this.imageUrl;
+    data['transactionId'] = this.transactionId;
     return data;
   }
 

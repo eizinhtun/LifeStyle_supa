@@ -75,7 +75,8 @@ class UserInfoScreenPhoto extends StatelessWidget {
                       width: width,
                       height: height,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        // color: Theme.of(context).primaryColor,
+                        color: Colors.pink[200],
                         border: Border.all(color: Colors.white, width: 3.0),
                         borderRadius:
                             BorderRadius.all(const Radius.circular(100.0)),
