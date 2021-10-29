@@ -7,11 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/meter_bill.dart';
-import 'package:left_style/models/my_read_unit.dart';
 import 'package:left_style/pages/my_meterBill_detail.dart';
 import 'package:left_style/utils/formatter.dart';
-import 'package:left_style/utils/message_handler.dart';
-import 'package:flutter_dash/flutter_dash.dart';
 
 class MyMeterBillList extends StatelessWidget {
   @override
@@ -35,10 +32,8 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final db = FirebaseFirestore.instance;
 
-  List<String> customerIds =
-      // [];
-      ["7324392739"];
-  // //"7324392739"
+  List<String> customerIds = ["7324392739"];
+
   bool _isLoading = true;
 
   @override
@@ -77,11 +72,8 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
-        title: Center(
-          child: Container(
-              margin: EdgeInsets.only(right: 40),
-              child: Text(Tran.of(context).text("my_meter_bills").toString())),
-        ),
+        centerTitle: true,
+        title: Text(Tran.of(context).text("my_meter_bills").toString()),
         /*flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -113,11 +105,9 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                         EdgeInsets.only(top: 8, bottom: 8, left: 8, right: 8),
                     child: ListView(
                       children: snapshot.data.docs.map((doc) {
-                        print(doc.data());
-                        // isPaid = doc.get("isPaid");
                         MeterBill bill = MeterBill.fromJson(doc.data());
-                       // MyReadUnit item = MyReadUnit.fromJson(doc.data());
-                       // print(item);
+                        // MyReadUnit item = MyReadUnit.fromJson(doc.data());
+                        print(bill.readImageUrl);
                         return InkWell(
                           onTap: () async {
                             Navigator.push(
@@ -139,104 +129,9 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                               children: [
                                 Column(
                                   children: [
-                                    // ListTile(
-                                    //   contentPadding: EdgeInsets.only(
-                                    //       top: 5.0,
-                                    //       left: 0.0,
-                                    //       right: 0.0,
-                                    //       bottom: 0.0),
-                                    //   leading: Container(
-                                    //     padding: EdgeInsets.only(left: 10),
-                                    //     alignment: Alignment.center,
-                                    //     decoration: BoxDecoration(
-                                    //       shape: BoxShape.circle,
-                                    //       border: Border.all(
-                                    //         color: Colors.white,
-                                    //       ),
-                                    //     ),
-                                    //     width: 60,
-                                    //     height: 60,
-                                    //     child: new CircleAvatar(
-                                    //       radius: 100.0,
-                                    //       // backgroundColor:MyTheme.getPrimaryColor(),
-                                    //       //backgroundImage: MeScreenState.fileAvatar!=null?
-                                    //       // FileImage(fileAvatar):
-                                    //       backgroundImage:
-                                    //           NetworkImage(item.readImageUrl),
-                                    //     ),
-                                    //   ),
-                                    //   title: Container(
-                                    //       alignment: Alignment.centerLeft,
-                                    //       child: Text(
-                                    //         item.meterNo + " ," + item.customerId,
-                                    //         style: TextStyle(
-                                    //             fontSize: 14,
-                                    //             fontWeight: FontWeight.bold),
-                                    //       )),
-                                    //   subtitle: Column(
-                                    //     mainAxisAlignment: MainAxisAlignment.start,
-                                    //     crossAxisAlignment:
-                                    //         CrossAxisAlignment.start,
-                                    //     children: [
-                                    //       Container(
-                                    //         padding: EdgeInsets.only(top: 5),
-                                    //         child: Text(
-                                    //           getDate(item.readDate.toDate()),
-                                    //         ),
-                                    //       ),
-                                    //       Text(
-                                    //         "${item.consumerName} - ${item.mobile}",
-                                    //         style: TextStyle(
-                                    //             color: Colors.black,
-                                    //             fontWeight: FontWeight.w600),
-                                    //       ),
-                                    //       // Visibility(
-                                    //       //     visible: item.remark !=
-                                    //       //             null &&
-                                    //       //         item.remark.length >
-                                    //       //             0,
-                                    //       //     child: Container(
-                                    //       //       padding:
-                                    //       //           EdgeInsets.only(top: 5),
-                                    //       //       child: Text(item
-                                    //       //           .remark
-                                    //       //           .toString()),
-                                    //       //     )),
-                                    //     ],
-                                    //   ),
-                                    //   trailing: Container(
-                                    //       padding: EdgeInsets.only(right: 20),
-                                    //       child: Column(
-                                    //         mainAxisAlignment:
-                                    //             MainAxisAlignment.center,
-                                    //         children: [
-                                    //           Wrap(
-                                    //             children: [
-                                    //               Text(
-                                    //                 "${NumberFormat('#,###,000').format(item.readUnit)}",
-                                    //                 style: TextStyle(
-                                    //                     color: Colors.black,
-                                    //                     fontWeight:
-                                    //                         FontWeight.w600),
-                                    //               ),
-                                    //               Padding(
-                                    //                 padding:
-                                    //                     EdgeInsets.only(left: 10.0),
-                                    //                 child: Icon(
-                                    //                   Icons.arrow_forward_ios,
-                                    //                   size: 16,
-                                    //                   color: Colors.black,
-                                    //                 ),
-                                    //               )
-                                    //             ],
-                                    //           ),
-                                    //         ],
-                                    //       )),
-                                    //   dense: true,
-                                    // ),
-
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         Container(
                                           padding: EdgeInsets.only(left: 10),
@@ -251,9 +146,6 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                           height: 60,
                                           child: new CircleAvatar(
                                             radius: 100.0,
-                                            // backgroundColor:MyTheme.getPrimaryColor(),
-                                            //backgroundImage: MeScreenState.fileAvatar!=null?
-                                            // FileImage(fileAvatar):
                                             backgroundImage:
                                                 NetworkImage(bill.readImageUrl),
                                           ),
@@ -262,34 +154,45 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                           width: 20,
                                         ),
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Container(
                                               padding: EdgeInsets.only(top: 10),
                                               alignment: Alignment.topLeft,
-                                              child: Text("No:"+
-                                                bill.billNo +
+                                              child: Text(
+                                                "No:" +
+                                                    bill.billNo +
                                                     " ," +
                                                     bill.meterNo,
                                                 style: TextStyle(
                                                     fontSize: 14,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ),
                                             Container(
                                               alignment: Alignment.bottomLeft,
                                               child: Container(
-                                                padding: EdgeInsets.only(top: 5),
+                                                padding:
+                                                    EdgeInsets.only(top: 5),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
                                                   children: [
                                                     Text(
-                                                        bill.monthName+"  "
-                                                      ,style: TextStyle(fontWeight: FontWeight.bold),
+                                                      bill.monthName + "  ",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    Text(
-                                                            bill.unitsToPay.toString() +
-                                                            " Unit  "+bill.totalCost.toString()+" Ks"
+                                                    Text(bill.unitsToPay
+                                                                .toString() +
+                                                            " Unit  " +
+                                                            bill.totalCost
+                                                                .toString() +
+                                                            " Ks"
                                                         // bill.readUnit
                                                         // NumberFormat('#,###,000').format(item.readUnit)
                                                         ),
@@ -299,42 +202,17 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                             ),
                                             Container(
                                               padding: EdgeInsets.only(top: 5),
-                                              child: Text(bill.consumerName+" - "+bill.state
-                                                // bill.readUnit
-                                                // NumberFormat('#,###,000').format(item.readUnit)
-                                              ),
+                                              child: Text(bill.consumerName +
+                                                      " - " +
+                                                      bill.state
+                                                  // bill.readUnit
+                                                  // NumberFormat('#,###,000').format(item.readUnit)
+                                                  ),
                                             ),
                                           ],
                                         ),
-                                        // Container(
-                                        //     padding: EdgeInsets.only(right: 20),
-                                        //     child: Column(
-                                        //       mainAxisAlignment:
-                                        //           MainAxisAlignment.center,
-                                        //       children: [
-                                        //         Wrap(
-                                        //           children: [
-                                        //             Text(
-                                        //               "${NumberFormat('#,###,000').format(item.readUnit)}",
-                                        //               style: TextStyle(
-                                        //                   color: Colors.black,
-                                        //                   fontWeight:
-                                        //                       FontWeight.w600),
-                                        //             ),
-                                        //           ],
-                                        //         ),
-                                        //       ],
-                                        //     )),
                                       ],
                                     ),
-/*
-                                    Dash(
-                                      direction: Axis.horizontal,
-                                      length:
-                                          MediaQuery.of(context).size.width * 0.85,
-                                      dashLength: 2,
-                                      /////// dashColor: sysData.mainColor
-                                    ),*/
                                     Container(
                                         alignment: Alignment.centerLeft,
                                         padding: EdgeInsets.only(
@@ -343,37 +221,58 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                             bottom: 10,
                                             right: 20),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
                                           children: [
                                             Container(
                                               padding: EdgeInsets.only(
                                                   top: 5, bottom: 5),
                                               alignment: Alignment.centerRight,
-                                              child:bill.isPaid?Row(
-                                                children: [
-                                                  Icon(Icons.check_circle,color: Colors.green.withOpacity(0.8),),
-                                                  Text(" paid",style: TextStyle(fontStyle: FontStyle.italic,color: Colors.green),)
-                                                ],
-                                              ): Text(
-                                                "Due date " +bill.dueDate,
-                                                style: TextStyle(
-                                                    fontStyle: FontStyle.italic,
-                                                    color: Colors.black26,
-                                                    fontSize: 12),
-                                              ),
+                                              child: bill.isPaid
+                                                  ? Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.check_circle,
+                                                          color: Colors.green
+                                                              .withOpacity(0.8),
+                                                        ),
+                                                        Text(
+                                                          " paid",
+                                                          style: TextStyle(
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic,
+                                                              color:
+                                                                  Colors.green),
+                                                        )
+                                                      ],
+                                                    )
+                                                  : Text(
+                                                      "Due date " +
+                                                          bill.dueDate,
+                                                      style: TextStyle(
+                                                          fontStyle:
+                                                              FontStyle.italic,
+                                                          color: Colors.black26,
+                                                          fontSize: 12),
+                                                    ),
                                             ),
                                             Container(
                                               padding: EdgeInsets.only(
                                                   top: 5, bottom: 5),
                                               alignment: Alignment.centerRight,
-                                              child: Text(bill.isPaid?bill.payDate:
-                                                Formatter.getDate(new DateTime.fromMillisecondsSinceEpoch(bill.readDate.millisecondsSinceEpoch)
-                                                  ),
+                                              child: Text(
+                                                bill.isPaid
+                                                    ? bill.payDate
+                                                    : Formatter.getDate(new DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                        bill.readDate
+                                                            .millisecondsSinceEpoch)),
                                                 textAlign: TextAlign.right,
                                                 style: TextStyle(
-
-                                                  fontStyle: FontStyle.italic,
+                                                    fontStyle: FontStyle.italic,
                                                     color: Colors.black26,
                                                     fontSize: 12),
                                               ),
@@ -383,10 +282,15 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                   ],
                                 ),
                                 Visibility(
-                                  visible: !bill.isPaid&&bill.status.toLowerCase()=="paid",
+                                  visible: !bill.isPaid &&
+                                      bill.status.toLowerCase() == "paid",
                                   child: Positioned(
-                                      top: 10,right: 10,
-                                      child: Icon(Icons.error,color: Colors.red,)),
+                                      top: 10,
+                                      right: 10,
+                                      child: Icon(
+                                        Icons.error,
+                                        color: Colors.red,
+                                      )),
                                 )
                               ],
                             ),
@@ -405,17 +309,5 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
     var dateFormat =
         DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
     return dateFormat.format(date);
-  }
-
-  @override
-  void showError(String text) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-        backgroundColor: Colors.red,
-        content: new Text(Tran.of(context).text(text))));
-  }
-
-  @override
-  void showMessage(String text) {
-    MessageHandler.showMessage(context, "", text);
   }
 }

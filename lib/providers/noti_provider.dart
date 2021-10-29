@@ -18,8 +18,6 @@ class NotiProvider with ChangeNotifier, DiagnosticableTreeMixin {
     List<NotiModel> list = [];
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid;
-
-      // await notiRef.where("uid", isEqualTo: uid).get()
       await notiRef.doc(uid).collection(notilist).get().then((value) {
         value.docs.forEach((result) {
           print(result.data());
@@ -100,7 +98,7 @@ class NotiProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  Future<int> notiCount(BuildContext context, int count) async {
+  int updateNotiCount(BuildContext context, int count) {
     SystemData.notiCount = count;
     notifyListeners();
     return count;

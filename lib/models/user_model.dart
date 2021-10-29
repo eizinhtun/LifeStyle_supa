@@ -11,6 +11,7 @@ class UserModel {
   bool isActive;
   DateTime createdDate;
   String address;
+  bool showBalance;
 
   UserModel({
     this.fullName,
@@ -24,6 +25,7 @@ class UserModel {
     this.isActive,
     this.createdDate,
     this.address,
+    this.showBalance,
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -39,6 +41,7 @@ class UserModel {
     // createdDate =
     //     DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
     address = json['address'];
+    showBalance= json['showBalance'];
     //  DateTime.parse(json['createdDate']);
   }
 
@@ -55,6 +58,7 @@ class UserModel {
     data['isActive'] = this.isActive;
     // data['createdDate'] = this.createdDate.toString();
     data['address'] = this.address;
+    data['showBalance'] = this.showBalance;
     return data;
   }
 }

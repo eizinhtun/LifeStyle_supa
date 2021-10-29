@@ -29,11 +29,8 @@ class _AdsDetailPage extends State<AdsDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Container(
-              margin: EdgeInsets.only(right: 40),
-              child: Text(Tran.of(context).text("helloword").toString())),
-        ),
+        title: Text(Tran.of(context).text("helloword").toString()),
+        centerTitle: true,
         flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(

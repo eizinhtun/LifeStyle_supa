@@ -2,13 +2,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/language_page.dart';
-import 'package:left_style/pages/setting_page.dart';
+import 'package:left_style/pages/setting.dart';
 import 'package:left_style/pages/user_profile_page.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
+import 'change_password.dart';
+import 'help.dart';
 import 'login.dart';
 import 'meter_list.dart';
 import 'notification_list.dart';
@@ -198,12 +201,78 @@ class _MePageState extends State<MePage> {
                       child: ListTile(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => NotificationListPage()));
+                              builder: (context) => ChangePasswordPage()));
                         },
                         leading: Icon(
-                          Icons.notifications,
+                          Icons.password,
                           color: mainColor,
                         ),
+                        title: Text(
+                          "Change Password",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                          color: Colors.black26,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 1,
+                      height: 1,
+                    ),
+                    Container(
+                      height: titleHeight,
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => NotificationListPage()));
+                        },
+                        leading: Container(
+                          width: 50,
+                          child: Stack(
+                            children: [
+                              Icon(
+                                Icons.notifications,
+                                color: mainColor,
+                              ),
+                              (SystemData.notiCount != null &&
+                                      SystemData.notiCount > 0)
+                                  ? Positioned(
+                                      top: 0,
+                                      left: 15,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          // shape: BoxShape.circle,
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: Colors.pink[100],
+                                        ),
+                                        child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: Text(
+                                              getNotiCount(
+                                                  SystemData.notiCount),
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      // child: Text("2"),
+                                    )
+                                  : Text(""),
+                            ],
+                          ),
+                        ),
+                        // leading: Icon(
+                        //   Icons.notifications,
+                        //   color: mainColor,
+                        // ),
                         title: Text(
                           "Notifications",
                           style: TextStyle(fontWeight: FontWeight.bold),
@@ -296,7 +365,10 @@ class _MePageState extends State<MePage> {
                     Container(
                       height: titleHeight,
                       child: ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => HelpPage()));
+                        },
                         leading: Icon(
                           Icons.help,
                           color: mainColor,
@@ -387,6 +459,15 @@ class _MePageState extends State<MePage> {
         ),
       ),
     );
+  }
+
+  String getNotiCount(int count) {
+    if (count > 99)
+      return "99+";
+    else if (count == null || count == "")
+      return "";
+    else
+      return count.toString();
   }
 
   showLogoutConfirmDialog(BuildContext context) {

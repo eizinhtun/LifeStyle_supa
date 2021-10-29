@@ -36,9 +36,9 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
 
   @override
   void initState() {
-
     super.initState();
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -50,74 +50,69 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
-        title: Center(
-          child: Container(
-              margin: EdgeInsets.only(right: 40),
-              child: Text("Select Payment")),
-        ),
-
+        centerTitle: true,
+        title: Text("Select Payment"),
       ),
-      body:  StreamBuilder<QuerySnapshot>(
-              stream: db
-                  .collection(paymentMethodCollection).snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else
-                  return ListView(
-                    children: snapshot.data.docs.map((doc) {
-                      PaymentMethod item = PaymentMethod.fromJson(doc.data());
-                      return Card(
-                        margin: EdgeInsets.only(
-                            top: 0, left: 5, right: 5, bottom: 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                        elevation: 1,
-                        child: Column(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: db.collection(paymentMethodCollection).snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else
+            return ListView(
+              children: snapshot.data.docs.map((doc) {
+                PaymentMethod item = PaymentMethod.fromJson(doc.data());
+                return Card(
+                  margin: EdgeInsets.only(top: 0, left: 5, right: 5, bottom: 1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  elevation: 1,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        onTap: () async {
+                          Navigator.of(context).pop(item);
+                        },
+                        contentPadding: EdgeInsets.only(
+                            top: 10.0, left: 0.0, right: 0.0, bottom: 10.0),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            ListTile(
-                              onTap: () async {
-                              Navigator.of(context).pop(item);
-                              },
-                              contentPadding: EdgeInsets.only(
-                                  top: 10.0, left: 0.0, right: 0.0, bottom: 10.0),
-                              title: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(left: 20),
-                                    alignment: Alignment.center,
-                                    width: 60,
-                                    height: 60,
-                                    child: new CircleAvatar(
-                                      radius: 100.0,
-                                      backgroundImage:
-                                      NetworkImage(item.logoUrl,),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(left: 20),
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        item.name,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w900),
-                                      )),
-                                ],
+                            Container(
+                              margin: EdgeInsets.only(left: 20),
+                              alignment: Alignment.center,
+                              width: 60,
+                              height: 60,
+                              child: new CircleAvatar(
+                                radius: 100.0,
+                                backgroundImage: NetworkImage(
+                                  item.logoUrl,
+                                ),
                               ),
-                              dense: true,
                             ),
+                            Container(
+                                padding: EdgeInsets.only(left: 20),
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  item.name,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900),
+                                )),
                           ],
                         ),
-                      );
-                    }).toList(),
-                  );
-              },
-            ),
+                        dense: true,
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            );
+        },
+      ),
     );
   }
 

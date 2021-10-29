@@ -116,12 +116,8 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
     return new Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        elevation: 0.0,
-        title: Center(
-          child: Container(
-              margin: EdgeInsets.only(right: 40),
-              child: Text(Tran.of(context).text("meter_rearch").toString())),
-        ),
+        centerTitle: true,
+        title: Text(Tran.of(context).text("meter_rearch").toString()),
         /*flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(

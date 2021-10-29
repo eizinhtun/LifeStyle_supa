@@ -106,3 +106,11 @@ class MeterBillStatus {
   static const String paid = "Paid";
   static const String unpaid = "Unpaid";
 }
+
+class NotiType {
+  static const String topup = "topup";
+  static const String withdraw = "withdraw";
+  static const String meterbill = "meterbill";
+  static const String appupdate = "appupdate";
+  static const String notice = "notice";
+}

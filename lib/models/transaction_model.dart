@@ -1,35 +1,38 @@
 // @dart=2.9
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class TransactionModel {
+  String docId;
   String uid;
   String type;
   String paymentType;
-  var amount;
-  DateTime createdDate;
+  int amount;
+  Timestamp createdDate;
   String imageUrl;
-  int transactionId;
+  String transactionId;
 
+  TransactionModel(
+      {this.uid,
+      this.type,
+      this.paymentType,
+      this.amount,
+      this.createdDate,
+      this.imageUrl,
+      this.transactionId});
 
-  TransactionModel({
-    this.uid,
-    this.type,
-    this.paymentType,
-    this.amount,
-    this.createdDate,
-    this.imageUrl,
-    this.transactionId
-  });
-
-  TransactionModel.fromJson(Map<String, dynamic> json) {
+  TransactionModel.fromJson(Map<String, dynamic> json, {String doc}) {
+    docId = doc;
     uid = json['uid'];
     type = json['type'];
     paymentType = json['paymentType'];
     amount = json['amount'];
-    createdDate =
-        DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
-    imageUrl= json['imageUrl'];
-    transactionId= json['transactionId'];
+    createdDate = json['createdDate']; // Timestamp.fromDate();
+    // DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
 
+    //DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
+    imageUrl = json['imageUrl'];
+    transactionId = json['transactionId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -38,9 +41,9 @@ class TransactionModel {
     data['type'] = this.type;
     data['paymentType'] = this.paymentType;
     data['amount'] = this.amount;
-    data['createdDate'] = this.createdDate.microsecondsSinceEpoch.toString();
-   data['imageUrl'] = this.imageUrl;
-   data['transactionId'] = this.transactionId;
+    data['createdDate'] = this.createdDate;
+    data['imageUrl'] = this.imageUrl;
+    data['transactionId'] = this.transactionId;
     return data;
   }
 

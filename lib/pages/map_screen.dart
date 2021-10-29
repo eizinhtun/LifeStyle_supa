@@ -18,7 +18,7 @@ class _MapScreenState extends State<MapScreen> {
 
   Marker marker;
   double lat, log;
-  bool showMarker=true;
+  bool showMarker = true;
 
   @override
   void initState() {
@@ -31,13 +31,12 @@ class _MapScreenState extends State<MapScreen> {
     log = double.parse(widget.meter.longitude);
     marker = Marker(
       visible: showMarker,
-
       markerId: MarkerId(widget.meter.meterNo),
       position: LatLng(lat, log),
       infoWindow: InfoWindow(
-        onTap: (){
+        onTap: () {
           setState(() {
-            showMarker=!showMarker;
+            showMarker = !showMarker;
           });
         },
         title: "${widget.meter.consumerName} (${widget.meter.customerId})",
@@ -56,10 +55,10 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("${widget.meter.meterNo}"),
+        centerTitle: true,
         backgroundColor: Color(0xFFfa2e73),
       ),
       body: GoogleMap(
-
         mapType: MapType.hybrid,
         initialCameraPosition: _kGooglePlex,
         onMapCreated: (GoogleMapController mapcontroller) {
