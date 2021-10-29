@@ -24,7 +24,7 @@ class WalletState extends State<Wallet> {
       RefreshController(initialRefresh: false);
   List<TransactionModel> totalList = [];
   List<TransactionModel> tracList = [];
-  List<String> docList=[];
+  List<String> docList = [];
   final db = FirebaseFirestore.instance;
   int i = 1;
   int showlist = 10;
@@ -42,7 +42,12 @@ class WalletState extends State<Wallet> {
     totalList =
         await context.read<WalletProvider>().getManyTransactionList(context);
     print(totalList);
-    db.collection(transactions).doc(FirebaseAuth.instance.currentUser.uid).collection(manyTransaction).get().then((value) {
+    db
+        .collection(transactions)
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .collection(manyTransaction)
+        .get()
+        .then((value) {
       value.docs.forEach((result) {
         docList.add(result.id);
       });
@@ -138,7 +143,7 @@ class WalletState extends State<Wallet> {
                           ),
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (contex) => WithdrawalPage()));
+                            builder: (context) => WithdrawalPage()));
                       },
                       child: Row(
                         children: [
@@ -235,7 +240,12 @@ class WalletState extends State<Wallet> {
                                   IconButton(
                                       onPressed: () {
                                         print(docList[i]);
-                                       Navigator.push(context, MaterialPageRoute(builder: (context)=>new WalletDetailSuccessPage(docId: docList[i])));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    new WalletDetailSuccessPage(
+                                                        docId: docList[i])));
                                       },
                                       icon: Icon(
                                         Icons.arrow_forward_ios_rounded,
