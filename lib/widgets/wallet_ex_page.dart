@@ -224,8 +224,8 @@ class _loadingPageState extends State<WalletExPage> {
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold)),
                                       Text(
-                                          Formatter.dateTimeFormat(
-                                              tracList[i].createdDate),
+                                          Formatter.dateTimeFormat(DateTime.fromMillisecondsSinceEpoch(tracList[i].createdDate.millisecondsSinceEpoch )),
+
                                           style: TextStyle(fontSize: 12)),
                                     ],
                                   ),

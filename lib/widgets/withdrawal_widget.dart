@@ -38,7 +38,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         title: Center(
           child: Container(
             margin: EdgeInsets.only(right: 40),
-            child: Text("Wallet"),
+            child: Text("Withdraw"),
           ),
         ),
       ),
@@ -53,6 +53,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                 child: Form(
                   key: _withdrawformKey,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                           decoration: BoxDecoration(
@@ -100,7 +101,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                     ),
                               hintText: "Select Payment",
                             ),
-                          )),
+                          )
+                      ),
                       SizedBox(height: 20),
                       TextFormField(
                         autofocus: false,
@@ -191,26 +193,36 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
     );
   }
 
-  _ShowPasswordAlertDialog(BuildContext context, amount, paymentType) {
-    return showDialog(
+  _ShowPasswordAlertDialog(BuildContext context, paymentType, amount) {
+ showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
         return StatefulBuilder(
+
           builder: (BuildContext context, setState) =>
-            AlertDialog(
-            backgroundColor: Colors.white,
-            shape: _defaultShape(),
-            insetPadding: EdgeInsets.all(20),
-            elevation: 10,
-            titlePadding: const EdgeInsets.all(0.0),
-            title: Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(top: 50),
+              Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  margin: const EdgeInsets.only(
+                      top: 10, left: 15, right: 15, bottom: 10),
+                  // height: 160,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //       blurRadius: 10,
+                    //       color: Colors.grey[300],
+                    //       spreadRadius: 5)
+                    // ],
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                     // Text("Enter Password", style: TextStyle(fontSize: 16)),
+                      // Text("Enter Password", style: TextStyle(fontSize: 16)),
                       Center(
                         child: Text(
                           "Enter Your Password",
@@ -223,143 +235,133 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                       SizedBox(
                         height: 30,
                       ),
-                      TextFormField(
-                        autofocus: true,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        controller: _passwordController,
-                        keyboardType: TextInputType.text,
-                        obscureText: _obscureText,
-                        validator: (val) {
-                          return Validator.password(
-                              context, val.toString(), "Password", true);
-                        },
-                        decoration: InputDecoration(
-                          labelText: "${Tran.of(context)?.text('password')}",
-                          labelStyle: TextStyle(),
-                          hintText: "${Tran.of(context)?.text('password')}",
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                            icon: Icon(_obscureText
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                          ),
-                          hintStyle: TextStyle(color: Colors.grey[400]),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.black,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            BorderSide(color: Theme.of(context).primaryColor),
-                          ),
-                          contentPadding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(10),
+                      Padding(
+                        padding: EdgeInsets.all(5),
                         child: TextFormField(
-                          keyboardType: TextInputType.number,
+                          autofocus: true,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           controller: _passwordController,
-                          decoration: InputDecoration(
-                              // border: OutlineInputBorder(
-                              //   borderSide: BorderSide(
-                              //     color: Colors.black12,
-                              //   ),
-                              // ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                              //border: InputBorder.none,
-                              hintText: "Password",
-                              suffixIcon: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _obscureText =
-                                    !_obscureText;
-                                  });
-                                },
-                                child: Icon(_obscureText
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                              ),
-                              hintStyle: TextStyle(color: Colors.grey[400])),
+                          keyboardType: TextInputType.text,
                           obscureText: _obscureText,
                           validator: (val) {
                             return Validator.password(
                                 context, val.toString(), "Password", true);
                           },
+                          decoration: InputDecoration(
+                            labelText: "${Tran.of(context)?.text('password')}",
+                            labelStyle: TextStyle(),
+                            hintText: "${Tran.of(context)?.text('password')}",
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscureText = !_obscureText;
+                                });
+                              },
+                              icon: Icon(_obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                            ),
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Theme.of(context).primaryColor),
+                            ),
+                            contentPadding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              side: BorderSide(
+                                width: 1.0,
+                                color: Colors.black12,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.all(12),
+                              child: Text(
+                                "Confirm",
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
                                 ),
-                                padding: EdgeInsets.only(
-                                  left: 30,
-                                  right: 30,
-                                  top: 10,
-                                  bottom: 10,
-                                ) // foreground
+                              ),
                             ),
                             onPressed: () async {
+                              print( _passwordController.text);
+                              if(_withdrawformKey.currentState.validate()){
+                                await context
+                                    .read<WalletProvider>()
+                                    .withdrawlCheckPassword(
+                                    context,
+                                    paymentType,
+                                    int.parse(amount),
+                                    _passwordController.text);
+                              }
 
-                              print(paymentType);
-                              print(amount.toString());
-
-                              await context
-                                  .read<WalletProvider>()
-                                  .withdrawlCheckPassword(
-                                  context,
-                                  paymentType,
-                                  int.parse(amount),
-                                  _passwordController.text);
-
-
+                              // if (_pwformKey.currentState.validate()) {
+                              //   // widget.bill.isPaid = true;
+                              //   widget.bill.remark = _remarkController.text;
+                              //   widget.bill.status = "Paid";
+                              //   widget.bill.payDate = getPayDate(DateTime.now());
+                              //   print(widget.bill.readDate);
+                              //   print(widget.bill.readImageUrl);
+                              //   print(widget.bill.toJson());
+                              //   await context.read<WalletProvider>().payMeterBill(
+                              //       context, widget.bill, widget.docId);
+                              // }
                             },
-                            child: Text("Confirm")),
+                          ),
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              side: BorderSide(
+                                width: 1.0,
+                                color: Colors.black12,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.all(12),
+                              child: Text(
+                                "Close",
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
                       ),
 
                     ],
                   ),
                 ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width * 0.65,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 10),
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.red
-                    ),
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(
-                          Icons.clear,
-                          color: Colors.white,
-                          size: 15,
-                        )),
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
         );
       },
     );

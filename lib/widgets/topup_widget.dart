@@ -49,7 +49,7 @@ class _TopUpPageState extends State<TopUpPage> {
           title: Center(
             child: Container(
               margin: EdgeInsets.only(right: 40),
-              child: Text("Wallet"),
+              child: Text("TopUp"),
             ),
           ),
         ),
@@ -192,7 +192,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                     await context.read<WalletProvider>().topup(
                                         context,
                                         _paymentMethod.id,
-                                        double.parse(_transferAmountController.text),int.parse(_transactionIdController.text), file);
+                                        double.parse(_transferAmountController.text),_transactionIdController.text, file);
 
                                   }
                                 },
