@@ -150,10 +150,10 @@ class _loadingPageState extends State<loadingPage> {
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold)),
-                                    Text(
-                                        Formatter.dateTimeFormat(
-                                            snapshot.data[i].createdDate),
-                                        style: TextStyle(fontSize: 12)),
+                                    // Text(
+                                    //     Formatter.dateTimeFormat(
+                                    //         snapshot.data[i].createdDate),
+                                    //     style: TextStyle(fontSize: 12)),
                                   ],
                                 ),
                                 Spacer(),

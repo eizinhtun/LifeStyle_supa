@@ -62,7 +62,8 @@ class WalletDemoPageState extends State<WalletDemoPage>
               ))
         ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
+      body:
+      StreamBuilder<QuerySnapshot>(
         stream: db
             .collection(transactions)
             .doc(FirebaseAuth.instance.currentUser.uid)
@@ -112,8 +113,8 @@ class WalletDemoPageState extends State<WalletDemoPage>
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold)),
                                     Text(
-                                        Formatter.dateTimeFormat(
-                                            item.createdDate),
+                                        Formatter.dateTimeFormat(DateTime.fromMillisecondsSinceEpoch(item.createdDate.millisecondsSinceEpoch )),
+
                                         style: TextStyle(fontSize: 12)),
                                   ],
                                 ),

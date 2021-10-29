@@ -12,6 +12,7 @@ import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/meter_bill.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/widgets/wallet.dart';
 
 class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var tracRef = FirebaseFirestore.instance.collection(transactions);
@@ -22,7 +23,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
   Future<void> topup(BuildContext context, String paymentType, double amount,
-      int transactionId, imageFile) async {
+      String transactionId, imageFile) async {
     print(imageFile);
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
@@ -53,7 +54,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                   paymentType: paymentType,
                   imageUrl: downloadUrl,
                   transactionId: transactionId,
-                  createdDate: DateTime.now());
+                  createdDate: Timestamp.fromDate(DateTime.now()));
               tracRef
                   .doc(uid)
                   .collection("manyTransition")
@@ -114,7 +115,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //   notifyListeners();
   // }
   Future<void> withdrawlCheckPassword(BuildContext context, String paymentType,
-      double amount, String password) async {
+      int amount, String password) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       userRef.doc(uid).get(GetOptions(source: Source.server)).then((value) {
         String oldPassword = value.data()["password"];
@@ -132,13 +133,14 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 print("withdrawl success!");
                 MessageHandler.showMessage(
                     context, "Success", "Your withdrawl is successful");
-                // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Wallet()));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => Wallet()));
               });
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
                   type: TransactionType.Withdraw,
-                  //amount: (balance - amount).toInt(),
-                  createdDate: DateTime.now());
+                  amount: -amount,
+                  createdDate: Timestamp.fromDate(DateTime.now()));
               tracRef
                   .doc(uid)
                   .collection("manyTransition")
@@ -246,8 +248,8 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 uid: uid,
                 type: TransactionType.meterbill,
                 // paymentType: ,
-                amount: bill.totalCost,
-                createdDate: DateTime.now());
+                // amount: bill.totalCost.toDouble(),
+                createdDate: Timestamp.fromDate(DateTime.now()));
 
             tracRef
                 .doc(uid)

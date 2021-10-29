@@ -47,8 +47,12 @@ class _TopUpPageState extends State<TopUpPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        centerTitle: true,
-        title: Text("Wallet"),
+        title: Center(
+          child: Container(
+            margin: EdgeInsets.only(right: 40),
+            child: Text("TopUp"),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -170,6 +174,44 @@ class _TopUpPageState extends State<TopUpPage> {
                             ),
                           ),
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                padding: EdgeInsets.only(
+                                  left: 30,
+                                  right: 30,
+                                  top: 10,
+                                  bottom: 10,
+                                ) // foreground
+                                ),
+                            onPressed: () async {
+                              if (file == null) {
+                                myMsg.MessageHandler.showErrMessage(
+                                    context,
+                                    "Picture is required",
+                                    "Plase take a picture and upload");
+                                return;
+                              }
+                              if (_topupformKey.currentState.validate()) {
+                                print("Validate");
+                                await context.read<WalletProvider>().topup(
+                                    context,
+                                    _paymentMethod.id,
+                                    double.parse(
+                                        _transferAmountController.text),
+                                    _transactionIdController.text,
+                                    file);
+                              }
+                            },
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(25),
@@ -196,7 +238,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                       _paymentMethod.id,
                                       double.parse(
                                           _transferAmountController.text),
-                                      int.parse(_transactionIdController.text),
+                                      _transactionIdController.text,
                                       file);
                                 }
                               },

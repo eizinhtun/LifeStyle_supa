@@ -59,8 +59,8 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                           children: [
                             Image.asset(
                               "assets/payment/success.png",
-                              width: 80,
-                              height: 80,
+                              width: 50,
+                              height: 50,
                             ),
                             Text(
                                 Tran.of(context)
@@ -87,7 +87,9 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                   Spacer(),
                                   Text(
                                       Formatter.dateTimeFormat(
-                                          item.createdDate),
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              item.createdDate
+                                                  .millisecondsSinceEpoch)),
                                       style: TextStyle(fontSize: 12)),
                                 ],
                               ),
@@ -105,7 +107,9 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                   Spacer(),
                                   Text(
                                       Formatter.dateTimeFormat(
-                                          item.createdDate),
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              item.createdDate
+                                                  .millisecondsSinceEpoch)),
                                       style: TextStyle(fontSize: 12)),
                                 ],
                               ),
@@ -123,7 +127,9 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                   Spacer(),
                                   Text(
                                       Formatter.dateTimeFormat(
-                                          item.createdDate),
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              item.createdDate
+                                                  .millisecondsSinceEpoch)),
                                       style: TextStyle(fontSize: 12)),
                                 ],
                               ),
@@ -141,7 +147,9 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                   Spacer(),
                                   Text(
                                       Formatter.dateTimeFormat(
-                                          item.createdDate),
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              item.createdDate
+                                                  .millisecondsSinceEpoch)),
                                       style: TextStyle(fontSize: 12)),
                                 ],
                               ),
