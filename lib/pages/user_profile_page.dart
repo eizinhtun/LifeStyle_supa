@@ -214,6 +214,9 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                           newImage != null
                               ? _showImageCircle()
                               : UserInfoScreenPhoto(
+                                  name: widget.user.fullName
+                                      .substring(0, 1)
+                                      .toUpperCase(),
                                   imageurl: photoUrl,
                                   width: 120,
                                   height: 120,

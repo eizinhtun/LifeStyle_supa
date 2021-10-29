@@ -1,12 +1,8 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
-import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/payment_method.dart';
 import 'package:left_style/pages/payment_method_list.dart';
-import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/validators/validator.dart';
-import 'package:provider/provider.dart';
-import '../providers/login_provider.dart';
 
 class WithdrawalPage extends StatefulWidget {
   const WithdrawalPage({Key key}) : super(key: key);
@@ -22,16 +18,16 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   TextEditingController _amountController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  bool _obscureText=true;
+  bool _obscureText = true;
   void _togglePasswordStatus() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
+
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -66,51 +62,56 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                           child: TextFormField(
                             readOnly: true,
                             onTap: () async {
-                              var payment=await  Navigator.push(
+                              var payment = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                      new PaymentMethodListPage(
-                                      )));
+                                          new PaymentMethodListPage()));
 
-                              if(payment!=null){
-                                _paymentMethod=payment;
+                              if (payment != null) {
+                                _paymentMethod = payment;
                                 setState(() {
-                                  _paymentController.text=_paymentMethod.name;
+                                  _paymentController.text = _paymentMethod.name;
                                 });
                               }
                             },
                             controller: _paymentController,
                             decoration: InputDecoration(
-                              suffixIcon: Icon(Icons.arrow_forward_ios_rounded,size: 20,color: Colors.red,),
-                              prefixIcon: (_paymentMethod==null||_paymentMethod.logoUrl==null||_paymentMethod.logoUrl.length==0)
-                                  ?Container(child: Icon(Icons.monetization_on_outlined),): Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Image.network(
-                                  _paymentMethod.logoUrl,
-                                  width: 10,
-                                  height: 10,
-                                  fit: BoxFit.contain,
-                                ),
+                              suffixIcon: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 20,
+                                color: Colors.red,
                               ),
+                              prefixIcon: (_paymentMethod == null ||
+                                      _paymentMethod.logoUrl == null ||
+                                      _paymentMethod.logoUrl.length == 0)
+                                  ? Container(
+                                      child:
+                                          Icon(Icons.monetization_on_outlined),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Image.network(
+                                        _paymentMethod.logoUrl,
+                                        width: 10,
+                                        height: 10,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
                               hintText: "Select Payment",
                             ),
                           )),
-
                       SizedBox(height: 20),
                       TextFormField(
                         autofocus: false,
-                        autovalidateMode:
-                        AutovalidateMode.onUserInteraction,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         validator: (val) {
-                          return Validator.requiredField(
-                              context, val, '');
+                          return Validator.requiredField(context, val, '');
                         },
                         decoration: buildInputDecoration("Withdraw Amount"),
                       ),
-
                       SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,7 +129,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                   bottom: 10,
                                 ),
                                 textStyle:
-                                TextStyle(fontWeight: FontWeight.bold)),
+                                    TextStyle(fontWeight: FontWeight.bold)),
                             onPressed: () async {
                               Navigator.pop(context);
                             },
@@ -150,17 +151,19 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                     top: 10,
                                     bottom: 10,
                                   ) // foreground
-                              ),
+                                  ),
                               onPressed: () async {
                                 if (_withdrawformKey.currentState.validate()) {
                                   print("Validate");
-                                  _ShowPasswordAlertDialog(context, _paymentMethod.id, _amountController.text);
+                                  _ShowPasswordAlertDialog(
+                                      context,
+                                      _paymentMethod.id,
+                                      _amountController.text);
                                 }
                               },
                               child: Text("Submit")),
                         ],
                       )
-
                     ],
                   ),
                 ),
@@ -182,17 +185,13 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         ),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-            color:
-            Theme.of(context).primaryColor),
+        borderSide: BorderSide(color: Theme.of(context).primaryColor),
       ),
-      contentPadding: EdgeInsets.symmetric(
-          horizontal: 20, vertical: 12),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
     );
   }
 
   _ShowPasswordAlertDialog(BuildContext context, amount, paymentType) {
-
     return showDialog(
       context: context,
       builder: (context) {
@@ -210,20 +209,23 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Enter Password",style: TextStyle(fontSize: 16)),
+                      Text("Enter Password", style: TextStyle(fontSize: 16)),
                       TextFormField(
                         keyboardType: TextInputType.number,
-                        autovalidateMode: AutovalidateMode
-                            .onUserInteraction,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _passwordController,
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: "Password",
-                          suffixIcon:  IconButton(
-                            icon:Icon(_obscureText ? Icons.visibility:Icons.visibility_off,),
-                            onPressed: _togglePasswordStatus,
-                            color: Colors.pink[400],
-                          ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureText
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: _togglePasswordStatus,
+                              color: Colors.pink[400],
+                            ),
 
                             // suffixIcon: IconButton(onPressed: (){
                             //   setState(() {
@@ -231,14 +233,12 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                             //   });
                             // },icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off)
                             // ),
-                            hintStyle: TextStyle(color: Colors.grey[400])
-                        ),
+                            hintStyle: TextStyle(color: Colors.grey[400])),
                         obscureText: _obscureText,
                         validator: (val) {
                           return Validator.password(
                               context, val.toString(), "Password", true);
                         },
-
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -260,15 +260,20 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                   ),
                 ),
                 Positioned(
-                    left: MediaQuery.of(context).size.width * 0.65,
-                    child: IconButton(onPressed: (){
-                      Navigator.of(context).pop();
-                    },icon: Icon(Icons.clear,color: Colors.red,size: 20,)),
+                  left: MediaQuery.of(context).size.width * 0.65,
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.red,
+                        size: 20,
+                      )),
                 ),
               ],
             ),
           ),
-
         );
       },
     );
@@ -282,6 +287,4 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
       ),
     );
   }
-
-
 }

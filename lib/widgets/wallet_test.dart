@@ -49,7 +49,7 @@ class _WalletTestState extends State<WalletTest> {
   getData() async {
     // await Future.delayed(Duration(milliseconds: 100));
     totalList =
-        await context.read<WalletProvider>().getManyTransactionList(context);
+        await context.read<WalletProvider>().getTransactionList(context);
     print(totalList);
     if (totalList.length < end) {
       end = totalList.length;

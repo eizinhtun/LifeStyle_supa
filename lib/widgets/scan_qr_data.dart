@@ -4,8 +4,9 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:provider/provider.dart';
+
 class ScanQRData extends StatefulWidget {
-  const ScanQRData({Key key,this.qrcodeuid}) : super(key: key);
+  const ScanQRData({Key key, this.qrcodeuid}) : super(key: key);
   final String qrcodeuid;
 
   @override
@@ -13,10 +14,9 @@ class ScanQRData extends StatefulWidget {
 }
 
 class _ScanQRDataState extends State<ScanQRData> {
-
   final _transferformKey = GlobalKey<FormState>();
-  TextEditingController _transferController= TextEditingController();
-  UserModel user=UserModel();
+  TextEditingController _transferController = TextEditingController();
+  UserModel user = UserModel();
   final String qrcodeuid;
   _ScanQRDataState({this.qrcodeuid});
 
@@ -25,8 +25,10 @@ class _ScanQRDataState extends State<ScanQRData> {
     super.initState();
     getUser();
   }
-  Future<UserModel> getUser() async {
-    user= await context.read<LoginProvider>().getUserScanData(context,qrcodeuid);
+
+  Future<void> getUser() async {
+    user =
+        await context.read<LoginProvider>().getUserScanData(context, qrcodeuid);
   }
 
   @override
@@ -51,29 +53,20 @@ class _ScanQRDataState extends State<ScanQRData> {
                           bottom: new Radius.elliptical(200, 56.0),
                         ),
                       ),
-
                       bottom: PreferredSize(
                         preferredSize: Size.fromHeight(50),
                         child: Container(),
                       ),
-
                     ),
                     SliverToBoxAdapter(
                       child: Container(
                           constraints: BoxConstraints.expand(
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height,
+                            height: MediaQuery.of(context).size.height,
                           ),
-                          child: Container(
-
-                          )
-                      ),
+                          child: Container()),
                     ),
                   ],
                 ),
-
                 Positioned(
                   top: 100,
                   left: 0,
@@ -101,8 +94,14 @@ class _ScanQRDataState extends State<ScanQRData> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-                                        child: user.fullName !=null ?Text(user.fullName.toUpperCase(),style: TextStyle(fontSize: 18,color: Colors.grey)):Text("loading..."),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 20),
+                                        child: user.fullName != null
+                                            ? Text(user.fullName.toUpperCase(),
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.grey))
+                                            : Text("loading..."),
                                       ),
                                       Container(
                                         child: Form(
@@ -112,41 +111,47 @@ class _ScanQRDataState extends State<ScanQRData> {
                                               Container(
                                                   height: 100,
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(50),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50),
                                                     color: Colors.transparent,
                                                   ),
                                                   child: TextFormField(
-                                                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                                                    controller: _transferController,
-                                                    keyboardType: TextInputType.number,
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    controller:
+                                                        _transferController,
+                                                    keyboardType:
+                                                        TextInputType.number,
                                                     validator: (val) {
-                                                      return Validator.requiredField(
-                                                          context, val, "transfer amount");
+                                                      return Validator
+                                                          .requiredField(
+                                                              context,
+                                                              val,
+                                                              "transfer amount");
                                                     },
                                                     decoration: InputDecoration(
-                                                      border: OutlineInputBorder(),
-                                                      labelText: 'Transfer Amount',
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                      labelText:
+                                                          'Transfer Amount',
                                                     ),
                                                   )),
-
                                             ],
                                           ),
                                         ),
-
                                       )
                                     ],
                                   ),
                                   Column(
-                                    children: [
-
-                                    ],
+                                    children: [],
                                   ),
                                 ],
                               ),
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -156,5 +161,4 @@ class _ScanQRDataState extends State<ScanQRData> {
           ),
         ));
   }
-
 }

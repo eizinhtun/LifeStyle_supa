@@ -1,9 +1,13 @@
 // @dart=2.9
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MeterBill {
   bool isPaid;
   String payDate;
   String remark;
+  String readImageUrl;
+  Timestamp readDate;
   String status;
 
   String block;
@@ -112,6 +116,8 @@ class MeterBill {
       this.remark,
       this.payDate,
       this.status,
+      this.readDate,
+      this.readImageUrl,
       this.block,
       this.street,
       this.billNo,
@@ -167,6 +173,8 @@ class MeterBill {
     remark = json['remark'];
     payDate = json['payDate'];
     status = json['status'];
+    readDate = json['readDate'];
+    readImageUrl = json['readImageUrl'];
     block = json['block'];
     dueDate = json['dueDate'];
     street = json['street'];
@@ -224,6 +232,8 @@ class MeterBill {
     data['isPaid'] = this.isPaid;
     data['remark'] = this.remark;
     data['payDate'] = this.payDate;
+    data['readDate'] = this.readDate;
+    data['readImageUrl'] = this.readImageUrl;
     data['status'] = this.status;
     data['block'] = this.block;
     data['dueDate'] = this.dueDate;

@@ -9,24 +9,29 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/models/meter_bill.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/utils/message_handler.dart';
 
 class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var tracRef = FirebaseFirestore.instance.collection(transactions);
   var userRef = FirebaseFirestore.instance.collection(userCollection);
+  var meterBillRef =
+      FirebaseFirestore.instance.collection(meterBillsCollection);
   var balance;
   String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
-  Future<void> topup(
-      BuildContext context, String paymentType, double amount, int transactionId,imageFile) async {
+  Future<void> topup(BuildContext context, String paymentType, double amount,
+      int transactionId, imageFile) async {
     print(imageFile);
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       var dateTime = DateTime.now();
-      var dateFormat= DateFormat("yyyy-MM-dd HH:mm:ss").format(dateTime);
+      var dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss").format(dateTime);
       print(dateFormat.toString());
-      final ref = FirebaseStorage.instance.ref('user_topup').child(dateFormat.toString()+"_"+uid+".jpg");
+      final ref = FirebaseStorage.instance
+          .ref('user_topup')
+          .child(dateFormat.toString() + "_" + uid + ".jpg");
       final uploadTask = ref.putFile(File(imageFile.path));
       String downloadUrl = await (await uploadTask).ref.getDownloadURL();
       if (downloadUrl != null) {
@@ -68,7 +73,6 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
           //MessageHandler.showErrMessage(context, "Fail", "No Internet");
           notifyListeners();
         });
-
       }
       notifyListeners();
     }
@@ -187,7 +191,23 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //   return 0;
   // }
 
-  Future<List<TransactionModel>> getManyTransactionList(
+  // Future<List<TransactionModel>> getManyTransactionList(
+  //     BuildContext context) async {
+  //   List<TransactionModel> list = [];
+  //   if (FirebaseAuth.instance.currentUser?.uid != null) {
+  //     String uid = FirebaseAuth.instance.currentUser.uid;
+  //     await tracRef.doc(uid).collection(manyTransaction).get().then((value) {
+  //       print(value.docs);
+  //       value.docs.forEach((result) {
+  //         list.add(TransactionModel.fromJson(result.data()));
+  //       });
+  //     });
+  //   }
+  //   notifyListeners();
+  //   return list;
+  // }
+
+  Future<List<TransactionModel>> getTransactionList(
       BuildContext context) async {
     List<TransactionModel> list = [];
     if (FirebaseAuth.instance.currentUser?.uid != null) {
@@ -203,36 +223,21 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     return list;
   }
 
-  Future<List<TransactionModel>> getTransactionList(
-      BuildContext context) async {
-    List<TransactionModel> list = [];
-    if (FirebaseAuth.instance.currentUser?.uid != null) {
-      String uid = FirebaseAuth.instance.currentUser.uid;
-      await tracRef.where("uid", isEqualTo: uid).get().then((value) {
-        value.docs.forEach((result) {
-          print(result.data());
-          list.add(TransactionModel.fromJson(result.data()));
-        });
-      });
-    }
-    notifyListeners();
-    return list;
-  }
-
-  Future<bool> payMeterBill(BuildContext context, double amount) async {
+  Future<void> payMeterBill(
+      BuildContext context, MeterBill bill, String docId) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
-      // double balance = await getBalance();
-      userRef.doc(uid).get().then((value) {
+      userRef.doc(uid).get().then((value) async {
         double balance = value.data()["balance"];
 
-        if (amount > balance) {
+        if (bill.totalCost > balance) {
           MessageHandler.showErrMessage(context, "Insufficient Balance",
               "Your meter bill is higher than your balance");
-          return Future<bool>.value(false);
         } else {
           try {
-            userRef.doc(uid).update({"balance": balance - amount}).then((_) {
+            userRef
+                .doc(uid)
+                .update({"balance": balance - bill.totalCost}).then((_) {
               print("meter bill payment success!");
               MessageHandler.showMessage(
                   context, "Success", "Your  meter bill payment is successful");
@@ -240,18 +245,25 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
             TransactionModel transactionModel = TransactionModel(
                 uid: uid,
                 type: TransactionType.meterbill,
-                //amount: amount.toInt(),
+                // paymentType: ,
+                amount: bill.totalCost.toDouble(),
                 createdDate: DateTime.now());
-            tracRef.add(transactionModel.toJson()).catchError((error) {
+
+            tracRef
+                .doc(uid)
+                .collection("manyTransition")
+                .add(transactionModel.toJson())
+                .catchError((error) {
               print("Failed to add meter bill payment transaction: $error");
             });
+
+            await meterBillRef.doc(docId).set(bill.toJson());
+
             notifyListeners();
-            return Future<bool>.value(true);
           } catch (e) {
             print("Failed to meter bill payment: $e");
             MessageHandler.showErrMessage(
                 context, "Fail", "Your meter bill payment is fail");
-            return Future<bool>.value(false);
           }
         }
       });

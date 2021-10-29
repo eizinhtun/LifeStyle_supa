@@ -146,7 +146,7 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
                                         TextSpan(
                                           text: "Date",
                                           // (widget.noti.currentdate != null
-                                          //         ? getDate(widget
+                                          //         ? Formatter.getDate(widget
                                           //                 .noti.currentdate)
                                           //             .toString()
                                           //         : "") +
@@ -202,14 +202,6 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
     DateTime tempDate = DateFormat("yyyy-MM-ddThh:mm:ss").parse(date);
     var dateFormat = DateFormat("h:mm a");
     var result = dateFormat.format(tempDate);
-    return result;
-  }
-
-  getDate(date) {
-    DateTime tempDate1 = DateFormat("yyyy-MM-ddThh:mm:ss").parse(date);
-    var dateFormat1 =
-        DateFormat("dd/MM/yyyy"); // you can change the format here
-    var result = dateFormat1.format(tempDate1);
     return result;
   }
 }

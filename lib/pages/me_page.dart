@@ -112,6 +112,9 @@ class _MePageState extends State<MePage> {
                                   //       "assets/image/user-photo.png"),
                                   // ),
                                   UserInfoScreenPhoto(
+                                    name: user.fullName
+                                        .substring(0, 1)
+                                        .toUpperCase(),
                                     imageurl: user.photoUrl,
                                     width: 80,
                                     height: 80,

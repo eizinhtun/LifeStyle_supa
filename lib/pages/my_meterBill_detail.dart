@@ -14,6 +14,7 @@ import 'package:left_style/pages/pay_bill_page.dart';
 
 class MeterBillDetailPage extends StatefulWidget {
   final String docId;
+
   const MeterBillDetailPage({Key key, this.docId}) : super(key: key);
 
   @override
@@ -22,6 +23,12 @@ class MeterBillDetailPage extends StatefulWidget {
 
 class MeterBillDetailPageState extends State<MeterBillDetailPage> {
   final db = FirebaseFirestore.instance;
+  MeterBill bill = MeterBill();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   TextStyle GetTextStyle() {
     //print("HorsePower:"+(consumer.meterBill.mHorsePowerCost!=0?consumer.meterBill.mHorsePowerCost.toString():"0"));
@@ -58,29 +65,21 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
   @override
   Widget build(BuildContext context) {
     _context = context;
-    return new Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        centerTitle: true,
-        title: Text(Tran.of(context).text("my_meters").toString()),
-        /*flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF001950),Color(0xFF04205a),Color(0xFF0b2b6a),
-                  Color(0xFF0b2b6a),Color(0xFF2253a2), Color(0xFF2253a2)],
-              )
-          ),
-        ),*/
-      ),
-      body: StreamBuilder<DocumentSnapshot>(
-          stream:
-              db.collection(meterBillsCollection).doc(widget.docId).snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              MeterBill bill = MeterBill.fromJson(snapshot.data.data());
-              return SingleChildScrollView(
+    // isPaid = widget.isPaid;
+    return StreamBuilder<DocumentSnapshot>(
+        stream:
+            db.collection(meterBillsCollection).doc(widget.docId).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            bill = MeterBill.fromJson(snapshot.data.data());
+            // isPaid = bill.isPaid;
+            return Scaffold(
+              appBar: AppBar(
+                elevation: 0.0,
+                centerTitle: true,
+                title: Text(Tran.of(context).text("my_meter_bill").toString()),
+              ),
+              body: SingleChildScrollView(
                 child: Container(
                   color: Colors.white,
                   margin: const EdgeInsets.all(0.0),
@@ -185,17 +184,17 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                 FixedTrackSize(32),
                                 FixedTrackSize(32),
                                 FixedTrackSize(32),
-//                      FixedTrackSize(32),
-//                      FixedTrackSize(32),
-//                      FixedTrackSize(32),
-//                      FixedTrackSize(32),
-//                      FixedTrackSize(32),
-//                      FixedTrackSize(32),
-//                      FixedTrackSize(32),
-//                      FixedTrackSize(32),
-//                      FixedTrackSize(32),
-//                      FixedTrackSize(32),
-//                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
+                                //                      FixedTrackSize(32),
                               ],
                               children: [
                                 _buildItem(0, 0, 1, "ငွေစာရင်းအမှတ်"),
@@ -520,74 +519,132 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                 style: GetTextStyle()),
                           ),
 
-                          // Expanded(child: Text('',textAlign: TextAlign.left,)),
-//              SizedBox(height: 12.0),
-//              Container(
-//                width: 80.0,
-//                height: 500.0,
-//                color: Colors.red,
-//              ),
-
-                          bill.isPaid
-                              ? Text("")
-                              : Container(
-                                  padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                  child: Center(
-                                    child: OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                        side: BorderSide(
-                                          width: 1.0,
-                                          color: mainColor,
-                                          style: BorderStyle.solid,
+                          (bill.isPaid != null &&
+                                  !bill.isPaid &&
+                                  (bill.status != null) &&
+                                  (bill.status == MeterBillStatus.paid))
+                              ? Column(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
+                                      child: Text(
+                                        "Your meter bill payment is rejected. Please contact office.",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black87,
                                         ),
                                       ),
-                                      child: Text(
-                                        "Pay Bill",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => PayBillPage(
-                                                bill: bill,
-                                                docId: widget.docId),
-                                          ),
-                                        );
-                                      },
                                     ),
-                                  ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        //TODO
+                                      },
+                                      child: Text(
+                                        "Contact Office",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
+                                )
+                              : SizedBox(
+                                  height: 80,
                                 ),
                         ],
                       ),
                       Positioned(
-                        top: 0,
-                        right: 0,
-                        child: bill.isPaid
-                            ? Image.asset(
-                                "assets/image/paid_stamp.png",
-                                height: 40,
-                              )
-                            : Container(),
-                        //Icon(Icons.check_circle_outline,color: Colors.green,size: 40,)
-                      ),
+                          top: 16, right: 16, child: getBillStatusWidget(bill)),
                     ],
                   ),
                 ),
-              );
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                  child: SpinKitDoubleBounce(
-                color: Theme.of(context).primaryColor,
-              ));
-            } else {
-              return Center(child: Text("No data"));
-            }
-          }),
-    );
+              ),
+              floatingActionButton: (bill.isPaid != null &&
+                      !bill.isPaid &&
+                      (bill.status != null) &&
+                      (bill.status == MeterBillStatus.unpaid))
+                  ?
+                  // FloatingActionButton.extended(
+                  //     isExtended: true,
+                  //     backgroundColor: Colors.red,
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(30),
+                  //       // Radius.circular(15),
+                  //       // BorderRadius.zero,
+                  //     ),
+                  //  elevation: 12,
+                  OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        side: BorderSide(
+                          width: 3.0,
+                          color: Theme.of(context).primaryColor,
+                          style: BorderStyle.solid,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PayBillPage(bill: bill, docId: widget.docId),
+                          ),
+                        );
+                        setState(() {});
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(14),
+                        child: Text(
+                          "Pay Bill",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Text(""),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+                child: SpinKitDoubleBounce(
+              color: Theme.of(context).primaryColor,
+            ));
+          } else {
+            return Center(child: Text("No data"));
+          }
+        });
+  }
+
+  Widget getBillStatusWidget(MeterBill bill) {
+    if (bill.isPaid) {
+      return Image.asset(
+        "assets/image/paid_stamp.png",
+        height: 40,
+      );
+    } else {
+      if (bill.status == MeterBillStatus.paid) {
+        return Icon(
+          Icons.error,
+          color: Colors.red,
+          size: 50,
+        );
+      } else {
+        Text("");
+      }
+    }
   }
 }

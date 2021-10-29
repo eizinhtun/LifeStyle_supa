@@ -2,10 +2,19 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MyReadUnit{
-
-  MyReadUnit({this.companyId,this.readDate,this.status,this.readUnit,this.mobile,this.branchId,this.consumerName,this.meterNo
-  ,this.customerId,this.monthName,this.readImageUrl});
+class MyReadUnit {
+  MyReadUnit(
+      {this.companyId,
+      this.readDate,
+      this.status,
+      this.readUnit,
+      this.mobile,
+      this.branchId,
+      this.consumerName,
+      this.meterNo,
+      this.customerId,
+      this.monthName,
+      this.readImageUrl});
   String meterNo;
   String consumerName;
   String customerId;
@@ -17,7 +26,6 @@ class MyReadUnit{
   String monthName;
   Timestamp readDate;
   String status;
-
 
   MyReadUnit.fromJson(Map<String, dynamic> json) {
     meterNo = json['meterNo'];
@@ -31,7 +39,6 @@ class MyReadUnit{
     monthName = json['monthName'];
     readDate = json['readDate'];
     status = json['status'];
-
   }
 
   Map<String, dynamic> toJson() {

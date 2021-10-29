@@ -218,13 +218,6 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
     );
   }
 
-  getDate(date) {
-    DateTime tempDate = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date);
-    var dateFormat =
-        DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
-    return dateFormat.format(tempDate);
-  }
-
   @override
   void showError(String text) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(

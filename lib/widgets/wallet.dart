@@ -40,7 +40,7 @@ class WalletState extends State<Wallet> {
   getData() async {
     await Future.delayed(Duration(milliseconds: 100));
     totalList =
-        await context.read<WalletProvider>().getManyTransactionList(context);
+        await context.read<WalletProvider>().getTransactionList(context);
     print(totalList);
     db
         .collection(transactions)
@@ -90,19 +90,10 @@ class WalletState extends State<Wallet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        title: Center(
-          child: Container(
-            margin: EdgeInsets.only(right: 40),
-            child: Text("Wallet"),
-          ),
-        ),
-      ),
       body: Column(
         children: [
           Container(
-            margin: EdgeInsets.all(10),
+            margin: EdgeInsets.fromLTRB(10, 40, 10, 20),
             color: Colors.transparent,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -216,13 +207,15 @@ class WalletState extends State<Wallet> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                          tracList[i].type ==
-                                                  TransactionType.Topup
-                                              ? "Top Up"
-                                              : "Withdraw",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold)),
+                                        tracList[i].type ==
+                                                TransactionType.Topup
+                                            ? "Top Up"
+                                            : "Withdraw",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       Text(
                                           Formatter.dateTimeFormat(
                                               tracList[i].createdDate),
@@ -286,5 +279,28 @@ class WalletState extends State<Wallet> {
         ],
       ),
     );
+  }
+
+  String title = "";
+  String imgUrl = "";
+  Color textColor;
+  void getTypeInfo(String type) {
+    switch (type) {
+      case TransactionType.Topup:
+        title = "Top Up";
+        imgUrl = "assets/payment/topup.png";
+        textColor = Colors.green;
+        break;
+      case TransactionType.Withdraw:
+        title = "Withdraw";
+        imgUrl = "assets/payment/withdraw.png";
+        textColor = Colors.red;
+        break;
+      case TransactionType.meterbill:
+        title = "Meter Bill";
+        imgUrl = "assets/payment/withdraw.png";
+        textColor = Colors.purple;
+        break;
+    }
   }
 }
