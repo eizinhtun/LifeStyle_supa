@@ -49,7 +49,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
                   type: TransactionType.Topup,
-                  amount: amount,
+                  amount: amount.toInt(),
                   paymentType: paymentType,
                   imageUrl: downloadUrl,
                   transactionId: transactionId,
@@ -114,7 +114,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //   notifyListeners();
   // }
   Future<void> withdrawlCheckPassword(BuildContext context, String paymentType,
-      double amount, String password) async {
+      int amount, String password) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       userRef.doc(uid).get(GetOptions(source: Source.server)).then((value) {
         String oldPassword = value.data()["password"];
@@ -137,7 +137,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
                   type: TransactionType.Withdraw,
-                  //amount: (balance - amount).toInt(),
+                  amount: (balance - amount).toInt(),
                   createdDate: DateTime.now());
               tracRef
                   .doc(uid)
@@ -246,7 +246,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 uid: uid,
                 type: TransactionType.meterbill,
                 // paymentType: ,
-                amount: bill.totalCost.toDouble(),
+                //amount: bill.totalCost.toDouble(),
                 createdDate: DateTime.now());
 
             tracRef

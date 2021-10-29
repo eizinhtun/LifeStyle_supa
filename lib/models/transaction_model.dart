@@ -4,7 +4,7 @@ class TransactionModel {
   String uid;
   String type;
   String paymentType;
-  double amount;
+  int amount;
   DateTime createdDate;
   String imageUrl;
   int transactionId;
