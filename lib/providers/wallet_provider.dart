@@ -37,7 +37,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String downloadUrl = await (await uploadTask).ref.getDownloadURL();
       if (downloadUrl != null) {
         userRef.doc(uid).get().then((value) {
-          double balance = value.data()["balance"]??0;
+          double balance = value.data()["balance"] ?? 0;
           print(balance);
           if (balance != null) {
             print(balance + amount);
@@ -80,7 +80,6 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
         });
       }
       notifyListeners();
-
     }
   }
 

@@ -1,11 +1,18 @@
 // @dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dbcrypt/dbcrypt.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/payment_method.dart';
+import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/pages/payment_method_list.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:provider/provider.dart';
+import 'package:left_style/utils/message_handler.dart' as myMsg;
 
 class WithdrawalPage extends StatefulWidget {
   const WithdrawalPage({Key key}) : super(key: key);
@@ -16,19 +23,72 @@ class WithdrawalPage extends StatefulWidget {
 
 class _WithdrawalPageState extends State<WithdrawalPage> {
   final _withdrawformKey = GlobalKey<FormState>();
-  final _passwordformKey= GlobalKey<FormState>();
   PaymentMethod _paymentMethod;
   TextEditingController _paymentController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
+  TextEditingController _transferAccountController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-
+  bool _isLoading = true;
   bool _obscureText = true;
+  bool _submiting = false
+  ;
 
 
   @override
   void initState() {
     super.initState();
   }
+  Future<void> upload(TransactionModel model) async {
+    model.status="verifying";
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      var result=await  FirebaseFirestore.instance.collection(transactions)
+          .doc(uid)
+          .collection("manyTransition")
+          .add(model.toJson());
+      if(result.id.isNotEmpty){
+        Navigator.pop(context, true);
+        Navigator.pop(context, true);
+        myMsg.MessageHandler.showMessage(context, "", "Successfully added");
+      }
+      else{
+        setState(() {
+          _submiting=false;
+        });
+      }
+
+    }
+  }
+  Future<bool> checkPassword(password) async {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      var userRef = await FirebaseFirestore.instance.collection(userCollection)
+          .doc(uid).get(GetOptions(source: Source.server));
+        if (userRef != null && userRef.exists) {
+          String oldPassword = userRef.data()["password"];
+          bool isCorrect = new DBCrypt().checkpw(password, oldPassword);
+          if (isCorrect) {
+            setState(() {
+              _isLoading = false;
+            });
+
+            return true;
+          }
+          else {
+            Navigator.pop(context, null);
+            myMsg.MessageHandler.showMessage(
+                context, "", "Password Fail");
+            setState(() {
+              _isLoading = false;
+            });
+            return false;
+          }
+        }else{
+          return false;
+        }
+    }
+    return false;
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +167,17 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                       TextFormField(
                         autofocus: false,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: _transferAccountController,
+                        keyboardType: TextInputType.number,
+                        validator: (val) {
+                          return Validator.requiredField(context, val, '');
+                        },
+                        decoration: buildInputDecoration("Transfer Account"),
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        autofocus: false,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         validator: (val) {
@@ -154,15 +225,21 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                     bottom: 10,
                                   ) // foreground
                                   ),
-                              onPressed: () async {
-                                if (_withdrawformKey.currentState.validate()) {
-                                  print("Validate");
+                              onPressed:() async {
+                                if (_withdrawformKey.currentState
+                                    .validate()) {
                                   _ShowPasswordAlertDialog(
                                       context,
                                       _paymentMethod.id,
-                                      _amountController.text);
+                                      _amountController.text,_transferAccountController.text);
+                                  setState(() {
+                                    _submiting = false;
+
+                                  });
+
                                 }
                               },
+
                               child: Text("Submit")),
                         ],
                       )
@@ -193,7 +270,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
     );
   }
 
-  _ShowPasswordAlertDialog(BuildContext context, paymentType, amount) {
+  _ShowPasswordAlertDialog(BuildContext context, paymentType, amount,transferAccount) {
+    print(transferAccount);
  showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -211,12 +289,6 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //       blurRadius: 10,
-                    //       color: Colors.grey[300],
-                    //       spreadRadius: 5)
-                    // ],
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -283,78 +355,73 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              side: BorderSide(
-                                width: 1.0,
-                                color: Colors.black12,
-                                style: BorderStyle.solid,
-                              ),
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.all(12),
-                              child: Text(
-                                "Confirm",
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
                                 ),
-                              ),
-                            ),
+                                primary: Colors.white24,
+                                padding: EdgeInsets.only(
+                                  left: 30,
+                                  right: 30,
+                                  top: 10,
+                                  bottom: 10,
+                                ),
+                                textStyle:
+                                TextStyle(fontWeight: FontWeight.bold)),
                             onPressed: () async {
-                              print( _passwordController.text);
-                              if(_withdrawformKey.currentState.validate()){
-                                await context
-                                    .read<WalletProvider>()
-                                    .withdrawlCheckPassword(
-                                    context,
-                                    paymentType,
-                                    int.parse(amount),
-                                    _passwordController.text);
-                              }
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          _submiting?SpinKitDoubleBounce(color: Theme.of(context).primaryColor,):ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  padding: EdgeInsets.only(
+                                    left: 30,
+                                    right: 30,
+                                    top: 10,
+                                    bottom: 10,
+                                  ) // foreground
+                              ),
+                              onPressed: _submiting
+                                  ? null
+                                  : () async {
+                                if (_withdrawformKey.currentState
+                                    .validate()) {
+                                  setState(() {
+                                    _submiting = true;
 
-                              // if (_pwformKey.currentState.validate()) {
-                              //   // widget.bill.isPaid = true;
-                              //   widget.bill.remark = _remarkController.text;
-                              //   widget.bill.status = "Paid";
-                              //   widget.bill.payDate = getPayDate(DateTime.now());
-                              //   print(widget.bill.readDate);
-                              //   print(widget.bill.readImageUrl);
-                              //   print(widget.bill.toJson());
-                              //   await context.read<WalletProvider>().payMeterBill(
-                              //       context, widget.bill, widget.docId);
-                              // }
-                            },
-                          ),
-                          OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              side: BorderSide(
-                                width: 1.0,
-                                color: Colors.black12,
-                                style: BorderStyle.solid,
-                              ),
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.all(12),
-                              child: Text(
-                                "Close",
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
+                                  });
+
+                                  TransactionModel model = new TransactionModel();
+                                  model.paymentType=paymentType;
+                                  model.type= TransactionType.Withdraw;
+                                  model.amount= -int.parse(amount);
+                                  model.transferAccount=transferAccount;
+                                  model.createdDate=Timestamp.fromDate(DateTime.now());
+                                  model.paymentLogoUrl= _paymentMethod.logoUrl;
+                                  bool checkPass= await checkPassword(_passwordController.text);
+
+                                  print(checkPass);
+                                  if (checkPass!=null && checkPass) {
+                                    upload(model);
+                                    _submiting = false;
+                                  }
+                                  else{
+                                    myMsg.MessageHandler.showErrMessage(
+                                        context,
+                                        "Can not edit","Pin is not correct");
+                                  }
+                                }
+                              },
+                              child: Text("Submit")),
                         ],
                       ),
 

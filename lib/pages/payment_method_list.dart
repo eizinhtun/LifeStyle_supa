@@ -51,7 +51,7 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
       appBar: AppBar(
         elevation: 0.0,
         centerTitle: true,
-        title: Text("Select Payment"),
+        title: Text(Tran.of(context).text("payment_method_list")),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: db.collection(paymentMethodCollection).snapshots(),

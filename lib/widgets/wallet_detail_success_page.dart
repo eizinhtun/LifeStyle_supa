@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
@@ -11,7 +12,9 @@ import 'package:left_style/utils/formatter.dart';
 
 class WalletDetailSuccessPage extends StatefulWidget {
   final String docId;
-  const WalletDetailSuccessPage({Key key, this.docId}) : super(key: key);
+  final String type;
+  final String status;
+  const WalletDetailSuccessPage({Key key, this.docId,this.type,this.status}) : super(key: key);
 
   @override
   _WalletDetailSuccessPageState createState() =>
@@ -31,6 +34,9 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
         elevation: 0.0,
         centerTitle: true,
         title: Text("Wallet Detail"),
+        actions: [
+          checkTypeAndStatus(context),
+        ],
       ),
       body: StreamBuilder<DocumentSnapshot>(
           stream: db
@@ -57,17 +63,33 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset(
-                              "assets/payment/success.png",
-                              width: 50,
-                              height: 50,
+                            Container(
+                              color: Colors.transparent,
+                              margin: EdgeInsets.only(bottom: 5),
+                              alignment: Alignment.center,
+                              width: 60,
+                              height: 60,
+                              child:new CircleAvatar(
+                                backgroundColor:Colors.black12,
+                                radius: 100.0,
+                                backgroundImage: NetworkImage(
+                                  item.paymentLogoUrl,
+                                ),
+                              ),
                             ),
-                            Text(
-                                Tran.of(context)
-                                    .text("notification_toup_success")
-                                    .toString(),
-                                style: TextStyle(fontSize: 24)),
-                            Text(item.amount.toString() + " (Ks)"),
+
+
+                            Container(child: Column(
+                              children: [
+                                Text(
+                                    Tran.of(context)
+                                        .text(item.status.trim().toLowerCase())
+                                        .toString(),
+                                    style: TextStyle(fontSize: 18,color: getStatusColor(item.status.trim().toLowerCase()))),
+                                Text(item.amount.toString(),style: TextStyle(color:item.amount>0?Colors.green:Colors.red,fontSize: 20,fontWeight: FontWeight.w900)),
+                              ],
+                            ),
+                ),
                             SizedBox(height: 10),
                             Dash(
                               direction: Axis.horizontal,
@@ -95,9 +117,19 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                               ),
                               Row(
                                 children: [
-                                  Text("Amount"),
+                                  Text("Transaction Type"),
                                   Spacer(),
-                                  Text(item.amount.toString(),
+                                  Text(
+                                      item.type,
+                                      style: TextStyle(fontSize: 12)),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("Bank"),
+                                  Spacer(),
+                                  Text(
+                                      item.paymentType,
                                       style: TextStyle(fontSize: 12)),
                                 ],
                               ),
@@ -117,68 +149,40 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                 children: [
                                   Text("Amount"),
                                   Spacer(),
-                                  Text(item.amount.toString(),
+                                  Text(item.amount.toString()+ " (Ks)",
                                       style: TextStyle(fontSize: 12)),
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  Text("Transaction Date"),
-                                  Spacer(),
-                                  Text(
-                                      Formatter.dateTimeFormat(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              item.createdDate
-                                                  .millisecondsSinceEpoch)),
-                                      style: TextStyle(fontSize: 12)),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("Amount"),
-                                  Spacer(),
-                                  Text(item.amount.toString(),
-                                      style: TextStyle(fontSize: 12)),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("Transaction Date"),
-                                  Spacer(),
-                                  Text(
-                                      Formatter.dateTimeFormat(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              item.createdDate
-                                                  .millisecondsSinceEpoch)),
-                                      style: TextStyle(fontSize: 12)),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("Amount"),
-                                  Spacer(),
-                                  Text(item.amount.toString(),
-                                      style: TextStyle(fontSize: 12)),
-                                ],
-                              ),
+
                             ],
                           ),
                         ),
                         SizedBox(height: 50),
                         OutlinedButton(
-                            style: ElevatedButton.styleFrom(
+                          style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50.0),
-                                  side: BorderSide(
-                                      color: Colors.black12, width: 2.0)),
-                              elevation: 0,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 100, vertical: 12),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("Close")),
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              primary: Colors.white24,
+                              padding: EdgeInsets.only(
+                                left: 30,
+                                right: 30,
+                                top: 10,
+                                bottom: 10,
+                              ),
+                              textStyle:
+                              TextStyle(fontWeight: FontWeight.bold,)),
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            "Close",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )
+
                       ],
                     ),
                   ),
@@ -193,6 +197,111 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
               return Center(child: Text("No data"));
             }
           }),
+    );
+  }
+
+  Color getStatusColor(status) {
+
+    switch (status) {
+      case "approved":
+           return Colors.green;
+        break;
+      default:
+        return Colors.red;
+        break;
+    }
+  }
+  Widget checkTypeAndStatus(context){
+    if((widget.type =="topup" || widget.type== "withdraw") && (widget.status.trim().toLowerCase()=="verifying" || widget.status.trim().toLowerCase()== "rejected")){
+      return IconButton(
+        onPressed: () async {
+          showAlertDialog(context);
+          setState(() {
+
+          });
+
+      },icon: Icon(Icons.delete));
+    }
+    else{
+      return Container();
+    }
+  }
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton =
+    OutlinedButton(
+      style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          primary: Colors.white24,
+          padding: EdgeInsets.only(
+            left: 30,
+            right: 30,
+            top: 10,
+            bottom: 10,
+          ),
+          textStyle:
+          TextStyle(fontWeight: FontWeight.bold)),
+      onPressed: () async {
+        Navigator.of(context).pop();
+      },
+      child: Text(
+        "Cancel",
+        style: TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.bold),
+      ),
+    );
+
+    Widget continueButton =
+    ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
+            padding: EdgeInsets.only(
+              left: 30,
+              right: 30,
+              top: 10,
+              bottom: 10,
+            ) // foreground
+        ),
+        onPressed:  () async {
+          Navigator.of(context).pop(true);
+          Navigator.of(context).pop(true);
+          await  db
+              .collection(transactions)
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .collection(manyTransaction)
+              .doc(widget.docId).delete();
+
+
+        },
+        child: Text("Ok"));
+
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Are Your Sure Delete?"),
+     // content: Text("Would you like to continue learning how to use Flutter alerts?"),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            cancelButton,
+            continueButton,
+          ],
+        ),
+
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

@@ -6,18 +6,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/models/user_model.dart';
-import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
 import 'package:left_style/widgets/wallet_detail_success_page.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:provider/provider.dart';
+
 
 class Wallet extends StatefulWidget {
   @override
@@ -47,7 +45,7 @@ bool _isLoading=true;
       tracList.clear();
      documentList = (await FirebaseFirestore.instance.collection(transactions)
           .doc(FirebaseAuth.instance.currentUser.uid).collection(manyTransaction)
-          .orderBy("createdDate")
+          .orderBy("createdDate",descending:true)
           .limit(showlist).get()).docs;
       documentList.forEach((result) {
         tracList.add(TransactionModel.fromJson(result.data(),doc: result.id));
@@ -68,7 +66,7 @@ bool _isLoading=true;
 
       List<DocumentSnapshot> newDocumentList = (await FirebaseFirestore.instance.collection(transactions)
           .doc(FirebaseAuth.instance.currentUser.uid).collection(manyTransaction)
-          .orderBy("createdDate")
+          .orderBy("createdDate",descending:true)
           .startAfterDocument(documentList[documentList.length - 1])
           .limit(showlist).get()).docs;
       newDocumentList.forEach((result) {
@@ -162,9 +160,9 @@ bool _isLoading=true;
                               ],
                             )),
                         PopupMenuButton(
-                            onSelected: (val){
+                            onSelected: (val) async {
                               if(val==1){
-                              var result=  Navigator.of(context).push(MaterialPageRoute(
+                              var result= await Navigator.of(context).push(MaterialPageRoute(
                                     builder: (contex) => TopUpPage()));
                               if(result!=null && result==true){
                                 _isLoading=true;
@@ -172,8 +170,12 @@ bool _isLoading=true;
                               }
                               }
                               if(val==2){
-                                Navigator.of(context).push(MaterialPageRoute(
+                                var result= await  Navigator.of(context).push(MaterialPageRoute(
                                     builder: (contex) => WithdrawalPage()));
+                                if(result!=null && result==true){
+                                  _isLoading=true;
+                                  _onRefresh();
+                                }
                               }
                             },
                             icon: Icon(Icons.more_horiz_rounded),
@@ -280,6 +282,7 @@ bool _isLoading=true;
             ),
             Divider(
                 //length: MediaQuery.of(context).size.width,
+                thickness:2,
                 ),
             Expanded(
               child: Container(
@@ -321,8 +324,6 @@ bool _isLoading=true;
                   onRefresh: _onRefresh,
                   onLoading: _onLoading,
 
-
-
                   child:_isLoading?Center(child:CupertinoActivityIndicator() ,): ListView.builder(
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
@@ -332,42 +333,50 @@ bool _isLoading=true;
                         child: Column(
                           children: [
                             ListTile(
-                              onTap: (){
-                                print(tracList[i].docId);
-                                Navigator.push(
+                              onTap: () async {
+                            var returnResult= await    Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                         new WalletDetailSuccessPage(
-                                            docId: tracList[i].docId)));
+                                            docId: tracList[i].docId,type: tracList[i].type,status: tracList[i].status)));
+                             if(returnResult!=null && returnResult){
+                               _onRefresh();
+                             }
+
                               },
                               title: Column(
                                 children: <Widget>[
                                   Row(
                                     children: [
-                                      documentList[i].get("type") == TransactionType.Topup
-                                          ? Image.asset(
-                                              "assets/payment/topup.png",
-                                              width: 50,
-                                              height: 50,
-                                            )
-                                          : Image.asset(
-                                              "assets/payment/withdraw.png",
-                                              width: 50,
-                                              height: 50,
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          margin: EdgeInsets.only(bottom: 5),
+                                          alignment: Alignment.center,
+                                          width: 45,
+                                          height: 45,
+                                          child:
+                                          new CircleAvatar(
+                                            backgroundColor:Colors.black12,
+                                            radius: 100.0,
+                                            backgroundImage: NetworkImage(
+                                              tracList[i].paymentLogoUrl,
                                             ),
+                                          ),
+                                        ),
+                                      ),
+
                                       Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            tracList[i].type ==
-                                                    TransactionType.Topup
-                                                ? "Top Up"
-                                                : "Withdraw",
+                                            tracList[i].paymentType,
                                             style: TextStyle(
                                               fontSize: 14,
-                                              fontWeight: FontWeight.bold,
+                                              fontWeight: FontWeight.w900,
                                             ),
                                           ),
                                           Text(
@@ -383,7 +392,7 @@ bool _isLoading=true;
                                               color: tracList[i].type ==
                                                       TransactionType.Topup
                                                   ? Colors.green
-                                                  : Colors.red)),
+                                                  : Colors.red,fontWeight: FontWeight.w900)),
 
                                     ],
                                   ),
@@ -398,14 +407,12 @@ bool _isLoading=true;
                                       Column(
                                         children: [
                                           Text("${Tran.of(context)?.text(tracList[i].status)}",
-                                              style: TextStyle(fontSize: 13,color:tracList[i].status.trim().toLowerCase()=="approved"? Colors.green:Colors.red))
-
-                                          ,
+                                              style: TextStyle(fontSize: 13,color:tracList[i].status.trim().toLowerCase()=="approved"? Colors.green:Colors.red)),
                                         ],
                                       ),
                                       Spacer(),
-                                      tracList[i].status.trim().toLowerCase()=="approved"? Image.asset("assets/payment/success.png",
-                                          width: 20, height: 20):Text("")
+                                      getTypeInfo(tracList[i].status.trim().toLowerCase()),
+
                                     ],
                                   ),
                                 ],
@@ -427,25 +434,18 @@ bool _isLoading=true;
     );
   }
 
-  String title = "";
-  String imgUrl = "";
-  Color textColor;
-  void getTypeInfo(String type) {
+
+  Widget getTypeInfo(String type) {
     switch (type) {
-      case TransactionType.Topup:
-        title = "Top Up";
-        imgUrl = "assets/payment/topup.png";
-        textColor = Colors.green;
+
+      case "approved":
+        return Image.asset("assets/payment/success.png",width: 20,height: 20,);
         break;
-      case TransactionType.Withdraw:
-        title = "Withdraw";
-        imgUrl = "assets/payment/withdraw.png";
-        textColor = Colors.red;
+      case "rejected":
+        return Icon(Icons.error,color: Colors.red,);
         break;
-      case TransactionType.meterbill:
-        title = "Meter Bill";
-        imgUrl = "assets/payment/withdraw.png";
-        textColor = Colors.purple;
+      case "verifying":
+        return Text("");
         break;
     }
   }
