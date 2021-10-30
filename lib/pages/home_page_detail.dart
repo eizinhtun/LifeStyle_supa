@@ -44,9 +44,22 @@ class _HomePageDetailState extends State<HomePageDetail> {
   @override
   void initState() {
     super.initState();
+    getData();
     if (!kIsWeb) {
       registerNotification(context);
     }
+  }
+
+  List<NotiModel> notiList = [];
+  getData() async {
+    notiList = await context.read<NotiProvider>().getNotiList(context);
+    if (notiList != null && notiList.length > 0) {
+      SystemData.notiCount = notiList.where((e) => e.status == false).length;
+    } else {
+      SystemData.notiCount = 0;
+    }
+    context.read<NotiProvider>().updateNotiCount(context, SystemData.notiCount);
+    setState(() {});
   }
 
   @override
@@ -165,8 +178,8 @@ class _HomePageDetailState extends State<HomePageDetail> {
         body: initialMessage.data['body'].toString(),
         imageUrl: initialMessage.data['imageUrl'].toString(),
         type: initialMessage.data['type'].toString(),
-        status: initialMessage.data['status'].toString(),
-        currentdate: initialMessage.data['currentdate'].toString(),
+        // status: initialMessage.data['status'].toString(),
+        // currentdate: initialMessage.data['currentdate'].toString(),
         // sound: initialMessage.data['sound'].toString(),
         // createdDateTimeStr:
         //     initialMessage.data['created_date_time_Str'].toString(),
@@ -202,10 +215,13 @@ class _HomePageDetailState extends State<HomePageDetail> {
       //           // NotificationListPage()
       //           NotificationDetailPage(noti: _notification, status: "false"), //
       //     ));
-      SystemData.notiCount = SystemData.notiCount + 1;
-      // setState(() {
-      //   SystemData.notiCount = SystemData.notiCount + 1;
-      // });
+
+      setState(() {
+        SystemData.notiCount = SystemData.notiCount + 1;
+        context
+            .read<NotiProvider>()
+            .updateNotiCount(context, SystemData.notiCount);
+      });
     }
   }
 
@@ -285,11 +301,12 @@ class _HomePageDetailState extends State<HomePageDetail> {
       // );
 
       // await context.read<NotiProvider>().addNotiToStore(_notification);
-      SystemData.notiCount = SystemData.notiCount + 1;
-      // setState(() {
-      //   SystemData.notiCount = SystemData.notiCount + 1;
-      //   //context.read<BetProvider>().notiCount(context,SystemData.notiCount);
-      // });
+      setState(() {
+        SystemData.notiCount = SystemData.notiCount + 1;
+        context
+            .read<NotiProvider>()
+            .updateNotiCount(context, SystemData.notiCount);
+      });
     });
   }
 
@@ -393,7 +410,7 @@ class _HomePageDetailState extends State<HomePageDetail> {
           body: message.notification.body,
           imageUrl: message.notification.android.imageUrl,
           type: message.messageType,
-          status: "true",
+          status: true,
           messageId: message.notification.hashCode.toString()
           // message.data['message_id'].toString(),
 // currentdate:DateTime. message.sentTime.
@@ -424,10 +441,12 @@ class _HomePageDetailState extends State<HomePageDetail> {
       //   ),
       // );
 
-      SystemData.notiCount = SystemData.notiCount + 1;
-      // setState(() {
-      //   SystemData.notiCount = SystemData.notiCount + 1;
-      // });
+      setState(() {
+        SystemData.notiCount = SystemData.notiCount + 1;
+        context
+            .read<NotiProvider>()
+            .updateNotiCount(context, SystemData.notiCount);
+      });
     });
   }
 

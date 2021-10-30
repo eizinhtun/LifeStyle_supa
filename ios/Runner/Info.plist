@@ -45,5 +45,11 @@
 		<true/>
 		<key>NSCameraUsageDescription</key>
     	<string>Camera permission is required for barcode scanning.</string>
+		<key>UIBackgroundModes</key>
+    	<array>
+        <string>remote-notification</string>
+    	</array>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Gallery permission is required for saving images.</string>
 	</dict>
 </plist>

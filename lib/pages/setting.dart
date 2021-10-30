@@ -10,10 +10,22 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text("Settings"),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Setting"),
+        centerTitle: true,
+      ),
+      body: Container(
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        child: ListView(
+          children: [],
+        ),
       ),
     );
   }

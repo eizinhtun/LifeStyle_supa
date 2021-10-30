@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/providers/noti_provider.dart';
+import 'package:left_style/utils/formatter.dart';
 import 'package:provider/provider.dart';
 
 class NotificationDetailPage extends StatefulWidget {
@@ -59,10 +60,8 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Center(
-          child: Container(
-              margin: EdgeInsets.only(right: 40), child: Text("Meter Pay")),
-        ),
+        centerTitle: true,
+        title: Text("Notification Detail"),
         flexibleSpace: Container(
           decoration: BoxDecoration(color: mainColor
               //     gradient: LinearGradient(
@@ -144,18 +143,10 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
                                           fontWeight: FontWeight.w600),
                                       children: <TextSpan>[
                                         TextSpan(
-                                          text: "Date",
-                                          // (widget.noti.currentdate != null
-                                          //         ? Formatter.getDate(widget
-                                          //                 .noti.currentdate)
-                                          //             .toString()
-                                          //         : "") +
-                                          //     " " +
-                                          //     (widget.noti.currentdate != null
-                                          //         ? getTime(widget
-                                          //                 .noti.currentdate)
-                                          //             .toString()
-                                          //         : ""),
+                                          text: (widget.noti.currentdate != null
+                                              ? getTime(widget.noti.currentdate)
+                                                  .toString()
+                                              : ""),
                                           style: TextStyle(
                                               fontSize: 14,
                                               color: mainColor,
@@ -198,10 +189,9 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
     );
   }
 
-  getTime(date) {
-    DateTime tempDate = DateFormat("yyyy-MM-ddThh:mm:ss").parse(date);
+  getTime(DateTime date) {
     var dateFormat = DateFormat("h:mm a");
-    var result = dateFormat.format(tempDate);
+    var result = dateFormat.format(date);
     return result;
   }
 }

@@ -255,13 +255,12 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Center(
-            child: Text(
-              "" + (meter == null ? "Meter" : meter.meterNo),
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black54,
-              ),
+          centerTitle: true,
+          title: Text(
+            "" + (meter == null ? "Meter" : meter.meterNo),
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.black54,
             ),
           ),
         ),

@@ -49,12 +49,8 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
-        title: Center(
-          child: Container(
-              margin: EdgeInsets.only(right: 40),
-              child:
-                  Text(Tran.of(context).text("my_uploaded_unit").toString())),
-        ),
+        centerTitle: true,
+        title: Text(Tran.of(context).text("my_uploaded_unit").toString()),
         /*flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(

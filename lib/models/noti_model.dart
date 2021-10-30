@@ -1,7 +1,9 @@
 //@dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class NotiModel {
   String id;
-  String createdDate;
+  DateTime createdDate;
   String createdDateTimeStr;
   String title;
   int userId;
@@ -17,7 +19,7 @@ class NotiModel {
   String bodyValue;
   String category;
   String clickAction;
-  String currentdate;
+  DateTime currentdate;
   String currentDateStr;
   String fortime;
   String number;
@@ -26,7 +28,7 @@ class NotiModel {
   String requestDateStr;
   String sound;
   String state;
-  String status;
+  bool status;
   String time;
   String transactionNo;
   int odd;
@@ -71,14 +73,16 @@ class NotiModel {
     title = json['title'];
     body = json['body'];
     type = json['type'];
-    // refid = json['refid'];
     content = json['content'];
     imageUrl = json['imageUrl'];
-    status = json['status'] == null || json['status'] == "null"
-        ? "0"
-        : json['status'];
+    status = json['status'];
     id = json['id'];
-    // createdDate = json['created_date'];
+    messageId = json['message_id'];
+    // refid = json['refid'];
+
+    Timestamp createdtimestamp = json['created_date'];
+    createdDate = createdtimestamp.toDate();
+    //  Timestamp()
     // createdDateTimeStr = json['created_date_time_Str'];
     // userId = json['userId'];
     // accountNo = json['account_no'];
@@ -88,7 +92,8 @@ class NotiModel {
     // bodyValue = json['body_value'];
     // category = json['category'];
     // clickAction = json['click_action'];
-    // currentdate = json['currentdate'];
+    Timestamp currenttimestamp = json['currentdate'];
+    currentdate = currenttimestamp.toDate();
     // currentDateStr = json['current_date_Str'];
     // fortime = json['fortime'];
     // number = json['number'];
@@ -101,7 +106,6 @@ class NotiModel {
     // transactionNo = json['transaction_no'];
     // odd = json['odd'];
     // guid = json['guid'];
-    messageId = json['message_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -109,12 +113,15 @@ class NotiModel {
     data['title'] = this.title;
     data['body'] = this.body;
     data['type'] = this.type;
-    // data['refid'] = this.refid;
     data['content'] = this.content;
     data['imageUrl'] = this.imageUrl;
     data['status'] = this.status;
     data['id'] = this.id;
-    // data['created_date'] = this.createdDate;
+    data['message_id'] = this.messageId;
+    // data['refid'] = this.refid;
+    data['created_date'] = Timestamp.fromDate(this.createdDate);
+    //  this.createdDate;
+
     // data['created_date_time_Str'] = this.createdDateTimeStr;
     // data['userId'] = this.userId;
     // data['account_no'] = this.accountNo;
@@ -124,7 +131,7 @@ class NotiModel {
     // data['body_value'] = this.bodyValue;
     // data['category'] = this.category;
     // data['click_action'] = this.clickAction;
-    // data['currentdate'] = this.currentdate;
+    data['currentdate'] = Timestamp.fromDate(this.currentdate);
     // data['current_date_Str'] = this.currentDateStr;
     // data['fortime'] = this.fortime;
     // data['number'] = this.number;
@@ -137,7 +144,7 @@ class NotiModel {
     // data['transaction_no'] = this.transactionNo;
     // data['odd'] = this.odd;
     // data['guid'] = this.guid;
-    data['message_id'] = this.messageId;
+
     return data;
   }
 }

@@ -48,12 +48,8 @@ class WalletDemoPageState extends State<WalletDemoPage>
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
-        title: Center(
-          child: Container(
-            margin: EdgeInsets.only(right: 40),
-            child: Text("Wallet"),
-          ),
-        ),
+        centerTitle: true,
+        title: Text("Wallet"),
         actions: [
           IconButton(
               onPressed: () {

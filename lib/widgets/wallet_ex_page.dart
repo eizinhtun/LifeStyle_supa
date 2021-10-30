@@ -89,12 +89,8 @@ class _loadingPageState extends State<WalletExPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        title: Center(
-          child: Container(
-            margin: EdgeInsets.only(right: 40),
-            child: Text("Wallet"),
-          ),
-        ),
+        centerTitle: true,
+        title: Text("Wallet"),
       ),
       body: Column(
         children: [

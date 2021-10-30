@@ -138,7 +138,8 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 print("withdrawl success!");
                 MessageHandler.showMessage(
                     context, "Success", "Your withdrawl is successful");
-                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Wallet()));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => Wallet()));
               });
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
@@ -252,8 +253,8 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 uid: uid,
                 type: TransactionType.meterbill,
                 // paymentType: ,
-               // amount: bill.totalCost.toDouble(),
-                createdDate:Timestamp.fromDate(DateTime.now()));
+                // amount: bill.totalCost.toDouble(),
+                createdDate: Timestamp.fromDate(DateTime.now()));
 
             tracRef
                 .doc(uid)

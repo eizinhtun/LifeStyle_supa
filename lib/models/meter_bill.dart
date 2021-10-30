@@ -169,6 +169,8 @@ class MeterBill {
       this.readUnit});
 
   MeterBill.fromJson(Map<String, dynamic> json) {
+    // print(json['isPaid']);
+    // print(json['isPaid'] == false);
     isPaid = json['isPaid'];
     remark = json['remark'];
     payDate = json['payDate'];

@@ -334,29 +334,29 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 10,
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      print("Pressed");
-                      var meterRef = FirebaseFirestore.instance
-                          .collection(meterCollection);
+                  // ElevatedButton(
+                  //   onPressed: () async {
+                  //     print("Pressed");
+                  //     var meterRef = FirebaseFirestore.instance
+                  //         .collection(meterCollection);
 
-                      if (FirebaseAuth.instance.currentUser?.uid != null) {
-                        String uid =
-                            FirebaseAuth.instance.currentUser.uid.toString();
+                  //     if (FirebaseAuth.instance.currentUser?.uid != null) {
+                  //       String uid =
+                  //           FirebaseAuth.instance.currentUser.uid.toString();
 
-                        await meterRef
-                            .doc(uid)
-                            .collection(userMeterCollection)
-                            .doc("7324392739")
-                            .set(jsonString);
-                      }
-                    },
-                    child: Text(
-                      "Add",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                  //       await meterRef
+                  //           .doc(uid)
+                  //           .collection(userMeterCollection)
+                  //           .doc("7324392739")
+                  //           .set(jsonString);
+                  //     }
+                  //   },
+                  //   child: Text(
+                  //     "Add",
+                  //     style: TextStyle(
+                  //         color: Colors.white, fontWeight: FontWeight.bold),
+                  //   ),
+                  // ),
                   Container(
                     padding: EdgeInsets.all(8),
                     child: Column(
