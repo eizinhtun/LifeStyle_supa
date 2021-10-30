@@ -58,7 +58,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
-                              "assets/payment/success.png",
+                              item.paymentType == TransactionType.Topup?"assets/payment/success.png": "assets/payment/money.png",
                               width: 50,
                               height: 50,
                             ),

@@ -11,6 +11,7 @@ class TransactionModel {
   Timestamp createdDate;
   String imageUrl;
   String transactionId;
+  String transferAccount;
 
   TransactionModel(
       {this.uid,
@@ -19,7 +20,8 @@ class TransactionModel {
       this.amount,
       this.createdDate,
       this.imageUrl,
-      this.transactionId});
+      this.transactionId,
+      this.transferAccount});
 
   TransactionModel.fromJson(Map<String, dynamic> json, {String doc}) {
     docId = doc;
@@ -33,6 +35,7 @@ class TransactionModel {
     //DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
     imageUrl = json['imageUrl'];
     transactionId = json['transactionId'];
+    transferAccount= json['transferAccount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +47,7 @@ class TransactionModel {
     data['createdDate'] = this.createdDate;
     data['imageUrl'] = this.imageUrl;
     data['transactionId'] = this.transactionId;
+    data['transferAccount']= this.transferAccount;
     return data;
   }
 

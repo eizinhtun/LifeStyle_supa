@@ -16,10 +16,10 @@ class WithdrawalPage extends StatefulWidget {
 
 class _WithdrawalPageState extends State<WithdrawalPage> {
   final _withdrawformKey = GlobalKey<FormState>();
-  final _passwordformKey= GlobalKey<FormState>();
   PaymentMethod _paymentMethod;
   TextEditingController _paymentController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
+  TextEditingController _transferAccountController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
   bool _obscureText = true;
@@ -107,6 +107,17 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                       TextFormField(
                         autofocus: false,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: _transferAccountController,
+                        keyboardType: TextInputType.number,
+                        validator: (val) {
+                          return Validator.requiredField(context, val, '');
+                        },
+                        decoration: buildInputDecoration("Transfer Account"),
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        autofocus: false,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         validator: (val) {
@@ -160,7 +171,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                   _ShowPasswordAlertDialog(
                                       context,
                                       _paymentMethod.id,
-                                      _amountController.text);
+                                      _amountController.text,_transferAccountController.text);
                                 }
                               },
                               child: Text("Submit")),
@@ -193,7 +204,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
     );
   }
 
-  _ShowPasswordAlertDialog(BuildContext context, paymentType, amount) {
+  _ShowPasswordAlertDialog(BuildContext context, paymentType, amount, transferAccount) {
  showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -312,21 +323,10 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                     .withdrawlCheckPassword(
                                     context,
                                     paymentType,
-                                    int.parse(amount),
+                                    int.parse(amount), transferAccount,
                                     _passwordController.text);
                               }
 
-                              // if (_pwformKey.currentState.validate()) {
-                              //   // widget.bill.isPaid = true;
-                              //   widget.bill.remark = _remarkController.text;
-                              //   widget.bill.status = "Paid";
-                              //   widget.bill.payDate = getPayDate(DateTime.now());
-                              //   print(widget.bill.readDate);
-                              //   print(widget.bill.readImageUrl);
-                              //   print(widget.bill.toJson());
-                              //   await context.read<WalletProvider>().payMeterBill(
-                              //       context, widget.bill, widget.docId);
-                              // }
                             },
                           ),
                           OutlinedButton(

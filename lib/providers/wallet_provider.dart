@@ -115,7 +115,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //   notifyListeners();
   // }
   Future<void> withdrawlCheckPassword(BuildContext context, String paymentType,
-      int amount, String password) async {
+      int amount, String transferAccount, String password) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       userRef.doc(uid).get(GetOptions(source: Source.server)).then((value) {
         String oldPassword = value.data()["password"];
@@ -138,8 +138,10 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
               });
               TransactionModel transactionModel = TransactionModel(
                   uid: uid,
+                  paymentType: paymentType,
                   type: TransactionType.Withdraw,
                   amount: -amount,
+                  transferAccount: transferAccount,
                   createdDate: Timestamp.fromDate(DateTime.now()));
               tracRef
                   .doc(uid)
@@ -155,12 +157,13 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
                   context, "Fail", "Your withdrawl is fail");
             }
           }
+          MessageHandler.showMessage(context, "Success", "Password is true");
+          notifyListeners();
         } else {
           MessageHandler.showErrMessage(context, "Fail", "Password is fail");
           notifyListeners();
         }
-        MessageHandler.showMessage(context, "Success", "Password is true");
-        notifyListeners();
+
       });
       // MessageHandler.showErrMessage(context, "Fail", "No Internet");
       // notifyListeners();
