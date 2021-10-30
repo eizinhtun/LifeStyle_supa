@@ -10,10 +10,10 @@ class MeterCityPage extends StatefulWidget {
 }
 
 class _MeterCityPageState extends State<MeterCityPage> {
-  TextEditingController _searchController = TextEditingController();
+  // TextEditingController _searchController = TextEditingController();
   Future resultsLoaded;
-  List _allResults = [];
-  List _resultsList = [];
+  // List _allResults = [];
+  // List _resultsList = [];
   final db = FirebaseFirestore.instance;
 
   @override

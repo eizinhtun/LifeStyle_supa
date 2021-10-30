@@ -16,14 +16,12 @@ class WithdrawalPage extends StatefulWidget {
 
 class _WithdrawalPageState extends State<WithdrawalPage> {
   final _withdrawformKey = GlobalKey<FormState>();
-  final _passwordformKey= GlobalKey<FormState>();
   PaymentMethod _paymentMethod;
   TextEditingController _paymentController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
   bool _obscureText = true;
-
 
   @override
   void initState() {
@@ -101,8 +99,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                     ),
                               hintText: "Select Payment",
                             ),
-                          )
-                      ),
+                          )),
                       SizedBox(height: 20),
                       TextFormField(
                         autofocus: false,
@@ -157,7 +154,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                               onPressed: () async {
                                 if (_withdrawformKey.currentState.validate()) {
                                   print("Validate");
-                                  _ShowPasswordAlertDialog(
+                                  _showPasswordAlertDialog(
                                       context,
                                       _paymentMethod.id,
                                       _amountController.text);
@@ -193,186 +190,183 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
     );
   }
 
-  _ShowPasswordAlertDialog(BuildContext context, paymentType, amount) {
- showModalBottomSheet(
+  _showPasswordAlertDialog(BuildContext context, paymentType, amount) {
+    showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) {
         return StatefulBuilder(
-
-          builder: (BuildContext context, setState) =>
-              Padding(
-                padding: MediaQuery.of(context).viewInsets,
-                child: Container(
-                  padding: EdgeInsets.all(16),
-                  margin: const EdgeInsets.only(
-                      top: 10, left: 15, right: 15, bottom: 10),
-                  // height: 160,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //       blurRadius: 10,
-                    //       color: Colors.grey[300],
-                    //       spreadRadius: 5)
-                    // ],
+          builder: (BuildContext context, setState) => Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Container(
+              padding: EdgeInsets.all(16),
+              margin: const EdgeInsets.only(
+                  top: 10, left: 15, right: 15, bottom: 10),
+              // height: 160,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                // boxShadow: [
+                //   BoxShadow(
+                //       blurRadius: 10,
+                //       color: Colors.grey[300],
+                //       spreadRadius: 5)
+                // ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Text("Enter Password", style: TextStyle(fontSize: 16)),
+                  Center(
+                    child: Text(
+                      "Enter Your Password",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Text("Enter Password", style: TextStyle(fontSize: 16)),
-                      Center(
-                        child: Text(
-                          "Enter Your Password",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                        child: TextFormField(
-                          autofocus: true,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          controller: _passwordController,
-                          keyboardType: TextInputType.text,
-                          obscureText: _obscureText,
-                          validator: (val) {
-                            return Validator.password(
-                                context, val.toString(), "Password", true);
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                    child: TextFormField(
+                      autofocus: true,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      controller: _passwordController,
+                      keyboardType: TextInputType.text,
+                      obscureText: _obscureText,
+                      validator: (val) {
+                        return Validator.password(
+                            context, val.toString(), "Password", true);
+                      },
+                      decoration: InputDecoration(
+                        labelText: "${Tran.of(context)?.text('password')}",
+                        labelStyle: TextStyle(),
+                        hintText: "${Tran.of(context)?.text('password')}",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
                           },
-                          decoration: InputDecoration(
-                            labelText: "${Tran.of(context)?.text('password')}",
-                            labelStyle: TextStyle(),
-                            hintText: "${Tran.of(context)?.text('password')}",
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
-                              },
-                              icon: Icon(_obscureText
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
-                            ),
-                            hintStyle: TextStyle(color: Colors.grey[400]),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                              BorderSide(color: Theme.of(context).primaryColor),
-                            ),
-                            contentPadding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          icon: Icon(_obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                        ),
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
                           ),
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Theme.of(context).primaryColor),
+                        ),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              side: BorderSide(
-                                width: 1.0,
-                                color: Colors.black12,
-                                style: BorderStyle.solid,
-                              ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          side: BorderSide(
+                            width: 1.0,
+                            color: Colors.black12,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          child: Text(
+                            "Confirm",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
-                            child: Container(
-                              padding: EdgeInsets.all(12),
-                              child: Text(
-                                "Confirm",
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            onPressed: () async {
-                              print( _passwordController.text);
-                              if(_withdrawformKey.currentState.validate()){
-                                await context
-                                    .read<WalletProvider>()
-                                    .withdrawlCheckPassword(
+                          ),
+                        ),
+                        onPressed: () async {
+                          print(_passwordController.text);
+                          if (_withdrawformKey.currentState.validate()) {
+                            await context
+                                .read<WalletProvider>()
+                                .withdrawlCheckPassword(
                                     context,
                                     paymentType,
                                     int.parse(amount),
                                     _passwordController.text);
-                              }
+                          }
 
-                              // if (_pwformKey.currentState.validate()) {
-                              //   // widget.bill.isPaid = true;
-                              //   widget.bill.remark = _remarkController.text;
-                              //   widget.bill.status = "Paid";
-                              //   widget.bill.payDate = getPayDate(DateTime.now());
-                              //   print(widget.bill.readDate);
-                              //   print(widget.bill.readImageUrl);
-                              //   print(widget.bill.toJson());
-                              //   await context.read<WalletProvider>().payMeterBill(
-                              //       context, widget.bill, widget.docId);
-                              // }
-                            },
-                          ),
-                          OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              side: BorderSide(
-                                width: 1.0,
-                                color: Colors.black12,
-                                style: BorderStyle.solid,
-                              ),
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.all(12),
-                              child: Text(
-                                "Close",
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
+                          // if (_pwformKey.currentState.validate()) {
+                          //   // widget.bill.isPaid = true;
+                          //   widget.bill.remark = _remarkController.text;
+                          //   widget.bill.status = "Paid";
+                          //   widget.bill.payDate = getPayDate(DateTime.now());
+                          //   print(widget.bill.readDate);
+                          //   print(widget.bill.readImageUrl);
+                          //   print(widget.bill.toJson());
+                          //   await context.read<WalletProvider>().payMeterBill(
+                          //       context, widget.bill, widget.docId);
+                          // }
+                        },
                       ),
-
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          side: BorderSide(
+                            width: 1.0,
+                            color: Colors.black12,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          child: Text(
+                            "Close",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
                     ],
                   ),
-                ),
+                ],
               ),
+            ),
+          ),
         );
       },
     );
   }
 
-  ShapeBorder _defaultShape() {
-    return RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      side: BorderSide(
-        color: Colors.deepOrange,
-      ),
-    );
-  }
+  // ShapeBorder _defaultShape() {
+  //   return RoundedRectangleBorder(
+  //     borderRadius: BorderRadius.circular(10.0),
+  //     side: BorderSide(
+  //       color: Colors.deepOrange,
+  //     ),
+  //   );
+  // }
 }

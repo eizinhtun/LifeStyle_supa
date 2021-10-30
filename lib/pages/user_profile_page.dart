@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,6 +12,7 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/me_page.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/validators/validator.dart';
+import 'package:left_style/widgets/code_painter.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -73,17 +75,19 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                     expandedHeight: 0.0,
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.vertical(
-                        bottom: new Radius.elliptical(200, 56.0),
+                        bottom: new Radius.elliptical(200, 30
+                            // 56.0
+                            ),
                       ),
                     ),
                     bottom: PreferredSize(
-                      preferredSize: Size.fromHeight(50),
+                      preferredSize: Size.fromHeight(30),
                       child: Container(),
                     ),
                   ),
                   SliverToBoxAdapter(
                     child: Container(
-                        margin: EdgeInsets.only(top: 70),
+                        margin: EdgeInsets.only(top: 60),
                         padding: EdgeInsets.all(20),
                         child: Form(
                           key: _formKey,
@@ -108,9 +112,9 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 20,
-                              ),
+                              // SizedBox(
+                              //   height: 10,
+                              // ),
                               TextFormField(
                                 autofocus: false,
                                 focusNode: nameFocusNode,
@@ -124,19 +128,23 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                 },
                                 decoration: InputDecoration(
                                   labelText: "Name",
-                                  labelStyle: TextStyle(),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.black12,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor),
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 12),
+                                  // contentPadding: EdgeInsets.all(16),
                                 ),
+                                // decoration: InputDecoration(
+                                //   labelText: "Name",
+                                //   labelStyle: TextStyle(),
+                                //   border: OutlineInputBorder(
+                                //     borderSide: BorderSide(
+                                //       color: Colors.black12,
+                                //     ),
+                                //   ),
+                                //   focusedBorder: OutlineInputBorder(
+                                //     borderSide: BorderSide(
+                                //         color: Theme.of(context).primaryColor),
+                                //   ),
+                                //   contentPadding: EdgeInsets.symmetric(
+                                //       horizontal: 20, vertical: 12),
+                                // ),
                               ),
                               SizedBox(
                                 height: 20,
@@ -155,17 +163,17 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                 decoration: InputDecoration(
                                   labelText: "Address",
                                   labelStyle: TextStyle(),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.black12,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor),
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 12),
+                                  // border: OutlineInputBorder(
+                                  //   borderSide: BorderSide(
+                                  //     color: Colors.black12,
+                                  //   ),
+                                  // ),
+                                  // focusedBorder: OutlineInputBorder(
+                                  //   borderSide: BorderSide(
+                                  //       color: Theme.of(context).primaryColor),
+                                  // ),
+                                  // contentPadding: EdgeInsets.symmetric(
+                                  //     horizontal: 20, vertical: 12),
                                 ),
                               ),
                               SizedBox(
@@ -174,7 +182,18 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: ElevatedButton(
+                                    child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
+                                        side: BorderSide(
+                                          width: 1.0,
+                                          color: Theme.of(context).primaryColor,
+                                          style: BorderStyle.solid,
+                                        ),
+                                      ),
                                       onPressed: () {
                                         setState(() {});
                                       },
@@ -185,7 +204,19 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                   ),
                                   SizedBox(width: 10),
                                   Expanded(
-                                    child: ElevatedButton(
+                                    child: OutlinedButton(
+                                        style: OutlinedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                          ),
+                                          side: BorderSide(
+                                            width: 1.0,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            style: BorderStyle.solid,
+                                          ),
+                                        ),
                                         onPressed: () async {
                                           if (_formKey.currentState
                                               .validate()) {
@@ -229,7 +260,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
               Align(
                 alignment: Alignment.topCenter,
                 child: Container(
-                  margin: EdgeInsets.only(top: 70),
+                  margin: EdgeInsets.only(top: 60),
                   height: 120,
                   width: 120,
                   child: Stack(
@@ -285,7 +316,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
             actionsPadding: EdgeInsets.all(10),
             title: Center(child: new Text("Do you want to save QR image?")),
             content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
@@ -302,6 +333,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                   onPressed: () {
                     // setState(() {});
                     _saveQrImage();
+                    Navigator.of(context).pop();
                   },
                   child: Container(
                     padding: EdgeInsets.all(14),
@@ -367,6 +399,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
 
   String saveBtnText = 'Save QR Image';
   final GlobalKey _globalKey = GlobalKey();
+  String albumName = 'Media';
   Future<void> _saveQrImage() async {
     setState(() {
       saveBtnText = 'saving in progress...';
@@ -375,9 +408,22 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
       //extract bytes
       final RenderRepaintBoundary boundary =
           _globalKey.currentContext.findRenderObject();
-      final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      final ByteData byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+
+      final ui.Image image = await boundary.toImage(pixelRatio: 2.0);
+      // final ByteData byteData =
+      //     await image.toByteData(format: ui.ImageByteFormat.png);
+
+      // final image = await QrPainter(
+      //   data: widget.user.uid,
+      //   version: QrVersions.auto,
+      //   gapless: false,
+      //   color: Color(0xff000000),
+      //   emptyColor: Color(0xffffffff),
+      // ).toImage(300);
+
+      final byteData = await CodePainter(qrImage: image, margin: 0)
+          .toImageData(300, format: ui.ImageByteFormat.png);
+
       final Uint8List pngBytes = byteData.buffer.asUint8List();
 
       //create file
@@ -387,7 +433,8 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
       await capturedFile.writeAsBytes(pngBytes);
       print(capturedFile.path);
 
-      await GallerySaver.saveImage(capturedFile.path).then((value) {
+      await GallerySaver.saveImage(capturedFile.path, albumName: albumName)
+          .then((value) {
         setState(() {
           saveBtnText = 'screenshot saved!';
         });
@@ -397,15 +444,15 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
     }
   }
 
-  void _saveNetworkImage() async {
-    String path =
-        'https://image.shutterstock.com/image-photo/montreal-canada-july-11-2019-600w-1450023539.jpg';
-    GallerySaver.saveImage(path).then((bool success) {
-      setState(() {
-        print('Image is saved');
-      });
-    });
-  }
+  // void _saveNetworkImage() async {
+  //   String path =
+  //       'https://image.shutterstock.com/image-photo/montreal-canada-july-11-2019-600w-1450023539.jpg';
+  //   GallerySaver.saveImage(path).then((bool success) {
+  //     setState(() {
+  //       print('Image is saved');
+  //     });
+  //   });
+  // }
 
   _showImageCircle() => Container(
         height: 120,
@@ -417,7 +464,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
         ),
       );
 
-  Future<String> showImage() async {
+  Future<void> showImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile image = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {

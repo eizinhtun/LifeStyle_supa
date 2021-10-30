@@ -669,8 +669,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
     return dateFormat.format(tempDate);
   }
 
-  @override
-  void showMessage(String text) {
-    MessageHandler.showMessage(context, "", text);
-  }
+  // @override
+  // void showMessage(String text) {
+  //   MessageHandler.showMessage(context, "", text);
+  // }
 }

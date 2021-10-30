@@ -27,6 +27,8 @@ class TransactionModel {
     type = json['type'];
     paymentType = json['paymentType'];
     amount = json['amount'];
+    //   Timestamp createdDatetimestamp = json['createdDate'];
+    // createdDate = createdDatetimestamp.toDate();
     createdDate = json['createdDate']; // Timestamp.fromDate();
     // DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
 

@@ -23,7 +23,6 @@ class MeterBillDetailPage extends StatefulWidget {
 class MeterBillDetailPageState extends State<MeterBillDetailPage> {
   final db = FirebaseFirestore.instance;
   MeterBill bill = MeterBill();
-  double _zoom = 100.0;
   double x, y = 0;
 
   @override
@@ -31,7 +30,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
     super.initState();
   }
 
-  TextStyle GetTextStyle() {
+  TextStyle getTextStyle() {
     //print("HorsePower:"+(consumer.meterBill.mHorsePowerCost!=0?consumer.meterBill.mHorsePowerCost.toString():"0"));
     return TextStyle(
         fontWeight: FontWeight.w900,
@@ -43,20 +42,20 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
   Widget _buildItem(
     rowIndex,
     colIndex,
-    ColumSpan,
+    columSpan,
     text,
   ) {
     return GridPlacement(
       rowStart: rowIndex,
       columnStart: colIndex,
-      columnSpan: ColumSpan,
+      columnSpan: columSpan,
       child: Container(
         alignment: Alignment.center,
         width: MediaQuery.of(_context).size.width,
         // height: ScreenUtil().setSp(100),
         margin: EdgeInsets.all(0.0),
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child: Text(text, textAlign: TextAlign.center, style: GetTextStyle()),
+        child: Text(text, textAlign: TextAlign.center, style: getTextStyle()),
         padding: EdgeInsets.all(0),
       ),
     );
@@ -106,22 +105,22 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                           children: <Widget>[
                             Text(
                               'လျှပ်စစ်နှင့်စွမ်းအင်ဝန်ကြီးဌာန',
-                              style: GetTextStyle(),
+                              style: getTextStyle(),
                             ),
                             Text(
                               'လျှပ်စစ်ဓာတ်အားဖြန့်ဖြူးရေးလုပ်ငန်း',
-                              style: GetTextStyle(),
+                              style: getTextStyle(),
                             ),
-                            Text('ဓာတ်အားခတောင်းခံလွှာ', style: GetTextStyle()),
+                            Text('ဓာတ်အားခတောင်းခံလွှာ', style: getTextStyle()),
                             Text(
                                 "Used: " +
                                     bill.monthName +
                                     " Last Date: " +
                                     bill.dueDate +
                                     "",
-                                style: GetTextStyle()),
+                                style: getTextStyle()),
                             Text(bill.companyName + '   လျှပ်စစ်ပုံစံ(၂၄၃)',
-                                style: GetTextStyle()),
+                                style: getTextStyle()),
                             // Text('',style: TextStyle(fontWeight: FontWeight.w900),),
                             //  Text(' '),
 
@@ -141,7 +140,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                     child: Container(
                                       padding: EdgeInsets.only(left: 5),
                                       child: Text(bill.state,
-                                          style: GetTextStyle()),
+                                          style: getTextStyle()),
                                     ),
                                   ),
                                   Align(
@@ -150,7 +149,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                       padding: EdgeInsets.only(left: 5),
                                       child: Text(
                                         "အမည်- " + bill.consumerName,
-                                        style: GetTextStyle(),
+                                        style: getTextStyle(),
                                       ),
                                     ),
                                   ),
@@ -168,7 +167,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                             (bill.street == null
                                                 ? ""
                                                 : bill.street),
-                                        style: GetTextStyle(),
+                                        style: getTextStyle(),
                                       ),
                                     ),
                                   ),
@@ -450,7 +449,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                         child: Text(
                                           "ယခင်ကြွေးကျန်" +
                                               bill.creditAmount.toString(),
-                                          style: GetTextStyle(),
+                                          style: getTextStyle(),
                                           textAlign: TextAlign.right,
                                         ),
                                       ),
@@ -466,7 +465,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                               bill.disscountAmt
                                                   .toString()
                                                   .replaceAll(".0", ""),
-                                          style: GetTextStyle(),
+                                          style: getTextStyle(),
                                           textAlign: TextAlign.right,
                                         ),
                                       ),
@@ -482,7 +481,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                                 bill.totalCost)
                                             .toString()
                                             .replaceAll(".0", ""),
-                                    style: GetTextStyle(),
+                                    style: getTextStyle(),
                                     textAlign: TextAlign.right,
                                   ),
                                 ),
@@ -510,7 +509,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                       )),
                                   //Container( height:60.0,width:90.0, child: Image.network(StaticCompanyInfo.signUrl),),
 
-                                  /// Text('လျှပ်စစ်ပုံစံ(၂၄၃)',style: GetTextStyle()),
+                                  /// Text('လျှပ်စစ်ပုံစံ(၂၄၃)',style: getTextStyle()),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 10.0),
                                     child: BarCodeImage(
@@ -546,7 +545,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                           : "") +
                                       "hotline: " +
                                       bill.hotline,
-                                  style: GetTextStyle()),
+                                  style: getTextStyle()),
                             ),
 
                             (bill.isPaid != null &&

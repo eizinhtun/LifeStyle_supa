@@ -1,16 +1,11 @@
 // @dart=2.9
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/models/my_read_unit.dart';
 import 'package:left_style/models/payment_method.dart';
-import 'package:left_style/pages/my_meterBill_detail.dart';
-import 'package:left_style/utils/message_handler.dart';
-import 'package:flutter_dash/flutter_dash.dart';
 
 class PaymentMethodList extends StatelessWidget {
   @override
@@ -87,11 +82,14 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
                               width: 60,
                               height: 60,
                               child: new CircleAvatar(
-                                radius: 100.0,
-                                backgroundImage: NetworkImage(
-                                  item.logoUrl,
-                                ),
-                              ),
+                                  radius: 100.0,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                    item.logoUrl,
+                                  )
+                                  // NetworkImage(
+                                  //   item.logoUrl,
+                                  // ),
+                                  ),
                             ),
                             Container(
                                 padding: EdgeInsets.only(left: 20),
@@ -123,15 +121,15 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
     return dateFormat.format(tempDate);
   }
 
-  @override
-  void showError(String text) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-        backgroundColor: Colors.red,
-        content: new Text(Tran.of(context).text(text))));
-  }
+  // @override
+  // void showError(String text) {
+  //   _scaffoldKey.currentState.showSnackBar(new SnackBar(
+  //       backgroundColor: Colors.red,
+  //       content: new Text(Tran.of(context).text(text))));
+  // }
 
-  @override
-  void showMessage(String text) {
-    MessageHandler.showMessage(context, "", text);
-  }
+  // @override
+  // void showMessage(String text) {
+  //   MessageHandler.showMessage(context, "", text);
+  // }
 }

@@ -818,9 +818,4 @@ class MeterEditPageState extends State<MeterEditPage>
       ),
     );
   }
-
-  @override
-  void showMessage(String text) {
-    MessageHandler.showMessage(context, "", text);
-  }
 }

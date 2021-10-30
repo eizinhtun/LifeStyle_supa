@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -147,7 +148,11 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                           child: new CircleAvatar(
                                             radius: 100.0,
                                             backgroundImage:
-                                                NetworkImage(bill.readImageUrl),
+                                                CachedNetworkImageProvider(
+                                              bill.readImageUrl,
+                                            ),
+
+                                            // NetworkImage(bill.readImageUrl),
                                           ),
                                         ),
                                         SizedBox(

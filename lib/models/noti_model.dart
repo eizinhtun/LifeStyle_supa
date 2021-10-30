@@ -77,7 +77,7 @@ class NotiModel {
     imageUrl = json['imageUrl'];
     status = json['status'];
     id = json['id'];
-    messageId = json['message_id'];
+    messageId = json['message_id'].toString().trim();
     // refid = json['refid'];
 
     Timestamp createdtimestamp = json['created_date'];

@@ -6,18 +6,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/models/user_model.dart';
-import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
 import 'package:left_style/widgets/wallet_detail_success_page.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:provider/provider.dart';
 
 class Wallet extends StatefulWidget {
   @override
@@ -25,73 +21,65 @@ class Wallet extends StatefulWidget {
 }
 
 class WalletState extends State<Wallet> {
-  RefreshController _refreshController ;
+  RefreshController _refreshController;
   final db = FirebaseFirestore.instance;
   //List<TransactionModel> totalList = [];
   //List<TransactionModel> tracList = [];
 
   int showlist = 5;
 
-
   @override
   void initState() {
     super.initState();
-    _refreshController= RefreshController(initialRefresh: true);
+    _refreshController = RefreshController(initialRefresh: true);
     _onRefresh();
   }
 
-  List<DocumentSnapshot> documentList=[];
-  List<TransactionModel> tracList=[];
+  List<DocumentSnapshot> documentList = [];
+  List<TransactionModel> tracList = [];
   Future fetchFirstList() async {
     try {
       tracList.clear();
-     documentList = (await FirebaseFirestore.instance.collection(transactions)
-          .doc(FirebaseAuth.instance.currentUser.uid).collection(manyTransaction)
-          .orderBy("createdDate")
-          .limit(showlist).get()).docs;
+      documentList = (await FirebaseFirestore.instance
+              .collection(transactions)
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .collection(manyTransaction)
+              .orderBy("createdDate")
+              .limit(showlist)
+              .get())
+          .docs;
       documentList.forEach((result) {
-        tracList.add(TransactionModel.fromJson(result.data(),doc: result.id));
+        tracList.add(TransactionModel.fromJson(result.data(), doc: result.id));
       });
-      setState(() {
-
-      });
-
-    } on SocketException {
-
-    } catch (e) {
+      setState(() {});
+    } on SocketException {} catch (e) {
       print(e.toString());
-
     }
   }
+
   fetchNext() async {
     try {
-
-      List<DocumentSnapshot> newDocumentList = (await FirebaseFirestore.instance.collection(transactions)
-          .doc(FirebaseAuth.instance.currentUser.uid).collection(manyTransaction)
-          .orderBy("createdDate")
-          .startAfterDocument(documentList[documentList.length - 1])
-          .limit(showlist).get()).docs;
+      List<DocumentSnapshot> newDocumentList = (await FirebaseFirestore.instance
+              .collection(transactions)
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .collection(manyTransaction)
+              .orderBy("createdDate")
+              .startAfterDocument(documentList[documentList.length - 1])
+              .limit(showlist)
+              .get())
+          .docs;
       newDocumentList.forEach((result) {
-        tracList.add(TransactionModel.fromJson(result.data(),doc: result.id));
+        tracList.add(TransactionModel.fromJson(result.data(), doc: result.id));
       });
       documentList.addAll(newDocumentList);
 
-      setState(() {
-
-      });
-
-    } on SocketException {
-
-    } catch (e) {
+      setState(() {});
+    } on SocketException {} catch (e) {
       print(e.toString());
-
     }
   }
 
-
-
   void _onRefresh() async {
-
     fetchFirstList();
     _refreshController.refreshCompleted();
   }
@@ -115,9 +103,10 @@ class WalletState extends State<Wallet> {
               padding: EdgeInsets.only(left: 20, right: 20, bottom: 0, top: 10),
               alignment: Alignment.bottomCenter,
               color: Colors.transparent,
-              child:  StreamBuilder(
+              child: StreamBuilder<DocumentSnapshot>(
                 stream: db
-                    .collection(userCollection).doc(FirebaseAuth.instance.currentUser.uid)
+                    .collection(userCollection)
+                    .doc(FirebaseAuth.instance.currentUser.uid)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -125,16 +114,16 @@ class WalletState extends State<Wallet> {
                       child: CupertinoActivityIndicator(),
                     );
                   } else if (snapshot.hasData) {
-                    UserModel _user=UserModel.fromJson(snapshot.data.data());
-                    return  Row(
+                    UserModel _user = UserModel.fromJson(snapshot.data.data());
+                    return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton.icon(
                             onPressed: () {
                               db
-                                  .collection(userCollection).doc(FirebaseAuth.instance.currentUser.uid).update(
-                                  {"showBalance":!_user.showBalance});
-
+                                  .collection(userCollection)
+                                  .doc(FirebaseAuth.instance.currentUser.uid)
+                                  .update({"showBalance": !_user.showBalance});
                             },
                             icon: Icon(
                               Icons.account_balance_wallet,
@@ -144,7 +133,7 @@ class WalletState extends State<Wallet> {
                             label: Row(
                               children: [
                                 Text(
-                                  "${_user.showBalance?Formatter.balanceFormatFromDouble(_user.balance):Formatter.balanceUnseenFormat(_user.balance)} Ks",
+                                  "${_user.showBalance ? Formatter.balanceFormatFromDouble(_user.balance) : Formatter.balanceUnseenFormat(_user.balance)} Ks",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -154,7 +143,9 @@ class WalletState extends State<Wallet> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Icon(
-                                      _user.showBalance?Icons.visibility:Icons.visibility_off,
+                                      _user.showBalance
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
                                       size: 15,
                                     ),
                                   ),
@@ -162,62 +153,65 @@ class WalletState extends State<Wallet> {
                               ],
                             )),
                         PopupMenuButton(
-                            onSelected: (val){
-                              if(val==1){
+                            onSelected: (val) {
+                              if (val == 1) {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (contex) => TopUpPage()));
                               }
-                              if(val==2){
+                              if (val == 2) {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (contex) => WithdrawalPage()));
                               }
                             },
                             icon: Icon(Icons.more_horiz_rounded),
                             itemBuilder: (context) => [
-                              PopupMenuItem(
-                                child: Column(
-                                  children: [
-                                    Row(
+                                  PopupMenuItem(
+                                    child: Column(
                                       children: [
-                                        Container(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0, top: 10, bottom: 10),
-                                            child: Icon(
-                                              Icons.add_circle,
-                                              color:
-                                              Theme.of(context).primaryColor,
-                                            )),
-                                        Text("Top up"),
+                                        Row(
+                                          children: [
+                                            Container(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0,
+                                                    top: 10,
+                                                    bottom: 10),
+                                                child: Icon(
+                                                  Icons.add_circle,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                )),
+                                            Text("Top up"),
+                                          ],
+                                        ),
+                                        Divider()
                                       ],
                                     ),
-                                    Divider()
-                                  ],
-                                ),
-
-                                value: 1,
-                              ),
-                              PopupMenuItem(
-                                child: Column(
-                                  children: [
-                                    Row(
+                                    value: 1,
+                                  ),
+                                  PopupMenuItem(
+                                    child: Column(
                                       children: [
-                                        Container(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0, top: 10, bottom: 10),
-                                            child: Icon(
-                                              Icons.remove_circle,
-                                              color: Colors.grey.withOpacity(0.5),
-                                            )),
-                                        Text("Withdraw"),
-
+                                        Row(
+                                          children: [
+                                            Container(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0,
+                                                    top: 10,
+                                                    bottom: 10),
+                                                child: Icon(
+                                                  Icons.remove_circle,
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                )),
+                                            Text("Withdraw"),
+                                          ],
+                                        ),
+                                        Divider()
                                       ],
                                     ),
-                                    Divider()
-                                  ],
-                                ),
-                                value: 2,
-                              )
-                            ])
+                                    value: 2,
+                                  )
+                                ])
 
                         /* Expanded(
                     child: ElevatedButton(
@@ -272,7 +266,6 @@ class WalletState extends State<Wallet> {
                   }
                 },
               ),
-
             ),
             Divider(
                 //length: MediaQuery.of(context).size.width,
@@ -280,7 +273,7 @@ class WalletState extends State<Wallet> {
             Expanded(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-               // height: MediaQuery.of(context).size.height * 0.65,
+                // height: MediaQuery.of(context).size.height * 0.65,
                 child: SmartRefresher(
                   enablePullDown: true,
                   enablePullUp: true,
@@ -304,7 +297,7 @@ class WalletState extends State<Wallet> {
                         body = Center(child: Text("No more Data"));
                         return body;
                       }
-                    /*  if (tracList.length == end) {
+                      /*  if (tracList.length == end) {
                         body = Text("No more Data");
                       }
                       return Container(
@@ -316,9 +309,6 @@ class WalletState extends State<Wallet> {
                   controller: _refreshController,
                   onRefresh: _onRefresh,
                   onLoading: _onLoading,
-
-
-
                   child: ListView.builder(
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
@@ -328,20 +318,21 @@ class WalletState extends State<Wallet> {
                         child: Column(
                           children: [
                             ListTile(
-                              onTap: (){
+                              onTap: () {
                                 print(tracList[i].docId);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                        new WalletDetailSuccessPage(
-                                            docId: tracList[i].docId)));
+                                            new WalletDetailSuccessPage(
+                                                docId: tracList[i].docId)));
                               },
                               title: Column(
                                 children: <Widget>[
                                   Row(
                                     children: [
-                                      documentList[i].get("type") == TransactionType.Topup
+                                      documentList[i].get("type") ==
+                                              TransactionType.Topup
                                           ? Image.asset(
                                               "assets/payment/topup.png",
                                               width: 50,
@@ -367,8 +358,11 @@ class WalletState extends State<Wallet> {
                                             ),
                                           ),
                                           Text(
-                                              Formatter.dateTimeFormat(DateTime.fromMillisecondsSinceEpoch(tracList[i].createdDate.millisecondsSinceEpoch )
-                                                  ),
+                                              Formatter.dateTimeFormat(DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                      tracList[i]
+                                                          .createdDate
+                                                          .millisecondsSinceEpoch)),
                                               style: TextStyle(fontSize: 12)),
                                         ],
                                       ),
@@ -380,7 +374,6 @@ class WalletState extends State<Wallet> {
                                                       TransactionType.Topup
                                                   ? Colors.green
                                                   : Colors.red)),
-
                                     ],
                                   ),
                                   Dash(
@@ -394,7 +387,9 @@ class WalletState extends State<Wallet> {
                                       Column(
                                         children: [
                                           Text("Top up successful",
-                                              style: TextStyle(fontSize: 13,color: Colors.green)),
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.green)),
                                         ],
                                       ),
                                       Spacer(),

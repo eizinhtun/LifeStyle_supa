@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +9,6 @@ import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/my_read_unit.dart';
 import 'package:left_style/pages/upload_my_read.dart';
-import 'package:left_style/utils/message_handler.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 
 class MyUploadUnitList extends StatelessWidget {
@@ -109,11 +109,14 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
                           width: 60,
                           height: 60,
                           child: new CircleAvatar(
-                              radius: 100.0,
-                              // backgroundColor:MyTheme.getPrimaryColor(),
-                              //backgroundImage: MeScreenState.fileAvatar!=null?
-                              // FileImage(fileAvatar):
-                              backgroundImage: NetworkImage(item.readImageUrl)),
+                            radius: 100.0,
+                            // backgroundColor:MyTheme.getPrimaryColor(),
+                            //backgroundImage: MeScreenState.fileAvatar!=null?
+                            // FileImage(fileAvatar):
+                            backgroundImage:
+                                CachedNetworkImageProvider(item.readImageUrl),
+                            // NetworkImage(item.readImageUrl),
+                          ),
                         ),
                         title: Container(
                             alignment: Alignment.centerLeft,
@@ -214,15 +217,15 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
     );
   }
 
-  @override
-  void showError(String text) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-        backgroundColor: Colors.red,
-        content: new Text(Tran.of(context).text(text))));
-  }
+  // @override
+  // void showError(String text) {
+  //   _scaffoldKey.currentState.showSnackBar(new SnackBar(
+  //       backgroundColor: Colors.red,
+  //       content: new Text(Tran.of(context).text(text))));
+  // }
 
-  @override
-  void showMessage(String text) {
-    MessageHandler.showMessage(context, "", text);
-  }
+  // @override
+  // void showMessage(String text) {
+  //   MessageHandler.showMessage(context, "", text);
+  // }
 }

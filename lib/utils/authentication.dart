@@ -43,7 +43,9 @@ class Authentication {
       }
     } else {
       final GoogleSignIn googleSignIn = GoogleSignIn();
-
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.disconnect();
+      }
       final GoogleSignInAccount googleSignInAccount =
           await googleSignIn.signIn();
 
@@ -93,6 +95,7 @@ class Authentication {
   static Future<User> signInWithFacebook({BuildContext context}) async {
     FirebaseAuth _auth = FirebaseAuth.instance;
     User user;
+    await FacebookAuth.instance.logOut();
     try {
       final LoginResult result = await FacebookAuth.instance.login();
       switch (result.status) {

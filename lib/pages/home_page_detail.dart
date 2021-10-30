@@ -475,7 +475,6 @@ class _HomePageDetailState extends State<HomePageDetail> {
 
   PageController controller = PageController();
   List<Widget> _list = <Widget>[
-
     Center(child: _homePage),
     Center(child: _walletPage),
     Center(child: _mePage),

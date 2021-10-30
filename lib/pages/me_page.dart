@@ -3,16 +3,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/system_data.dart';
+import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/language_page.dart';
 import 'package:left_style/pages/setting.dart';
 import 'package:left_style/pages/user_profile_page.dart';
+import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
-import 'change_password.dart';
+import 'change_pin.dart';
 import 'help.dart';
-import 'login.dart';
 import 'meter_list.dart';
 import 'notification_list.dart';
 
@@ -27,35 +28,47 @@ class _MePageState extends State<MePage> {
   UserModel user = UserModel();
   bool _isSigningOut = false;
   String url = "";
-
-  Route _routeToLogin() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-1.0, 0.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
-
-  String fullName;
-  String photoUrl;
-  String address;
-
   @override
   void initState() {
     super.initState();
     getUser();
+    getData();
   }
+
+  List<NotiModel> notiList = [];
+  getData() async {
+    notiList = await context.read<NotiProvider>().getNotiList(context);
+    if (notiList != null && notiList.length > 0) {
+      SystemData.notiCount = notiList.where((e) => e.status == false).length;
+    } else {
+      SystemData.notiCount = 0;
+    }
+    context.read<NotiProvider>().updateNotiCount(context, SystemData.notiCount);
+    setState(() {});
+  }
+
+  // Route _routeToLogin() {
+  //   return PageRouteBuilder(
+  //     pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+  //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+  //       var begin = Offset(-1.0, 0.0);
+  //       var end = Offset.zero;
+  //       var curve = Curves.ease;
+
+  //       var tween =
+  //           Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+  //       return SlideTransition(
+  //         position: animation.drive(tween),
+  //         child: child,
+  //       );
+  //     },
+  //   );
+  // }
+
+  String fullName;
+  String photoUrl;
+  String address;
 
   Future<UserModel> getUser() async {
     user = await context.read<LoginProvider>().getUser(context);
@@ -63,6 +76,8 @@ class _MePageState extends State<MePage> {
   }
 
   double titleHeight = 50;
+  double leadingWidth = 50;
+  double iconSize = 30;
   @override
   Widget build(BuildContext context) {
     print("_isSigningOut : $_isSigningOut");
@@ -94,13 +109,17 @@ class _MePageState extends State<MePage> {
                         fullName = user.fullName.toString();
                         photoUrl = user.photoUrl.toString();
                         address = user.address.toString();
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
                             builder: (context) => EditUserProfilePage(
-                                  user: user,
-                                )));
+                              user: user,
+                            ),
+                          ),
+                        );
                       },
                       child: Container(
-                        padding: EdgeInsets.all(8),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -154,9 +173,12 @@ class _MePageState extends State<MePage> {
                                 ],
                               ),
                             ),
-                            Icon(
-                              Icons.qr_code,
-                            )
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Icon(
+                                Icons.qr_code,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -177,9 +199,14 @@ class _MePageState extends State<MePage> {
                                     user: user,
                                   )));
                         },
-                        leading: Icon(
-                          Icons.person,
-                          color: mainColor,
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.person,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
                         ),
                         title: Text(
                           "My Account",
@@ -201,14 +228,19 @@ class _MePageState extends State<MePage> {
                       child: ListTile(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ChangePasswordPage()));
+                              builder: (context) => ChangePinPage()));
                         },
-                        leading: Icon(
-                          Icons.password,
-                          color: mainColor,
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.lock,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
                         ),
                         title: Text(
-                          "Change Password",
+                          "Change Pin",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
@@ -228,42 +260,44 @@ class _MePageState extends State<MePage> {
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => NotificationListPage()));
+                          setState(() {});
                         },
                         leading: Container(
-                          width: 50,
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
                           child: Stack(
                             children: [
                               Icon(
                                 Icons.notifications,
+                                size: iconSize,
                                 color: mainColor,
                               ),
                               (SystemData.notiCount != null &&
                                       SystemData.notiCount > 0)
-                                  ? Positioned(
-                                      top: 0,
-                                      left: 15,
+                                  ? Container(
+                                      width: iconSize,
+                                      height: iconSize,
+                                      alignment: Alignment.topRight,
+                                      margin: EdgeInsets.only(top: 5),
                                       child: Container(
+                                        width: iconSize / 2,
+                                        height: iconSize / 2,
+                                        alignment: Alignment.center,
+                                        // padding: EdgeInsets.all(2),
                                         decoration: BoxDecoration(
-                                          // shape: BoxShape.circle,
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          color: Colors.pink[100],
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: Colors.white, width: 1),
+                                          color: Colors.red,
                                         ),
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: Text(
-                                              getNotiCount(
-                                                  SystemData.notiCount),
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                            ),
+                                        child: Text(
+                                          getNotiCount(SystemData.notiCount),
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ),
-                                      // child: Text("2"),
                                     )
                                   : Text(""),
                             ],
@@ -287,7 +321,6 @@ class _MePageState extends State<MePage> {
                     Divider(
                       thickness: 0.5,
                       height: 1,
-
                     ),
                     Container(
                       height: titleHeight,
@@ -296,9 +329,14 @@ class _MePageState extends State<MePage> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => MeterListPage()));
                         },
-                        leading: Icon(
-                          Icons.list,
-                          color: mainColor,
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.list,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
                         ),
                         title: Text(
                           "Meter List",
@@ -322,9 +360,14 @@ class _MePageState extends State<MePage> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => LanguagePage()));
                         },
-                        leading: Icon(
-                          Icons.language,
-                          color: mainColor,
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.language,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
                         ),
                         title: Text(
                           "Select Language",
@@ -343,9 +386,14 @@ class _MePageState extends State<MePage> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => SettingPage()));
                         },
-                        leading: Icon(
-                          Icons.settings,
-                          color: mainColor,
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.settings,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
                         ),
                         title: Text(
                           "Setting",
@@ -369,9 +417,14 @@ class _MePageState extends State<MePage> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => HelpPage()));
                         },
-                        leading: Icon(
-                          Icons.help,
-                          color: mainColor,
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.help,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
                         ),
                         title: Text(
                           "Help",
@@ -409,27 +462,29 @@ class _MePageState extends State<MePage> {
                             Widget continueButton = TextButton(
                               child: Text("Confirm"),
                               onPressed: () async {
-                                setState(() {
-                                  _isSigningOut = true;
-                                });
+                                // setState(() {
+                                //   _isSigningOut = true;
+                                // });
                                 await context
                                     .read<LoginProvider>()
                                     .logOut(context);
-                                setState(() {
-                                  _isSigningOut = false;
-                                });
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
+                                Navigator.pop(context);
+                                // setState(() {
+                                //   _isSigningOut = false;
+                                // });
+                                // Navigator.of(context).push(MaterialPageRoute(
+                                //     builder: (context) => LoginPage()));
                               },
                             );
                             Widget cancelButton = TextButton(
                               child: Text("Cancel"),
                               onPressed: () {
-                                setState(() {});
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => super.widget));
+                                Navigator.pop(context);
+                                // setState(() {});
+                                // Navigator.pushReplacement(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => super.widget));
                               },
                             );
                             AlertDialog alert = AlertDialog(
@@ -470,46 +525,46 @@ class _MePageState extends State<MePage> {
       return count.toString();
   }
 
-  showLogoutConfirmDialog(BuildContext context) {
-    Widget continueButton = TextButton(
-      child: Text("Confirm"),
-      onPressed: () async {
-        setState(() {
-          _isSigningOut = true;
-        });
-        await context.read<LoginProvider>().logOut(context);
-        setState(() {
-          _isSigningOut = false;
-        });
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => LoginPage()));
-      },
-    );
-    Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        setState(() {});
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => super.widget));
-      },
-    );
+  // showLogoutConfirmDialog(BuildContext context) {
+  //   Widget continueButton = TextButton(
+  //     child: Text("Confirm"),
+  //     onPressed: () async {
+  //       setState(() {
+  //         _isSigningOut = true;
+  //       });
+  //       await context.read<LoginProvider>().logOut(context);
+  //       setState(() {
+  //         _isSigningOut = false;
+  //       });
+  //       Navigator.of(context)
+  //           .push(MaterialPageRoute(builder: (context) => LoginPage()));
+  //     },
+  //   );
+  //   Widget cancelButton = TextButton(
+  //     child: Text("Cancel"),
+  //     onPressed: () {
+  //       setState(() {});
+  //       Navigator.pushReplacement(
+  //           context, MaterialPageRoute(builder: (context) => super.widget));
+  //     },
+  //   );
+  //   AlertDialog alert = AlertDialog(
+  //     title: Text(
+  //       "Are you sure logout?",
+  //       style: TextStyle(fontSize: 20),
+  //     ),
+  //     actions: [
+  //       cancelButton,
+  //       continueButton,
+  //     ],
+  //   );
 
-    AlertDialog alert = AlertDialog(
-      title: Text(
-        "Are you sure logout?",
-        style: TextStyle(fontSize: 20),
-      ),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return alert;
+  //     },
+  //   );
+  // }
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
 }

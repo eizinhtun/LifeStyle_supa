@@ -51,5 +51,18 @@
     	</array>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Gallery permission is required for saving images.</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+		<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<!-- TODO Replace this value: -->
+			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+			<string>com.googleusercontent.apps.719786289421-kqt8q595rq3a28fn7vsemn2r824sjt18</string>
+		</array>
+		</dict>
+		</array>
 	</dict>
 </plist>

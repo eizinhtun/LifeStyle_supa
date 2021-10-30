@@ -14,6 +14,7 @@ import 'package:left_style/pages/register_verify_pin_page.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:left_style/utils/message_handler.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'language_page.dart';
 
@@ -46,43 +47,42 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Container(
-              padding: EdgeInsets.all(30),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage(
-                        "assets/icon/icon.png",
-                      )),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Form(
-                    key: _loginformKey,
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color.fromRGBO(143, 148, 251, .2),
-                                blurRadius: 20.0,
-                                offset: Offset(0, 10))
-                          ]),
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(color: Colors.grey))),
-                            child: TextFormField(
+      body: LoadingOverlay(
+        isLoading: isWaiting,
+        opacity: 0.5,
+        progressIndicator: CircularProgressIndicator(),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    CircleAvatar(
+                        radius: 40,
+                        backgroundImage: AssetImage(
+                          "assets/icon/icon.png",
+                        )),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Form(
+                      key: _loginformKey,
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        // decoration: BoxDecoration(
+                        //     color: Colors.white,
+                        //     borderRadius: BorderRadius.circular(10),
+                        //     boxShadow: [
+                        //       BoxShadow(
+                        //           color: Color.fromRGBO(143, 148, 251, .2),
+                        //           blurRadius: 20.0,
+                        //           offset: Offset(0, 10))
+                        //     ]),
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               controller: _phoneController,
@@ -91,94 +91,98 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               keyboardType: TextInputType.phone,
                               decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: Tran.of(context)?.text("phone"),
-                                  hintStyle:
-                                      TextStyle(color: Colors.grey[400])),
+                                labelText: Tran.of(context)?.text("phone"),
+                                //     border: InputBorder.none,
+                                //     hintText: Tran.of(context)?.text("phone"),
+                                //     hintStyle:
+                                //         TextStyle(color: Colors.grey[400])
+                              ),
                             ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      constraints: BoxConstraints(
+                          minHeight: 50,
+                          minWidth: double.infinity,
+                          maxHeight: 400),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          bool isTaken = await checkPhoneIsTaken();
+
+                          phone = phNoFormat();
+                          if (!isTaken &&
+                              _loginformKey.currentState.validate()) {
+                            register();
+                          }
+                        },
+                        child: Text(
+                          "${Tran.of(context)?.text("login")}",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Center(
+                      child: Text(
+                        "${Tran.of(context)?.text("login_with")}",
+                        style: TextStyle(color: Colors.black26),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                            onPressed: () => _fblogin(),
+                            icon: Icon(Icons.facebook),
+                            iconSize: 50,
+                            color: Color(0xff3b5998),
                           ),
+                          MaterialButton(
+                            onPressed: () async {
+                              await _googlelogin();
+                              // setState(() {});
+                            },
+                            child: Image.asset(
+                              "assets/image/google.png",
+                              height: 40,
+                            ),
+                            shape: CircleBorder(),
+                          )
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    constraints: BoxConstraints(
-                        minHeight: 50,
-                        minWidth: double.infinity,
-                        maxHeight: 400),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        bool isTaken = await checkPhoneIsTaken();
-                        phone = phNoFormat();
-                        if (!isTaken && _loginformKey.currentState.validate()) {
-                          register();
-                        }
-                      },
-                      child: Text(
-                        "${Tran.of(context)?.text("login")}",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Center(
-                    child: Text(
-                      "${Tran.of(context)?.text("login_with")}",
-                      style: TextStyle(color: Colors.black26),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                          onPressed: () => _fblogin(),
-                          icon: Icon(Icons.facebook),
-                          iconSize: 50,
-                          color: Color(0xff3b5998),
-                        ),
-                        MaterialButton(
-                          onPressed: () async {
-                            await _googlelogin();
-                            // setState(() {});
-                          },
-                          child: Image.asset(
-                            "assets/image/google.png",
-                            height: 40,
-                          ),
-                          shape: CircleBorder(),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: InkWell(
-                      onTap: () async {
-                        await Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => LanguagePage()));
+                    Center(
+                      child: InkWell(
+                        onTap: () async {
+                          await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => LanguagePage()));
 
-                        setState(() {});
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(12.0),
-                        child: Text(
-                          "Select Language",
-                          style: TextStyle(color: mainColor),
+                          setState(() {});
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(12.0),
+                          child: Text(
+                            "Select Language",
+                            style: TextStyle(color: mainColor),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -206,6 +210,7 @@ class _LoginPageState extends State<LoginPage> {
     return isPhoneToken;
   }
 
+  bool isWaiting = false;
   void register() async {
     if (_loginformKey.currentState.validate()) {
       print("Validate");
@@ -220,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
       try {
         await _auth.verifyPhoneNumber(
             phoneNumber: phone,
-            timeout: const Duration(seconds: 120),
+            timeout: const Duration(seconds: timeOut),
             verificationCompleted:
                 (PhoneAuthCredential phoneAuthCredential) async {},
             verificationFailed: (FirebaseAuthException authException) {
@@ -257,13 +262,25 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _fblogin() async {
+    setState(() {
+      isWaiting = true;
+    });
     String token = await checkToken(fcmtoken);
     await context.read<LoginProvider>().fbLogin(context, token);
+    setState(() {
+      isWaiting = false;
+    });
   }
 
   Future<void> _googlelogin() async {
+    setState(() {
+      isWaiting = true;
+    });
     String token = await checkToken(fcmtoken);
     await context.read<LoginProvider>().googleLogin(context, token);
+    setState(() {
+      isWaiting = false;
+    });
   }
 
   String prettyPrint(Map json) {

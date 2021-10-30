@@ -1,9 +1,10 @@
+// @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:provider/provider.dart';
 
 class UserNotActiveScreen extends StatefulWidget {
-  const UserNotActiveScreen({Key? key}) : super(key: key);
+  const UserNotActiveScreen({Key key}) : super(key: key);
 
   @override
   _UserNotActiveScreenState createState() => _UserNotActiveScreenState();

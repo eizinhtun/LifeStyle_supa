@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -179,7 +180,7 @@ class _GenerateQRState extends State<GenerateQR> {
         version: QrVersions.auto,
         size: 320,
         gapless: false,
-        embeddedImage: NetworkImage(photo),
+        embeddedImage: CachedNetworkImageProvider(photo),
         embeddedImageStyle: QrEmbeddedImageStyle(
           size: Size(50, 50),
         ),

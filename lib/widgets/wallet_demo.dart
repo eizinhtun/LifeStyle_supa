@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/wallet_detail_success_page.dart';
@@ -62,8 +61,7 @@ class WalletDemoPageState extends State<WalletDemoPage>
               ))
         ],
       ),
-      body:
-      StreamBuilder<QuerySnapshot>(
+      body: StreamBuilder<QuerySnapshot>(
         stream: db
             .collection(transactions)
             .doc(FirebaseAuth.instance.currentUser.uid)
@@ -113,8 +111,10 @@ class WalletDemoPageState extends State<WalletDemoPage>
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold)),
                                     Text(
-                                        Formatter.dateTimeFormat(DateTime.fromMillisecondsSinceEpoch(item.createdDate.millisecondsSinceEpoch )),
-
+                                        Formatter.dateTimeFormat(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                item.createdDate
+                                                    .millisecondsSinceEpoch)),
                                         style: TextStyle(fontSize: 12)),
                                   ],
                                 ),
@@ -183,52 +183,52 @@ class WalletDemoPageState extends State<WalletDemoPage>
     );
   }
 
-  @override
-  void showError(String text) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-        backgroundColor: Colors.red,
-        content: new Text(Tran.of(context).text(text))));
-  }
+  // @override
+  // void showError(String text) {
+  //   _scaffoldKey.currentState.showSnackBar(new SnackBar(
+  //       backgroundColor: Colors.red,
+  //       content: new Text(Tran.of(context).text(text))));
+  // }
 
-  _searchDialog(BuildContext context) {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-              insetPadding: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              content: SizedBox.expand(
-                child: Column(
-                  children: <Widget>[
-                    SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
-                        child: Wrap(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    "Sample type",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                                Expanded(flex: 1, child: Text(""))
-                              ],
-                            ),
-                          ],
-                        )),
-                  ],
-                ),
-              ));
-        });
-      },
-    );
-  }
+  // _searchDialog(BuildContext context) {
+  //   return showDialog(
+  //     barrierDismissible: false,
+  //     context: context,
+  //     builder: (context) {
+  //       return StatefulBuilder(builder: (context, setState) {
+  //         return AlertDialog(
+  //             insetPadding: EdgeInsets.zero,
+  //             shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.all(Radius.circular(10.0))),
+  //             content: SizedBox.expand(
+  //               child: Column(
+  //                 children: <Widget>[
+  //                   SingleChildScrollView(
+  //                       physics: BouncingScrollPhysics(),
+  //                       child: Wrap(
+  //                         children: <Widget>[
+  //                           Row(
+  //                             children: <Widget>[
+  //                               Expanded(
+  //                                 flex: 1,
+  //                                 child: Text(
+  //                                   "Sample type",
+  //                                   style:
+  //                                       TextStyle(fontWeight: FontWeight.w700),
+  //                                 ),
+  //                               ),
+  //                               Expanded(flex: 1, child: Text(""))
+  //                             ],
+  //                           ),
+  //                         ],
+  //                       )),
+  //                 ],
+  //               ),
+  //             ));
+  //       });
+  //     },
+  //   );
+  // }
 
   _searchShow(context) {
     return showDialog(

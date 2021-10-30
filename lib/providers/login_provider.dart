@@ -17,7 +17,10 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
 
-      await userRef.doc(uid).get(GetOptions(source:Source.server)).then((value) {
+      await userRef
+          .doc(uid)
+          .get(GetOptions(source: Source.server))
+          .then((value) {
         userModel = UserModel.fromJson(value.data());
         print(userModel.isActive);
         notifyListeners();
@@ -84,7 +87,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<void> fbLogin(BuildContext context, String fcmtoken) async {
     User user = await Authentication.signInWithFacebook(context: context);
 
-    if (user.uid != null) {
+    if (user != null && user.uid != null) {
       DatabaseHelper.setAppLoggedIn(context, true);
       notifyListeners();
       // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
@@ -115,6 +118,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       // }
 
     } else {}
+    notifyListeners();
   }
 
   Future<void> googleLogin(BuildContext context, String fcmtoken) async {

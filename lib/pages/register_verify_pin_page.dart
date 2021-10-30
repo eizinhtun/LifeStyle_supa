@@ -1,10 +1,13 @@
 // @dart=2.9
 import 'dart:async';
+import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
+import 'package:left_style/utils/message_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:otp_autofill/otp_autofill.dart';
 import 'package:provider/provider.dart';
@@ -31,22 +34,22 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
   @override
   void initState() {
     super.initState();
-    OTPInteractor.getAppSignature()
-        //ignore: avoid_print
-        .then((value) => print('signature - $value'));
-    controller = OTPTextEditController(
-      codeLength: 6,
-      //ignore: avoid_print
-      onCodeReceive: (code) => print('Your Application receive code - $code'),
-    )..startListenUserConsent(
-        (code) {
-          final exp = RegExp(r'(\d{6})');
-          return exp.stringMatch(code ?? '') ?? '';
-        },
-        strategies: [
-          // SampleStrategy(),
-        ],
-      );
+    // OTPInteractor.getAppSignature()
+    //     //ignore: avoid_print
+    //     .then((value) => print('signature - $value'));
+    // controller = OTPTextEditController(
+    //   codeLength: 6,
+    //   //ignore: avoid_print
+    //   onCodeReceive: (code) => print('Your Application receive code - $code'),
+    // )..startListenUserConsent(
+    //     (code) {
+    //       final exp = RegExp(r'(\d{6})');
+    //       return exp.stringMatch(code ?? '') ?? '';
+    //     },
+    //     strategies: [
+    //       // SampleStrategy(),
+    //     ],
+    //   );
   }
 
   @override
@@ -149,6 +152,58 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                                   return true;
                                 },
                               ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: ArgonTimerButton(
+                                  initialTimer: timeOut,
+                                  highlightColor: Colors.white,
+                                  // Colors.transparent,
+                                  highlightElevation: 0,
+                                  height: 40,
+                                  width: 100,
+                                  onTap: (startTimer, btnState) async {
+                                    if (btnState == ButtonState.Idle) {
+                                      requestOTP(widget.user.phone);
+
+                                      startTimer(timeOut);
+                                    }
+                                  },
+                                  child: Text(
+                                    "Resend OTP",
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  loader: (timeLeft) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(50)),
+                                      margin: EdgeInsets.all(5),
+                                      alignment: Alignment.center,
+                                      width: 40,
+                                      height: 40,
+                                      child: Text(
+                                        "$timeLeft",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    );
+                                  },
+                                  borderRadius: 5.0,
+                                  color: Colors.transparent,
+                                  elevation: 0,
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColor,
+                                      // Colors.black.withOpacity(0.2),
+                                      width: 1.5),
+                                ),
+                              ),
                               SizedBox(
                                 height: 20,
                               ),
@@ -183,6 +238,47 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
         ],
       ),
     );
+  }
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<void> requestOTP(String phone) async {
+    try {
+      await _auth.verifyPhoneNumber(
+          phoneNumber: phone,
+          timeout: const Duration(seconds: timeOut),
+          verificationCompleted:
+              (PhoneAuthCredential phoneAuthCredential) async {},
+          verificationFailed: (FirebaseAuthException authException) {
+            print(
+                'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+            MessageHandler.showSnackbar(
+                'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
+                context,
+                6);
+          },
+          codeSent: (String verificationId, [int forceResendingToken]) async {
+            print('Please check your phone for the verification code.' +
+                verificationId);
+            MessageHandler.showSnackbar(
+                'Please check your phone for the verification code.',
+                context,
+                6);
+            verificationId = verificationId;
+            print("Before: $verificationId");
+
+            // Navigator.of(context).push(MaterialPageRoute(
+            //     builder: (context) => RegisterVerifyPinPage(
+            //         user: user, verificationId: verificationId)));
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            print("verification code: " + verificationId);
+
+            verificationId = verificationId;
+          });
+    } catch (e) {
+      MessageHandler.showSnackbar(
+          "Failed to Verify Phone Number: $e", context, 6);
+    }
   }
 
   void signInWithPhoneNumber() async {

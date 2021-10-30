@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/payment_method.dart';
 import 'package:left_style/pages/payment_method_list.dart';
 import 'package:left_style/providers/wallet_provider.dart';

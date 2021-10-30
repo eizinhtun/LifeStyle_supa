@@ -8,7 +8,6 @@ import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Meter.dart';
 import 'package:left_style/pages/meter_edit.dart';
-import 'package:left_style/utils/message_handler.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 
 class MeterListScreen extends StatelessWidget {
@@ -231,15 +230,15 @@ class MeterListPageState extends State<MeterListPage>
     return dateFormat.format(tempDate);
   }
 
-  @override
-  void showError(String text) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-        backgroundColor: Colors.red,
-        content: new Text(Tran.of(context).text(text))));
-  }
+  // @override
+  // void showError(String text) {
+  //   _scaffoldKey.currentState.showSnackBar(new SnackBar(
+  //       backgroundColor: Colors.red,
+  //       content: new Text(Tran.of(context).text(text))));
+  // }
 
-  @override
-  void showMessage(String text) {
-    MessageHandler.showMessage(context, "", text);
-  }
+  // @override
+  // void showMessage(String text) {
+  //   MessageHandler.showMessage(context, "", text);
+  // }
 }

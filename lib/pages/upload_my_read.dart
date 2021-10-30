@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -66,7 +67,6 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
 
   Future<void> upload(MyReadUnit model) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
-      String uid = FirebaseAuth.instance.currentUser.uid.toString();
       await FirebaseFirestore.instance
           .collection(userUploadUnitCollection)
           .doc(FirebaseAuth.instance.currentUser.uid)
@@ -138,7 +138,8 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
                       ),
                       imageProvider: file != null
                           ? FileImage(File(file.path))
-                          : NetworkImage(myReadUnit.readImageUrl),
+                          : CachedNetworkImageProvider(myReadUnit.readImageUrl),
+                      // NetworkImage(myReadUnit.readImageUrl),
                     ),
                   ),
           ),

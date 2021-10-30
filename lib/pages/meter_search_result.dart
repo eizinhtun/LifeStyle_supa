@@ -37,9 +37,8 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
     implements MeterContract {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  int _selectedIndex = 0;
-
-  bool _isSearch = false;
+  // int _selectedIndex = 0;
+  // bool _isSearch = false;
   bool _onFirstLoading = false;
   int pageIndex = 1;
   int pageSize = 20;

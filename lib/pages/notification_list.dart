@@ -165,64 +165,70 @@ class _NotificationListPage extends State<NotificationListPage>
                 itemCount: notiList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: () {
+                    onTap: () async {
                       setState(() {
                         if (!notiList[index].status) {
                           notiList[index].status = true;
-                          SystemData.notiCount--;
-                          context
-                              .read<NotiProvider>()
-                              .updateNotiCount(context, SystemData.notiCount);
+                          --SystemData.notiCount;
                         }
                       });
-                      switch (notiList[index].type) {
-                        case NotiType.topup:
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  WalletDetailSuccessPage(
-                                docId: notiList[index].id,
-                              ),
-                            ),
-                          );
-                          break;
-                        case NotiType.withdraw:
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  WalletDetailSuccessPage(
-                                docId: notiList[index].id,
-                              ),
-                            ),
-                          );
-                          break;
-                        case NotiType.meterbill:
-                          String tempId = "7324392739";
-                          print(notiList[index].id);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  MeterBillDetailPage(
-                                docId: notiList[index].id,
-                              ),
-                            ),
-                          );
-                          break;
+                      await context
+                          .read<NotiProvider>()
+                          .changeNotiStatus(context, notiList[index].messageId)
+                          .then((value) {
+                        // context
+                        //     .read<NotiProvider>()
+                        //     .updateNotiCount(context, --SystemData.notiCount);
 
-                        default:
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  NotificationDetailPage(
-                                      noti: notiList[index], status: "true"),
-                            ),
-                          );
-                          break;
-                      }
+                        switch (notiList[index].type) {
+                          case NotiType.topup:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    WalletDetailSuccessPage(
+                                  docId: notiList[index].id,
+                                ),
+                              ),
+                            );
+                            break;
+                          case NotiType.withdraw:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    WalletDetailSuccessPage(
+                                  docId: notiList[index].id,
+                                ),
+                              ),
+                            );
+                            break;
+                          case NotiType.meterbill:
+                            // String tempId = "7324392739";
+                            print(notiList[index].id);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    MeterBillDetailPage(
+                                  docId: notiList[index].id,
+                                ),
+                              ),
+                            );
+                            break;
+
+                          default:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    NotificationDetailPage(
+                                        noti: notiList[index], status: "true"),
+                              ),
+                            );
+                            break;
+                        }
+                      });
                     },
                     child: Card(
                       color: !notiList[index].status

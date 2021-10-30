@@ -7,19 +7,17 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
-import 'package:left_style/utils/formatter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import 'package:provider/provider.dart';
 
-class loadingPage extends StatefulWidget {
-  const loadingPage({Key key}) : super(key: key);
+class LoadingPage extends StatefulWidget {
+  const LoadingPage({Key key}) : super(key: key);
 
   @override
-  _loadingPageState createState() => _loadingPageState();
+  _LoadingPageState createState() => _LoadingPageState();
 }
 
-class _loadingPageState extends State<loadingPage> {
+class _LoadingPageState extends State<LoadingPage> {
   List<String> totalList = [];
   List<String> tracList = [];
   RefreshController _refreshController =

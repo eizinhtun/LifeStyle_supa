@@ -1,8 +1,6 @@
 // @dart=2.9
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +14,6 @@ import 'package:left_style/widgets/home_item.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AdsDetailPage.dart';
-import 'home_page copy.dart';
 import 'meter_city.dart';
 import 'meter_list.dart';
 import 'meter_search_result.dart';

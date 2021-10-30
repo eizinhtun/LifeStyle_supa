@@ -16,10 +16,10 @@ class WalletExPage extends StatefulWidget {
   const WalletExPage({Key key}) : super(key: key);
 
   @override
-  _loadingPageState createState() => _loadingPageState();
+  _LoadingPageState createState() => _LoadingPageState();
 }
 
-class _loadingPageState extends State<WalletExPage> {
+class _LoadingPageState extends State<WalletExPage> {
   // List<String> totalList=[];
   // List<String> tracList=[];
   RefreshController _refreshController =
@@ -220,8 +220,11 @@ class _loadingPageState extends State<WalletExPage> {
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold)),
                                       Text(
-                                          Formatter.dateTimeFormat(DateTime.fromMillisecondsSinceEpoch(tracList[i].createdDate.millisecondsSinceEpoch )),
-
+                                          Formatter.dateTimeFormat(DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                                  tracList[i]
+                                                      .createdDate
+                                                      .millisecondsSinceEpoch)),
                                           style: TextStyle(fontSize: 12)),
                                     ],
                                   ),

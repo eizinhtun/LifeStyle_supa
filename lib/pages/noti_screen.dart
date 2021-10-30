@@ -1,9 +1,10 @@
+// @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:provider/provider.dart';
 
 class NotiScreen extends StatefulWidget {
-  const NotiScreen({Key? key}) : super(key: key);
+  const NotiScreen({Key key}) : super(key: key);
 
   @override
   _NotiScreenState createState() => _NotiScreenState();

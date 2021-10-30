@@ -82,6 +82,7 @@ const String paymentMethodCollection = "payment_method";
 
 const String notilist = "notilist";
 const String myTransactions = "myTransactions";
+const int timeOut = 120;
 
 class ActionButton {
   static const String ReadUnit = "ReadUnit";

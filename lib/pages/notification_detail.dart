@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/providers/noti_provider.dart';
-import 'package:left_style/utils/formatter.dart';
 import 'package:provider/provider.dart';
 
 class NotificationDetailPage extends StatefulWidget {
