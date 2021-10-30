@@ -87,6 +87,7 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
                               width: 60,
                               height: 60,
                               child: new CircleAvatar(
+                                backgroundColor: Colors.white,
                                 radius: 100.0,
                                 backgroundImage: NetworkImage(
                                   item.logoUrl,

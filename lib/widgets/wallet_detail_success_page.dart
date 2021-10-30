@@ -14,7 +14,8 @@ class WalletDetailSuccessPage extends StatefulWidget {
   final String docId;
   final String type;
   final String status;
-  const WalletDetailSuccessPage({Key key, this.docId,this.type,this.status}) : super(key: key);
+  const WalletDetailSuccessPage({Key key, this.docId, this.type, this.status})
+      : super(key: key);
 
   @override
   _WalletDetailSuccessPageState createState() =>
@@ -69,27 +70,37 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                               alignment: Alignment.center,
                               width: 60,
                               height: 60,
-                              child:new CircleAvatar(
-                                backgroundColor:Colors.black12,
+                              child: new CircleAvatar(
+                                backgroundColor: Colors.black12,
                                 radius: 100.0,
                                 backgroundImage: NetworkImage(
                                   item.paymentLogoUrl,
                                 ),
                               ),
                             ),
-
-
-                            Container(child: Column(
-                              children: [
-                                Text(
-                                    Tran.of(context)
-                                        .text(item.status.trim().toLowerCase())
-                                        .toString(),
-                                    style: TextStyle(fontSize: 18,color: getStatusColor(item.status.trim().toLowerCase()))),
-                                Text(item.amount.toString(),style: TextStyle(color:item.amount>0?Colors.green:Colors.red,fontSize: 20,fontWeight: FontWeight.w900)),
-                              ],
+                            Container(
+                              child: Column(
+                                children: [
+                                  Text(
+                                      Tran.of(context)
+                                          .text(
+                                              item.status.trim().toLowerCase())
+                                          .toString(),
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: getStatusColor(item.status
+                                              .trim()
+                                              .toLowerCase()))),
+                                  Text(item.amount.toString(),
+                                      style: TextStyle(
+                                          color: item.amount > 0
+                                              ? Colors.green
+                                              : Colors.red,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w900)),
+                                ],
+                              ),
                             ),
-                ),
                             SizedBox(height: 10),
                             Dash(
                               direction: Axis.horizontal,
@@ -119,8 +130,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                 children: [
                                   Text("Transaction Type"),
                                   Spacer(),
-                                  Text(
-                                      item.type,
+                                  Text(item.type,
                                       style: TextStyle(fontSize: 12)),
                                 ],
                               ),
@@ -128,8 +138,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                 children: [
                                   Text("Bank"),
                                   Spacer(),
-                                  Text(
-                                      item.paymentType,
+                                  Text(item.paymentType,
                                       style: TextStyle(fontSize: 12)),
                                 ],
                               ),
@@ -149,11 +158,10 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                 children: [
                                   Text("Amount"),
                                   Spacer(),
-                                  Text(item.amount.toString()+ " (Ks)",
+                                  Text(item.amount.toString() + " (Ks)",
                                       style: TextStyle(fontSize: 12)),
                                 ],
                               ),
-
                             ],
                           ),
                         ),
@@ -170,8 +178,9 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                 top: 10,
                                 bottom: 10,
                               ),
-                              textStyle:
-                              TextStyle(fontWeight: FontWeight.bold,)),
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              )),
                           onPressed: () async {
                             Navigator.of(context).pop();
                           },
@@ -182,7 +191,6 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                 fontWeight: FontWeight.bold),
                           ),
                         )
-
                       ],
                     ),
                   ),
@@ -201,35 +209,34 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
   }
 
   Color getStatusColor(status) {
-
     switch (status) {
       case "approved":
-           return Colors.green;
+        return Colors.green;
         break;
       default:
         return Colors.red;
         break;
     }
   }
-  Widget checkTypeAndStatus(context){
-    if((widget.type =="topup" || widget.type== "withdraw") && (widget.status.trim().toLowerCase()=="verifying" || widget.status.trim().toLowerCase()== "rejected")){
+
+  Widget checkTypeAndStatus(context) {
+    if ((widget.type == "topup" || widget.type == "withdraw") &&
+        (widget.status.trim().toLowerCase() == "verifying" ||
+            widget.status.trim().toLowerCase() == "rejected")) {
       return IconButton(
-        onPressed: () async {
-          showAlertDialog(context);
-          setState(() {
-
-          });
-
-      },icon: Icon(Icons.delete));
-    }
-    else{
+          onPressed: () async {
+            showAlertDialog(context);
+            setState(() {});
+          },
+          icon: Icon(Icons.delete));
+    } else {
       return Container();
     }
   }
+
   showAlertDialog(BuildContext context) {
     // set up the buttons
-    Widget cancelButton =
-    OutlinedButton(
+    Widget cancelButton = OutlinedButton(
       style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
@@ -241,21 +248,17 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
             top: 10,
             bottom: 10,
           ),
-          textStyle:
-          TextStyle(fontWeight: FontWeight.bold)),
+          textStyle: TextStyle(fontWeight: FontWeight.bold)),
       onPressed: () async {
         Navigator.of(context).pop();
       },
       child: Text(
         "Cancel",
-        style: TextStyle(
-            color: Colors.grey,
-            fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
       ),
     );
 
-    Widget continueButton =
-    ElevatedButton(
+    Widget continueButton = ElevatedButton(
         style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25),
@@ -266,25 +269,23 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
               top: 10,
               bottom: 10,
             ) // foreground
-        ),
-        onPressed:  () async {
+            ),
+        onPressed: () async {
           Navigator.of(context).pop(true);
           Navigator.of(context).pop(true);
-          await  db
+          await db
               .collection(transactions)
               .doc(FirebaseAuth.instance.currentUser.uid)
               .collection(manyTransaction)
-              .doc(widget.docId).delete();
-
-
+              .doc(widget.docId)
+              .delete();
         },
         child: Text("Ok"));
-
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Are Your Sure Delete?"),
-     // content: Text("Would you like to continue learning how to use Flutter alerts?"),
+      // content: Text("Would you like to continue learning how to use Flutter alerts?"),
       actions: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -293,7 +294,6 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
             continueButton,
           ],
         ),
-
       ],
     );
     // show the dialog

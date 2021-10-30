@@ -44,8 +44,8 @@ class TransactionModel {
     //DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
     imageUrl = json['imageUrl'];
     transactionId = json['transactionId'];
-    transferAccount= json['transferAccount'];
-    paymentLogoUrl= json['paymentLogoUrl'];
+    transferAccount = json['transferAccount'];
+    paymentLogoUrl = json['paymentLogoUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -58,8 +58,8 @@ class TransactionModel {
     data['imageUrl'] = this.imageUrl;
     data['transactionId'] = this.transactionId;
     data['status'] = this.status;
-    data['transferAccount']=this.transferAccount;
-    data['paymentLogoUrl']=this.paymentLogoUrl;
+    data['transferAccount'] = this.transferAccount;
+    data['paymentLogoUrl'] = this.paymentLogoUrl;
     return data;
   }
 

@@ -19,6 +19,7 @@ import 'package:left_style/utils/message_handler.dart' as myMsg;
 import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
 class TopUpPage extends StatefulWidget {
   const TopUpPage({Key key}) : super(key: key);
 
@@ -48,6 +49,7 @@ class _TopUpPageState extends State<TopUpPage> {
   void initState() {
     super.initState();
   }
+
   Future<firebase_storage.UploadTask> uploadFile(PickedFile file) async {
     if (file == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -62,7 +64,10 @@ class _TopUpPageState extends State<TopUpPage> {
     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child('user_topup')
-        .child(dateFormat.toString() + "_" + FirebaseAuth.instance.currentUser.uid + ".jpg");
+        .child(dateFormat.toString() +
+            "_" +
+            FirebaseAuth.instance.currentUser.uid +
+            ".jpg");
 
     final metadata = firebase_storage.SettableMetadata(
         contentType: 'image/jpeg',
@@ -76,27 +81,28 @@ class _TopUpPageState extends State<TopUpPage> {
 
     return Future.value(uploadTask);
   }
-  Future<void> upload(TransactionModel model) async {
 
+  Future<void> upload(TransactionModel model) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
-      model.status="verifying";
-      model.uid= uid;
-      var result=await  FirebaseFirestore.instance.collection(transactions)
+      model.status = "verifying";
+      model.uid = uid;
+      var result = await FirebaseFirestore.instance
+          .collection(transactions)
           .doc(uid)
           .collection("manyTransition")
           .add(model.toJson());
-      if(result.id.isNotEmpty){
+      if (result.id.isNotEmpty) {
         Navigator.pop(context, true);
         myMsg.MessageHandler.showMessage(context, "", "Successfully added");
-      }
-      else{
+      } else {
         setState(() {
-          _submiting=false;
+          _submiting = false;
         });
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -165,7 +171,8 @@ class _TopUpPageState extends State<TopUpPage> {
                                         fit: BoxFit.contain,
                                       ),
                                     ),
-                              hintText: Tran.of(context).text("payment_method_list"),
+                              hintText:
+                                  Tran.of(context).text("payment_method_list"),
                             ),
                           )),
                       SizedBox(height: 20),
@@ -228,68 +235,79 @@ class _TopUpPageState extends State<TopUpPage> {
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-                          _submiting?SpinKitDoubleBounce(color: Theme.of(context).primaryColor,): ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  padding: EdgeInsets.only(
-                                    left: 30,
-                                    right: 30,
-                                    top: 10,
-                                    bottom: 10,
-                                  ) // foreground
-                                  ),
-                              onPressed: _submiting
-                                  ? null
-                                  : () async {
-                                      if (file == null) {
-                                        myMsg.MessageHandler.showErrMessage(
-                                            context,
-                                            "Picture is required",
-                                            "Plase take a picture and upload");
-                                        return;
-                                      }
-                                      if (_topupformKey.currentState
-                                          .validate()) {
-                                          setState(() {
-                                            _submiting = true;
-                                            if (file != null) {
-                                              _isuploadingPicture = true;
-                                            }
-                                          });
-                                          print(_paymentMethod.id);
-                                          print(TransactionType.Topup);
-
-                                        TransactionModel model = new TransactionModel();
-                                        model.paymentType=_paymentMethod.id;
-                                        model.type= TransactionType.Topup;
-                                        model.amount=int.parse(_transferAmountController.text);
-                                        model.transactionId=_transactionIdController.text;
-                                        model.paymentLogoUrl= _paymentMethod.logoUrl;
-                                        model.createdDate=Timestamp.fromDate(DateTime.now());
-                                        if (file != null) {
-                                          setState(() {
-                                            _isuploadingPicture = true;
-                                          });
-                                          firebase_storage.UploadTask task =
-                                          await uploadFile(
-                                              PickedFile(file.path));
-                                          if (task != null) {
-                                            task.whenComplete(() async {
-                                              model.imageUrl =  await task
-                                                  .snapshot.ref
-                                                  .getDownloadURL();
-                                              setState(() {
-                                                _isuploadingPicture = false;
-                                              });
-                                              upload(model);
-                                            });
+                          _submiting
+                              ? SpinKitDoubleBounce(
+                                  color: Theme.of(context).primaryColor,
+                                )
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      padding: EdgeInsets.only(
+                                        left: 30,
+                                        right: 30,
+                                        top: 10,
+                                        bottom: 10,
+                                      ) // foreground
+                                      ),
+                                  onPressed: _submiting
+                                      ? null
+                                      : () async {
+                                          if (file == null) {
+                                            myMsg.MessageHandler.showErrMessage(
+                                                context,
+                                                "Picture is required",
+                                                "Plase take a picture and upload");
+                                            return;
                                           }
-                                        }
-                                      }
-                                    },
-                              child: Text("Submit")),
+                                          if (_topupformKey.currentState
+                                              .validate()) {
+                                            setState(() {
+                                              _submiting = true;
+                                              if (file != null) {
+                                                _isuploadingPicture = true;
+                                              }
+                                            });
+                                            print(_paymentMethod.id);
+                                            print(TransactionType.Topup);
+
+                                            TransactionModel model =
+                                                new TransactionModel();
+                                            model.paymentType =
+                                                _paymentMethod.id;
+                                            model.type = TransactionType.Topup;
+                                            model.amount = int.parse(
+                                                _transferAmountController.text);
+                                            model.transactionId =
+                                                _transactionIdController.text;
+                                            model.paymentLogoUrl =
+                                                _paymentMethod.logoUrl;
+                                            model.createdDate =
+                                                Timestamp.fromDate(
+                                                    DateTime.now());
+                                            if (file != null) {
+                                              setState(() {
+                                                _isuploadingPicture = true;
+                                              });
+                                              firebase_storage.UploadTask task =
+                                                  await uploadFile(
+                                                      PickedFile(file.path));
+                                              if (task != null) {
+                                                task.whenComplete(() async {
+                                                  model.imageUrl = await task
+                                                      .snapshot.ref
+                                                      .getDownloadURL();
+                                                  setState(() {
+                                                    _isuploadingPicture = false;
+                                                  });
+                                                  upload(model);
+                                                });
+                                              }
+                                            }
+                                          }
+                                        },
+                                  child: Text("Submit")),
                         ],
                       )
                     ],

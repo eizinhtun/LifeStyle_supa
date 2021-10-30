@@ -16,80 +16,75 @@ import 'package:left_style/widgets/wallet_detail_success_page.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-
 class Wallet extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => WalletState();
 }
 
 class WalletState extends State<Wallet> {
-  RefreshController _refreshController ;
+  RefreshController _refreshController;
   final db = FirebaseFirestore.instance;
   //List<TransactionModel> totalList = [];
   //List<TransactionModel> tracList = [];
 
   int showlist = 5;
-bool _isLoading=true;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _refreshController= RefreshController(initialRefresh: false);
+    _refreshController = RefreshController(initialRefresh: false);
     _onRefresh();
   }
 
-  List<DocumentSnapshot> documentList=[];
-  List<TransactionModel> tracList=[];
+  List<DocumentSnapshot> documentList = [];
+  List<TransactionModel> tracList = [];
   Future fetchFirstList() async {
     try {
       tracList.clear();
-     documentList = (await FirebaseFirestore.instance.collection(transactions)
-          .doc(FirebaseAuth.instance.currentUser.uid).collection(manyTransaction)
-          .orderBy("createdDate",descending:true)
-          .limit(showlist).get()).docs;
+      documentList = (await FirebaseFirestore.instance
+              .collection(transactions)
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .collection(manyTransaction)
+              .orderBy("createdDate", descending: true)
+              .limit(showlist)
+              .get())
+          .docs;
       documentList.forEach((result) {
-        tracList.add(TransactionModel.fromJson(result.data(),doc: result.id));
+        tracList.add(TransactionModel.fromJson(result.data(), doc: result.id));
       });
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
-
-    } on SocketException {
-
-    } catch (e) {
+      setState(() {});
+    } on SocketException {} catch (e) {
       print(e.toString());
-
     }
   }
+
   fetchNext() async {
     try {
-
-      List<DocumentSnapshot> newDocumentList = (await FirebaseFirestore.instance.collection(transactions)
-          .doc(FirebaseAuth.instance.currentUser.uid).collection(manyTransaction)
-          .orderBy("createdDate",descending:true)
-          .startAfterDocument(documentList[documentList.length - 1])
-          .limit(showlist).get()).docs;
+      List<DocumentSnapshot> newDocumentList = (await FirebaseFirestore.instance
+              .collection(transactions)
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .collection(manyTransaction)
+              .orderBy("createdDate", descending: true)
+              .startAfterDocument(documentList[documentList.length - 1])
+              .limit(showlist)
+              .get())
+          .docs;
       newDocumentList.forEach((result) {
-        tracList.add(TransactionModel.fromJson(result.data(),doc: result.id));
+        tracList.add(TransactionModel.fromJson(result.data(), doc: result.id));
       });
       documentList.addAll(newDocumentList);
 
-      setState(() {
-
-      });
-
-    } on SocketException {
-
-    } catch (e) {
+      setState(() {});
+    } on SocketException {} catch (e) {
       print(e.toString());
-
     }
   }
 
-
-
   void _onRefresh() async {
-
     fetchFirstList();
     _refreshController.refreshCompleted();
   }
@@ -103,6 +98,12 @@ bool _isLoading=true;
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -113,9 +114,10 @@ bool _isLoading=true;
               padding: EdgeInsets.only(left: 20, right: 20, bottom: 0, top: 10),
               alignment: Alignment.bottomCenter,
               color: Colors.transparent,
-              child:  StreamBuilder(
+              child: StreamBuilder(
                 stream: db
-                    .collection(userCollection).doc(FirebaseAuth.instance.currentUser.uid)
+                    .collection(userCollection)
+                    .doc(FirebaseAuth.instance.currentUser.uid)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -123,16 +125,16 @@ bool _isLoading=true;
                       child: CupertinoActivityIndicator(),
                     );
                   } else if (snapshot.hasData) {
-                    UserModel _user=UserModel.fromJson(snapshot.data.data());
-                    return  Row(
+                    UserModel _user = UserModel.fromJson(snapshot.data.data());
+                    return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton.icon(
                             onPressed: () {
                               db
-                                  .collection(userCollection).doc(FirebaseAuth.instance.currentUser.uid).update(
-                                  {"showBalance":!_user.showBalance});
-
+                                  .collection(userCollection)
+                                  .doc(FirebaseAuth.instance.currentUser.uid)
+                                  .update({"showBalance": !_user.showBalance});
                             },
                             icon: Icon(
                               Icons.account_balance_wallet,
@@ -142,7 +144,7 @@ bool _isLoading=true;
                             label: Row(
                               children: [
                                 Text(
-                                  "${_user.showBalance?Formatter.balanceFormatFromDouble(_user.balance):Formatter.balanceUnseenFormat(_user.balance)} Ks",
+                                  "${_user.showBalance ? Formatter.balanceFormatFromDouble(_user.balance) : Formatter.balanceUnseenFormat(_user.balance)} Ks",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -152,7 +154,9 @@ bool _isLoading=true;
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Icon(
-                                      _user.showBalance?Icons.visibility:Icons.visibility_off,
+                                      _user.showBalance
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
                                       size: 15,
                                     ),
                                   ),
@@ -161,69 +165,74 @@ bool _isLoading=true;
                             )),
                         PopupMenuButton(
                             onSelected: (val) async {
-                              if(val==1){
-                              var result= await Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (contex) => TopUpPage()));
-                              if(result!=null && result==true){
-                                _isLoading=true;
-                                _onRefresh();
+                              if (val == 1) {
+                                var result = await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (contex) => TopUpPage()));
+                                if (result != null && result == true) {
+                                  _isLoading = true;
+                                  _onRefresh();
+                                }
                               }
-                              }
-                              if(val==2){
-                                var result= await  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (contex) => WithdrawalPage()));
-                                if(result!=null && result==true){
-                                  _isLoading=true;
+                              if (val == 2) {
+                                var result = await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (contex) => WithdrawalPage()));
+                                if (result != null && result == true) {
+                                  _isLoading = true;
                                   _onRefresh();
                                 }
                               }
                             },
                             icon: Icon(Icons.more_horiz_rounded),
                             itemBuilder: (context) => [
-                              PopupMenuItem(
-                                child: Column(
-                                  children: [
-                                    Row(
+                                  PopupMenuItem(
+                                    child: Column(
                                       children: [
-                                        Container(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0, top: 10, bottom: 10),
-                                            child: Icon(
-                                              Icons.add_circle,
-                                              color:
-                                              Theme.of(context).primaryColor,
-                                            )),
-                                        Text("Top up"),
+                                        Row(
+                                          children: [
+                                            Container(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0,
+                                                    top: 10,
+                                                    bottom: 10),
+                                                child: Icon(
+                                                  Icons.add_circle,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                )),
+                                            Text("Top up"),
+                                          ],
+                                        ),
+                                        Divider()
                                       ],
                                     ),
-                                    Divider()
-                                  ],
-                                ),
-
-                                value: 1,
-                              ),
-                              PopupMenuItem(
-                                child: Column(
-                                  children: [
-                                    Row(
+                                    value: 1,
+                                  ),
+                                  PopupMenuItem(
+                                    child: Column(
                                       children: [
-                                        Container(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0, top: 10, bottom: 10),
-                                            child: Icon(
-                                              Icons.remove_circle,
-                                              color: Colors.grey.withOpacity(0.5),
-                                            )),
-                                        Text("Withdraw"),
-
+                                        Row(
+                                          children: [
+                                            Container(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0,
+                                                    top: 10,
+                                                    bottom: 10),
+                                                child: Icon(
+                                                  Icons.remove_circle,
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                )),
+                                            Text("Withdraw"),
+                                          ],
+                                        ),
+                                        Divider()
                                       ],
                                     ),
-                                    Divider()
-                                  ],
-                                ),
-                                value: 2,
-                              )
-                            ])
+                                    value: 2,
+                                  )
+                                ])
 
                         /* Expanded(
                     child: ElevatedButton(
@@ -278,16 +287,15 @@ bool _isLoading=true;
                   }
                 },
               ),
-
             ),
             Divider(
-                //length: MediaQuery.of(context).size.width,
-                thickness:2,
-                ),
+              //length: MediaQuery.of(context).size.width,
+              thickness: 2,
+            ),
             Expanded(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-               // height: MediaQuery.of(context).size.height * 0.65,
+                // height: MediaQuery.of(context).size.height * 0.65,
                 child: SmartRefresher(
                   enablePullDown: true,
                   enablePullUp: true,
@@ -311,7 +319,7 @@ bool _isLoading=true;
                         body = Center(child: Text("No more Data"));
                         return body;
                       }
-                    /*  if (tracList.length == end) {
+                      /*  if (tracList.length == end) {
                         body = Text("No more Data");
                       }
                       return Container(
@@ -323,108 +331,134 @@ bool _isLoading=true;
                   controller: _refreshController,
                   onRefresh: _onRefresh,
                   onLoading: _onLoading,
-
-                  child:_isLoading?Center(child:CupertinoActivityIndicator() ,): ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (c, i) => Card(
-                      elevation: 0.3,
-                      child: Center(
-                        child: Column(
-                          children: [
-                            ListTile(
-                              onTap: () async {
-                            var returnResult= await    Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                        new WalletDetailSuccessPage(
-                                            docId: tracList[i].docId,type: tracList[i].type,status: tracList[i].status)));
-                             if(returnResult!=null && returnResult){
-                               _onRefresh();
-                             }
-
-                              },
-                              title: Column(
-                                children: <Widget>[
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 10),
-                                        child: Container(
-                                          color: Colors.transparent,
-                                          margin: EdgeInsets.only(bottom: 5),
-                                          alignment: Alignment.center,
-                                          width: 45,
-                                          height: 45,
-                                          child:
-                                          new CircleAvatar(
-                                            backgroundColor:Colors.black12,
-                                            radius: 100.0,
-                                            backgroundImage: NetworkImage(
-                                              tracList[i].paymentLogoUrl,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            tracList[i].paymentType,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w900,
-                                            ),
-                                          ),
-                                          Text(
-                                              Formatter.dateTimeFormat(DateTime.fromMillisecondsSinceEpoch(tracList[i].createdDate.millisecondsSinceEpoch )
+                  child: _isLoading
+                      ? Center(
+                          child: CupertinoActivityIndicator(),
+                        )
+                      : ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (c, i) => Card(
+                            elevation: 0.3,
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    onTap: () async {
+                                      var returnResult = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  new WalletDetailSuccessPage(
+                                                      docId: tracList[i].docId,
+                                                      type: tracList[i].type,
+                                                      status:
+                                                          tracList[i].status)));
+                                      if (returnResult != null &&
+                                          returnResult) {
+                                        _onRefresh();
+                                      }
+                                    },
+                                    title: Column(
+                                      children: <Widget>[
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10),
+                                              child: Container(
+                                                color: Colors.transparent,
+                                                margin:
+                                                    EdgeInsets.only(bottom: 5),
+                                                alignment: Alignment.center,
+                                                width: 45,
+                                                height: 45,
+                                                child: new CircleAvatar(
+                                                  backgroundColor:
+                                                      Colors.black12,
+                                                  radius: 100.0,
+                                                  backgroundImage: NetworkImage(
+                                                    tracList[i].paymentLogoUrl,
                                                   ),
-                                              style: TextStyle(fontSize: 12)),
-                                        ],
-                                      ),
-                                      Spacer(),
-                                      Text(tracList[i].amount.toString(),
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: tracList[i].type ==
-                                                      TransactionType.Topup
-                                                  ? Colors.green
-                                                  : Colors.red,fontWeight: FontWeight.w900)),
-
-                                    ],
-                                  ),
-                                  Dash(
-                                    direction: Axis.horizontal,
-                                    length:
-                                        MediaQuery.of(context).size.width * 0.7,
-                                    dashLength: 2,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text("${Tran.of(context)?.text(tracList[i].status)}",
-                                              style: TextStyle(fontSize: 13,color:tracList[i].status.trim().toLowerCase()=="approved"? Colors.green:Colors.red)),
-                                        ],
-                                      ),
-                                      Spacer(),
-                                      getTypeInfo(tracList[i].status.trim().toLowerCase()),
-
-                                    ],
+                                                ),
+                                              ),
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  tracList[i].paymentType,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                                Text(
+                                                    Formatter.dateTimeFormat(DateTime
+                                                        .fromMillisecondsSinceEpoch(
+                                                            tracList[i]
+                                                                .createdDate
+                                                                .millisecondsSinceEpoch)),
+                                                    style: TextStyle(
+                                                        fontSize: 12)),
+                                              ],
+                                            ),
+                                            Spacer(),
+                                            Text(tracList[i].amount.toString(),
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: tracList[i].type ==
+                                                            TransactionType
+                                                                .Topup
+                                                        ? Colors.green
+                                                        : Colors.red,
+                                                    fontWeight:
+                                                        FontWeight.w900)),
+                                          ],
+                                        ),
+                                        Dash(
+                                          direction: Axis.horizontal,
+                                          length: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
+                                          dashLength: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Column(
+                                              children: [
+                                                Text(
+                                                    "${Tran.of(context)?.text(tracList[i].status)}",
+                                                    style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: tracList[i]
+                                                                    .status
+                                                                    .trim()
+                                                                    .toLowerCase() ==
+                                                                "approved"
+                                                            ? Colors.green
+                                                            : Colors.red)),
+                                              ],
+                                            ),
+                                            Spacer(),
+                                            getTypeInfo(tracList[i]
+                                                .status
+                                                .trim()
+                                                .toLowerCase()),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ],
+                          ),
+                          itemExtent: 100.0,
+                          itemCount: documentList.length,
                         ),
-                      ),
-                    ),
-                    itemExtent: 100.0,
-                    itemCount: documentList.length,
-                  ),
                 ),
               ),
             ),
@@ -434,15 +468,20 @@ bool _isLoading=true;
     );
   }
 
-
   Widget getTypeInfo(String type) {
     switch (type) {
-
       case "approved":
-        return Image.asset("assets/payment/success.png",width: 20,height: 20,);
+        return Image.asset(
+          "assets/payment/success.png",
+          width: 20,
+          height: 20,
+        );
         break;
       case "rejected":
-        return Icon(Icons.error,color: Colors.red,);
+        return Icon(
+          Icons.error,
+          color: Colors.red,
+        );
         break;
       case "verifying":
         return Text("");
