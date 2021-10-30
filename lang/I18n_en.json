@@ -1,4 +1,7 @@
 {
+  "verifying": "Verfying ...",
+  "approved": "Approved",
+  "rejected": "Rejected",
   "phone":"Phone number",
   "password":"Password",
   "login":"Login with Phone",

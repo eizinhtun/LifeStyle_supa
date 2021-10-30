@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/payment_method.dart';
 
 class PaymentMethodList extends StatelessWidget {
@@ -46,7 +47,7 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
       appBar: AppBar(
         elevation: 0.0,
         centerTitle: true,
-        title: Text("Select Payment"),
+        title: Text(Tran.of(context).text("payment_method_list")),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: db.collection(paymentMethodCollection).snapshots(),

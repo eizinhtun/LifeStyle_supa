@@ -1,16 +1,21 @@
 // @dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/payment_method.dart';
+import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/pages/payment_method_list.dart';
-import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:left_style/utils/message_handler.dart' as myMsg;
 import 'dart:io';
-import 'package:provider/provider.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class TopUpPage extends StatefulWidget {
   const TopUpPage({Key key}) : super(key: key);
@@ -31,6 +36,7 @@ class _TopUpPageState extends State<TopUpPage> {
   String status = '';
   String base64Image;
   XFile tmpFile;
+  bool _submiting = false;
 
   PaymentMethod _paymentMethod;
   FocusNode transferAmountFoucusNode;
@@ -39,6 +45,59 @@ class _TopUpPageState extends State<TopUpPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<firebase_storage.UploadTask> uploadFile(PickedFile file) async {
+    if (file == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('No file was selected'),
+      ));
+      return null;
+    }
+    var dateTime = DateTime.now();
+    var dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss").format(dateTime);
+    firebase_storage.UploadTask uploadTask;
+    // Create a Reference to the file
+    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('user_topup')
+        .child(dateFormat.toString() +
+            "_" +
+            FirebaseAuth.instance.currentUser.uid +
+            ".jpg");
+
+    final metadata = firebase_storage.SettableMetadata(
+        contentType: 'image/jpeg',
+        customMetadata: {'picked-file-path': file.path});
+
+    if (kIsWeb) {
+      uploadTask = ref.putData(await file.readAsBytes(), metadata);
+    } else {
+      uploadTask = ref.putFile(File(file.path), metadata);
+    }
+
+    return Future.value(uploadTask);
+  }
+
+  Future<void> upload(TransactionModel model) async {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      model.status = "verifying";
+      model.uid = uid;
+      var result = await FirebaseFirestore.instance
+          .collection(transactions)
+          .doc(uid)
+          .collection("manyTransition")
+          .add(model.toJson());
+      if (result.id.isNotEmpty) {
+        Navigator.pop(context, true);
+        myMsg.MessageHandler.showMessage(context, "", "Successfully added");
+      } else {
+        setState(() {
+          _submiting = false;
+        });
+      }
+    }
   }
 
   @override
@@ -109,7 +168,8 @@ class _TopUpPageState extends State<TopUpPage> {
                                         fit: BoxFit.contain,
                                       ),
                                     ),
-                              hintText: "Select Payment",
+                              hintText:
+                                  Tran.of(context).text("payment_method_list"),
                             ),
                           )),
                       SizedBox(height: 20),
@@ -172,76 +232,79 @@ class _TopUpPageState extends State<TopUpPage> {
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                padding: EdgeInsets.only(
-                                  left: 30,
-                                  right: 30,
-                                  top: 10,
-                                  bottom: 10,
-                                ) // foreground
-                                ),
-                            onPressed: () async {
-                              if (file == null) {
-                                myMsg.MessageHandler.showErrMessage(
-                                    context,
-                                    "Picture is required",
-                                    "Plase take a picture and upload");
-                                return;
-                              }
-                              if (_topupformKey.currentState.validate()) {
-                                print("Validate");
-                                await context.read<WalletProvider>().topup(
-                                    context,
-                                    _paymentMethod.id,
-                                    double.parse(
-                                        _transferAmountController.text),
-                                    _transactionIdController.text,
-                                    file);
-                              }
-                            },
-                            child: Text(
-                              "Cancel",
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  padding: EdgeInsets.only(
-                                    left: 30,
-                                    right: 30,
-                                    top: 10,
-                                    bottom: 10,
-                                  ) // foreground
-                                  ),
-                              onPressed: () async {
-                                if (file == null) {
-                                  myMsg.MessageHandler.showErrMessage(
-                                      context,
-                                      "Picture is required",
-                                      "Plase take a picture and upload");
-                                  return;
-                                }
-                                if (_topupformKey.currentState.validate()) {
-                                  print("Validate");
-                                  await context.read<WalletProvider>().topup(
-                                      context,
-                                      _paymentMethod.id,
-                                      double.parse(
-                                          _transferAmountController.text),
-                                      _transactionIdController.text,
-                                      file);
-                                }
-                              },
-                              child: Text("Submit")),
+                          _submiting
+                              ? SpinKitDoubleBounce(
+                                  color: Theme.of(context).primaryColor,
+                                )
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      padding: EdgeInsets.only(
+                                        left: 30,
+                                        right: 30,
+                                        top: 10,
+                                        bottom: 10,
+                                      ) // foreground
+                                      ),
+                                  onPressed: _submiting
+                                      ? null
+                                      : () async {
+                                          if (file == null) {
+                                            myMsg.MessageHandler.showErrMessage(
+                                                context,
+                                                "Picture is required",
+                                                "Plase take a picture and upload");
+                                            return;
+                                          }
+                                          if (_topupformKey.currentState
+                                              .validate()) {
+                                            setState(() {
+                                              _submiting = true;
+                                              if (file != null) {
+                                                _isuploadingPicture = true;
+                                              }
+                                            });
+                                            print(_paymentMethod.id);
+                                            print(TransactionType.Topup);
+
+                                            TransactionModel model =
+                                                new TransactionModel();
+                                            model.paymentType =
+                                                _paymentMethod.id;
+                                            model.type = TransactionType.Topup;
+                                            model.amount = int.parse(
+                                                _transferAmountController.text);
+                                            model.transactionId =
+                                                _transactionIdController.text;
+                                            model.paymentLogoUrl =
+                                                _paymentMethod.logoUrl;
+                                            model.createdDate =
+                                                Timestamp.fromDate(
+                                                    DateTime.now());
+                                            if (file != null) {
+                                              setState(() {
+                                                _isuploadingPicture = true;
+                                              });
+                                              firebase_storage.UploadTask task =
+                                                  await uploadFile(
+                                                      PickedFile(file.path));
+                                              if (task != null) {
+                                                task.whenComplete(() async {
+                                                  model.imageUrl = await task
+                                                      .snapshot.ref
+                                                      .getDownloadURL();
+                                                  setState(() {
+                                                    _isuploadingPicture = false;
+                                                  });
+                                                  upload(model);
+                                                });
+                                              }
+                                            }
+                                          }
+                                        },
+                                  child: Text("Submit")),
                         ],
                       )
                     ],
@@ -291,7 +354,7 @@ class _TopUpPageState extends State<TopUpPage> {
               top: 5,
               right: 5,
               child: IconButton(
-                  onPressed: chooseImage,
+                  onPressed: _submiting ? null : chooseImage,
                   icon: Icon(
                     Icons.photo,
                     color: Colors.red,

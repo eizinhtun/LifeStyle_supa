@@ -1,4 +1,8 @@
 {
+
+  "verifying": "Verfying ...",
+  "approved": "Approved",
+  "rejected": "Rejected",
   "phone":"ဖုန်းနံပါတ်",
   "password":"လျှို့ဝှက်နံပါတ်",
   "login":"အကောင့်ဝင်ပါ",

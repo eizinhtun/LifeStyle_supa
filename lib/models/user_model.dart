@@ -11,7 +11,7 @@ class UserModel {
   bool isActive;
   DateTime createdDate;
   String address;
-  bool showBalance;
+  bool showBalance=true;
 
   UserModel({
     this.fullName,
@@ -34,14 +34,14 @@ class UserModel {
     email = json['email'];
     photoUrl = json['photoUrl'];
     uid = json['uid'];
-    balance = json['balance'];
+    balance = json['balance']??0;
     fcmtoken = json['fcmtoken'];
     password = json['password'];
     isActive = json['isActive'];
     // createdDate =
     //     DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
     address = json['address'];
-    showBalance= json['showBalance'];
+    showBalance=json['showBalance']==null?true: json['showBalance'];
     //  DateTime.parse(json['createdDate']);
   }
 

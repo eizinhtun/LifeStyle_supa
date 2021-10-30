@@ -10,16 +10,22 @@ class TransactionModel {
   int amount;
   Timestamp createdDate;
   String imageUrl;
+  String status;
   String transactionId;
+  String transferAccount;
+  String paymentLogoUrl;
 
   TransactionModel(
       {this.uid,
       this.type,
+      this.status,
       this.paymentType,
       this.amount,
       this.createdDate,
       this.imageUrl,
-      this.transactionId});
+      this.transactionId,
+      this.transferAccount,
+      this.paymentLogoUrl});
 
   TransactionModel.fromJson(Map<String, dynamic> json, {String doc}) {
     docId = doc;
@@ -30,11 +36,18 @@ class TransactionModel {
     //   Timestamp createdDatetimestamp = json['createdDate'];
     // createdDate = createdDatetimestamp.toDate();
     createdDate = json['createdDate']; // Timestamp.fromDate();
+    status = json['status'] ?? "verifying";
     // DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
 
     //DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
     imageUrl = json['imageUrl'];
     transactionId = json['transactionId'];
+
+    //DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
+    imageUrl = json['imageUrl'];
+    transactionId = json['transactionId'];
+    transferAccount = json['transferAccount'];
+    paymentLogoUrl = json['paymentLogoUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -46,6 +59,9 @@ class TransactionModel {
     data['createdDate'] = this.createdDate;
     data['imageUrl'] = this.imageUrl;
     data['transactionId'] = this.transactionId;
+    data['status'] = this.status;
+    data['transferAccount'] = this.transferAccount;
+    data['paymentLogoUrl'] = this.paymentLogoUrl;
     return data;
   }
 
