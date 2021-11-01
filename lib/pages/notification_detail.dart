@@ -143,7 +143,8 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
                                       children: <TextSpan>[
                                         TextSpan(
                                           text: (widget.noti.currentdate != null
-                                              ? getTime(widget.noti.currentdate)
+                                              ? getTime(widget.noti.currentdate
+                                                      .toDate())
                                                   .toString()
                                               : ""),
                                           style: TextStyle(

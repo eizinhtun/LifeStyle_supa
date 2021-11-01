@@ -346,10 +346,6 @@ class _ChangePinPageState extends State<ChangePinPage> {
                 6);
             verificationId = verificationId;
             print("Before: $verificationId");
-
-            // Navigator.of(context).push(MaterialPageRoute(
-            //     builder: (context) => RegisterVerifyPinPage(
-            //         user: user, verificationId: verificationId)));
           },
           codeAutoRetrievalTimeout: (String verificationId) {
             print("verification code: " + verificationId);

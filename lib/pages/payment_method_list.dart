@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/payment_method.dart';
@@ -113,13 +112,6 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
         },
       ),
     );
-  }
-
-  getDate(date) {
-    DateTime tempDate = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date);
-    var dateFormat =
-        DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
-    return dateFormat.format(tempDate);
   }
 
   // @override

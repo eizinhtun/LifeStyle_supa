@@ -6,6 +6,11 @@ class Formatter {
     return f.format(date);
   }
 
+  // static String getDate(DateTime date) {
+  //   var dateFormat =
+  //       DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
+  //   return dateFormat.format(date);
+  // }
   static String getDate(DateTime date) {
     var dateFormat =
         DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
@@ -26,7 +31,6 @@ class Formatter {
   static String balanceFormatFromDouble(double balance) {
     return NumberFormat.decimalPattern().format(balance);
   }
-
 
   static String formatPhone(String phone) {
     if (phone.startsWith("+95")) {

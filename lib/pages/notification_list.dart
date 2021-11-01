@@ -295,7 +295,9 @@ class _NotificationListPage extends State<NotificationListPage>
                                       child: notiList[index].currentdate != null
                                           ? Text(
                                               timeago.format(
-                                                  notiList[index].currentdate,
+                                                  notiList[index]
+                                                      .currentdate
+                                                      .toDate(),
                                                   // DateTime.parse(
 
                                                   //     notiList[index]

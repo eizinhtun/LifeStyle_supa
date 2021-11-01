@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NotiModel {
   String id;
-  DateTime createdDate;
+  Timestamp createdDate;
   String createdDateTimeStr;
   String title;
   int userId;
@@ -19,7 +19,7 @@ class NotiModel {
   String bodyValue;
   String category;
   String clickAction;
-  DateTime currentdate;
+  Timestamp currentdate;
   String currentDateStr;
   String fortime;
   String number;
@@ -80,8 +80,7 @@ class NotiModel {
     messageId = json['message_id'].toString().trim();
     // refid = json['refid'];
 
-    Timestamp createdtimestamp = json['created_date'];
-    createdDate = createdtimestamp.toDate();
+    createdDate = json['created_date'];
     //  Timestamp()
     // createdDateTimeStr = json['created_date_time_Str'];
     // userId = json['userId'];
@@ -92,8 +91,7 @@ class NotiModel {
     // bodyValue = json['body_value'];
     // category = json['category'];
     // clickAction = json['click_action'];
-    Timestamp currenttimestamp = json['currentdate'];
-    currentdate = currenttimestamp.toDate();
+    currentdate = json['currentdate'];
     // currentDateStr = json['current_date_Str'];
     // fortime = json['fortime'];
     // number = json['number'];
@@ -119,7 +117,7 @@ class NotiModel {
     data['id'] = this.id;
     data['message_id'] = this.messageId;
     // data['refid'] = this.refid;
-    data['created_date'] = Timestamp.fromDate(this.createdDate);
+    data['created_date'] = this.createdDate;
     //  this.createdDate;
 
     // data['created_date_time_Str'] = this.createdDateTimeStr;
@@ -131,7 +129,7 @@ class NotiModel {
     // data['body_value'] = this.bodyValue;
     // data['category'] = this.category;
     // data['click_action'] = this.clickAction;
-    data['currentdate'] = Timestamp.fromDate(this.currentdate);
+    data['currentdate'] = this.currentdate;
     // data['current_date_Str'] = this.currentDateStr;
     // data['fortime'] = this.fortime;
     // data['number'] = this.number;

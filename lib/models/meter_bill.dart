@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MeterBill {
   bool isPaid;
-  String payDate;
+  Timestamp payDate;
   String remark;
   String readImageUrl;
   Timestamp readDate;
@@ -100,7 +100,7 @@ class MeterBill {
 
   String state;
 
-  String dueDate;
+  Timestamp dueDate;
 
   String monthName;
 
