@@ -273,14 +273,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _googlelogin() async {
-    setState(() {
-      isWaiting = true;
-    });
-    String token = await checkToken(fcmtoken);
+    // setState(() {
+    //   isWaiting = true;
+    // });
+    // String token = await checkToken(fcmtoken);
     await context.read<LoginProvider>().googleLogin(context, token);
-    setState(() {
-      isWaiting = false;
-    });
+    // setState(() {
+    //   isWaiting = false;
+    // });
   }
 
   String prettyPrint(Map json) {

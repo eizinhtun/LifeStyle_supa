@@ -5,7 +5,7 @@ class UserModel {
   String email;
   String phone;
   String photoUrl;
-  double balance;
+  int balance;
   String fcmtoken;
   String password;
   bool isActive;

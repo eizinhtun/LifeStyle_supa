@@ -190,14 +190,19 @@ class _MePageState extends State<MePage> {
                     Container(
                       height: titleHeight,
                       child: ListTile(
-                        onTap: () {
+                        onTap: () async {
                           fullName = user.fullName.toString();
                           photoUrl = user.photoUrl.toString();
                           address = user.address.toString();
-                          Navigator.of(context).push(MaterialPageRoute(
+                         var result=await Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => EditUserProfilePage(
                                     user: user,
                                   )));
+                          if (result != null && result == true) {
+                           setState(() {
+
+                           });
+                          }
                         },
                         leading: Container(
                           width: leadingWidth,

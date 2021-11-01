@@ -26,7 +26,7 @@ class WalletState extends State<Wallet> {
   //List<TransactionModel> totalList = [];
   //List<TransactionModel> tracList = [];
 
-  int showlist = 5;
+  int showlist = 10;
   bool _isLoading = true;
 
   @override
@@ -41,17 +41,24 @@ class WalletState extends State<Wallet> {
   Future fetchFirstList() async {
     try {
       tracList.clear();
+      // documentList = (await FirebaseFirestore.instance
+      //         .collection(transactions)
+      //         .doc(FirebaseAuth.instance.currentUser.uid)
+      //         .collection(manyTransaction)
+      //         .orderBy("createdDate", descending: true)
+      //         .limit(showlist)
+      //         .get())
+      //     .docs;
       documentList = (await FirebaseFirestore.instance
-              .collection(transactions)
-              .doc(FirebaseAuth.instance.currentUser.uid)
-              .collection(manyTransaction)
-              .orderBy("createdDate", descending: true)
-              .limit(showlist)
-              .get())
+          .collection(transactions)
+          .orderBy("createdDate", descending: true)
+          .limit(showlist)
+          .get())
           .docs;
       documentList.forEach((result) {
         tracList.add(TransactionModel.fromJson(result.data(), doc: result.id));
       });
+      print(tracList);
       setState(() {
         _isLoading = false;
       });
@@ -63,14 +70,21 @@ class WalletState extends State<Wallet> {
 
   fetchNext() async {
     try {
+      // List<DocumentSnapshot> newDocumentList = (await FirebaseFirestore.instance
+      //         .collection(transactions)
+      //         .doc(FirebaseAuth.instance.currentUser.uid)
+      //         .collection(manyTransaction)
+      //         .orderBy("createdDate", descending: true)
+      //         .startAfterDocument(documentList[documentList.length - 1])
+      //         .limit(showlist)
+      //         .get())
+      //     .docs;
       List<DocumentSnapshot> newDocumentList = (await FirebaseFirestore.instance
-              .collection(transactions)
-              .doc(FirebaseAuth.instance.currentUser.uid)
-              .collection(manyTransaction)
-              .orderBy("createdDate", descending: true)
-              .startAfterDocument(documentList[documentList.length - 1])
-              .limit(showlist)
-              .get())
+          .collection(transactions)
+          .orderBy("createdDate", descending: true)
+          .startAfterDocument(documentList[documentList.length - 1])
+          .limit(showlist)
+          .get())
           .docs;
       newDocumentList.forEach((result) {
         tracList.add(TransactionModel.fromJson(result.data(), doc: result.id));
@@ -143,7 +157,7 @@ class WalletState extends State<Wallet> {
                             label: Row(
                               children: [
                                 Text(
-                                  "${_user.showBalance ? Formatter.balanceFormatFromDouble(_user.balance) : Formatter.balanceUnseenFormat(_user.balance)} Ks",
+                                  "${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)} Ks",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -161,13 +175,14 @@ class WalletState extends State<Wallet> {
                                   ),
                                 ),
                               ],
-                            )),
+                            )
+                        ),
                         PopupMenuButton(
                             onSelected: (val) async {
                               if (val == 1) {
                                 var result = await Navigator.of(context).push(
                                     MaterialPageRoute(
-                                        builder: (contex) => TopUpPage()));
+                                        builder: (context) => TopUpPage()));
                                 if (result != null && result == true) {
                                   _isLoading = true;
                                   _onRefresh();
@@ -176,7 +191,7 @@ class WalletState extends State<Wallet> {
                               if (val == 2) {
                                 var result = await Navigator.of(context).push(
                                     MaterialPageRoute(
-                                        builder: (contex) => WithdrawalPage()));
+                                        builder: (context) => WithdrawalPage()));
                                 if (result != null && result == true) {
                                   _isLoading = true;
                                   _onRefresh();
@@ -351,8 +366,7 @@ class WalletState extends State<Wallet> {
                                                   new WalletDetailSuccessPage(
                                                       docId: tracList[i].docId,
                                                       type: tracList[i].type,
-                                                      status:
-                                                          tracList[i].status)));
+                                                      status: tracList[i].status)));
                                       if (returnResult != null &&
                                           returnResult) {
                                         _onRefresh();

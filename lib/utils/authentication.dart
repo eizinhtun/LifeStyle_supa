@@ -64,6 +64,7 @@ class Authentication {
 
           user = userCredential.user;
         } on FirebaseAuthException catch (e) {
+          print(e);
           if (e.code == 'account-exists-with-different-credential') {
             ScaffoldMessenger.of(context).showSnackBar(
               Authentication.customSnackBar(

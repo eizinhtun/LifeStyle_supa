@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';

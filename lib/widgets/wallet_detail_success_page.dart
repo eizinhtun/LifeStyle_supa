@@ -33,7 +33,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
       appBar: AppBar(
         elevation: 0.0,
         centerTitle: true,
-        title: Text("Wallet Detail"),
+       title: Text(Tran.of(context).text("transaction_detail_title").replaceAll("@type", widget.type)),
         actions: [
           checkTypeAndStatus(context),
         ],
@@ -41,8 +41,6 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
       body: StreamBuilder<DocumentSnapshot>(
           stream: db
               .collection(transactions)
-              .doc(FirebaseAuth.instance.currentUser.uid)
-              .collection(manyTransaction)
               .doc(widget.docId)
               .snapshots(),
           builder: (context, snapshot) {
@@ -138,18 +136,6 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                   Text("Bank"),
                                   Spacer(),
                                   Text(item.paymentType,
-                                      style: TextStyle(fontSize: 12)),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("Transaction Date"),
-                                  Spacer(),
-                                  Text(
-                                      Formatter.dateTimeFormat(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              item.createdDate
-                                                  .millisecondsSinceEpoch)),
                                       style: TextStyle(fontSize: 12)),
                                 ],
                               ),

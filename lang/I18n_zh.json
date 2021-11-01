@@ -24,12 +24,18 @@
   "my_meter_bill": "My meter bill",
   "helloword":"hello word",
   "pay_bill":"Pay Bill",
-
   "notification_toup_success": "充值成功",
   "notification_toup_denied": "充值拒绝",
   "notification_withdrawal_success": "提现成功",
   "notification_withdrawal_denied": "提现拒绝",
-
   "ks": " KS",
-  "payment_method_list": "Select Payment"
+  "payment_method_list": "Select Payment",
+  "transaction_detail_title": "@type Details",
+  "transaction_detail_date": "Transaction Date",
+  "transaction_detail_time": "Transaction Time",
+  "transaction_detail_type": "Transaction Type",
+  "transaction_detail_bank": "Bank",
+  "transaction_detail_topup_account": "Transaction No",
+  "transaction_detail_withdrawal_account": "Receiving Account",
+  "transaction_detail_amount": "Amount"
 }

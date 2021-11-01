@@ -84,10 +84,13 @@ class _TopUpPageState extends State<TopUpPage> {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       model.status = "verifying";
       model.uid = uid;
+      // var result = await FirebaseFirestore.instance
+      //     .collection(transactions)
+      //     .doc(uid)
+      //     .collection("manyTransition")
+      //     .add(model.toJson());
       var result = await FirebaseFirestore.instance
           .collection(transactions)
-          .doc(uid)
-          .collection("manyTransition")
           .add(model.toJson());
       if (result.id.isNotEmpty) {
         Navigator.pop(context, true);

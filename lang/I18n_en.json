@@ -23,12 +23,19 @@
   "my_meter_bill": "My meter bill",
   "helloword":"hello word",
   "pay_bill":"Pay Bill",
-
   "notification_toup_success": "Top up Successful ",
   "notification_toup_denied": "Top up denied ",
   "notification_withdrawal_success": "Withdrawal successful ",
   "notification_withdrawal_denied": "Withdrawal denied ",
-
   "ks": " KS",
-  "payment_method_list": "Select Payment"
+  "payment_method_list": "Select Payment",
+  "transaction_detail_title": "@type Details",
+  "transaction_detail_date": "Transaction Date",
+  "transaction_detail_time": "Transaction Time",
+  "transaction_detail_type": "Transaction Type",
+  "transaction_detail_bank": "Bank",
+  "transaction_detail_topup_account": "Transaction No",
+  "transaction_detail_withdrawal_account": "Receiving Account",
+  "transaction_detail_amount": "Amount"
+
 }

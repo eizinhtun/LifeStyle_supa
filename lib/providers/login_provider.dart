@@ -123,7 +123,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   Future<void> googleLogin(BuildContext context, String fcmtoken) async {
     User user = await Authentication.signInWithGoogle(context: context);
-    if (user.uid != null) {
+    if (user != null && user?.uid != null) {
       DatabaseHelper.setAppLoggedIn(context, true);
       // FirebaseAuth.instance.currentUser.
       notifyListeners();
