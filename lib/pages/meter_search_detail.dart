@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Meter.dart';
+import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'map_screen.dart';
@@ -180,9 +181,11 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                     children: [
                                       Container(
                                         padding: EdgeInsets.only(top: 5),
-                                        child: Text(getDate(widget.obj
-                                                .insertDate) //yyy-MM-ddTHH:mm:ss
-                                            .toString()),
+                                        child: Text(
+                                          Formatter.getDate(
+                                            widget.obj.insertDate.toDate(),
+                                          ),
+                                        ),
                                       ),
                                       Text(
                                         widget.obj.customerId +
@@ -334,8 +337,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "date",
-                                        // Formatter.getDate(widget.obj.readDate),
+                                        Formatter.getDate(
+                                            widget.obj.readDate.toDate()),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -368,8 +371,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "date",
-                                        // Formatter.getDate(widget.obj.dueDate),
+                                        Formatter.getDate(
+                                            widget.obj.dueDate.toDate()),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -402,8 +405,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "date",
-                                        // Formatter.getDate(widget.obj.dueDate),
+                                        Formatter.getDate(
+                                            widget.obj.dueDate.toDate()),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -660,13 +663,6 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
         ],
       ),
     );
-  }
-
-  getDate(date) {
-    DateTime tempDate = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(date);
-    var dateFormat =
-        DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
-    return dateFormat.format(tempDate);
   }
 
   // @override

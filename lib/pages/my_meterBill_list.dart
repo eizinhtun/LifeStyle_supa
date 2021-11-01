@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/meter_bill.dart';
@@ -256,7 +255,9 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                     )
                                                   : Text(
                                                       "Due date " +
-                                                          bill.dueDate,
+                                                          Formatter.getDate(bill
+                                                              .dueDate
+                                                              .toDate()),
                                                       style: TextStyle(
                                                           fontStyle:
                                                               FontStyle.italic,
@@ -308,11 +309,5 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
               },
             ),
     );
-  }
-
-  String getDate(DateTime date) {
-    var dateFormat =
-        DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
-    return dateFormat.format(date);
   }
 }

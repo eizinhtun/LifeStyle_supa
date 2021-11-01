@@ -1,11 +1,20 @@
 // @dart=2.9
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Meter {
   bool autoPay;
   bool selfScan;
   bool requiredMatchGPS;
   String latitude;
   String longitude;
+  Timestamp joinDate;
+  Timestamp insertDate;
+  Timestamp lastDate;
+  Timestamp dueDate;
+  Timestamp readDate;
+  Null applyDate;
+  Null issueDate;
   Null creditReason;
   int creditUnit;
   int creditAmount;
@@ -32,7 +41,6 @@ class Meter {
   String manufacturerNo;
   String businessNo;
   String meterSerial;
-  String joinDate;
   double horsePower;
   String multiplier;
   double percentage;
@@ -43,16 +51,12 @@ class Meter {
   String rate;
   String currencyType;
   Null excelFileName;
-  String insertDate;
   bool isShowDebt;
   bool noLayer;
   int noOfRoom;
   String layerDescription;
   String layerRate;
   String layerAmount;
-  String lastDate;
-  String dueDate;
-  String readDate;
   int streetLightCost;
   String oldAccount;
   Null poleNo;
@@ -62,8 +66,7 @@ class Meter {
   int avageUseUnit;
   int lastReadUnit;
   Null lastMonthRedUnit;
-  Null applyDate;
-  Null issueDate;
+
   Null installPerson;
   // double meterBill;
   String branchId;
@@ -199,12 +202,12 @@ class Meter {
     isShowDebt = json['IsShowDebt'];
     noLayer = json['NoLayer'];
     noOfRoom = json['NoOfRoom'];
-    //layerDescription = json['LayerDescription'];
+    // layerDescription = json['LayerDescription'];
     // layerRate = json['LayerRate'];
     // layerAmount = json['LayerAmount'];
-    // lastDate = json['LastDate'];
+    lastDate = json['LastDate'];
     dueDate = json['DueDate'];
-    // readDate = json['ReadDate'];
+    readDate = json['ReadDate'];
     // streetLightCost = json['StreetLightCost'];
     // oldAccount = json['OldAccount'];
     // poleNo = json['PoleNo'];

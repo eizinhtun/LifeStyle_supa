@@ -10,6 +10,7 @@ import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/meter_bill.dart';
 import 'package:left_style/pages/pay_bill_page.dart';
+import 'package:left_style/utils/formatter.dart';
 
 class MeterBillDetailPage extends StatefulWidget {
   final String docId;
@@ -116,7 +117,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                 "Used: " +
                                     bill.monthName +
                                     " Last Date: " +
-                                    bill.dueDate +
+                                    Formatter.getDate(bill.dueDate.toDate()) +
                                     "",
                                 style: getTextStyle()),
                             Text(bill.companyName + '   လျှပ်စစ်ပုံစံ(၂၄၃)',

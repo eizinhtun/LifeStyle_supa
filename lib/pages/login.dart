@@ -220,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
           phone: phone,
           fcmtoken: token,
           isActive: true,
-          createdDate: DateTime.now());
+          createdDate: Timestamp.fromDate(DateTime.now()));
 
       try {
         await _auth.verifyPhoneNumber(

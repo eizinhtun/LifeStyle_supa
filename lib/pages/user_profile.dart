@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -288,7 +289,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                               photoUrl: _user.photoURL,
                                               email: _user.email,
                                               isActive: true,
-                                              createdDate: DateTime.now());
+                                              createdDate: Timestamp.fromDate(
+                                                  DateTime.now()));
                                           await context
                                               .read<LoginProvider>()
                                               .updateUserInfo(

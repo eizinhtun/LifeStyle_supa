@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:intl/intl.dart';
@@ -329,7 +330,8 @@ class _PayBillPageState extends State<PayBillPage> {
                               // widget.bill.isPaid = true;
                               widget.bill.remark = _remarkController.text;
                               widget.bill.status = "Paid";
-                              widget.bill.payDate = getPayDate(DateTime.now());
+                              widget.bill.payDate =
+                                  Timestamp.fromDate(DateTime.now());
                               print(widget.bill.readDate);
                               print(widget.bill.readImageUrl);
                               print(widget.bill.toJson());

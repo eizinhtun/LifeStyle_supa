@@ -1,4 +1,6 @@
 // @dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
   String uid;
   String fullName;
@@ -9,9 +11,9 @@ class UserModel {
   String fcmtoken;
   String password;
   bool isActive;
-  DateTime createdDate;
+  Timestamp createdDate;
   String address;
-  bool showBalance=true;
+  bool showBalance = true;
 
   UserModel({
     this.fullName,
@@ -34,15 +36,13 @@ class UserModel {
     email = json['email'];
     photoUrl = json['photoUrl'];
     uid = json['uid'];
-    balance = json['balance']??0;
+    balance = json['balance'] ?? 0;
     fcmtoken = json['fcmtoken'];
     password = json['password'];
     isActive = json['isActive'];
-    // createdDate =
-    //     DateTime.fromMicrosecondsSinceEpoch(int.parse(json['createdDate']));
+    createdDate = json['createdDate'];
     address = json['address'];
-    showBalance=json['showBalance']==null?true: json['showBalance'];
-    //  DateTime.parse(json['createdDate']);
+    showBalance = json['showBalance'] == null ? true : json['showBalance'];
   }
 
   Map<String, dynamic> toJson() {
@@ -56,7 +56,7 @@ class UserModel {
     data['fcmtoken'] = this.fcmtoken;
     data['password'] = this.password;
     data['isActive'] = this.isActive;
-    // data['createdDate'] = this.createdDate.toString();
+    data['createdDate'] = this.createdDate;
     data['address'] = this.address;
     data['showBalance'] = this.showBalance;
     return data;
