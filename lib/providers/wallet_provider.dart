@@ -231,7 +231,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       userRef.doc(uid).get().then((value) async {
-        double balance = value.data()["balance"];
+        int balance = value.data()["balance"];
 
         if (bill.totalCost > balance) {
           MessageHandler.showErrMessage(context, "Insufficient Balance",

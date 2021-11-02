@@ -504,7 +504,7 @@ class _HomePageDetailState extends State<HomePageDetail> {
         },
       ),
       bottomNavigationBar: SizedBox(
-        height: 80,
+        height: 90,
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: bottomSelectedIndex,
@@ -513,7 +513,9 @@ class _HomePageDetailState extends State<HomePageDetail> {
           },
           items: [
             BottomNavigationBarItem(
-              activeIcon: Icon(FontAwesomeIcons.home),
+              activeIcon: Icon(FontAwesomeIcons.home,
+              // size: ,
+              ),
               icon: Icon(FontAwesomeIcons.home),
               label: "Home",
             ),
@@ -533,4 +535,5 @@ class _HomePageDetailState extends State<HomePageDetail> {
       ),
     );
   }
+  double iconSize=20;
 }

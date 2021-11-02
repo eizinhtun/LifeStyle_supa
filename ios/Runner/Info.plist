@@ -64,5 +64,31 @@
 		</array>
 		</dict>
 		</array>
+		<!-- <key>io.flutter.embedded_views_preview</key>
+		<true/> -->
+
+		<key>io.flutter.embedded_views_preview</key>
+		<string>yes</string>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+    	<key>NSAllowsArbitraryLoads</key>
+    	<true/>
+    	<key>NSAllowsArbitraryLoadsInWebContent</key>
+    	<true/>
+		</dict>
+
+
+
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>https</string>
+  			<string>http</string>
+    		<string>googlechromes</string>
+    		<string>comgooglemaps</string>
+		</array>
+		<key>UIBackgroundModes</key>
+    	<array>
+        <string>remote-notification</string>
+    	</array>
 	</dict>
 </plist>

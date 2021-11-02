@@ -11,7 +11,7 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/validators/validator.dart';
-import 'package:otp_autofill/otp_autofill.dart';
+// import 'package:otp_autofill/otp_autofill.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class ChangePinPage extends StatefulWidget {
@@ -22,7 +22,7 @@ class ChangePinPage extends StatefulWidget {
 }
 
 class _ChangePinPageState extends State<ChangePinPage> {
-  OTPTextEditController controller;
+  TextEditingController controller;
   // ignore: close_sinks
   StreamController<ErrorAnimationType> errorController;
   bool hasError = false;
