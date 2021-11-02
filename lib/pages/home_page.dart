@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Ads.dart';
 import 'package:left_style/pages/my_meterBill_list.dart';
 import 'package:left_style/pages/upload_my_read.dart';
@@ -73,14 +74,14 @@ class _HomePageState extends State<HomePage> {
                     style: BorderStyle.solid,
                   ),
                 ),
-                child: Text("Close"),
+                child: Text(Tran.of(context).text("readMeterSearchClose")),
                 onPressed: () {
                   Navigator.of(context).pop();
                   return null;
                 },
               ),
             ],
-            title: Center(child: Text("Select search option")),
+            title: Center(child: Text(Tran.of(context).text("readMeterSearchTitle"))),
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -176,7 +177,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Positioned(
-            top: 60,
+            top: 120,
             left: 0,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 15),
@@ -193,60 +194,60 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white,
                       elevation: 10,
                       child: Container(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 10, right: 10, top: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(Icons.account_balance_wallet),
-                                  SizedBox(width: 10),
-                                  Text("Wallet Balance (Ks)"),
-                                  Spacer(),
-                                  IconButton(
-                                    icon: Icon(Icons.remove_red_eye_rounded),
-                                    color: iconColor,
-                                    onPressed: () {
-                                      setState(() {
-                                        show = !show;
-                                        iconColor = show
-                                            ? Theme.of(context).primaryColor
-                                            : Colors.black87;
-                                      });
-                                    },
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: 45, right: 10, top: 5, bottom: 10),
-                              child: show
-                                  ? Text(
-                                      ("${Formatter.balanceFormat(balance ?? 0)}"),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    )
-                                  : Text(
-                                      "${Formatter.balanceUnseenFormat(balance)}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                            ),
-                          ],
-                        ),
+                        // child: Column(
+                        //   mainAxisSize: MainAxisSize.min,
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: <Widget>[
+                        //     Container(
+                        //       margin:
+                        //           EdgeInsets.only(left: 10, right: 10, top: 5),
+                        //       child: Row(
+                        //         mainAxisAlignment: MainAxisAlignment.start,
+                        //         children: [
+                        //           Icon(Icons.account_balance_wallet),
+                        //           SizedBox(width: 10),
+                        //           Text("Wallet Balance (Ks)"),
+                        //           Spacer(),
+                        //           IconButton(
+                        //             icon: Icon(Icons.remove_red_eye_rounded),
+                        //             color: iconColor,
+                        //             onPressed: () {
+                        //               setState(() {
+                        //                 show = !show;
+                        //                 iconColor = show
+                        //                     ? Theme.of(context).primaryColor
+                        //                     : Colors.black87;
+                        //               });
+                        //             },
+                        //           )
+                        //         ],
+                        //       ),
+                        //     ),
+                        //     Container(
+                        //       margin: EdgeInsets.only(
+                        //           left: 45, right: 10, top: 5, bottom: 10),
+                        //       child: show
+                        //           ? Text(
+                        //               ("${Formatter.balanceFormat(balance ?? 0)}"),
+                        //               style: TextStyle(
+                        //                   fontWeight: FontWeight.bold,
+                        //                   fontSize: 16),
+                        //             )
+                        //           : Text(
+                        //               "${Formatter.balanceUnseenFormat(balance)}",
+                        //               style: TextStyle(
+                        //                   fontWeight: FontWeight.bold,
+                        //                   fontSize: 16),
+                        //             ),
+                        //     ),
+                        //   ],
+                        // ),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
                   Container(
                       margin: EdgeInsets.only(top: 10),
                       color: Colors.black.withOpacity(0.05),

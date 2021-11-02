@@ -100,7 +100,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         title: Center(
           child: Container(
             margin: EdgeInsets.only(right: 40),
-            child: Text("Withdraw"),
+            child: Text(Tran.of(context).text("withdrawal")),
           ),
         ),
       ),
@@ -238,7 +238,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                   });
                                 }
                               },
-                              child: Text("Submit")),
+                              child: Text(Tran.of(context).text("submit"))),
                         ],
                       )
                     ],
@@ -368,7 +368,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                           Navigator.pop(context);
                         },
                         child: Text(
-                          "Cancel",
+                          Tran.of(context).text("cancel"),
                           style: TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.bold),
                         ),

@@ -1,14 +1,19 @@
 // @dart=2.9
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/system_data.dart';
+import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/language_page.dart';
 import 'package:left_style/pages/setting.dart';
 import 'package:left_style/pages/user_profile_page.dart';
 import 'package:left_style/providers/noti_provider.dart';
+import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
@@ -25,6 +30,7 @@ class MePage extends StatefulWidget {
 }
 
 class _MePageState extends State<MePage> {
+  final db = FirebaseFirestore.instance;
   UserModel user = UserModel();
   bool _isSigningOut = false;
   String url = "";
@@ -104,85 +110,176 @@ class _MePageState extends State<MePage> {
                 margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 child: ListView(
                   children: [
-                    InkWell(
-                      onTap: () {
-                        fullName = user.fullName.toString();
-                        photoUrl = user.photoUrl.toString();
-                        address = user.address.toString();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => EditUserProfilePage(
-                              user: user,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
+                    StreamBuilder(
+                      stream: db
+                          .collection(userCollection)
+                          .doc(FirebaseAuth.instance.currentUser.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(
+                            child: CupertinoActivityIndicator(),
+                          );
+                        } else if (snapshot.hasData) {
+                          UserModel _user = UserModel.fromJson(snapshot.data.data());
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => EditUserProfilePage(
+                                    user: _user,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 0),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  // CircleAvatar(
-                                  //   radius: 40,
-                                  //   backgroundImage: AssetImage(
-                                  //       "assets/image/user-photo.png"),
-                                  // ),
-                                  UserInfoScreenPhoto(
-                                    name: user.fullName
-                                        .substring(0, 1)
-                                        .toUpperCase(),
-                                    imageurl: user.photoUrl,
-                                    width: 80,
-                                    height: 80,
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Container(
-                                    child: Expanded(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            height: 20,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        UserInfoScreenPhoto(
+                                          name: _user.fullName
+                                              .substring(0, 1)
+                                              .toUpperCase(),
+                                          imageurl: _user.photoUrl,
+                                          width: 80,
+                                          height: 80,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                          child: Expanded(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                Text(
+                                                  "${_user.fullName}",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                                Text(Tran.of(context).text("balance").replaceAll("@amount", " ${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)}")
+                                                    .replaceAll("@balanceKs", Tran.of(context).text("ks")),
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 13,
+                                                        color: Colors.black)
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                          Text(
-                                            "${user.fullName}",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                              "Balance : ${user.balance.toString()} Ks",
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Icon(
+                                      Icons.qr_code,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Icon(
-                                Icons.qr_code,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                          );
+                        } else {
+                          return Text("No data found");
+                        }
+                      },
                     ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     fullName = user.fullName.toString();
+                    //     photoUrl = user.photoUrl.toString();
+                    //     address = user.address.toString();
+                    //     Navigator.of(context).push(
+                    //       MaterialPageRoute(
+                    //         builder: (context) => EditUserProfilePage(
+                    //           user: user,
+                    //         ),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Container(
+                    //     padding:
+                    //         EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //       children: [
+                    //         Flexible(
+                    //           child: Row(
+                    //             mainAxisAlignment: MainAxisAlignment.start,
+                    //             crossAxisAlignment: CrossAxisAlignment.start,
+                    //             children: <Widget>[
+                    //               // CircleAvatar(
+                    //               //   radius: 40,
+                    //               //   backgroundImage: AssetImage(
+                    //               //       "assets/image/user-photo.png"),
+                    //               // ),
+                    //               UserInfoScreenPhoto(
+                    //                 name: user.fullName
+                    //                     .substring(0, 1)
+                    //                     .toUpperCase(),
+                    //                 imageurl: user.photoUrl,
+                    //                 width: 80,
+                    //                 height: 80,
+                    //               ),
+                    //               SizedBox(
+                    //                 width: 20,
+                    //               ),
+                    //               Container(
+                    //                 child: Expanded(
+                    //                   child: Column(
+                    //                     mainAxisAlignment:
+                    //                         MainAxisAlignment.center,
+                    //                     crossAxisAlignment:
+                    //                         CrossAxisAlignment.start,
+                    //                     children: [
+                    //                       SizedBox(
+                    //                         height: 20,
+                    //                       ),
+                    //                       Text(
+                    //                         "${user.fullName}",
+                    //                         style: TextStyle(
+                    //                             fontSize: 16,
+                    //                             fontWeight: FontWeight.bold),
+                    //                       ),
+                    //                       Text(
+                    //                           "Balance : ${user.balance.toString()} Ks",
+                    //                           style: TextStyle(
+                    //                               fontSize: 16,
+                    //                               fontWeight: FontWeight.bold)),
+                    //                     ],
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //         Padding(
+                    //           padding: const EdgeInsets.only(right: 8.0),
+                    //           child: Icon(
+                    //             Icons.qr_code,
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+
                     Divider(
                       thickness: 0.5,
                       height: 1,
@@ -214,7 +311,7 @@ class _MePageState extends State<MePage> {
                           ),
                         ),
                         title: Text(
-                          "My Account",
+                          Tran.of(context).text("myAccount"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
@@ -245,7 +342,7 @@ class _MePageState extends State<MePage> {
                           ),
                         ),
                         title: Text(
-                          "Change Pin",
+                         Tran.of(context).text("changePin"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
@@ -313,7 +410,7 @@ class _MePageState extends State<MePage> {
                         //   color: mainColor,
                         // ),
                         title: Text(
-                          "Notifications",
+                         Tran.of(context).text("notification"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
@@ -344,7 +441,7 @@ class _MePageState extends State<MePage> {
                           ),
                         ),
                         title: Text(
-                          "Meter List",
+                          Tran.of(context).text("meterList"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
@@ -375,7 +472,7 @@ class _MePageState extends State<MePage> {
                           ),
                         ),
                         title: Text(
-                          "Select Language",
+                          Tran.of(context).text("languagePage"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -401,7 +498,7 @@ class _MePageState extends State<MePage> {
                           ),
                         ),
                         title: Text(
-                          "Setting",
+                          Tran.of(context).text("setting"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
@@ -432,7 +529,7 @@ class _MePageState extends State<MePage> {
                           ),
                         ),
                         title: Text(
-                          "Help",
+                          Tran.of(context).text("needHelp"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
@@ -459,7 +556,7 @@ class _MePageState extends State<MePage> {
                             ),
                           ),
                           child: Text(
-                            "Log Out",
+                            Tran.of(context).text("logout"),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, color: Colors.red),
                           ),

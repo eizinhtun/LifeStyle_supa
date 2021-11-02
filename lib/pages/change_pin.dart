@@ -71,7 +71,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Change Pin"),
+        title: Text(Tran.of(context).text("changePin")),
         centerTitle: true,
       ),
       body: Container(
@@ -90,7 +90,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
                       });
                       requestOTP(user.phone);
                     },
-                    child: Text("Get Otp Code"),
+                    child: Text(Tran.of(context).text("getOtpCode")),
                   ),
                 ),
               ),
@@ -107,7 +107,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Enter your OTP code",
+                            Tran.of(context).text("enterYourOtpCode"),
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               color: Colors.black87,
@@ -201,7 +201,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                 }
                               },
                               child: Text(
-                                "Resend OTP",
+                                Tran.of(context).text("resendOtp"),
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                     fontSize: 12,
@@ -217,7 +217,8 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                   width: 40,
                                   height: 40,
                                   child: Text(
-                                    "$timeLeft",
+                                    Tran.of(context).text("timeLeft").replaceAll("@timeLeft",  "$timeLeft"),
+                                    //"$timeLeft",
                                     style: TextStyle(
                                         color: Theme.of(context).primaryColor,
                                         fontSize: 14,
@@ -252,7 +253,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
                             //   // contentPadding: EdgeInsets.all(16),
                             // ),
                             decoration: InputDecoration(
-                              labelText: "Password",
+                              labelText: Tran.of(context).text("password"),
                               labelStyle: TextStyle(),
                               hintText: "${Tran.of(context)?.text('password')}",
                               suffixIcon: IconButton(
@@ -301,7 +302,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Text(
-                                  "Submit",
+                                  Tran.of(context).text("changePinSubmit"),
                                   style: TextStyle(
                                     fontSize: 16,
                                   ),
@@ -333,7 +334,8 @@ class _ChangePinPageState extends State<ChangePinPage> {
             print(
                 'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
             MessageHandler.showSnackbar(
-                'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
+              Tran.of(context).text("phoneNumberVerificationFailedCode").replaceAll("@authExceptionCode", "${authException.code}").replaceAll("@authExceptionMessage", "${authException.message}"),
+                //'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
                 context,
                 6);
           },
@@ -341,7 +343,8 @@ class _ChangePinPageState extends State<ChangePinPage> {
             print('Please check your phone for the verification code.' +
                 verificationId);
             MessageHandler.showSnackbar(
-                'Please check your phone for the verification code.',
+                Tran.of(context).text("checkPhoneNumberVerificationCode"),
+                //'Please check your phone for the verification code.',
                 context,
                 6);
             verificationId = verificationId;
@@ -354,7 +357,9 @@ class _ChangePinPageState extends State<ChangePinPage> {
           });
     } catch (e) {
       MessageHandler.showSnackbar(
-          "Failed to Verify Phone Number: $e", context, 6);
+        Tran.of(context).text('failVerifyPhoneNumber').replaceAll("@e", "$e"),
+         // "Failed to Verify Phone Number: $e",
+          context, 6);
     }
   }
 

@@ -92,6 +92,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Unifine',
         theme: ThemeData(
           primarySwatch: colorCustom,
+          fontFamily: 'NotoSansMyanmar',
         ),
         home: StreamBuilder<User>(
           stream: FirebaseAuth.instance.authStateChanges(),

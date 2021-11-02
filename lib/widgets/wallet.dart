@@ -25,7 +25,7 @@ class WalletState extends State<Wallet> {
   final db = FirebaseFirestore.instance;
   //List<TransactionModel> totalList = [];
   //List<TransactionModel> tracList = [];
-
+  String uid=FirebaseAuth.instance.currentUser.uid.toString();
   int showlist = 10;
   bool _isLoading = true;
 
@@ -51,10 +51,12 @@ class WalletState extends State<Wallet> {
       //     .docs;
       documentList = (await FirebaseFirestore.instance
           .collection(transactions)
-          .orderBy("createdDate", descending: true)
+          .where("uid", isEqualTo: uid)
+          //.orderBy("createdDate", descending: true)
           .limit(showlist)
           .get())
           .docs;
+
       documentList.forEach((result) {
         tracList.add(TransactionModel.fromJson(result.data(), doc: result.id));
       });
@@ -81,7 +83,8 @@ class WalletState extends State<Wallet> {
       //     .docs;
       List<DocumentSnapshot> newDocumentList = (await FirebaseFirestore.instance
           .collection(transactions)
-          .orderBy("createdDate", descending: true)
+          .where("uid", isEqualTo: uid)
+          //.orderBy("createdDate", descending: true)
           .startAfterDocument(documentList[documentList.length - 1])
           .limit(showlist)
           .get())
@@ -157,7 +160,7 @@ class WalletState extends State<Wallet> {
                             label: Row(
                               children: [
                                 Text(
-                                  "${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)} Ks",
+                                  "${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)} ${Tran.of(context).text("ks")}",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -215,7 +218,7 @@ class WalletState extends State<Wallet> {
                                                   color: Theme.of(context)
                                                       .primaryColor,
                                                 )),
-                                            Text("Top up"),
+                                            Text(Tran.of(context).text("topup")),
                                           ],
                                         ),
                                         Divider()
@@ -238,7 +241,7 @@ class WalletState extends State<Wallet> {
                                                   color: Colors.grey
                                                       .withOpacity(0.5),
                                                 )),
-                                            Text("Withdraw"),
+                                            Text(Tran.of(context).text("withdrawal")),
                                           ],
                                         ),
                                         Divider()

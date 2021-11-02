@@ -16,6 +16,17 @@ class Formatter {
         DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
     return dateFormat.format(date);
   }
+  static String getDates(DateTime date) {
+    var dateFormat =
+    DateFormat("dd-MM-yyyy"); // you can change the format here
+    return dateFormat.format(date);
+  }
+
+  static String getHour(DateTime date){
+    var dateFormat =
+    DateFormat("hh:mm a"); // you can change the format here
+    return dateFormat.format(date);
+  }
 
   static String balanceUnseenFormat(double num) {
     String s = "";
