@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Ads.dart';
 import 'package:left_style/pages/my_meterBill_list.dart';
 import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/home_item.dart';
+import 'package:left_style/widgets/show_balance.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'AdsDetailPage.dart';
@@ -73,14 +75,14 @@ class _HomePageState extends State<HomePage> {
                     style: BorderStyle.solid,
                   ),
                 ),
-                child: Text("Close"),
+                child: Text(Tran.of(context).text("readMeterSearchClose")),
                 onPressed: () {
                   Navigator.of(context).pop();
                   return null;
                 },
               ),
             ],
-            title: Center(child: Text("Select search option")),
+            title: Center(child: Text(Tran.of(context).text("readMeterSearchTitle"))),
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -147,7 +149,215 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    double balance = 250450;
+    // return Scaffold(
+    //   body: SafeArea(
+    //     child: Column(
+    //         children: [
+    //           SingleChildScrollView(
+    //             child: Container(
+    //               margin: EdgeInsets.symmetric(horizontal: 15),
+    //               height: MediaQuery.of(context).size.height - 100,
+    //               width: MediaQuery.of(context).size.width - 30,
+    //               child: Column(
+    //                 children: [
+    //                   Container(
+    //                     width: double.infinity,
+    //                     child: Card(
+    //                       shape: RoundedRectangleBorder(
+    //                         borderRadius: BorderRadius.circular(15.0),
+    //                       ),
+    //                       color: Colors.white,
+    //                       elevation: 10,
+    //                       child: Container(
+    //                         // child: Column(
+    //                         //   mainAxisSize: MainAxisSize.min,
+    //                         //   crossAxisAlignment: CrossAxisAlignment.start,
+    //                         //   children: <Widget>[
+    //                         //     Container(
+    //                         //       margin:
+    //                         //           EdgeInsets.only(left: 10, right: 10, top: 5),
+    //                         //       child: Row(
+    //                         //         mainAxisAlignment: MainAxisAlignment.start,
+    //                         //         children: [
+    //                         //           Icon(Icons.account_balance_wallet),
+    //                         //           SizedBox(width: 10),
+    //                         //           Text("Wallet Balance (Ks)"),
+    //                         //           Spacer(),
+    //                         //           IconButton(
+    //                         //             icon: Icon(Icons.remove_red_eye_rounded),
+    //                         //             color: iconColor,
+    //                         //             onPressed: () {
+    //                         //               setState(() {
+    //                         //                 show = !show;
+    //                         //                 iconColor = show
+    //                         //                     ? Theme.of(context).primaryColor
+    //                         //                     : Colors.black87;
+    //                         //               });
+    //                         //             },
+    //                         //           )
+    //                         //         ],
+    //                         //       ),
+    //                         //     ),
+    //                         //     Container(
+    //                         //       margin: EdgeInsets.only(
+    //                         //           left: 45, right: 10, top: 5, bottom: 10),
+    //                         //       child: show
+    //                         //           ? Text(
+    //                         //               ("${Formatter.balanceFormat(balance ?? 0)}"),
+    //                         //               style: TextStyle(
+    //                         //                   fontWeight: FontWeight.bold,
+    //                         //                   fontSize: 16),
+    //                         //             )
+    //                         //           : Text(
+    //                         //               "${Formatter.balanceUnseenFormat(balance)}",
+    //                         //               style: TextStyle(
+    //                         //                   fontWeight: FontWeight.bold,
+    //                         //                   fontSize: 16),
+    //                         //             ),
+    //                         //     ),
+    //                         //   ],
+    //                         // ),
+    //
+    //                       ),
+    //                     ),
+    //                   ),
+    //                   // SizedBox(
+    //                   //   height: 20,
+    //                   // ),
+    //                   Container(
+    //                     color: Theme.of(context).primaryColor,
+    //                     child: ShowBalance(
+    //                       onTopued: (result){
+    //
+    //                       },
+    //                       onWithdrawed: (result){
+    //
+    //                       },
+    //
+    //                     ),
+    //                   ),
+    //                   Container(
+    //
+    //                       margin: EdgeInsets.only(top: 10),
+    //                       color: Colors.black.withOpacity(0.05),
+    //                       child: Column(
+    //                         children: [
+    //                           CarouselSlider.builder(
+    //                             itemCount: adsItems.length,
+    //                             options: CarouselOptions(
+    //                               autoPlay: true,
+    //                               autoPlayInterval: const Duration(seconds: 8),
+    //                               viewportFraction: 1,
+    //                               aspectRatio: 2.0,
+    //                               enlargeCenterPage: true,
+    //                             ),
+    //                             itemBuilder: (context, index, realIdx) {
+    //                               return Container(
+    //                                 height: 800,
+    //                                 child: InkWell(
+    //                                   onTap: () {
+    //                                     if (adsItems[index].linkUrl != null &&
+    //                                         adsItems[index].linkUrl.length > 1 &&
+    //                                         adsItems[index]
+    //                                             .type
+    //                                             .toString()
+    //                                             .toLowerCase() ==
+    //                                             "linkurl") {
+    //                                       _launchURL(adsItems[index].linkUrl);
+    //                                     } else if (adsItems[index]
+    //                                         .type
+    //                                         .toString()
+    //                                         .toLowerCase() ==
+    //                                         "content") {
+    //                                       Navigator.push(
+    //                                           context,
+    //                                           new MaterialPageRoute(
+    //                                             builder: (BuildContext context) =>
+    //                                                 AdsDetailPage(
+    //                                                     id: adsItems[index]
+    //                                                         .id
+    //                                                         .toString()),
+    //                                           ));
+    //                                     }
+    //                                     setState(() {});
+    //                                   },
+    //                                   child: Center(
+    //                                     child: Card(
+    //                                       margin: EdgeInsets.symmetric(
+    //                                           horizontal: 5, vertical: 5),
+    //                                       shape: RoundedRectangleBorder(
+    //                                         borderRadius:
+    //                                         BorderRadius.circular(5.0),
+    //                                       ),
+    //                                       elevation: 3,
+    //                                       child: OptimizedCacheImage(
+    //                                         fit: BoxFit.fill,
+    //                                         width: 1000,
+    //                                         height: 700,
+    //                                         imageUrl: adsItems[index].imageUrl,
+    //                                         placeholder: (context, url) =>
+    //                                             SpinKitChasingDots(
+    //                                               color: Colors.blue,
+    //                                             ),
+    //                                         errorWidget: (context, url, error) =>
+    //                                             Icon(Icons.error),
+    //                                       ),
+    //                                     ),
+    //                                     //   Image.network( adsItems[index].imageUrl,
+    //                                     //   fit: BoxFit.fill,
+    //                                     //     width: 1000,
+    //                                     //
+    //                                     // ),
+    //
+    //                                     /*Image.network(imgList[index],
+    //                                     fit: BoxFit.cover, width: 1000)*/
+    //                                   ),
+    //                                 ),
+    //                               );
+    //                             },
+    //                           ),
+    //                         ],
+    //                       )),
+    //                   SizedBox(
+    //                     height: 10,
+    //                   ),
+    //                   // ElevatedButton(
+    //                   //   onPressed: () async {
+    //                   //     print("Pressed");
+    //                   //     var meterRef = FirebaseFirestore.instance
+    //                   //         .collection(meterCollection);
+    //
+    //                   //     if (FirebaseAuth.instance.currentUser?.uid != null) {
+    //                   //       String uid =
+    //                   //           FirebaseAuth.instance.currentUser.uid.toString();
+    //
+    //                   //       await meterRef
+    //                   //           .doc(uid)
+    //                   //           .collection(userMeterCollection)
+    //                   //           .doc("7324392739")
+    //                   //           .set(jsonString);
+    //                   //     }
+    //                   //   },
+    //                   //   child: Text(
+    //                   //     "Add",
+    //                   //     style: TextStyle(
+    //                   //         color: Colors.white, fontWeight: FontWeight.bold),
+    //                   //   ),
+    //                   // ),
+    //                   Container(
+    //                     padding: EdgeInsets.all(8),
+    //                     child: Column(
+    //                       children: getWidgets(context),
+    //                     ),
+    //                   ),
+    //                 ],
+    //               ),
+    //             ),
+    //           )
+    //           ]
+    //     ),
+    //   ),
+    // );
     return Scaffold(
         body: Center(
       child: Stack(
@@ -190,62 +400,22 @@ class _HomePageState extends State<HomePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
-                      color: Colors.white,
-                      elevation: 10,
+                      color: Colors.transparent,
+                      elevation: 0,
                       child: Container(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Container(
-                              margin:
-                                  EdgeInsets.only(left: 10, right: 10, top: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(Icons.account_balance_wallet),
-                                  SizedBox(width: 10),
-                                  Text("Wallet Balance (Ks)"),
-                                  Spacer(),
-                                  IconButton(
-                                    icon: Icon(Icons.remove_red_eye_rounded),
-                                    color: iconColor,
-                                    onPressed: () {
-                                      setState(() {
-                                        show = !show;
-                                        iconColor = show
-                                            ? Theme.of(context).primaryColor
-                                            : Colors.black87;
-                                      });
-                                    },
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: 45, right: 10, top: 5, bottom: 10),
-                              child: show
-                                  ? Text(
-                                      ("${Formatter.balanceFormat(balance ?? 0)}"),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    )
-                                  : Text(
-                                      "${Formatter.balanceUnseenFormat(balance)}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                            ),
+                            ShowBalance()
                           ],
                         ),
                       ),
                     ),
                   ),
+                 //ShowBalance(),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   Container(
                       margin: EdgeInsets.only(top: 10),
@@ -364,6 +534,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+
         ],
       ),
     ));

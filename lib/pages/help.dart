@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:left_style/localization/Translate.dart';
 
 class HelpPage extends StatefulWidget {
   const HelpPage({Key key}) : super(key: key);
@@ -18,7 +19,7 @@ class _HelpPageState extends State<HelpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Help"),
+        title: Text(Tran.of(context).text("help")),
         centerTitle: true,
       ),
       body: Container(

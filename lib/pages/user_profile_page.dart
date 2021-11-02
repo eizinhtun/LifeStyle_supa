@@ -14,6 +14,7 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/me_page.dart';
 import 'package:left_style/utils/authentication.dart';
@@ -225,12 +226,12 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                               // SizedBox(
                               //   height: 10,
                               // ),
-                              Container(
-                                padding: EdgeInsets.all(4),
-                                child: Center(
-                                  child: _previewImages(),
-                                ),
-                              ),
+                              // Container(
+                              //   padding: EdgeInsets.all(4),
+                              //   child: Center(
+                              //     child: _previewImages(),
+                              //   ),
+                              // ),
                               TextFormField(
                                 autofocus: false,
                                 focusNode: nameFocusNode,
@@ -243,7 +244,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                       context, val, '');
                                 },
                                 decoration: InputDecoration(
-                                  labelText: "Name",
+                                  labelText: Tran.of(context).text("full_name"),
                                   // contentPadding: EdgeInsets.all(16),
                                 ),
                                 // decoration: InputDecoration(
@@ -277,7 +278,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                       context, val, '');
                                 },
                                 decoration: InputDecoration(
-                                  labelText: "Address",
+                                  labelText: Tran.of(context).text("address"),
                                   labelStyle: TextStyle(),
                                   // border: OutlineInputBorder(
                                   //   borderSide: BorderSide(
@@ -311,11 +312,15 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                         ),
                                       ),
                                       onPressed: () {
-                                        setState(() {});
+                                        Navigator.of(context).pop();
+                                        setState(() {
+
+                                        });
                                       },
                                       child: Container(
                                           padding: EdgeInsets.all(12),
-                                          child: Text("Cancel")),
+                                          child: Text(Tran.of(context).text("cancel"))
+                                      ),
                                     ),
                                   ),
                                   SizedBox(width: 10),
@@ -399,7 +404,9 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                         },
                                         child: Container(
                                             padding: EdgeInsets.all(12),
-                                            child: Text("Save"))),
+                                            child: Text(Tran.of(context).text("save"))
+                                        )
+                                    ),
                                   )
                                 ],
                               ),
@@ -409,7 +416,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                   ),
                 ],
               ),
-
+             _previewProfileImages()
               // Align(
               //   alignment: Alignment.topCenter,
               //   child: Container(
@@ -607,86 +614,324 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
   //   });
   // }
 
-  Widget _previewImages() {
+  // Widget _previewImages() {
+  //   if (file != null || photoUrl != null) {
+  //     // if (file != null || myReadUnit != null && myReadUnit.readImageUrl != null) {
+  //     return
+  //       Align(
+  //         alignment: Alignment.topCenter,
+  //         child: Container(
+  //           margin: EdgeInsets.only(top: 60),
+  //           height: 120,
+  //           width: 120,
+  //           child: Stack(
+  //             children: [
+  //               newImage != null
+  //                   ? _showImageCircle()
+  //                   : UserInfoScreenPhoto(
+  //                 name: widget.user.fullName
+  //                     .substring(0, 1)
+  //                     .toUpperCase(),
+  //                 imageurl: photoUrl,
+  //                 width: 120,
+  //                 height: 120,
+  //               ),
+  //               Positioned(
+  //                 top: 80,
+  //                 left: 80,
+  //                 child: Container(
+  //                   width: 40,
+  //                   height: 40,
+  //                   decoration: BoxDecoration(
+  //                     borderRadius: BorderRadius.circular(80),
+  //                     color: Theme.of(context).primaryColor,
+  //                   ),
+  //                   child: IconButton(
+  //                       onPressed: () {
+  //                         showImage();
+  //                         setState(() {});
+  //                       },
+  //                       icon: Icon(
+  //                         Icons.photo_camera,
+  //                         size: 20,
+  //                         color: Colors.white,
+  //                       )),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     // return Stack(
+  //     //   children: [
+  //     //     Container(
+  //     //       child: kIsWeb
+  //     //           ? Image.network(file != null ? file.path : photoUrl)
+  //     //           : Container(
+  //     //         constraints: BoxConstraints.expand(
+  //     //           //width: MediaQuery.of(context).size.width-50,
+  //     //           height: 200,
+  //     //         ),
+  //     //         child: PhotoView(
+  //     //           loadingBuilder: (context, _progress) => Center(
+  //     //             child: Container(
+  //     //               width: 20.0,
+  //     //               height: 20.0,
+  //     //               child: CircularProgressIndicator(
+  //     //                 value: _progress == null
+  //     //                     ? null
+  //     //                     : _progress.cumulativeBytesLoaded /
+  //     //                     _progress.expectedTotalBytes,
+  //     //               ),
+  //     //             ),
+  //     //           ),
+  //     //           imageProvider: file != null
+  //     //               ? FileImage(File(file.path))
+  //     //               : CachedNetworkImageProvider(photoUrl),
+  //     //         ),
+  //     //       ),
+  //     //     ),
+  //     //     Positioned(
+  //     //         top: 5,
+  //     //         right: 5,
+  //     //         child: IconButton(
+  //     //             onPressed: _submiting ? null : chooseImage,
+  //     //             icon: Icon(
+  //     //               Icons.photo,
+  //     //               color: Colors.red,
+  //     //               size: 40,
+  //     //             ))),
+  //     //     _isuploadingPicture
+  //     //         ? Container(
+  //     //         constraints: BoxConstraints.expand(
+  //     //           //width: MediaQuery.of(context).size.width-50,
+  //     //           height: 200,
+  //     //         ),
+  //     //         child: SpinKitCubeGrid(
+  //     //           color: Colors.white,
+  //     //           size: 100,
+  //     //         ))
+  //     //         : Container()
+  //     //   ],
+  //     // );
+  //   } else {
+  //     return ElevatedButton(
+  //         style: ElevatedButton.styleFrom(
+  //           padding: EdgeInsets.only(
+  //             left: 15,
+  //             right: 15,
+  //             top: 10,
+  //             bottom: 10,
+  //           ),
+  //         ), //
+  //         onPressed: chooseImage,
+  //         child: Row(
+  //           children: [
+  //             Padding(
+  //               padding: EdgeInsets.only(right: 10),
+  //               child: Icon(
+  //                 Icons.photo,
+  //                 color: Colors.white,
+  //                 size: 30,
+  //               ),
+  //             ),
+  //             Text("Take picture of read unit."),
+  //           ],
+  //         ));
+  //   }
+  // }
+  Widget _previewProfileImages() {
+    print(photoUrl);
     if (file != null || photoUrl != null) {
       // if (file != null || myReadUnit != null && myReadUnit.readImageUrl != null) {
-      return Stack(
-        children: [
-          Container(
-            child: kIsWeb
-                ? Image.network(file != null ? file.path : photoUrl)
-                : Container(
-              constraints: BoxConstraints.expand(
-                //width: MediaQuery.of(context).size.width-50,
-                height: 200,
-              ),
-              child: PhotoView(
-                loadingBuilder: (context, _progress) => Center(
-                  child: Container(
-                    width: 20.0,
-                    height: 20.0,
-                    child: CircularProgressIndicator(
-                      value: _progress == null
-                          ? null
-                          : _progress.cumulativeBytesLoaded /
-                          _progress.expectedTotalBytes,
-                    ),
-                  ),
-                ),
-                imageProvider: file != null
-                    ? FileImage(File(file.path))
-                    : CachedNetworkImageProvider(photoUrl),
-              ),
-            ),
-          ),
-          Positioned(
-              top: 5,
-              right: 5,
-              child: IconButton(
-                  onPressed: _submiting ? null : chooseImage,
-                  icon: Icon(
-                    Icons.photo,
-                    color: Colors.red,
-                    size: 40,
-                  ))),
-          _isuploadingPicture
-              ? Container(
-              constraints: BoxConstraints.expand(
-                //width: MediaQuery.of(context).size.width-50,
-                height: 200,
-              ),
-              child: SpinKitCubeGrid(
-                color: Colors.white,
-                size: 100,
-              ))
-              : Container()
-        ],
-      );
-    } else {
-      return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 10,
-              bottom: 10,
-            ),
-          ), //
-          onPressed: chooseImage,
-          child: Row(
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          margin: EdgeInsets.only(top: 60),
+          height: 120,
+          width: 120,
+          child: Stack(
             children: [
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Icon(
-                  Icons.photo,
-                  color: Colors.white,
-                  size: 30,
+                Container(
+                height: 120,
+                width: 120,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  backgroundImage: file != null
+                                ? FileImage(File(file.path))
+                                : CachedNetworkImageProvider(photoUrl),
+                  radius: 50,
+                ),
+                ),
+
+                Positioned(
+                top: 80,
+                left: 80,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(80),
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  child: IconButton(
+                      onPressed: _submiting ? null : chooseImage,
+                      icon: Icon(
+                        Icons.photo_camera,
+                        size: 20,
+                        color: Colors.white,
+                      )),
                 ),
               ),
-              Text("Take picture of read unit."),
+              _isuploadingPicture
+                  ? Container(
+                  constraints: BoxConstraints.expand(
+                    //width: MediaQuery.of(context).size.width-50,
+                    height: 200,
+                  ),
+                  child: SpinKitCubeGrid(
+                    color: Colors.white,
+                    size: 100,
+                  ))
+                  : Container(),
             ],
-          ));
+          ),
+
+        ),
+      );
+      // return Stack(
+      //   children: [
+      //     Container(
+      //       child: kIsWeb
+      //           ? Image.network(file != null ? file.path : photoUrl)
+      //           : Container(
+      //         constraints: BoxConstraints.expand(
+      //           //width: MediaQuery.of(context).size.width-50,
+      //           height: 200,
+      //         ),
+      //         child: PhotoView(
+      //           loadingBuilder: (context, _progress) => Center(
+      //             child: Container(
+      //               width: 20.0,
+      //               height: 20.0,
+      //               child: CircularProgressIndicator(
+      //                 value: _progress == null
+      //                     ? null
+      //                     : _progress.cumulativeBytesLoaded /
+      //                     _progress.expectedTotalBytes,
+      //               ),
+      //             ),
+      //           ),
+      //           imageProvider: file != null
+      //               ? FileImage(File(file.path))
+      //               : CachedNetworkImageProvider(photoUrl),
+      //         ),
+      //       ),
+      //     ),
+      //     Positioned(
+      //         top: 5,
+      //         right: 5,
+      //         child: IconButton(
+      //             onPressed: _submiting ? null : chooseImage,
+      //             icon: Icon(
+      //               Icons.photo,
+      //               color: Colors.red,
+      //               size: 40,
+      //             ))),
+      //     _isuploadingPicture
+      //         ? Container(
+      //         constraints: BoxConstraints.expand(
+      //           //width: MediaQuery.of(context).size.width-50,
+      //           height: 200,
+      //         ),
+      //         child: SpinKitCubeGrid(
+      //           color: Colors.white,
+      //           size: 100,
+      //         ))
+      //         : Container()
+      //   ],
+      // );
     }
+    else{
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          margin: EdgeInsets.only(top: 60),
+          height: 120,
+          width: 120,
+          child: Stack(
+            children: [
+              Container(
+                height: 120,
+                width: 120,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  backgroundImage: AssetImage("assets/image/user-photo.png"),
+                  radius: 50,
+                ),
+              ),
+
+              Positioned(
+                top: 80,
+                left: 80,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(80),
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  child: IconButton(
+                      onPressed: _submiting ? null : chooseImage,
+                      icon: Icon(
+                        Icons.photo_camera,
+                        size: 20,
+                        color: Colors.white,
+                      )),
+                ),
+              ),
+              _isuploadingPicture
+                  ? Container(
+                  constraints: BoxConstraints.expand(
+                    //width: MediaQuery.of(context).size.width-50,
+                    height: 200,
+                  ),
+                  child: SpinKitCubeGrid(
+                    color: Colors.white,
+                    size: 100,
+                  ))
+                  : Container(),
+            ],
+          ),
+
+        ),
+      );
+    }
+    // else {
+    //   return ElevatedButton(
+    //       style: ElevatedButton.styleFrom(
+    //         padding: EdgeInsets.only(
+    //           left: 15,
+    //           right: 15,
+    //           top: 10,
+    //           bottom: 10,
+    //         ),
+    //       ), //
+    //       onPressed: chooseImage,
+    //       child: Row(
+    //         children: [
+    //           Padding(
+    //             padding: EdgeInsets.only(right: 10),
+    //             child: Icon(
+    //               Icons.photo,
+    //               color: Colors.white,
+    //               size: 30,
+    //             ),
+    //           ),
+    //           Text("Take picture of read unit."),
+    //         ],
+    //       ));
+    // }
   }
 
   chooseImage() async {

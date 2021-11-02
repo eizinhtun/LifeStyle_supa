@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
+import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/pages/me_page.dart';
 import 'package:left_style/providers/login_provider.dart';
@@ -517,19 +518,20 @@ class _HomePageDetailState extends State<HomePageDetail> {
               // size: ,
               ),
               icon: Icon(FontAwesomeIcons.home),
-              label: "Home",
+              label: Tran.of(context).text("homeTap"),
             ),
             BottomNavigationBarItem(
               activeIcon: Icon(
                 FontAwesomeIcons.wallet,
               ),
               icon: Icon(FontAwesomeIcons.wallet),
-              label: "Wallet",
+              label: Tran.of(context).text("walletTap"),
             ),
             BottomNavigationBarItem(
                 activeIcon: Icon(FontAwesomeIcons.user),
                 icon: Icon(FontAwesomeIcons.user),
-                label: "Me"),
+                label: Tran.of(context).text("meTap")
+            ),
           ],
         ),
       ),

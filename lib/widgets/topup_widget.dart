@@ -111,7 +111,7 @@ class _TopUpPageState extends State<TopUpPage> {
         title: Center(
           child: Container(
             margin: EdgeInsets.only(right: 40),
-            child: Text("TopUp"),
+            child: Text(Tran.of(context).text("topup")),
           ),
         ),
       ),
@@ -227,9 +227,10 @@ class _TopUpPageState extends State<TopUpPage> {
                                     TextStyle(fontWeight: FontWeight.bold)),
                             onPressed: () async {
                               Navigator.pop(context);
+
                             },
                             child: Text(
-                              "Cancel",
+                              Tran.of(context).text("cancel"),
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold),
@@ -307,7 +308,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                             }
                                           }
                                         },
-                                  child: Text("Submit")),
+                                  child: Text(Tran.of(context).text("submit"))),
                         ],
                       )
                     ],
