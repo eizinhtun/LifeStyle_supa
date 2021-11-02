@@ -10,6 +10,7 @@ import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/formatter.dart';
+import 'package:left_style/widgets/show_balance.dart';
 import 'package:left_style/widgets/topup_widget.dart';
 import 'package:left_style/widgets/wallet_detail_success_page.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
@@ -101,6 +102,10 @@ class WalletState extends State<Wallet> {
   }
 
   void _onRefresh() async {
+    setState(() {
+      _isLoading=true;
+    });
+
     fetchFirstList();
     _refreshController.refreshCompleted();
   }
@@ -130,180 +135,128 @@ class WalletState extends State<Wallet> {
               padding: EdgeInsets.only(left: 20, right: 20, bottom: 0, top: 10),
               alignment: Alignment.bottomCenter,
               color: Colors.transparent,
-              child: StreamBuilder(
-                stream: db
-                    .collection(userCollection)
-                    .doc(FirebaseAuth.instance.currentUser.uid)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CupertinoActivityIndicator(),
-                    );
-                  } else if (snapshot.hasData) {
-                    UserModel _user = UserModel.fromJson(snapshot.data.data());
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton.icon(
-                            onPressed: () {
-                              db
-                                  .collection(userCollection)
-                                  .doc(FirebaseAuth.instance.currentUser.uid)
-                                  .update({"showBalance": !_user.showBalance});
-                            },
-                            icon: Icon(
-                              Icons.account_balance_wallet,
-                              color: Colors.black38,
-                              size: 35,
-                            ),
-                            label: Row(
-                              children: [
-                                Text(
-                                  "${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)} ${Tran.of(context).text("ks")}",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.black),
-                                ),
-                                InkWell(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      _user.showBalance
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                      size: 15,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                        ),
-                        PopupMenuButton(
-                            onSelected: (val) async {
-                              if (val == 1) {
-                                var result = await Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) => TopUpPage()));
-                                if (result != null && result == true) {
-                                  _isLoading = true;
-                                  _onRefresh();
-                                }
-                              }
-                              if (val == 2) {
-                                var result = await Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) => WithdrawalPage()));
-                                if (result != null && result == true) {
-                                  _isLoading = true;
-                                  _onRefresh();
-                                }
-                              }
-                            },
-                            icon: Icon(Icons.more_horiz_rounded),
-                            itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8.0,
-                                                    top: 10,
-                                                    bottom: 10),
-                                                child: Icon(
-                                                  Icons.add_circle,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                )),
-                                            Text(Tran.of(context).text("topup")),
-                                          ],
-                                        ),
-                                        Divider()
-                                      ],
-                                    ),
-                                    value: 1,
-                                  ),
-                                  PopupMenuItem(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8.0,
-                                                    top: 10,
-                                                    bottom: 10),
-                                                child: Icon(
-                                                  Icons.remove_circle,
-                                                  color: Colors.grey
-                                                      .withOpacity(0.5),
-                                                )),
-                                            Text(Tran.of(context).text("withdrawal")),
-                                          ],
-                                        ),
-                                        Divider()
-                                      ],
-                                    ),
-                                    value: 2,
-                                  )
-                                ])
-
-                        /* Expanded(
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            // primary: Colors.white,
-                            padding: EdgeInsets.only(
-                          left: 15,
-                          right: 15,
-                          top: 10,
-                          bottom: 10,
-                        ) // foreground
-                            ),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (contex) => TopUpPage()));
-                        },
-                        child: Row(
-                          children: [
-                            Icon(Icons.cached),
-                            SizedBox(width: 5),
-                            Text("Top Up"),
-                          ],
-                        )),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.only(
-                          left: 15,
-                          right: 15,
-                          top: 10,
-                          bottom: 10,
-                        ) // foreground
-                            ),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (contex) => WithdrawalPage()));
-                        },
-                        child: Row(
-                          children: [
-                            Icon(Icons.payments),
-                            SizedBox(width: 5),
-                            Text("Withdrawal"),
-                          ],
-                        )),
-                  ),*/
-                      ],
-                    );
-                  } else {
-                    return Text("No data found");
+              // child: StreamBuilder(
+              //   stream: db
+              //       .collection(userCollection)
+              //       .doc(FirebaseAuth.instance.currentUser.uid)
+              //       .snapshots(),
+              //   builder: (context, snapshot) {
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       return Center(
+              //         child: CupertinoActivityIndicator(),
+              //       );
+              //     } else if (snapshot.hasData) {
+              //       UserModel _user = UserModel.fromJson(snapshot.data.data());
+              //       return Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           TextButton.icon(
+              //               onPressed: () {
+              //                 db
+              //                     .collection(userCollection)
+              //                     .doc(FirebaseAuth.instance.currentUser.uid)
+              //                     .update({"showBalance": !_user.showBalance});
+              //               },
+              //               icon: Icon(
+              //                 Icons.account_balance_wallet,
+              //                 color: Colors.black38,
+              //                 size: 35,
+              //               ),
+              //               label: Row(
+              //                 children: [
+              //                   Text(
+              //                     "${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)} ${Tran.of(context).text("ks")}",
+              //                     style: TextStyle(
+              //                         fontWeight: FontWeight.bold,
+              //                         fontSize: 16,
+              //                         color: Colors.black),
+              //                   ),
+              //                   InkWell(
+              //                     child: Padding(
+              //                       padding: const EdgeInsets.all(8.0),
+              //                       child: Icon(
+              //                         _user.showBalance
+              //                             ? Icons.visibility
+              //                             : Icons.visibility_off,
+              //                         size: 15,
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ],
+              //               )
+              //           ),
+              //
+              //
+              //           /* Expanded(
+              //       child: ElevatedButton(
+              //           style: ElevatedButton.styleFrom(
+              //               // primary: Colors.white,
+              //               padding: EdgeInsets.only(
+              //             left: 15,
+              //             right: 15,
+              //             top: 10,
+              //             bottom: 10,
+              //           ) // foreground
+              //               ),
+              //           onPressed: () {
+              //             Navigator.of(context).push(MaterialPageRoute(
+              //                 builder: (contex) => TopUpPage()));
+              //           },
+              //           child: Row(
+              //             children: [
+              //               Icon(Icons.cached),
+              //               SizedBox(width: 5),
+              //               Text("Top Up"),
+              //             ],
+              //           )),
+              //     ),
+              //     SizedBox(width: 5),
+              //     Expanded(
+              //       child: ElevatedButton(
+              //           style: ElevatedButton.styleFrom(
+              //               padding: EdgeInsets.only(
+              //             left: 15,
+              //             right: 15,
+              //             top: 10,
+              //             bottom: 10,
+              //           ) // foreground
+              //               ),
+              //           onPressed: () {
+              //             Navigator.of(context).push(MaterialPageRoute(
+              //                 builder: (contex) => WithdrawalPage()));
+              //           },
+              //           child: Row(
+              //             children: [
+              //               Icon(Icons.payments),
+              //               SizedBox(width: 5),
+              //               Text("Withdrawal"),
+              //             ],
+              //           )),
+              //     ),*/
+              //         ],
+              //       );
+              //     } else {
+              //       return Text("No data found");
+              //     }
+              //   },
+              // ),
+              child: ShowBalance(
+                onTopued: (result){
+                  if (result != null && result == true) {
+                        _isLoading = true;
+                        _onRefresh();
+                      }
+                },
+                onWithdrawed: (result){
+                  if (result != null && result == true) {
+                    _isLoading = true;
+                    _onRefresh();
                   }
                 },
+
+
               ),
+
             ),
             Divider(
               //length: MediaQuery.of(context).size.width,
