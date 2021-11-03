@@ -10,9 +10,11 @@ import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
 class ShowBalance extends StatelessWidget {
-   ShowBalance({Key key,this.onTopued,this.onWithdrawed}) : super(key: key);
+   ShowBalance({Key key,this.onTopued,this.onWithdrawed,this.color = Colors.black38}) : super(key: key);
   final ValueSetter<bool> onTopued ;//= (value) {};
    final ValueSetter<bool> onWithdrawed;// = (value) {};
+   final Color color;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -39,7 +41,7 @@ class ShowBalance extends StatelessWidget {
                   },
                   icon: Icon(
                     Icons.account_balance_wallet,
-                    color: Colors.black38,
+                    color: color,
                     size: 35,
                   ),
                   label: Row(
@@ -49,7 +51,7 @@ class ShowBalance extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
-                            color: Colors.black),
+                            color: color),
                       ),
                       InkWell(
                         child: Padding(
@@ -88,7 +90,7 @@ class ShowBalance extends StatelessWidget {
                       }*/
                     }
                   },
-                  icon: Icon(Icons.more_horiz_rounded),
+                  icon: Icon(Icons.more_horiz_rounded,color: color,),
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       child: Column(
