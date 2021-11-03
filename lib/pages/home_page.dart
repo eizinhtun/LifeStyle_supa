@@ -10,12 +10,11 @@ import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Ads.dart';
 import 'package:left_style/pages/my_meterBill_list.dart';
 import 'package:left_style/pages/upload_my_read.dart';
-import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/home_item.dart';
 import 'package:left_style/widgets/show_balance.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'AdsDetailPage.dart';
+import 'ads_detail.dart';
 import 'meter_city.dart';
 import 'meter_list.dart';
 import 'meter_search_result.dart';
@@ -702,6 +701,7 @@ class _HomePageState extends State<HomePage> {
       if (typeResult != null && typeResult == "QR") {
         try {
           String meterBarcode = await BarcodeScanner.scan();
+          print(meterBarcode);
           setState(() => this.meterBarcode = meterBarcode);
 
           if (meterBarcode != null) {

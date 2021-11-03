@@ -84,6 +84,30 @@ class Validator {
     }
   }
 
+  static String pin(
+      BuildContext context, String value, String fileName, bool isRequired) {
+    if (isRequired) {
+      if (value.isEmpty) {
+        return "${Tran.of(context)?.text("requiredField")}"
+            .replaceAll("@value", fileName);
+      }
+    }
+    if (value.length < 6) {
+      String tip = "${Tran.of(context)?.text("lenghtInvaild")}";
+      tip =
+          tip.replaceAll("@filed", "${Tran.of(context)?.text("length_field")}");
+
+      tip = tip.replaceAll("@size", "4");
+      if (SystemData.language == "zh") {
+        return tip;
+      } else {
+        return "${Tran.of(context)?.text("requiredField")}"
+            .replaceAll("@value", tip);
+      }
+    }
+    return null;
+  }
+
   static String password(
       BuildContext context, String value, String fileName, bool isRequired) {
     if (isRequired) {

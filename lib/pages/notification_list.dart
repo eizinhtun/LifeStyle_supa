@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:left_style/datas/constants.dart';
 
 import 'package:left_style/datas/system_data.dart';
@@ -53,13 +54,14 @@ class _NotificationListPage extends State<NotificationListPage>
   }
 
   getData() async {
-    await Future.delayed(Duration(milliseconds: 100));
     totalList = await context.read<NotiProvider>().getNotiList(context);
     print(totalList.length);
     if (notiList != null && notiList.length > 0) {
       SystemData.notiCount = notiList.where((e) => e.status == false).length;
+      FlutterAppBadger.updateBadgeCount(SystemData.notiCount);
     } else {
       SystemData.notiCount = 0;
+      FlutterAppBadger.removeBadge();
     }
     notiCount = context
         .read<NotiProvider>()

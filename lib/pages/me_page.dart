@@ -11,13 +11,13 @@ import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/language_page.dart';
 import 'package:left_style/pages/setting.dart';
-import 'package:left_style/pages/user_profile_page.dart';
+import 'package:left_style/pages/user_profile_edit.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
-import 'change_pin.dart';
+import 'change_pin_phone.dart';
 import 'help.dart';
 import 'meter_list.dart';
 import 'notification_list.dart';
@@ -116,12 +116,14 @@ class _MePageState extends State<MePage> {
                           .doc(FirebaseAuth.instance.currentUser.uid)
                           .snapshots(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Center(
                             child: CupertinoActivityIndicator(),
                           );
                         } else if (snapshot.hasData) {
-                          UserModel _user = UserModel.fromJson(snapshot.data.data());
+                          UserModel _user =
+                              UserModel.fromJson(snapshot.data.data());
                           return InkWell(
                             onTap: () {
                               Navigator.of(context).push(
@@ -133,15 +135,18 @@ class _MePageState extends State<MePage> {
                               );
                             },
                             child: Container(
-                              padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 0),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Flexible(
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         UserInfoScreenPhoto(
                                           name: _user.fullName
@@ -158,9 +163,9 @@ class _MePageState extends State<MePage> {
                                           child: Expanded(
                                             child: Column(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                                  MainAxisAlignment.center,
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 SizedBox(
                                                   height: 20,
@@ -169,15 +174,23 @@ class _MePageState extends State<MePage> {
                                                   "${_user.fullName}",
                                                   style: TextStyle(
                                                       fontSize: 16,
-                                                      fontWeight: FontWeight.bold),
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
-                                                Text(Tran.of(context).text("balance").replaceAll("@amount", " ${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)}")
-                                                    .replaceAll("@balanceKs", Tran.of(context).text("ks")),
+                                                Text(
+                                                    Tran.of(context)
+                                                        .text("balance")
+                                                        .replaceAll("@amount",
+                                                            " ${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)}")
+                                                        .replaceAll(
+                                                            "@balanceKs",
+                                                            Tran.of(context)
+                                                                .text("ks")),
                                                     style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                         fontSize: 13,
-                                                        color: Colors.black)
-                                                ),
+                                                        color: Colors.black)),
                                               ],
                                             ),
                                           ),
@@ -291,14 +304,13 @@ class _MePageState extends State<MePage> {
                           fullName = user.fullName.toString();
                           photoUrl = user.photoUrl.toString();
                           address = user.address.toString();
-                         var result=await Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => EditUserProfilePage(
-                                    user: user,
-                                  )));
+                          var result = await Navigator.of(context)
+                              .push(MaterialPageRoute(
+                                  builder: (context) => EditUserProfilePage(
+                                        user: user,
+                                      )));
                           if (result != null && result == true) {
-                           setState(() {
-
-                           });
+                            setState(() {});
                           }
                         },
                         leading: Container(
@@ -329,8 +341,9 @@ class _MePageState extends State<MePage> {
                       height: titleHeight,
                       child: ListTile(
                         onTap: () {
+                          // FirebaseAuth.instance.
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ChangePinPage()));
+                              builder: (context) => ChangePinPhonePage()));
                         },
                         leading: Container(
                           width: leadingWidth,
@@ -342,7 +355,7 @@ class _MePageState extends State<MePage> {
                           ),
                         ),
                         title: Text(
-                         Tran.of(context).text("changePin"),
+                          Tran.of(context).text("changePin"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
@@ -410,7 +423,7 @@ class _MePageState extends State<MePage> {
                         //   color: mainColor,
                         // ),
                         title: Text(
-                         Tran.of(context).text("notification"),
+                          Tran.of(context).text("notification"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
