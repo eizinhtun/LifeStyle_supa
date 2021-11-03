@@ -337,6 +337,7 @@ class _PayBillPageState extends State<PayBillPage> {
                               print(widget.bill.toJson());
                               await context.read<WalletProvider>().payMeterBill(
                                   context, widget.bill, widget.docId);
+                                  Navigator.of(context).pop();
                             }
                           },
                         ),

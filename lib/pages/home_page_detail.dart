@@ -505,7 +505,7 @@ class _HomePageDetailState extends State<HomePageDetail> {
         },
       ),
       bottomNavigationBar: SizedBox(
-        height: 80,
+        height: 90,
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: bottomSelectedIndex,
@@ -514,7 +514,10 @@ class _HomePageDetailState extends State<HomePageDetail> {
           },
           items: [
             BottomNavigationBarItem(
-              activeIcon: Icon(FontAwesomeIcons.home),
+              activeIcon: Icon(
+                FontAwesomeIcons.home,
+                // size: ,
+              ),
               icon: Icon(FontAwesomeIcons.home),
               label: Tran.of(context).text("homeTap"),
             ),
@@ -528,11 +531,12 @@ class _HomePageDetailState extends State<HomePageDetail> {
             BottomNavigationBarItem(
                 activeIcon: Icon(FontAwesomeIcons.user),
                 icon: Icon(FontAwesomeIcons.user),
-                label: Tran.of(context).text("meTap")
-            ),
+                label: Tran.of(context).text("meTap")),
           ],
         ),
       ),
     );
   }
+
+  double iconSize = 20;
 }
