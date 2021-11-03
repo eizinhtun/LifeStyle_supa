@@ -115,6 +115,7 @@ flutter:
   assets:
     - assets/
     - assets/image/
+    - assets/language_icon/
     - assets/icon/
     - assets/payment/
     - lang/I18n_en.json
