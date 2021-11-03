@@ -16,15 +16,9 @@ import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/user_model.dart';
-import 'package:left_style/pages/me_page.dart';
-import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/validators/validator.dart';
 import 'package:left_style/widgets/code_painter.dart';
-import 'package:left_style/widgets/user-info_screen_photo.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import '../providers/login_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:left_style/utils/message_handler.dart' as myMsg;
@@ -73,26 +67,30 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
 
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
-      var result =await FirebaseFirestore.instance.collection(userCollection)
-        .doc(uid).get(GetOptions(source: Source.server)).then((value) {
+      var result = await FirebaseFirestore.instance
+          .collection(userCollection)
+          .doc(uid)
+          .get(GetOptions(source: Source.server))
+          .then((value) {
         oldUserModel = UserModel.fromJson(value.data());
         return oldUserModel;
       });
-      if(result != null){
+      if (result != null) {
         oldUserModel.address = model.address;
-        oldUserModel.photoUrl=model.photoUrl;
-        oldUserModel.fullName=model.fullName;
+        oldUserModel.photoUrl = model.photoUrl;
+        oldUserModel.fullName = model.fullName;
         print(oldUserModel);
         try {
           await FirebaseFirestore.instance
               .collection(userCollection)
-              .doc(uid).update(oldUserModel.toJson());
+              .doc(uid)
+              .update(oldUserModel.toJson());
           Navigator.pop(context, true);
 
           myMsg.MessageHandler.showMessage(context, "", "Successfully added");
-        }
-        catch (e) {
-          myMsg.MessageHandler.showErrMessage(context, "fail", "User Update Successfully");
+        } catch (e) {
+          myMsg.MessageHandler.showErrMessage(
+              context, "fail", "User Update Successfully");
           setState(() {
             _submiting = false;
           });
@@ -131,9 +129,9 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
         .ref()
         .child('profile')
         .child(dateFormat.toString() +
-        "_" +
-        FirebaseAuth.instance.currentUser.uid +
-        ".jpg");
+            "_" +
+            FirebaseAuth.instance.currentUser.uid +
+            ".jpg");
 
     final metadata = firebase_storage.SettableMetadata(
         contentType: 'image/jpeg',
@@ -187,8 +185,8 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.vertical(
                         bottom: new Radius.elliptical(200, 30
-                          // 56.0
-                        ),
+                            // 56.0
+                            ),
                       ),
                     ),
                     bottom: PreferredSize(
@@ -236,7 +234,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                 autofocus: false,
                                 focusNode: nameFocusNode,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 controller: _nameController,
                                 keyboardType: TextInputType.text,
                                 validator: (val) {
@@ -270,7 +268,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                 autofocus: false,
                                 focusNode: addressFocusNode,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 controller: _addressController,
                                 keyboardType: TextInputType.text,
                                 validator: (val) {
@@ -303,7 +301,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                       style: OutlinedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(30.0),
+                                              BorderRadius.circular(30.0),
                                         ),
                                         side: BorderSide(
                                           width: 1.0,
@@ -313,101 +311,98 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                       ),
                                       onPressed: () {
                                         Navigator.of(context).pop();
-                                        setState(() {
-
-                                        });
+                                        setState(() {});
                                       },
                                       child: Container(
                                           padding: EdgeInsets.all(12),
-                                          child: Text(Tran.of(context).text("cancel"))
-                                      ),
+                                          child: Text(
+                                              Tran.of(context).text("cancel"))),
                                     ),
                                   ),
                                   SizedBox(width: 10),
                                   _submiting
                                       ? SpinKitDoubleBounce(
-                                    color: Theme.of(context).primaryColor,
-                                  )
-                                      : Expanded(
-                                    child: OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                30.0),
-                                          ),
-                                          side: BorderSide(
-                                            width: 1.0,
-                                            color: Theme.of(context)
-                                                .primaryColor,
-                                            style: BorderStyle.solid,
-                                          ),
-                                        ),
-                                        onPressed: _submiting
-                                            ? null
-                                            : () async {
-                                          if (file == null) {
-                                            myMsg.MessageHandler
-                                                .showErrMessage(
-                                                context,
-                                                "Picture is required",
-                                                "Plase take a picture and upload");
-                                            return;
-                                          }
-                                          if (_formKey.currentState
-                                              .validate()) {
-                                            setState(() {
-                                              _submiting = true;
-                                              if (file != null) {
-                                                _isuploadingPicture =
-                                                true;
-                                              }
-                                            });
-
-                                            UserModel model =
-                                            new UserModel();
-
-                                            model.fullName =
-                                                _nameController
-                                                    .text;
-                                            model.address =
-                                                _addressController
-                                                    .text;
-                                            if (file != null) {
-                                              setState(() {
-                                                _isuploadingPicture =
-                                                true;
-                                              });
-                                              firebase_storage
-                                                  .UploadTask
-                                              task =
-                                              await uploadFile(
-                                                  PickedFile(file
-                                                      .path));
-                                              if (task != null) {
-                                                task.whenComplete(
-                                                        () async {
-                                                      model.photoUrl =
-                                                      await task
-                                                          .snapshot
-                                                          .ref
-                                                          .getDownloadURL();
-                                                      setState(() {
-                                                        _isuploadingPicture =
-                                                        false;
-                                                      });
-                                                      updateUser(model);
-                                                    });
-                                              }
-                                            }
-                                          }
-                                        },
-                                        child: Container(
-                                            padding: EdgeInsets.all(12),
-                                            child: Text(Tran.of(context).text("save"))
+                                          color: Theme.of(context).primaryColor,
                                         )
-                                    ),
-                                  )
+                                      : Expanded(
+                                          child: OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.0),
+                                                ),
+                                                side: BorderSide(
+                                                  width: 1.0,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  style: BorderStyle.solid,
+                                                ),
+                                              ),
+                                              onPressed: _submiting
+                                                  ? null
+                                                  : () async {
+                                                      if (file == null) {
+                                                        myMsg.MessageHandler
+                                                            .showErrMessage(
+                                                                context,
+                                                                "Picture is required",
+                                                                "Plase take a picture and upload");
+                                                        return;
+                                                      }
+                                                      if (_formKey.currentState
+                                                          .validate()) {
+                                                        setState(() {
+                                                          _submiting = true;
+                                                          if (file != null) {
+                                                            _isuploadingPicture =
+                                                                true;
+                                                          }
+                                                        });
+
+                                                        UserModel model =
+                                                            new UserModel();
+
+                                                        model.fullName =
+                                                            _nameController
+                                                                .text;
+                                                        model.address =
+                                                            _addressController
+                                                                .text;
+                                                        if (file != null) {
+                                                          setState(() {
+                                                            _isuploadingPicture =
+                                                                true;
+                                                          });
+                                                          firebase_storage
+                                                                  .UploadTask
+                                                              task =
+                                                              await uploadFile(
+                                                                  PickedFile(file
+                                                                      .path));
+                                                          if (task != null) {
+                                                            task.whenComplete(
+                                                                () async {
+                                                              model.photoUrl =
+                                                                  await task
+                                                                      .snapshot
+                                                                      .ref
+                                                                      .getDownloadURL();
+                                                              setState(() {
+                                                                _isuploadingPicture =
+                                                                    false;
+                                                              });
+                                                              updateUser(model);
+                                                            });
+                                                          }
+                                                        }
+                                                      }
+                                                    },
+                                              child: Container(
+                                                  padding: EdgeInsets.all(12),
+                                                  child: Text(Tran.of(context)
+                                                      .text("save")))),
+                                        )
                                 ],
                               ),
                             ],
@@ -416,7 +411,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                   ),
                 ],
               ),
-             _previewProfileImages()
+              _previewProfileImages()
               // Align(
               //   alignment: Alignment.topCenter,
               //   child: Container(
@@ -567,7 +562,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
     try {
       //extract bytes
       final RenderRepaintBoundary boundary =
-      _globalKey.currentContext.findRenderObject();
+          _globalKey.currentContext.findRenderObject();
 
       final ui.Image image = await boundary.toImage(pixelRatio: 2.0);
       // final ByteData byteData =
@@ -752,19 +747,18 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
           width: 120,
           child: Stack(
             children: [
-                Container(
+              Container(
                 height: 120,
                 width: 120,
                 child: CircleAvatar(
                   backgroundColor: Colors.white,
                   backgroundImage: file != null
-                                ? FileImage(File(file.path))
-                                : CachedNetworkImageProvider(photoUrl),
+                      ? FileImage(File(file.path))
+                      : CachedNetworkImageProvider(photoUrl),
                   radius: 50,
                 ),
-                ),
-
-                Positioned(
+              ),
+              Positioned(
                 top: 80,
                 left: 80,
                 child: Container(
@@ -785,18 +779,17 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
               ),
               _isuploadingPicture
                   ? Container(
-                  constraints: BoxConstraints.expand(
-                    //width: MediaQuery.of(context).size.width-50,
-                    height: 200,
-                  ),
-                  child: SpinKitCubeGrid(
-                    color: Colors.white,
-                    size: 100,
-                  ))
+                      constraints: BoxConstraints.expand(
+                        //width: MediaQuery.of(context).size.width-50,
+                        height: 200,
+                      ),
+                      child: SpinKitCubeGrid(
+                        color: Colors.white,
+                        size: 100,
+                      ))
                   : Container(),
             ],
           ),
-
         ),
       );
       // return Stack(
@@ -851,8 +844,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
       //         : Container()
       //   ],
       // );
-    }
-    else{
+    } else {
       return Align(
         alignment: Alignment.topCenter,
         child: Container(
@@ -870,7 +862,6 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                   radius: 50,
                 ),
               ),
-
               Positioned(
                 top: 80,
                 left: 80,
@@ -892,18 +883,17 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
               ),
               _isuploadingPicture
                   ? Container(
-                  constraints: BoxConstraints.expand(
-                    //width: MediaQuery.of(context).size.width-50,
-                    height: 200,
-                  ),
-                  child: SpinKitCubeGrid(
-                    color: Colors.white,
-                    size: 100,
-                  ))
+                      constraints: BoxConstraints.expand(
+                        //width: MediaQuery.of(context).size.width-50,
+                        height: 200,
+                      ),
+                      child: SpinKitCubeGrid(
+                        color: Colors.white,
+                        size: 100,
+                      ))
                   : Container(),
             ],
           ),
-
         ),
       );
     }
@@ -936,19 +926,19 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
 
   chooseImage() async {
     file =
-    await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     setState(() {});
   }
 
   _showImageCircle() => Container(
-    height: 120,
-    width: 120,
-    child: CircleAvatar(
-      backgroundColor: Colors.pink[300],
-      backgroundImage: Image.file(File(newImage.path)).image,
-      radius: 50,
-    ),
-  );
+        height: 120,
+        width: 120,
+        child: CircleAvatar(
+          backgroundColor: Colors.pink[300],
+          backgroundImage: Image.file(File(newImage.path)).image,
+          radius: 50,
+        ),
+      );
 
   Future<void> showImage() async {
     final ImagePicker _picker = ImagePicker();

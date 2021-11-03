@@ -14,15 +14,15 @@ import 'package:left_style/validators/validator.dart';
 // import 'package:otp_autofill/otp_autofill.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class ChangePinPage extends StatefulWidget {
-  const ChangePinPage({Key key}) : super(key: key);
+class ChangePinPhonePage extends StatefulWidget {
+  const ChangePinPhonePage({Key key}) : super(key: key);
 
   @override
-  _ChangePinPageState createState() => _ChangePinPageState();
+  _ChangePinPhonePageState createState() => _ChangePinPhonePageState();
 }
 
-class _ChangePinPageState extends State<ChangePinPage> {
-  TextEditingController controller;
+class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
+  TextEditingController controller = TextEditingController();
   // ignore: close_sinks
   StreamController<ErrorAnimationType> errorController;
   bool hasError = false;
@@ -32,6 +32,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
   bool _obscureText = false;
   bool isVisible = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   UserModel user = UserModel();
 
   @override
@@ -134,12 +135,9 @@ class _ChangePinPageState extends State<ChangePinPage> {
                             // ),
                             // blinkWhenObscuring: true,
                             animationType: AnimationType.fade,
-                            validator: (v) {
-                              if (v.length < 3) {
-                                return "I'm from validator";
-                              } else {
-                                return null;
-                              }
+                            validator: (val) {
+                              return Validator.pin(
+                                  context, val.toString(), "Pin", true);
                             },
                             pinTheme: PinTheme(
                                 inactiveFillColor: Colors.white,
@@ -217,7 +215,9 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                   width: 40,
                                   height: 40,
                                   child: Text(
-                                    Tran.of(context).text("timeLeft").replaceAll("@timeLeft",  "$timeLeft"),
+                                    Tran.of(context)
+                                        .text("timeLeft")
+                                        .replaceAll("@timeLeft", "$timeLeft"),
                                     //"$timeLeft",
                                     style: TextStyle(
                                         color: Theme.of(context).primaryColor,
@@ -295,9 +295,11 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                 ),
                               ),
                               onPressed: () async {
-                                await submit(context).then((value) {
-                                  Navigator.pop(context);
-                                });
+                                if (_formKey.currentState.validate()) {
+                                  await submit(context).then((value) {
+                                    Navigator.pop(context);
+                                  });
+                                }
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
@@ -323,7 +325,10 @@ class _ChangePinPageState extends State<ChangePinPage> {
     );
   }
 
+  String verificationId = "";
   Future<void> requestOTP(String phone) async {
+    // _auth.setSettings()
+// _auth.
     try {
       await _auth.verifyPhoneNumber(
           phoneNumber: phone,
@@ -334,38 +339,53 @@ class _ChangePinPageState extends State<ChangePinPage> {
             print(
                 'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
             MessageHandler.showSnackbar(
-              Tran.of(context).text("phoneNumberVerificationFailedCode").replaceAll("@authExceptionCode", "${authException.code}").replaceAll("@authExceptionMessage", "${authException.message}"),
+                Tran.of(context)
+                    .text("phoneNumberVerificationFailedCode")
+                    .replaceAll("@authExceptionCode", "${authException.code}")
+                    .replaceAll(
+                        "@authExceptionMessage", "${authException.message}"),
                 //'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
                 context,
                 6);
           },
-          codeSent: (String verificationId, [int forceResendingToken]) async {
-            print('Please check your phone for the verification code.' +
-                verificationId);
+          codeSent: (String vId, [int forceResendingToken]) async {
+            verificationId = vId;
+            print('Please check your phone for the verification code.' + vId);
             MessageHandler.showSnackbar(
                 Tran.of(context).text("checkPhoneNumberVerificationCode"),
                 //'Please check your phone for the verification code.',
                 context,
                 6);
-            verificationId = verificationId;
+            verificationId = vId;
             print("Before: $verificationId");
           },
           codeAutoRetrievalTimeout: (String verificationId) {
             print("verification code: " + verificationId);
-
             verificationId = verificationId;
           });
     } catch (e) {
       MessageHandler.showSnackbar(
-        Tran.of(context).text('failVerifyPhoneNumber').replaceAll("@e", "$e"),
-         // "Failed to Verify Phone Number: $e",
-          context, 6);
+          Tran.of(context).text('failVerifyPhoneNumber').replaceAll("@e", "$e"),
+          // "Failed to Verify Phone Number: $e",
+          context,
+          6);
     }
   }
 
   Future<void> submit(BuildContext context) async {
-    var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
-    user.password = pass;
-    await context.read<LoginProvider>().updateUserInfo(context, user);
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String smsCode = controller.text.trim();
+
+    print(verificationId);
+    PhoneAuthCredential _credential = PhoneAuthProvider.credential(
+        verificationId: verificationId, smsCode: smsCode);
+    UserCredential userCredential =
+        await auth.signInWithCredential(_credential);
+    if (userCredential.user != null) {
+      var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
+      user.password = pass;
+
+      await context.read<LoginProvider>().updateUserInfo(context, user);
+    }
   }
 }

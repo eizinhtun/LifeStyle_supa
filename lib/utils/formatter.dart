@@ -6,11 +6,6 @@ class Formatter {
     return f.format(date);
   }
 
-  // static String getDate(DateTime date) {
-  //   var dateFormat =
-  //       DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
-  //   return dateFormat.format(date);
-  // }
   static String getDate(DateTime date) {
     var dateFormat =
         DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
@@ -28,7 +23,7 @@ class Formatter {
     return dateFormat.format(date);
   }
 
-  static String balanceUnseenFormat(double num) {
+  static String balanceUnseenFormat(int num) {
     String s = "";
     int length = num.toInt().toString().length;
     for (int i = 0; i < length; i++) s += "*";

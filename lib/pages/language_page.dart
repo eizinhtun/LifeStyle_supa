@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/database_helper.dart';
-import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/providers/language_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +32,7 @@ class _LanguagePageState extends State<LanguagePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(Tran.of(context).text("languagePage")),
+        title: Text("Select Language"),
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -43,13 +42,13 @@ class _LanguagePageState extends State<LanguagePage> {
               height: height,
               child: ListTile(
                 onTap: () async {
+
                   await context
                       .read<LanguageProvider>()
                       .changeLang(context, "my")
                       .then((value) {
                     Navigator.pop(context);
                   });
-
                 },
                 title: Text(
                   "မြန်မာ",
@@ -58,54 +57,52 @@ class _LanguagePageState extends State<LanguagePage> {
 
               ),
             ),
-            // Divider(
-            //   thickness: 1,
-            //   height: 1,
-            // ),
-            // Container(
-            //   height: height,
-            //   child: ListTile(
-            //     onTap: () async {
-            //       await context
-            //           .read<LanguageProvider>()
-            //           .changeLang(context, "en")
-            //           .then((value) {
-            //         Navigator.pop(context);
-            //       });
-            //
-            //     },
-            //     title: Text(
-            //       "English",
-            //       style: TextStyle(fontWeight: FontWeight.bold),
-            //     ),
-            //   ),
-            // ),
-            // Divider(
-            //   thickness: 1,
-            //   height: 1,
-            // ),
-            // Container(
-            //   height: height,
-            //   child: ListTile(
-            //     onTap: () async {
-            //       await context
-            //           .read<LanguageProvider>()
-            //           .changeLang(context, "zh")
-            //           .then((value) {
-            //         Navigator.pop(context);
-            //       });
-            //
-            //     },
-            //     title: Text(
-            //       "中文",
-            //       style: TextStyle(fontWeight: FontWeight.bold),
-            //     ),
-            //   ),
-            // ),
-            // Divider(
-            //   thickness: 1,
-            //   height: 1,
-            // ),
+            Divider(
+              thickness: 1,
+              height: 1,
+            ),
+            Container(
+              height: height,
+              child: ListTile(
+                onTap: () async {
+                  await context
+                      .read<LanguageProvider>()
+                      .changeLang(context, "en")
+                      .then((value) {
+                    Navigator.pop(context);
+                  });
+                },
+                title: Text(
+                  "English",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            Divider(
+              thickness: 1,
+              height: 1,
+            ),
+            Container(
+              height: height,
+              child: ListTile(
+                onTap: () async {
+                  await context
+                      .read<LanguageProvider>()
+                      .changeLang(context, "zh")
+                      .then((value) {
+                    Navigator.pop(context);
+                  });
+                },
+                title: Text(
+                  "中文",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            Divider(
+              thickness: 1,
+              height: 1,
+            ),
           ],
         ),
       ),

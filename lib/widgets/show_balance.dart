@@ -10,10 +10,11 @@ import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
 class ShowBalance extends StatelessWidget {
-   ShowBalance({Key key,this.onTopued,this.onWithdrawed,this.color = Colors.black38}) : super(key: key);
+   ShowBalance({Key key,this.onTopued,this.onWithdrawed,this.color = Colors.black38,this.showIconColor=Colors.pink}) : super(key: key);
   final ValueSetter<bool> onTopued ;//= (value) {};
    final ValueSetter<bool> onWithdrawed;// = (value) {};
    final Color color;
+   final Color showIconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class ShowBalance extends StatelessWidget {
                   label: Row(
                     children: [
                       Text(
-                        "${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)} ${Tran.of(context).text("ks")}",
+                        "${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceUnseenFormat(_user.balance)} ${Tran.of(context).text("ks")}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -61,6 +62,7 @@ class ShowBalance extends StatelessWidget {
                                 ? Icons.visibility
                                 : Icons.visibility_off,
                             size: 15,
+                            color: showIconColor,
                           ),
                         ),
                       ),

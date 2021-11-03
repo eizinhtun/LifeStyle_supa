@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:left_style/datas/database_helper.dart';
@@ -13,9 +15,7 @@ import 'package:left_style/pages/me_page.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/widgets/wallet.dart';
-
 import 'package:provider/provider.dart';
-
 import 'home_page.dart';
 import 'notification_detail.dart';
 
@@ -48,7 +48,33 @@ class _HomePageDetailState extends State<HomePageDetail> {
     getData();
     if (!kIsWeb) {
       registerNotification(context);
+
+      initPlatformState();
     }
+  }
+
+  String _appBadgeSupported = 'Unknown';
+  initPlatformState() async {
+    String appBadgeSupported;
+    try {
+      bool res = await FlutterAppBadger.isAppBadgeSupported();
+      if (res) {
+        appBadgeSupported = 'Supported';
+      } else {
+        appBadgeSupported = 'Not supported';
+      }
+    } on PlatformException {
+      appBadgeSupported = 'Failed to get badge support.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _appBadgeSupported = appBadgeSupported;
+    });
   }
 
   List<NotiModel> notiList = [];
@@ -56,10 +82,13 @@ class _HomePageDetailState extends State<HomePageDetail> {
     notiList = await context.read<NotiProvider>().getNotiList(context);
     if (notiList != null && notiList.length > 0) {
       SystemData.notiCount = notiList.where((e) => e.status == false).length;
+      FlutterAppBadger.updateBadgeCount(SystemData.notiCount);
     } else {
       SystemData.notiCount = 0;
+      FlutterAppBadger.removeBadge();
     }
     context.read<NotiProvider>().updateNotiCount(context, SystemData.notiCount);
+
     setState(() {});
   }
 
@@ -504,37 +533,39 @@ class _HomePageDetailState extends State<HomePageDetail> {
           });
         },
       ),
-      bottomNavigationBar: SizedBox(
-        height: 90,
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: bottomSelectedIndex,
-          onTap: (index) {
-            bottomTapped(index);
-          },
-          items: [
-            BottomNavigationBarItem(
-              activeIcon: Icon(
-                FontAwesomeIcons.home,
-                // size: ,
-              ),
-              icon: Icon(FontAwesomeIcons.home),
-              label: Tran.of(context).text("homeTap"),
+      bottomNavigationBar:
+          // SizedBox(
+          //   height: 91,
+          //   child:
+          BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: bottomSelectedIndex,
+        onTap: (index) {
+          bottomTapped(index);
+        },
+        items: [
+          BottomNavigationBarItem(
+            activeIcon: Icon(
+              FontAwesomeIcons.home,
+              // size: ,
             ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(
-                FontAwesomeIcons.wallet,
-              ),
-              icon: Icon(FontAwesomeIcons.wallet),
-              label: Tran.of(context).text("walletTap"),
+            icon: Icon(FontAwesomeIcons.home),
+            label: Tran.of(context).text("home"),
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(
+              FontAwesomeIcons.wallet,
             ),
-            BottomNavigationBarItem(
-                activeIcon: Icon(FontAwesomeIcons.user),
-                icon: Icon(FontAwesomeIcons.user),
-                label: Tran.of(context).text("meTap")),
-          ],
-        ),
+            icon: Icon(FontAwesomeIcons.wallet),
+            label: Tran.of(context).text("wallet"),
+          ),
+          BottomNavigationBarItem(
+              activeIcon: Icon(FontAwesomeIcons.user),
+              icon: Icon(FontAwesomeIcons.user),
+              label: Tran.of(context).text("me")),
+        ],
       ),
+      // ),
     );
   }
 

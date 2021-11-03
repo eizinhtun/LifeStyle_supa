@@ -8,12 +8,9 @@ import 'package:flutter_dash/flutter_dash.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/transaction_model.dart';
-import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/show_balance.dart';
-import 'package:left_style/widgets/topup_widget.dart';
 import 'package:left_style/widgets/wallet_detail_success_page.dart';
-import 'package:left_style/widgets/withdrawal_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Wallet extends StatefulWidget {
