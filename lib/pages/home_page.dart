@@ -406,7 +406,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            ShowBalance()
+                            ShowBalance(color: Colors.white)
                           ],
                         ),
                       ),
