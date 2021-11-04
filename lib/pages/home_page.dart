@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'package:barcode_scan_fix/barcode_scan.dart' as bar;
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Ads.dart';
@@ -575,6 +578,22 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
+  Future<List<RecognizedText>> getText(String path) async {
+    final inputImage = InputImage.fromFilePath(path);
+    final textDetector = GoogleMlKit.vision.textDetector();
+    final RecognisedText recognisedText =
+        await textDetector.processImage(inputImage);
+
+    List<RecognizedText> recognizedList = [];
+
+    for (TextBlock block in recognisedText.blocks) {
+      recognizedList.add(
+          RecognizedText(lines: block.lines, block: block.text.toLowerCase()));
+    }
+
+    return recognizedList;
+  }
+
   void _launchURL(String _url) async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
@@ -698,7 +717,7 @@ class _HomePageState extends State<HomePage> {
     String s = await _showAlertDialog(context);
     if (s != null) {
       try {
-        String barcode = await BarcodeScanner.scan();
+        String barcode = await bar.BarcodeScanner.scan();
         setState(() => this.barcode = barcode);
 
         if (barcode != null) {
@@ -706,7 +725,7 @@ class _HomePageState extends State<HomePage> {
               builder: (context) => UploadMyReadScreen(customerId: barcode)));
         }
       } on PlatformException catch (e) {
-        if (e.code == BarcodeScanner.CameraAccessDenied) {
+        if (e.code == bar.BarcodeScanner.CameraAccessDenied) {
           setState(() {
             this.barcode = 'The user did not grant the camera permission!';
           });
@@ -736,7 +755,7 @@ class _HomePageState extends State<HomePage> {
       var typeResult = await _showAlertDialog(context);
       if (typeResult != null && typeResult == "QR") {
         try {
-          String meterBarcode = await BarcodeScanner.scan();
+          String meterBarcode = await bar.BarcodeScanner.scan();
           print(meterBarcode);
           setState(() => this.meterBarcode = meterBarcode);
 
@@ -753,7 +772,7 @@ class _HomePageState extends State<HomePage> {
                     )));
           }
         } on PlatformException catch (e) {
-          if (e.code == BarcodeScanner.CameraAccessDenied) {
+          if (e.code == bar.BarcodeScanner.CameraAccessDenied) {
             setState(() {
               this.meterBarcode =
                   'The user did not grant the camera permission!';
@@ -800,4 +819,11 @@ class HomeItem {
   final Function(BuildContext context) onPressed;
 
   HomeItem({this.title, this.iconData, this.onPressed, this.action});
+}
+
+class RecognizedText {
+  String block;
+  List<TextLine> lines;
+
+  RecognizedText({@required this.lines, this.block});
 }

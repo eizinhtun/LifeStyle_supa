@@ -27,7 +27,8 @@ dependencies:
   pin_code_fields: ^7.3.0
   # pin_code_text_field: ^1.8.0
   argon_buttons_flutter: ^1.1.0
-  google_fonts: ^2.1.0
+  google_fonts: any
+    # ^2.1.0
   another_flushbar: ^1.10.23
   # sms_autofill: ^2.1.2
   provider: ^5.0.0
@@ -42,7 +43,8 @@ dependencies:
   firebase_phone_auth_handler: ^0.0.7
   # otp_autofill: ^1.1.0
   photo_view: ^0.13.0
-  cached_network_image: ^3.1.0
+  cached_network_image: any
+    # ^3.1.0
   intl: ^0.17.0
   curved_navigation_bar: ^1.0.1
   google_maps_flutter: ^2.0.9
@@ -85,7 +87,16 @@ dependencies:
   gallery_saver: ^2.3.2
   loading_overlay: ^0.2.1
   webview_flutter: ^2.0.0
+  share: ^2.0.4
+  flutter_share_file: ^1.2.1+6
+  flutter_share_me: ^0.11.0
   flutter_share: ^2.0.0
+  # tesseract_ocr: ^0.3.1
+  path_provider: any
+  google_ml_kit: ^0.7.2
+  # image_picker: ^0.7.2
+  camera: ^0.8.1
+  # flutter_share: ^2.0.0
   dots_indicator: ^2.0.0
 
 dev_dependencies:

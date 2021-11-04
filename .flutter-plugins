@@ -1,5 +1,6 @@
 # This is a generated file; do not edit or check into version control.
 barcode_scan_fix=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\barcode_scan_fix-1.0.2\\
+camera=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\camera-0.8.1+7\\
 cloud_firestore=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\cloud_firestore-2.5.4\\
 cloud_firestore_web=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\cloud_firestore_web-2.4.4\\
 firebase_auth=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\firebase_auth-1.4.1\\
@@ -18,9 +19,12 @@ flutter_image_compress=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartla
 flutter_local_notifications=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\flutter_local_notifications-9.0.2\\
 flutter_plugin_android_lifecycle=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\flutter_plugin_android_lifecycle-2.0.4\\
 flutter_share=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\flutter_share-2.0.0\\
+flutter_share_file=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\flutter_share_file-1.2.1+6\\
+flutter_share_me=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\flutter_share_me-0.11.2\\
 gallery_saver=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\gallery_saver-2.3.2\\
 google_maps_flutter=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\google_maps_flutter-2.0.9\\
 google_maps_flutter_web=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\google_maps_flutter_web-0.3.2\\
+google_ml_kit=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\google_ml_kit-0.7.2\\
 google_sign_in=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\google_sign_in-5.1.0\\
 google_sign_in_web=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\google_sign_in_web-0.10.0+3\\
 image_picker=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\image_picker-0.8.4+1\\
@@ -30,6 +34,7 @@ path_provider_linux=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.
 path_provider_macos=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_macos-2.0.2\\
 path_provider_windows=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\path_provider_windows-2.0.3\\
 permission_handler=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\permission_handler-8.1.6\\
+share=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\share-2.0.4\\
 shared_preferences=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\shared_preferences-2.0.7\\
 shared_preferences_linux=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\shared_preferences_linux-2.0.2\\
 shared_preferences_macos=D:\\applications\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\shared_preferences_macos-2.0.2\\
