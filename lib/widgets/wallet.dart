@@ -23,7 +23,7 @@ class WalletState extends State<Wallet> {
   final db = FirebaseFirestore.instance;
   //List<TransactionModel> totalList = [];
   //List<TransactionModel> tracList = [];
-  String uid=FirebaseAuth.instance.currentUser.uid.toString();
+  String uid = FirebaseAuth.instance.currentUser.uid.toString();
   int showlist = 10;
   bool _isLoading = true;
 
@@ -48,11 +48,11 @@ class WalletState extends State<Wallet> {
       //         .get())
       //     .docs;
       documentList = (await FirebaseFirestore.instance
-          .collection(transactions)
-          .where("uid", isEqualTo: uid)
-          //.orderBy("createdDate", descending: true)
-          .limit(showlist)
-          .get())
+              .collection(transactions)
+              .where("uid", isEqualTo: uid)
+              //.orderBy("createdDate", descending: true)
+              .limit(showlist)
+              .get())
           .docs;
 
       documentList.forEach((result) {
@@ -80,12 +80,12 @@ class WalletState extends State<Wallet> {
       //         .get())
       //     .docs;
       List<DocumentSnapshot> newDocumentList = (await FirebaseFirestore.instance
-          .collection(transactions)
-          .where("uid", isEqualTo: uid)
-          //.orderBy("createdDate", descending: true)
-          .startAfterDocument(documentList[documentList.length - 1])
-          .limit(showlist)
-          .get())
+              .collection(transactions)
+              .where("uid", isEqualTo: uid)
+              //.orderBy("createdDate", descending: true)
+              .startAfterDocument(documentList[documentList.length - 1])
+              .limit(showlist)
+              .get())
           .docs;
       newDocumentList.forEach((result) {
         tracList.add(TransactionModel.fromJson(result.data(), doc: result.id));
@@ -100,7 +100,7 @@ class WalletState extends State<Wallet> {
 
   void _onRefresh() async {
     setState(() {
-      _isLoading=true;
+      _isLoading = true;
     });
 
     fetchFirstList();
@@ -238,22 +238,19 @@ class WalletState extends State<Wallet> {
               //   },
               // ),
               child: ShowBalance(
-                onTopued: (result){
-                  if (result != null && result == true) {
-                        _isLoading = true;
-                        _onRefresh();
-                      }
-                },
-                onWithdrawed: (result){
+                onTopued: (result) {
                   if (result != null && result == true) {
                     _isLoading = true;
                     _onRefresh();
                   }
                 },
-
-
+                onWithdrawed: (result) {
+                  if (result != null && result == true) {
+                    _isLoading = true;
+                    _onRefresh();
+                  }
+                },
               ),
-
             ),
             Divider(
               //length: MediaQuery.of(context).size.width,
@@ -319,7 +316,8 @@ class WalletState extends State<Wallet> {
                                                   new WalletDetailSuccessPage(
                                                       docId: tracList[i].docId,
                                                       type: tracList[i].type,
-                                                      status: tracList[i].status)));
+                                                      status:
+                                                          tracList[i].status)));
                                       if (returnResult != null &&
                                           returnResult) {
                                         _onRefresh();

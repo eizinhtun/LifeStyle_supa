@@ -3,4 +3,5 @@
     <string name="app_name">Facebook Login</string>
     <string name="facebook_app_id">3105247143054675</string>
     <string name="fb_login_protocol_scheme">fb3105247143054675</string>
+    <string name="map_api_key">AIzaSyA7TRogvV360fOZNbhcjaa3fioVzNH3Qug</string>
 </resources>

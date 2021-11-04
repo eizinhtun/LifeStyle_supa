@@ -9,11 +9,14 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/topup_widget.dart';
 import 'package:left_style/widgets/withdrawal_widget.dart';
+
 class ShowBalance extends StatelessWidget {
-   ShowBalance({Key key,this.onTopued,this.onWithdrawed,this.color = Colors.black38}) : super(key: key);
-  final ValueSetter<bool> onTopued ;//= (value) {};
-   final ValueSetter<bool> onWithdrawed;// = (value) {};
-   final Color color;
+  ShowBalance(
+      {Key key, this.onTopued, this.onWithdrawed, this.color = Colors.black38})
+      : super(key: key);
+  final ValueSetter<bool> onTopued; //= (value) {};
+  final ValueSetter<bool> onWithdrawed; // = (value) {};
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -65,15 +68,13 @@ class ShowBalance extends StatelessWidget {
                         ),
                       ),
                     ],
-                  )
-              ),
+                  )),
               PopupMenuButton(
                   onSelected: (val) async {
                     if (val == 1) {
                       var result = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => TopUpPage()));
-                       onTopued(result);
+                          MaterialPageRoute(builder: (context) => TopUpPage()));
+                      onTopued(result);
                       /*if (result != null && result == true) {
                         _isLoading = true;
                         _onRefresh();
@@ -90,61 +91,79 @@ class ShowBalance extends StatelessWidget {
                       }*/
                     }
                   },
-                  icon: Icon(Icons.more_horiz_rounded,color: color,),
+                  icon: Icon(
+                    Icons.more_horiz_rounded,
+                    color: color,
+                  ),
                   itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: Column(
-                        children: [
-                          Row(
+                        PopupMenuItem(
+                          child: Column(
                             children: [
-                              Container(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0,
-                                      top: 10,
-                                      bottom: 10),
-                                  child: Icon(
-                                    Icons.add_circle,
-                                    color: Theme.of(context)
-                                        .primaryColor,
-                                  )),
-                              Text(Tran.of(context).text("topup")),
+                              Row(
+                                children: [
+                                  Container(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0, top: 10, bottom: 10),
+                                      child: Icon(
+                                        Icons.add_circle,
+                                        color: Theme.of(context).primaryColor,
+                                      )),
+                                  Text(Tran.of(context).text("topup")),
+                                ],
+                              ),
+                              Divider()
                             ],
                           ),
-                          Divider()
-                        ],
-                      ),
-                      value: 1,
-                    ),
-                    PopupMenuItem(
-                      child: Column(
-                        children: [
-                          Row(
+                          value: 1,
+                        ),
+                        PopupMenuItem(
+                          child: Column(
                             children: [
-                              Container(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0,
-                                      top: 10,
-                                      bottom: 10),
-                                  child: Icon(
-                                    Icons.remove_circle,
-                                    color: Colors.grey
-                                        .withOpacity(0.5),
-                                  )),
-                              Text(Tran.of(context).text("withdrawal")),
+                              Row(
+                                children: [
+                                  Container(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0, top: 10, bottom: 10),
+                                      child: Icon(
+                                        Icons.remove_circle,
+                                        color: Colors.grey.withOpacity(0.5),
+                                      )),
+                                  Text(Tran.of(context).text("withdrawal")),
+                                ],
+                              ),
+                              Divider()
                             ],
                           ),
-                          Divider()
-                        ],
-                      ),
-                      value: 2,
-                    )
-                  ]),
+                          value: 2,
+                        )
+                      ]),
             ],
           );
         } else {
           return Text("No data found");
         }
       },
+    );
+  }
+
+  Widget getUnseen(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(
+            child: Icon(Icons.add, size: 14),
+          ),
+          WidgetSpan(
+            child: Icon(Icons.add, size: 14),
+          ),
+          WidgetSpan(
+            child: Icon(Icons.add, size: 14),
+          ),
+          WidgetSpan(
+            child: Icon(Icons.add, size: 14),
+          ),
+        ],
+      ),
     );
   }
 }

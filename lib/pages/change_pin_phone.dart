@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'dart:async';
 import 'package:dbcrypt/dbcrypt.dart';
+import 'package:gallery_saver/files.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
@@ -13,6 +14,7 @@ import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/validators/validator.dart';
 // import 'package:otp_autofill/otp_autofill.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:http/http.dart' as http;
 
 class ChangePinPhonePage extends StatefulWidget {
   const ChangePinPhonePage({Key key}) : super(key: key);
@@ -327,49 +329,59 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
 
   String verificationId = "";
   Future<void> requestOTP(String phone) async {
-    // _auth.setSettings()
-// _auth.
-    try {
-      await _auth.verifyPhoneNumber(
-          phoneNumber: phone,
-          timeout: const Duration(seconds: timeOut),
-          verificationCompleted:
-              (PhoneAuthCredential phoneAuthCredential) async {},
-          verificationFailed: (FirebaseAuthException authException) {
-            print(
-                'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-            MessageHandler.showSnackbar(
-                Tran.of(context)
-                    .text("phoneNumberVerificationFailedCode")
-                    .replaceAll("@authExceptionCode", "${authException.code}")
-                    .replaceAll(
-                        "@authExceptionMessage", "${authException.message}"),
-                //'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
-                context,
-                6);
-          },
-          codeSent: (String vId, [int forceResendingToken]) async {
-            verificationId = vId;
-            print('Please check your phone for the verification code.' + vId);
-            MessageHandler.showSnackbar(
-                Tran.of(context).text("checkPhoneNumberVerificationCode"),
-                //'Please check your phone for the verification code.',
-                context,
-                6);
-            verificationId = vId;
-            print("Before: $verificationId");
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {
-            print("verification code: " + verificationId);
-            verificationId = verificationId;
-          });
-    } catch (e) {
-      MessageHandler.showSnackbar(
-          Tran.of(context).text('failVerifyPhoneNumber').replaceAll("@e", "$e"),
-          // "Failed to Verify Phone Number: $e",
-          context,
-          6);
-    }
+    String templateString = Tran.of(context).text("sms_template");
+    templateString.replaceAll('@brand_name', brandName);
+    templateString.replaceAll('@code', '{code}');
+    var url =
+        "$smsUrl/v1/request?access-token=$smsToken&number=$phone&brand_name=$brandName&code_length=$codeLength&sender_name=$brandName&template=${Tran.of(context).text("sms_template")}";
+
+    http.post(
+      Uri.parse(url),
+      body: {"to": phone, "message": "Hello World", "sender": "SMSPoh"},
+    );
+    // http.post(url)
+
+    // try {
+    //   await _auth.verifyPhoneNumber(
+    //       phoneNumber: phone,
+    //       timeout: const Duration(seconds: timeOut),
+    //       verificationCompleted:
+    //           (PhoneAuthCredential phoneAuthCredential) async {},
+    //       verificationFailed: (FirebaseAuthException authException) {
+    //         print(
+    //             'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+    //         MessageHandler.showSnackbar(
+    //             Tran.of(context)
+    //                 .text("phoneNumberVerificationFailedCode")
+    //                 .replaceAll("@authExceptionCode", "${authException.code}")
+    //                 .replaceAll(
+    //                     "@authExceptionMessage", "${authException.message}"),
+    //             //'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
+    //             context,
+    //             6);
+    //       },
+    //       codeSent: (String vId, [int forceResendingToken]) async {
+    //         verificationId = vId;
+    //         print('Please check your phone for the verification code.' + vId);
+    //         MessageHandler.showSnackbar(
+    //             Tran.of(context).text("checkPhoneNumberVerificationCode"),
+    //             //'Please check your phone for the verification code.',
+    //             context,
+    //             6);
+    //         verificationId = vId;
+    //         print("Before: $verificationId");
+    //       },
+    //       codeAutoRetrievalTimeout: (String verificationId) {
+    //         print("verification code: " + verificationId);
+    //         verificationId = verificationId;
+    //       });
+    // } catch (e) {
+    //   MessageHandler.showSnackbar(
+    //       Tran.of(context).text('failVerifyPhoneNumber').replaceAll("@e", "$e"),
+    //       // "Failed to Verify Phone Number: $e",
+    //       context,
+    //       6);
+    // }
   }
 
   Future<void> submit(BuildContext context) async {
@@ -377,15 +389,25 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
     String smsCode = controller.text.trim();
 
     print(verificationId);
-    PhoneAuthCredential _credential = PhoneAuthProvider.credential(
+    PhoneAuthCredential _phCredential = PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: smsCode);
-    UserCredential userCredential =
-        await auth.signInWithCredential(_credential);
-    if (userCredential.user != null) {
-      var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
-      user.password = pass;
+    // EmailAuthCredential _emailCredential =
+    // EmailAuthProvider.credential(email: email, password: password);
+    // FacebookAuthCredential _fbCredential =
+    //     FacebookAuthProvider.credential(accessToken);
+    //         UserCredential euserCredential =
+    // await auth.signInWithPhoneNumber(phoneNumber)
+    // signInWithCredential(_phCredential);
+    print(_phCredential);
 
-      await context.read<LoginProvider>().updateUserInfo(context, user);
-    }
+    // auth.
+    // UserCredential userCredential =
+    //     await auth.signInWithCredential(_phCredential);
+    // if (userCredential.user != null) {
+    //   var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
+    //   user.password = pass;
+
+    //   await context.read<LoginProvider>().updateUserInfo(context, user);
+    // }
   }
 }

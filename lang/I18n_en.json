@@ -69,5 +69,6 @@
   "submit": "Submit",
   "editProfileTitle": "Edit Profile",
   "topup": "Top Up",
-  "withdrawal": "Withdrawal"
+  "withdrawal": "Withdrawal",
+  "sms_template": "Verification Code for @brand_name is @code."
 }
