@@ -70,5 +70,7 @@
   "editProfileTitle": "Edit Profile",
   "topup": "Top Up",
   "withdrawal": "Withdrawal",
-  "sms_template": "Verification Code for @brand_name is @code."
+  "sms_template": "Verification Code for @brand_name is @code.",
+  "readMeter": "Read Meter",
+  "meterRemove": "Remove"
 }

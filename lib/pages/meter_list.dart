@@ -139,7 +139,11 @@ class MeterListPageState extends State<MeterListPage>
                             Container(
                               padding: EdgeInsets.only(top: 5),
                               child: Text(
-                                Formatter.getDate(item.insertDate.toDate()),
+                                  Formatter.dateTimeFormat(DateTime
+                                      .fromMillisecondsSinceEpoch(
+                                      item.insertDate.millisecondsSinceEpoch)
+                                  ),
+                                // Formatter.getDate(item.insertDate.toDate()),
                               ),
                             ),
 

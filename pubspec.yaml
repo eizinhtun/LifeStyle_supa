@@ -98,6 +98,8 @@ dependencies:
   camera: ^0.8.1
   # flutter_share: ^2.0.0
   dots_indicator: ^2.0.0
+  share_plus: ^3.0.1
+
 
 dev_dependencies:
   flutter_test:

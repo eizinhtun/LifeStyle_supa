@@ -4,6 +4,7 @@ import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -151,7 +152,7 @@ class _HomePageState extends State<HomePage> {
     ),
     HomeItem(
         title: "Meter Bills",
-        iconData: Icons.history,
+        iconData: Icons.receipt_long,
         action: ActionButton.MeterBill),
   ];
 
@@ -266,6 +267,7 @@ class _HomePageState extends State<HomePage> {
                                         enlargeCenterPage: true,
                                         aspectRatio: 1.0,
                                         viewportFraction: 1,
+                                        height: 200,
                                         onPageChanged: (index, reason) {
                                           setState(() {
                                             _current = index;
@@ -282,8 +284,8 @@ class _HomePageState extends State<HomePage> {
                                         onTap: () => _controller
                                             .animateToPage(entry.key),
                                         child: Container(
-                                          width: 12.0,
-                                          height: 12.0,
+                                          width: 8.0,
+                                          height: 8.0,
                                           margin: EdgeInsets.symmetric(
                                               vertical: 8.0, horizontal: 4.0),
                                           decoration: BoxDecoration(
@@ -310,6 +312,31 @@ class _HomePageState extends State<HomePage> {
                         ),
                         SizedBox(
                           height: 10,
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            print("Pressed");
+                            var meterRef = FirebaseFirestore.instance
+                                .collection(meterCollection);
+
+                            if (FirebaseAuth.instance.currentUser?.uid !=
+                                null) {
+                              String uid = FirebaseAuth.instance.currentUser.uid
+                                  .toString();
+
+                              await meterRef
+                                  .doc(uid)
+                                  .collection(userMeterCollection)
+                                  .doc("7324392739")
+                                  .set(jsonString);
+                            }
+                          },
+                          child: Text(
+                            "Add",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                         Container(
                           padding: EdgeInsets.all(8),
@@ -714,8 +741,8 @@ class _HomePageState extends State<HomePage> {
   String barcode = "";
   String meterBarcode = "";
   Future<void> uploadUnit(BuildContext context) async {
-    String s = await _showAlertDialog(context);
-    if (s != null) {
+    ///String s = await _showAlertDialog(context);
+    //if (s != null) {
       try {
         String barcode = await bar.BarcodeScanner.scan();
         setState(() => this.barcode = barcode);
@@ -738,7 +765,7 @@ class _HomePageState extends State<HomePage> {
       } catch (e) {
         setState(() => this.barcode = 'Unknown error: $e');
       }
-    }
+    //}
     // String codeSanner = await BarcodeScanner.scan().then((value) {
     //   if (value != null) {
     //     Navigator.of(context).push(MaterialPageRoute(
@@ -759,11 +786,7 @@ class _HomePageState extends State<HomePage> {
           print(meterBarcode);
           setState(() => this.meterBarcode = meterBarcode);
 
-          if (meterBarcode != null) {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    UploadMyReadScreen(customerId: meterBarcode)));
-          }
+
           if (meterBarcode != null) {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => MeterSearchResultPage(
@@ -827,3 +850,78 @@ class RecognizedText {
 
   RecognizedText({@required this.lines, this.block});
 }
+
+const jsonString = {
+  "AllowedUnit": 0,
+  "Ampere": "10/30",
+  "ApplyDate": null,
+  "AvageUseUnit": 99,
+  "BillNeedModity": false,
+  "BinderId": 5,
+  "Block": null,
+  "BranchId": "1",
+  "BusinessNo": "",
+  "CategoryId": 1,
+  "CategoryName": "ရိုးရိုး",
+  "ChargePerUnit": 35,
+  "ConsumerName": "ဦးအိုက်နပ်",
+  "ConsumerType": "P",
+  "CoverSeal": null,
+  "CreditAmount": 79040,
+  "CreditReason": null,
+  "CreditUnit": 0,
+  "CurrencyType": "ks",
+  "CustomerId": "7324392739",
+  "DueDate": "2016-07-28T15:15:28.307",
+  "ExcelFileName": null,
+  "FeederID": 3,
+  "GroupId": 2,
+  "HorsePower": 0,
+  "HorsePowerCost": 0,
+  "HouseNo": "အမှတ်-၂၀/၂၂၊ တက္ကသိုလ်ရိပ်သာလမ်း",
+  "Id": 2,
+  "InsertDate": "2016-07-28T15:15:28.307",
+  "InstallPerson": null,
+  "IsShowDebt": true,
+  "IssueDate": null,
+  "JoinDate": "23-12-2019",
+  "LastDate": "2016-07-28T15:15:28.307",
+  "LastMonthRedUnit": null,
+  "LastReadUnit": 13151,
+  "Latitude": "22.9534015",
+  "LayerAmount": null,
+  "LayerDescription": null,
+  "LayerRate": null,
+  "LedgerId": "BH1",
+  "LedgerPostFix": "01/03",
+  "Longitude": "97.7405598",
+  "MainLedgerId": 1,
+  "MainLedgerTitle": "2110",
+  "MaintainenceCost": 500,
+  "ManufacturerNo": "10/30",
+  "MeterNo": "YA-046496",
+  "MeterSerial": "",
+  "Mobile": "09123456789",
+  "Multiplier": "1",
+  "NoLayer": false,
+  "NoOfRoom": 1,
+  "OldAccount": null,
+  "OutDemand": null,
+  "Percentage": 0,
+  "PoleNo": null,
+  "Rate": "1 ",
+  "ReadDate": "2016-07-28T15:15:28.307",
+  "RequiredMatchGPS": false,
+  "Street": "နယ်မြေ(၁)",
+  "StreetLightCost": null,
+  "TerminalSeal": null,
+  "TransformerID": 49,
+  "TspEng": null,
+  "TspMM": null,
+  "TwinLeftSeal": null,
+  "TwinRightSeal": null,
+  "Voltage": "230",
+  "WattLoad": "",
+  "dueDate": "2016-07-28T15:15:28.307",
+  "meterBill": 150000
+};

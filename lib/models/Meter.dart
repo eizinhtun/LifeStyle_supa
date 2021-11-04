@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Meter {
+  String meterName;
   bool autoPay;
   bool selfScan;
   bool requiredMatchGPS;
@@ -79,7 +80,8 @@ class Meter {
   Null twinLeftSeal;
 
   Meter(
-      {this.autoPay,
+      {this.meterName,
+      this.autoPay,
       this.selfScan,
       this.requiredMatchGPS,
       this.latitude,
@@ -154,6 +156,7 @@ class Meter {
       this.twinLeftSeal});
 
   Meter.fromJson(Map<String, dynamic> json) {
+    meterName = json['meterName']??"";
     autoPay = json['AutoPay'];
     selfScan = json['SelfScan'];
     requiredMatchGPS = json['RequiredMatchGPS'];
@@ -232,6 +235,7 @@ class Meter {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['meterName'] = this.meterName;
     data['AutoPay'] = this.autoPay;
     data['SelfScan'] = this.selfScan;
     data['RequiredMatchGPS'] = this.requiredMatchGPS;
