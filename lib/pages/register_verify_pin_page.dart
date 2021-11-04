@@ -9,7 +9,7 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:otp_autofill/otp_autofill.dart';
+// import 'package:otp_autofill/otp_autofill.dart';
 import 'package:provider/provider.dart';
 
 class RegisterVerifyPinPage extends StatefulWidget {
@@ -25,7 +25,7 @@ class RegisterVerifyPinPage extends StatefulWidget {
 
 class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
-  OTPTextEditController controller;
+  TextEditingController controller;
   // ignore: close_sinks
   StreamController<ErrorAnimationType> errorController;
   bool hasError = false;
@@ -55,7 +55,7 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
   @override
   Future<void> dispose() async {
     super.dispose();
-    await controller.stopListen();
+    // await controller.stopListen();
   }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();

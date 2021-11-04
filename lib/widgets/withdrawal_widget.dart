@@ -36,13 +36,18 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   }
 
   Future<void> upload(TransactionModel model) async {
-    model.status = "verifying";
+
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      model.status = "verifying";
+      model.uid=uid;
+      // var result = await FirebaseFirestore.instance
+      //     .collection(transactions)
+      //     .doc(uid)
+      //     .collection("manyTransition")
+      //     .add(model.toJson());
       var result = await FirebaseFirestore.instance
           .collection(transactions)
-          .doc(uid)
-          .collection("manyTransition")
           .add(model.toJson());
       if (result.id.isNotEmpty) {
         Navigator.pop(context, true);
@@ -95,7 +100,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         title: Center(
           child: Container(
             margin: EdgeInsets.only(right: 40),
-            child: Text("Withdraw"),
+            child: Text(Tran.of(context).text("withdrawal")),
           ),
         ),
       ),
@@ -233,7 +238,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                   });
                                 }
                               },
-                              child: Text("Submit")),
+                              child: Text(Tran.of(context).text("submit"))),
                         ],
                       )
                     ],
@@ -363,7 +368,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                           Navigator.pop(context);
                         },
                         child: Text(
-                          "Cancel",
+                          Tran.of(context).text("cancel"),
                           style: TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.bold),
                         ),

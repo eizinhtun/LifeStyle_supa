@@ -8,8 +8,8 @@ class UserInfoScreenPhoto extends StatelessWidget {
       {Key key,
       this.name,
       this.imageurl,
-      this.width = 100,
-      this.height = 100,
+      this.width = 120,
+      this.height = 120,
       this.borderColor = Colors.white})
       : super(key: key);
   final String name;
@@ -19,6 +19,7 @@ class UserInfoScreenPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(imageurl);
     print(imageurl != null);
     return Row(
       children: [
@@ -29,11 +30,7 @@ class UserInfoScreenPhoto extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => CommonExampleRouteWrapper(
-                      imageProvider: AssetImage("assets/image/user-photo.png")
-                      // NetworkImage(
-                      //   imageurl.toString(),
-                      // ),
-
+                      imageProvider: CachedNetworkImageProvider(imageurl),
                       ),
                 ),
               );
@@ -41,14 +38,14 @@ class UserInfoScreenPhoto extends StatelessWidget {
           },
           child: Stack(
             children: [
-              // Container(
-              //   width: 80,
-              //   height: 80,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(100),
-              //     color: Colors.white,
-              //   ),
-              // ),
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: Colors.white,
+                ),
+              ),
               imageurl != null
                   ? CachedNetworkImage(
                       width: width,

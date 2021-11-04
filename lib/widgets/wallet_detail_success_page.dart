@@ -27,13 +27,15 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
 
   @override
   Widget build(BuildContext context) {
+    //Locale myLocale = Localizations.localeOf(context);
+
     return new Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
         centerTitle: true,
-        title: Text("Wallet Detail"),
+       title: Text(widget.type.toString() == TransactionType.Withdraw ? Tran.of(context).text("withdrawal_pending_detail_title").toString():Tran.of(context).text("topup_pending_detail_title").toString(),style: TextStyle(fontSize: 16),),
         actions: [
           checkTypeAndStatus(context),
         ],
@@ -41,8 +43,6 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
       body: StreamBuilder<DocumentSnapshot>(
           stream: db
               .collection(transactions)
-              .doc(FirebaseAuth.instance.currentUser.uid)
-              .collection(manyTransaction)
               .doc(widget.docId)
               .snapshots(),
           builder: (context, snapshot) {
@@ -90,7 +90,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                           color: getStatusColor(item.status
                                               .trim()
                                               .toLowerCase()))),
-                                  Text(item.amount.toString(),
+                                  Text(Formatter.balanceFormat(item.amount),
                                       style: TextStyle(
                                           color: item.amount > 0
                                               ? Colors.green
@@ -113,52 +113,54 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                           margin: EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
                             children: [
+
                               Row(
                                 children: [
-                                  Text("Transaction Date"),
+                                  Text(Tran.of(context).text("transaction_detail_date")),
                                   Spacer(),
                                   Text(
-                                      Formatter.dateTimeFormat(
+                                      Formatter.getDates(
                                           DateTime.fromMillisecondsSinceEpoch(
                                               item.createdDate
                                                   .millisecondsSinceEpoch)),
-                                      style: TextStyle(fontSize: 12)),
+                                      style: TextStyle(fontSize: 12,fontWeight: FontWeight.w900)),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Text("Transaction Type"),
+                                  Text(Tran.of(context).text("transaction_detail_time")),
+                                  Spacer(),
+                                  Text(
+                                      Formatter.getHour(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              item.createdDate
+                                                  .millisecondsSinceEpoch)),
+                                      style: TextStyle(fontSize: 12,fontWeight: FontWeight.w900)),
+                                ],
+                              ),
+
+                              Row(
+                                children: [
+                                  Text(Tran.of(context).text("transaction_detail_type")),
                                   Spacer(),
                                   Text(item.type,
-                                      style: TextStyle(fontSize: 12)),
+                                      style: TextStyle(fontSize: 12,fontWeight: FontWeight.w900)),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Text("Bank"),
+                                  Text(Tran.of(context).text("transaction_detail_bank")),
                                   Spacer(),
                                   Text(item.paymentType,
-                                      style: TextStyle(fontSize: 12)),
+                                      style: TextStyle(fontSize: 12,fontWeight: FontWeight.w900)),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Text("Transaction Date"),
+                                  Text(Tran.of(context).text("transaction_detail_amount")),
                                   Spacer(),
-                                  Text(
-                                      Formatter.dateTimeFormat(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              item.createdDate
-                                                  .millisecondsSinceEpoch)),
-                                      style: TextStyle(fontSize: 12)),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("Amount"),
-                                  Spacer(),
-                                  Text(item.amount.toString() + " (Ks)",
-                                      style: TextStyle(fontSize: 12)),
+                                  Text(Formatter.balanceFormat(item.amount) + " (Ks)",
+                                      style: TextStyle(fontSize: 12,fontWeight: FontWeight.w900)),
                                 ],
                               ),
                             ],
@@ -184,7 +186,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                             Navigator.of(context).pop();
                           },
                           child: Text(
-                            "Close",
+                            Tran.of(context).text("cancel"),
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold),

@@ -15,6 +15,7 @@ class LanguagePage extends StatefulWidget {
 class _LanguagePageState extends State<LanguagePage> {
   double height = 50;
   String lang = "en";
+  bool isSelected = false;
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class _LanguagePageState extends State<LanguagePage> {
               height: height,
               child: ListTile(
                 onTap: () async {
+
                   await context
                       .read<LanguageProvider>()
                       .changeLang(context, "my")
@@ -52,6 +54,7 @@ class _LanguagePageState extends State<LanguagePage> {
                   "မြန်မာ",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
+
               ),
             ),
             Divider(

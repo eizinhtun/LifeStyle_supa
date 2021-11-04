@@ -1,7 +1,10 @@
 // @dart=2.9
 import 'dart:async';
+import 'dart:convert';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/models/sms_request_response.dart';
+import 'package:left_style/models/sms_verify_response.dart';
 import 'package:provider/provider.dart';
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,18 +14,19 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/validators/validator.dart';
-import 'package:otp_autofill/otp_autofill.dart';
+// import 'package:otp_autofill/otp_autofill.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:http/http.dart' as http;
 
-class ChangePinPage extends StatefulWidget {
-  const ChangePinPage({Key key}) : super(key: key);
+class ChangePinPhonePage extends StatefulWidget {
+  const ChangePinPhonePage({Key key}) : super(key: key);
 
   @override
-  _ChangePinPageState createState() => _ChangePinPageState();
+  _ChangePinPhonePageState createState() => _ChangePinPhonePageState();
 }
 
-class _ChangePinPageState extends State<ChangePinPage> {
-  OTPTextEditController controller;
+class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
+  TextEditingController controller = TextEditingController();
   // ignore: close_sinks
   StreamController<ErrorAnimationType> errorController;
   bool hasError = false;
@@ -32,6 +36,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
   bool _obscureText = false;
   bool isVisible = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   UserModel user = UserModel();
 
   @override
@@ -71,7 +76,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Change Pin"),
+        title: Text(Tran.of(context).text("changePin")),
         centerTitle: true,
       ),
       body: Container(
@@ -90,7 +95,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
                       });
                       requestOTP(user.phone);
                     },
-                    child: Text("Get Otp Code"),
+                    child: Text(Tran.of(context).text("getOtpCode")),
                   ),
                 ),
               ),
@@ -107,7 +112,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Enter your OTP code",
+                            Tran.of(context).text("enterYourOtpCode"),
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               color: Colors.black87,
@@ -134,12 +139,9 @@ class _ChangePinPageState extends State<ChangePinPage> {
                             // ),
                             // blinkWhenObscuring: true,
                             animationType: AnimationType.fade,
-                            validator: (v) {
-                              if (v.length < 3) {
-                                return "I'm from validator";
-                              } else {
-                                return null;
-                              }
+                            validator: (val) {
+                              return Validator.pin(
+                                  context, val.toString(), "Pin", true);
                             },
                             pinTheme: PinTheme(
                                 inactiveFillColor: Colors.white,
@@ -201,7 +203,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                 }
                               },
                               child: Text(
-                                "Resend OTP",
+                                Tran.of(context).text("resendOtp"),
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                     fontSize: 12,
@@ -217,7 +219,10 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                   width: 40,
                                   height: 40,
                                   child: Text(
-                                    "$timeLeft",
+                                    Tran.of(context)
+                                        .text("timeLeft")
+                                        .replaceAll("@timeLeft", "$timeLeft"),
+                                    //"$timeLeft",
                                     style: TextStyle(
                                         color: Theme.of(context).primaryColor,
                                         fontSize: 14,
@@ -252,7 +257,7 @@ class _ChangePinPageState extends State<ChangePinPage> {
                             //   // contentPadding: EdgeInsets.all(16),
                             // ),
                             decoration: InputDecoration(
-                              labelText: "Password",
+                              labelText: Tran.of(context).text("password"),
                               labelStyle: TextStyle(),
                               hintText: "${Tran.of(context)?.text('password')}",
                               suffixIcon: IconButton(
@@ -294,14 +299,16 @@ class _ChangePinPageState extends State<ChangePinPage> {
                                 ),
                               ),
                               onPressed: () async {
-                                await submit(context).then((value) {
-                                  Navigator.pop(context);
-                                });
+                                if (_formKey.currentState.validate()) {
+                                  await submit(context).then((value) {
+                                    Navigator.pop(context);
+                                  });
+                                }
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Text(
-                                  "Submit",
+                                  Tran.of(context).text("changePinSubmit"),
                                   style: TextStyle(
                                     fontSize: 16,
                                   ),
@@ -322,49 +329,121 @@ class _ChangePinPageState extends State<ChangePinPage> {
     );
   }
 
+  String verificationId = "";
+  int requestId;
   Future<void> requestOTP(String phone) async {
-    try {
-      await _auth.verifyPhoneNumber(
-          phoneNumber: phone,
-          timeout: const Duration(seconds: timeOut),
-          verificationCompleted:
-              (PhoneAuthCredential phoneAuthCredential) async {},
-          verificationFailed: (FirebaseAuthException authException) {
-            print(
-                'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-            MessageHandler.showSnackbar(
-                'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
-                context,
-                6);
-          },
-          codeSent: (String verificationId, [int forceResendingToken]) async {
-            print('Please check your phone for the verification code.' +
-                verificationId);
-            MessageHandler.showSnackbar(
-                'Please check your phone for the verification code.',
-                context,
-                6);
-            verificationId = verificationId;
-            print("Before: $verificationId");
+    String templateString =
+        "{brand_name} အတွက် အတည်ပြုရန်ကုဒ်နံပါတ်မှာ {code} ဖြစ်ပါတယ်";
+    // String templateString = Tran.of(context).text("sms_template");
+    // templateString.replaceAll('@brand_name', brandName);
+    // templateString.replaceAll('@code', '{code}');
+    var url =
+        "$smsUrl/v1/request?access-token=$smsToken&number=$phone&brand_name=$brandName&code_length=$codeLength&sender_name=$brandName&template=$templateString";
+//  body: {"to": phone, "message": "Hello World", "sender": "SMSPoh"},
+    var response = await http.get(
+      Uri.parse(url),
+    );
 
-            // Navigator.of(context).push(MaterialPageRoute(
-            //     builder: (context) => RegisterVerifyPinPage(
-            //         user: user, verificationId: verificationId)));
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {
-            print("verification code: " + verificationId);
+    SmsRequestResponse resModel =
+        SmsRequestResponse.fromJson(json.decode(response.body));
+    requestId = resModel.requestId;
 
-            verificationId = verificationId;
-          });
-    } catch (e) {
-      MessageHandler.showSnackbar(
-          "Failed to Verify Phone Number: $e", context, 6);
-    }
+    // try {
+    //   await _auth.verifyPhoneNumber(
+    //       phoneNumber: phone,
+    //       timeout: const Duration(seconds: timeOut),
+    //       verificationCompleted:
+    //           (PhoneAuthCredential phoneAuthCredential) async {},
+    //       verificationFailed: (FirebaseAuthException authException) {
+    //         print(
+    //             'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+    //         MessageHandler.showSnackbar(
+    //             Tran.of(context)
+    //                 .text("phoneNumberVerificationFailedCode")
+    //                 .replaceAll("@authExceptionCode", "${authException.code}")
+    //                 .replaceAll(
+    //                     "@authExceptionMessage", "${authException.message}"),
+    //             //'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
+    //             context,
+    //             6);
+    //       },
+    //       codeSent: (String vId, [int forceResendingToken]) async {
+    //         verificationId = vId;
+    //         print('Please check your phone for the verification code.' + vId);
+    //         MessageHandler.showSnackbar(
+    //             Tran.of(context).text("checkPhoneNumberVerificationCode"),
+    //             //'Please check your phone for the verification code.',
+    //             context,
+    //             6);
+    //         verificationId = vId;
+    //         print("Before: $verificationId");
+    //       },
+    //       codeAutoRetrievalTimeout: (String verificationId) {
+    //         print("verification code: " + verificationId);
+    //         verificationId = verificationId;
+    //       });
+    // } catch (e) {
+    //   MessageHandler.showSnackbar(
+    //       Tran.of(context).text('failVerifyPhoneNumber').replaceAll("@e", "$e"),
+    //       // "Failed to Verify Phone Number: $e",
+    //       context,
+    //       6);
+    // }
   }
 
   Future<void> submit(BuildContext context) async {
-    var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
-    user.password = pass;
-    await context.read<LoginProvider>().updateUserInfo(context, user);
+    String smsCode = controller.text.trim();
+
+    var url =
+        "$smsUrl/v1/verify?access-token=$smsToken&request_id=$requestId&code=$smsCode";
+    var response = await http.get(
+      Uri.parse(url),
+    );
+
+    if (response.statusCode == 0) {
+      // Invalid PIN
+      MessageHandler.showErrMessage(
+          context, "Invalid PIN", "Your Pin is Invalid!");
+    } else if (response.statusCode == 10) {
+      // PIN Verify Attempt Exceed
+      MessageHandler.showErrMessage(context, "PIN Verify Attempt Exceed",
+          "Your PIN Verify Attempt is Exceed!");
+    } else if (response.statusCode == 11) {
+      // PIN Expired
+      MessageHandler.showErrMessage(
+          context, "PIN Expired", "Your Pin is Expired!");
+    } else {
+      MessageHandler.showErrMessage(
+          context, "PIN Valid", "Your Pin is Success!");
+      var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
+      user.password = pass;
+      await context.read<LoginProvider>().updateUserInfo(context, user);
+    }
+
+    SmsVerifyResponse resModel =
+        SmsVerifyResponse.fromJson(json.decode(response.body));
+
+    //  FirebaseAuth auth = FirebaseAuth.instance;
+    // print(verificationId);
+    // PhoneAuthCredential _phCredential = PhoneAuthProvider.credential(
+    //     verificationId: verificationId, smsCode: smsCode);
+    // EmailAuthCredential _emailCredential =
+    // EmailAuthProvider.credential(email: email, password: password);
+    // FacebookAuthCredential _fbCredential =
+    //     FacebookAuthProvider.credential(accessToken);
+    //         UserCredential euserCredential =
+    // await auth.signInWithPhoneNumber(phoneNumber)
+    // signInWithCredential(_phCredential);
+    // print(_phCredential);
+
+    // auth.
+    // UserCredential userCredential =
+    //     await auth.signInWithCredential(_phCredential);
+    // if (userCredential.user != null) {
+    //   var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
+    //   user.password = pass;
+
+    //   await context.read<LoginProvider>().updateUserInfo(context, user);
+    // }
   }
 }

@@ -11,8 +11,19 @@ class Formatter {
         DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
     return dateFormat.format(date);
   }
+  static String getDates(DateTime date) {
+    var dateFormat =
+    DateFormat("dd-MM-yyyy"); // you can change the format here
+    return dateFormat.format(date);
+  }
 
-  static String balanceUnseenFormat(double num) {
+  static String getHour(DateTime date){
+    var dateFormat =
+    DateFormat("hh:mm a"); // you can change the format here
+    return dateFormat.format(date);
+  }
+
+  static String balanceUnseenFormat(int num) {
     String s = "";
     int length = num.toInt().toString().length;
     for (int i = 0; i < length; i++) s += "*";
@@ -25,10 +36,6 @@ class Formatter {
 
   static String balanceFormatFromDouble(double balance) {
     return NumberFormat.decimalPattern().format(balance);
-  }
-
-  static String balanceTopupFormat(double balance) {
-    return "+" + NumberFormat.decimalPattern().format(balance);
   }
 
   static String formatPhone(String phone) {

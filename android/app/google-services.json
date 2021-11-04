@@ -14,13 +14,37 @@
       },
       "oauth_client": [
         {
+          "client_id": "719786289421-fg69g0n2ss77pgp2v5sur2iodcpvho5a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unifine.epc.left_style",
+            "certificate_hash": "ca2fe9c70b812fe229a211353c628cdc8c2a2a1a"
+          }
+        },
+        {
+          "client_id": "719786289421-hvooo1k5bsnvunnblrkmd8lobsvv0avg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unifine.epc.left_style",
+            "certificate_hash": "fc002471b8f4cca6eb3449c34c37a4a31b8b2d77"
+          }
+        },
+        {
+          "client_id": "719786289421-sgs3e307jvrujlvfgoogojigbru7os6a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unifine.epc.left_style",
+            "certificate_hash": "b6cbc58ee8402d3c61152a2711c69baa02708c84"
+          }
+        },
+        {
           "client_id": "719786289421-3ng988obgo2eumss7jqac7j8qtpeg66f.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCiBAmECvCR0iopl26254_vpalkQ9-94F4"
+          "current_key": "AIzaSyAQPPV2Y3Nq8hKGzcCgtuIKFQJO3cyjWIk"
         }
       ],
       "services": {
@@ -29,6 +53,13 @@
             {
               "client_id": "719786289421-3ng988obgo2eumss7jqac7j8qtpeg66f.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "719786289421-kqt8q595rq3a28fn7vsemn2r824sjt18.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unifine.epc.leftStyle"
+              }
             }
           ]
         }

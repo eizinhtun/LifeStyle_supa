@@ -309,7 +309,7 @@ class _RegisterPageState extends State<RegisterPage> {
           fullName: _nameController.text,
           phone: phone,
           fcmtoken: token,
-          createdDate: DateTime.now());
+          createdDate: Timestamp.fromDate(DateTime.now()));
 
       try {
         await _auth.verifyPhoneNumber(
