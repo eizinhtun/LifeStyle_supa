@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_share_file/flutter_share_file.dart';
+// import 'package:flutter_share/flutter_share.dart';
+import 'package:left_style/widgets/code_painter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -760,6 +762,19 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
       File capturedFile = File(fullPath);
       await capturedFile.writeAsBytes(pngBytes);
       FlutterShareFile.share(fullPath, fileName, ShareFileType.image);
+      // FlutterShareFile.share(dir.path, fileName, ShareFileType.image);
+
+      // await FlutterShare.shareFile(
+      //   title: 'Share',
+      //   text: 'Choose file',
+      //   filePath: fullPath,
+      // );
+
+      // final String dir = (await getApplicationDocumentsDirectory()).path;
+      // final String fullPath = '$dir/${DateTime.now().millisecond}.png';
+      // File capturedFile = File(fullPath);
+      // await capturedFile.writeAsBytes(pngBytes);
+      // print(capturedFile.path);
 
       // Share.shareFiles([fullPath],
       //       subject: "subject",

@@ -1,21 +1,26 @@
 // @dart=2.9
 class Ads {
-  String imageUrl;
+
   String name;
-  int id;
   String content;
+  int id;
   String linkUrl;
   String type;
+  String imageUrl;
 
-  Ads({this.imageUrl, this.name, this.id, this.content, this.linkUrl,this.type});
+  Ads({
+   this.name,  this.content,
+    this.id,this.linkUrl,this.type,this.imageUrl});
 
   Ads.fromJson(Map<String, dynamic> json) {
-    imageUrl = json['imageUrl'];
+
     name = json['name'];
-    id = json['id'];
     content = json['content'];
+    id = json['id'];
     linkUrl = json['linkUrl'];
     type = json['type'];
+    imageUrl = json['imageUrl'];
+
   }
 
   Map<String, dynamic> toJson() {

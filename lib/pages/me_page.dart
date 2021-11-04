@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 import 'change_pin_phone.dart';
 import 'help.dart';
+import 'language_page_test.dart';
 import 'meter_list.dart';
 import 'notification_list.dart';
 
@@ -468,12 +469,34 @@ class _MePageState extends State<MePage> {
                       thickness: 0.5,
                       height: 1,
                     ),
+                    // Container(
+                    //   height: titleHeight,
+                    //   child: ListTile(
+                    //     onTap: () {
+                    //       Navigator.of(context).push(MaterialPageRoute(
+                    //           builder: (context) => LanguagePage()));
+                    //     },
+                    //     leading: Container(
+                    //       width: leadingWidth,
+                    //       alignment: Alignment.centerLeft,
+                    //       child: Icon(
+                    //         Icons.language,
+                    //         size: iconSize,
+                    //         color: mainColor,
+                    //       ),
+                    //     ),
+                    //     title: Text(
+                    //       Tran.of(context).text("languagePage"),
+                    //       style: TextStyle(fontWeight: FontWeight.bold),
+                    //     ),
+                    //   ),
+                    // ),
                     Container(
                       height: titleHeight,
                       child: ListTile(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => LanguagePage()));
+                              builder: (context) => LanguagePageTest()));
                         },
                         leading: Container(
                           width: leadingWidth,
@@ -490,6 +513,7 @@ class _MePageState extends State<MePage> {
                         ),
                       ),
                     ),
+
                     Divider(
                       thickness: 0.5,
                       height: 1,

@@ -68,7 +68,6 @@ Future<Map<String, String>> getHeadersWithOutToken() async {
 }
 
 const Color mainColor = Color(0xFFfa2e73);
-
 const String userCollection = "users";
 const String meterCollection = "meters";
 const String userUploadUnitCollection = "user_upload_unit";
@@ -80,6 +79,8 @@ const String manyTransaction = "manyTransition";
 const String notifications = "notifications";
 const String testCollection = "tests";
 const String paymentMethodCollection = "payment_method";
+const String languageCollection= "languages";
+const String adsCollection="ads";
 
 const String notilist = "notilist";
 const String myTransactions = "myTransactions";

@@ -198,6 +198,13 @@
             </list>
           </value>
         </entry>
+        <entry key="dots_indicator">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/dots_indicator-2.0.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="fading_edge_scrollview">
           <value>
             <list>
@@ -362,7 +369,7 @@
         <entry key="flutter_facebook_auth">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_facebook_auth-3.5.3/lib" />
+              <option value="$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_facebook_auth-3.5.4/lib" />
             </list>
           </value>
         </entry>
@@ -461,6 +468,13 @@
           <value>
             <list>
               <option value="$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_screenutil-5.0.0+2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="flutter_share">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_share-2.0.0/lib" />
             </list>
           </value>
         </entry>
@@ -688,13 +702,6 @@
             </list>
           </value>
         </entry>
-        <entry key="otp_autofill">
-          <value>
-            <list>
-              <option value="$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/otp_autofill-1.1.0/lib" />
-            </list>
-          </value>
-        </entry>
         <entry key="otp_text_field">
           <value>
             <list>
@@ -797,13 +804,6 @@
           <value>
             <list>
               <option value="$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/pin_code_fields-7.3.0/lib" />
-            </list>
-          </value>
-        </entry>
-        <entry key="pin_input_text_field">
-          <value>
-            <list>
-              <option value="$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/pin_input_text_field-4.1.1/lib" />
             </list>
           </value>
         </entry>
@@ -923,13 +923,6 @@
           <value>
             <list>
               <option value="$PROJECT_DIR$/../applications/flutter/bin/cache/pkg/sky_engine/lib" />
-            </list>
-          </value>
-        </entry>
-        <entry key="sms_autofill">
-          <value>
-            <list>
-              <option value="$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/sms_autofill-2.2.0/lib" />
             </list>
           </value>
         </entry>
@@ -1230,6 +1223,7 @@
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/curved_navigation_bar-1.0.1/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/dbcrypt-1.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/dbus-0.5.6/lib" />
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/dots_indicator-2.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/fading_edge_scrollview-2.0.1/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/ffi-1.1.2/lib" />
@@ -1252,7 +1246,7 @@
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_blurhash-0.6.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_cache_manager-3.1.2/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_dash-0.0.1/lib" />
-      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_facebook_auth-3.5.3/lib" />
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_facebook_auth-3.5.4/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_facebook_auth_platform_interface-2.7.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_facebook_auth_web-2.6.0+2/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_html-2.1.5/lib" />
@@ -1266,6 +1260,7 @@
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_native_splash-1.2.3/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.4/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_screenutil-5.0.0+2/lib" />
+      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_share-2.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_spinkit-5.1.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_svg-0.22.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/font_awesome_flutter-9.2.0/lib" />
@@ -1296,7 +1291,6 @@
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/numerus-1.1.1/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/octo_image-1.0.0+1/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/optimized_cached_image-2.0.1/lib" />
-      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/otp_autofill-1.1.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/otp_text_field-1.1.1/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/path_drawing-0.5.1+1/lib" />
@@ -1312,7 +1306,6 @@
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/petitparser-4.1.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/photo_view-0.13.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/pin_code_fields-7.3.0/lib" />
-      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/pin_input_text_field-4.1.1/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/platform-3.0.2/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/plugin_platform_interface-2.0.2/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/process-4.2.3/lib" />
@@ -1329,7 +1322,6 @@
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_platform_interface-2.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_web-2.0.2/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_windows-2.0.2/lib" />
-      <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/sms_autofill-2.2.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.1/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/sprintf-6.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../applications/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.0+4/lib" />

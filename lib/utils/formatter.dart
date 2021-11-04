@@ -23,7 +23,7 @@ class Formatter {
     return dateFormat.format(date);
   }
 
-  static String balanceUnseenFormat(double num) {
+  static String balanceUnseenFormat(int num) {
     String s = "";
     int length = num.toInt().toString().length;
     for (int i = 0; i < length; i++) s += "*";
