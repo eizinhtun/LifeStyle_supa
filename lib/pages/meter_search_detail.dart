@@ -11,6 +11,7 @@ import 'package:left_style/models/Meter.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:flutter_dash/flutter_dash.dart';
+import 'package:location/location.dart';
 import 'map_screen.dart';
 
 class MeterSearchDetailScreen extends StatelessWidget {
@@ -41,10 +42,12 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
 
   bool isExist = true;
   bool _isLoading = true;
+  Location location;
 
   @override
   void initState() {
     super.initState();
+    // location.
     checkExist();
   }
 

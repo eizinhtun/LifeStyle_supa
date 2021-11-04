@@ -9,8 +9,8 @@ import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/models/user_model.dart';
-import 'package:left_style/pages/language_page.dart';
 import 'package:left_style/pages/setting.dart';
+import 'package:left_style/pages/text_from_image.dart';
 import 'package:left_style/pages/user_profile_edit.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/utils/formatter.dart';
@@ -357,6 +357,39 @@ class _MePageState extends State<MePage> {
                         ),
                         title: Text(
                           Tran.of(context).text("changePin"),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                          color: Colors.black26,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 1,
+                      height: 1,
+                    ),
+
+                    Container(
+                      height: titleHeight,
+                      child: ListTile(
+                        onTap: () {
+                          // FirebaseAuth.instance.
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => TextFromImage()));
+                        },
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.lock,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
+                        ),
+                        title: Text(
+                          "Text From Image",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(

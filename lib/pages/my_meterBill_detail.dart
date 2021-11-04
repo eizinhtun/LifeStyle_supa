@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_share_file/flutter_share_file.dart';
 // import 'package:flutter_share/flutter_share.dart';
-import 'package:left_style/widgets/code_painter.dart';
+// import 'package:left_style/widgets/code_painter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';

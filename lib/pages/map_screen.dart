@@ -23,6 +23,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     initialMap();
+
     super.initState();
   }
 

@@ -16,7 +16,6 @@ import 'package:left_style/pages/user_profile.dart';
 import 'package:left_style/providers/language_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/providers/wallet_provider.dart';
-// import 'package:left_style/text_from_image/text_from_img.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'datas/constants.dart';
@@ -54,7 +53,6 @@ void main() async {
     ChangeNotifierProvider(create: (_) => WalletProvider()),
     ChangeNotifierProvider(create: (_) => MeterBillProvider()),
     ChangeNotifierProvider(create: (_) => NotiProvider()),
-    // ChangeNotifierProvider(create: (_) => FirebaseCRUDProvider()),
   ], child: MyApp()));
 }
 
