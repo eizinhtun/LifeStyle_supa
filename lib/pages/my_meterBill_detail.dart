@@ -7,7 +7,7 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_share_file/flutter_share_file.dart';
 import 'package:left_style/widgets/code_Invoicepainter.dart';
 // import 'package:flutter_share/flutter_share.dart';
-import 'package:left_style/widgets/code_painter.dart';
+// import 'package:left_style/widgets/code_painter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -667,7 +667,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                           right: 0,
                           child: IconButton(
                             onPressed: () async {
-                               await shareImage(context);
+                              await shareImage(context);
                               //await shareDemoImage(context);
                             },
                             icon: Icon(
@@ -747,11 +747,11 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
   final GlobalKey _globalKey = GlobalKey();
   String meterNo = "";
 
-  Future<void> shareDemoImage(BuildContext context)async{
-   // await Share.share("Hello");
+  Future<void> shareDemoImage(BuildContext context) async {
+    // await Share.share("Hello");
     if (Platform.isAndroid) {
       var urlImg = 'https://i.ytimg.com/vi/fq4N0hgOWzU/maxresdefault.jpg';
-      var url= Uri.parse(urlImg);
+      var url = Uri.parse(urlImg);
       var response = await http.get(url);
       final documentDirectory = (await getExternalStorageDirectory()).path;
       File imgFile = new File('$documentDirectory/flutter.png');
@@ -762,7 +762,6 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
       //     text: 'Hello, check your share files!',
       //     sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
     } else {}
-
   }
 
   Future<Uint8List> removeWhiteBackground(Uint8List bytes) async {
@@ -771,19 +770,19 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
     var newPng = Img.encodePng(transparentImage);
     return newPng;
   }
-  Future<Img.Image> colorTransparent(Img.Image src, int red, int green, int blue) async {
+
+  Future<Img.Image> colorTransparent(
+      Img.Image src, int red, int green, int blue) async {
     var pixels = src.getBytes();
     for (int i = 0, len = pixels.length; i < len; i += 4) {
-      if(pixels[i] == red
-          && pixels[i+1] == green
-          && pixels[i+2] == blue
-      ) {
+      if (pixels[i] == red && pixels[i + 1] == green && pixels[i + 2] == blue) {
         pixels[i + 3] = 0;
       }
     }
 
     return src;
   }
+
   Future<void> shareImage(BuildContext context) async {
     String fileName = "MeterBill-$meterNo.png";
     final RenderBox box = context.findRenderObject() as RenderBox;
@@ -797,9 +796,6 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
           _globalKey.currentContext.findRenderObject();
       final ui.Image image = await boundary.toImage();
 
-
-
-
       // final ByteData byteData =
       //     await image.toByteData(format: ui.ImageByteFormat.png);
 
@@ -810,7 +806,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
       //   color: Color(0xff000000),
       //   emptyColor: Color(0xffffffff),
       // ).toImage(300);
-      Size size=new Size(image.width.toDouble(),image.height.toDouble());
+      Size size = new Size(image.width.toDouble(), image.height.toDouble());
       final byteData = await CodeInvoicePainter(qrImage: image, margin: 2)
           .toImageData(size, format: ui.ImageByteFormat.png);
 
@@ -821,7 +817,8 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
       File capturedFile = File(fullPath);
       await capturedFile.writeAsBytes(pngBytes);
 
-      await Share.shareFiles([fullPath],text: "My Meter Lists",
+      await Share.shareFiles([fullPath],
+          text: "My Meter Lists",
           sharePositionOrigin: box.localToGlobal(Offset.infinite) & box.size);
       //FlutterShareFile.share(fullPath, fileName, ShareFileType.image);
       // FlutterShareFile.share(dir.path, fileName, ShareFileType.image);

@@ -1,8 +1,10 @@
 // @dart=2.9
 import 'dart:async';
+import 'dart:convert';
 import 'package:dbcrypt/dbcrypt.dart';
-import 'package:gallery_saver/files.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/models/sms_request_response.dart';
+import 'package:left_style/models/sms_verify_response.dart';
 import 'package:provider/provider.dart';
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -328,18 +330,23 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
   }
 
   String verificationId = "";
+  int requestId;
   Future<void> requestOTP(String phone) async {
-    String templateString = Tran.of(context).text("sms_template");
-    templateString.replaceAll('@brand_name', brandName);
-    templateString.replaceAll('@code', '{code}');
+    String templateString =
+        "{brand_name} အတွက် အတည်ပြုရန်ကုဒ်နံပါတ်မှာ {code} ဖြစ်ပါတယ်";
+    // String templateString = Tran.of(context).text("sms_template");
+    // templateString.replaceAll('@brand_name', brandName);
+    // templateString.replaceAll('@code', '{code}');
     var url =
-        "$smsUrl/v1/request?access-token=$smsToken&number=$phone&brand_name=$brandName&code_length=$codeLength&sender_name=$brandName&template=${Tran.of(context).text("sms_template")}";
-
-    http.post(
+        "$smsUrl/v1/request?access-token=$smsToken&number=$phone&brand_name=$brandName&code_length=$codeLength&sender_name=$brandName&template=$templateString";
+//  body: {"to": phone, "message": "Hello World", "sender": "SMSPoh"},
+    var response = await http.get(
       Uri.parse(url),
-      body: {"to": phone, "message": "Hello World", "sender": "SMSPoh"},
     );
-    // http.post(url)
+
+    SmsRequestResponse resModel =
+        SmsRequestResponse.fromJson(json.decode(response.body));
+    requestId = resModel.requestId;
 
     // try {
     //   await _auth.verifyPhoneNumber(
@@ -385,12 +392,41 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
   }
 
   Future<void> submit(BuildContext context) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
     String smsCode = controller.text.trim();
 
-    print(verificationId);
-    PhoneAuthCredential _phCredential = PhoneAuthProvider.credential(
-        verificationId: verificationId, smsCode: smsCode);
+    var url =
+        "$smsUrl/v1/verify?access-token=$smsToken&request_id=$requestId&code=$smsCode";
+    var response = await http.get(
+      Uri.parse(url),
+    );
+
+    if (response.statusCode == 0) {
+      // Invalid PIN
+      MessageHandler.showErrMessage(
+          context, "Invalid PIN", "Your Pin is Invalid!");
+    } else if (response.statusCode == 10) {
+      // PIN Verify Attempt Exceed
+      MessageHandler.showErrMessage(context, "PIN Verify Attempt Exceed",
+          "Your PIN Verify Attempt is Exceed!");
+    } else if (response.statusCode == 11) {
+      // PIN Expired
+      MessageHandler.showErrMessage(
+          context, "PIN Expired", "Your Pin is Expired!");
+    } else {
+      MessageHandler.showErrMessage(
+          context, "PIN Valid", "Your Pin is Success!");
+      var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
+      user.password = pass;
+      await context.read<LoginProvider>().updateUserInfo(context, user);
+    }
+
+    SmsVerifyResponse resModel =
+        SmsVerifyResponse.fromJson(json.decode(response.body));
+
+    //  FirebaseAuth auth = FirebaseAuth.instance;
+    // print(verificationId);
+    // PhoneAuthCredential _phCredential = PhoneAuthProvider.credential(
+    //     verificationId: verificationId, smsCode: smsCode);
     // EmailAuthCredential _emailCredential =
     // EmailAuthProvider.credential(email: email, password: password);
     // FacebookAuthCredential _fbCredential =
@@ -398,7 +434,7 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
     //         UserCredential euserCredential =
     // await auth.signInWithPhoneNumber(phoneNumber)
     // signInWithCredential(_phCredential);
-    print(_phCredential);
+    // print(_phCredential);
 
     // auth.
     // UserCredential userCredential =

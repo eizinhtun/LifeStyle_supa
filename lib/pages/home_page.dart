@@ -1,7 +1,5 @@
 // @dart=2.9
 import 'package:barcode_scan_fix/barcode_scan.dart' as bar;
-import 'package:barcode_scan_fix/barcode_scan.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,8 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Ads.dart';
@@ -324,11 +320,11 @@ class _HomePageState extends State<HomePage> {
                               String uid = FirebaseAuth.instance.currentUser.uid
                                   .toString();
 
-                              await meterRef
-                                  .doc(uid)
-                                  .collection(userMeterCollection)
-                                  .doc("7324392739")
-                                  .set(jsonString);
+                              // await meterRef
+                              //     .doc(uid)
+                              //     .collection(userMeterCollection)
+                              //     .doc("7324392739")
+                              //     .set(jsonString);
                             }
                           },
                           child: Text(
@@ -605,22 +601,6 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  Future<List<RecognizedText>> getText(String path) async {
-    final inputImage = InputImage.fromFilePath(path);
-    final textDetector = GoogleMlKit.vision.textDetector();
-    final RecognisedText recognisedText =
-        await textDetector.processImage(inputImage);
-
-    List<RecognizedText> recognizedList = [];
-
-    for (TextBlock block in recognisedText.blocks) {
-      recognizedList.add(
-          RecognizedText(lines: block.lines, block: block.text.toLowerCase()));
-    }
-
-    return recognizedList;
-  }
-
   void _launchURL(String _url) async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
@@ -743,28 +723,28 @@ class _HomePageState extends State<HomePage> {
   Future<void> uploadUnit(BuildContext context) async {
     ///String s = await _showAlertDialog(context);
     //if (s != null) {
-      try {
-        String barcode = await bar.BarcodeScanner.scan();
-        setState(() => this.barcode = barcode);
+    try {
+      String barcode = await bar.BarcodeScanner.scan();
+      setState(() => this.barcode = barcode);
 
-        if (barcode != null) {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => UploadMyReadScreen(customerId: barcode)));
-        }
-      } on PlatformException catch (e) {
-        if (e.code == bar.BarcodeScanner.CameraAccessDenied) {
-          setState(() {
-            this.barcode = 'The user did not grant the camera permission!';
-          });
-        } else {
-          setState(() => this.barcode = 'Unknown error: $e');
-        }
-      } on FormatException {
-        setState(() => this.barcode =
-            'null (User returned using the "back"-button before scanning anything. Result)');
-      } catch (e) {
+      if (barcode != null) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => UploadMyReadScreen(customerId: barcode)));
+      }
+    } on PlatformException catch (e) {
+      if (e.code == bar.BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          this.barcode = 'The user did not grant the camera permission!';
+        });
+      } else {
         setState(() => this.barcode = 'Unknown error: $e');
       }
+    } on FormatException {
+      setState(() => this.barcode =
+          'null (User returned using the "back"-button before scanning anything. Result)');
+    } catch (e) {
+      setState(() => this.barcode = 'Unknown error: $e');
+    }
     //}
     // String codeSanner = await BarcodeScanner.scan().then((value) {
     //   if (value != null) {
@@ -785,7 +765,6 @@ class _HomePageState extends State<HomePage> {
           String meterBarcode = await bar.BarcodeScanner.scan();
           print(meterBarcode);
           setState(() => this.meterBarcode = meterBarcode);
-
 
           if (meterBarcode != null) {
             Navigator.of(context).push(MaterialPageRoute(
@@ -843,85 +822,3 @@ class HomeItem {
 
   HomeItem({this.title, this.iconData, this.onPressed, this.action});
 }
-
-class RecognizedText {
-  String block;
-  List<TextLine> lines;
-
-  RecognizedText({@required this.lines, this.block});
-}
-
-const jsonString = {
-  "AllowedUnit": 0,
-  "Ampere": "10/30",
-  "ApplyDate": null,
-  "AvageUseUnit": 99,
-  "BillNeedModity": false,
-  "BinderId": 5,
-  "Block": null,
-  "BranchId": "1",
-  "BusinessNo": "",
-  "CategoryId": 1,
-  "CategoryName": "ရိုးရိုး",
-  "ChargePerUnit": 35,
-  "ConsumerName": "ဦးအိုက်နပ်",
-  "ConsumerType": "P",
-  "CoverSeal": null,
-  "CreditAmount": 79040,
-  "CreditReason": null,
-  "CreditUnit": 0,
-  "CurrencyType": "ks",
-  "CustomerId": "7324392739",
-  "DueDate": "2016-07-28T15:15:28.307",
-  "ExcelFileName": null,
-  "FeederID": 3,
-  "GroupId": 2,
-  "HorsePower": 0,
-  "HorsePowerCost": 0,
-  "HouseNo": "အမှတ်-၂၀/၂၂၊ တက္ကသိုလ်ရိပ်သာလမ်း",
-  "Id": 2,
-  "InsertDate": "2016-07-28T15:15:28.307",
-  "InstallPerson": null,
-  "IsShowDebt": true,
-  "IssueDate": null,
-  "JoinDate": "23-12-2019",
-  "LastDate": "2016-07-28T15:15:28.307",
-  "LastMonthRedUnit": null,
-  "LastReadUnit": 13151,
-  "Latitude": "22.9534015",
-  "LayerAmount": null,
-  "LayerDescription": null,
-  "LayerRate": null,
-  "LedgerId": "BH1",
-  "LedgerPostFix": "01/03",
-  "Longitude": "97.7405598",
-  "MainLedgerId": 1,
-  "MainLedgerTitle": "2110",
-  "MaintainenceCost": 500,
-  "ManufacturerNo": "10/30",
-  "MeterNo": "YA-046496",
-  "MeterSerial": "",
-  "Mobile": "09123456789",
-  "Multiplier": "1",
-  "NoLayer": false,
-  "NoOfRoom": 1,
-  "OldAccount": null,
-  "OutDemand": null,
-  "Percentage": 0,
-  "PoleNo": null,
-  "Rate": "1 ",
-  "ReadDate": "2016-07-28T15:15:28.307",
-  "RequiredMatchGPS": false,
-  "Street": "နယ်မြေ(၁)",
-  "StreetLightCost": null,
-  "TerminalSeal": null,
-  "TransformerID": 49,
-  "TspEng": null,
-  "TspMM": null,
-  "TwinLeftSeal": null,
-  "TwinRightSeal": null,
-  "Voltage": "230",
-  "WattLoad": "",
-  "dueDate": "2016-07-28T15:15:28.307",
-  "meterBill": 150000
-};
