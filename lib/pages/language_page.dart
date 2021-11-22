@@ -42,7 +42,6 @@ class _LanguagePageState extends State<LanguagePage> {
               height: height,
               child: ListTile(
                 onTap: () async {
-
                   await context
                       .read<LanguageProvider>()
                       .changeLang(context, "my")
@@ -54,7 +53,6 @@ class _LanguagePageState extends State<LanguagePage> {
                   "မြန်မာ",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-
               ),
             ),
             Divider(

@@ -32,7 +32,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final db = FirebaseFirestore.instance;
 
-  List<String> customerIds = ["7324392739"];
+  List<String> customerIds = ["7854286121"];
 
   bool _isLoading = true;
 
@@ -92,7 +92,12 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
           : StreamBuilder<QuerySnapshot>(
               stream: db
                   .collection(meterBillsCollection)
-                  .where(FieldPath.documentId, whereIn: customerIds)
+                  .where("customerId", isEqualTo: customerIds.first
+                      // isGreaterThanOrEqualTo: customerIds.first
+                      //FieldPath.documentId,
+                      // arrayContainsAny: customerIds,
+                      // whereIn: customerIds
+                      )
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -100,6 +105,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                     child: CircularProgressIndicator(),
                   );
                 } else {
+                  print(snapshot.data.docs.length);
                   return Container(
                     padding:
                         EdgeInsets.only(top: 8, bottom: 8, left: 8, right: 8),
@@ -108,6 +114,9 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                         MeterBill bill = MeterBill.fromJson(doc.data());
                         // MyReadUnit item = MyReadUnit.fromJson(doc.data());
                         print(bill.readImageUrl);
+                        print(bill.isPaid);
+                        print(bill.readImageUrl != null &&
+                            bill.readImageUrl != "");
                         return InkWell(
                           onTap: () async {
                             Navigator.push(
@@ -144,15 +153,20 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                           ),
                                           width: 60,
                                           height: 60,
-                                          child: new CircleAvatar(
-                                            radius: 100.0,
-                                            backgroundImage:
-                                                CachedNetworkImageProvider(
-                                              bill.readImageUrl,
-                                            ),
-
-                                            // NetworkImage(bill.readImageUrl),
-                                          ),
+                                          child: bill.readImageUrl != null &&
+                                                  bill.readImageUrl != ""
+                                              ? CircleAvatar(
+                                                  radius: 100.0,
+                                                  backgroundImage:
+                                                      CachedNetworkImageProvider(
+                                                    bill.readImageUrl,
+                                                  ),
+                                                )
+                                              : CircleAvatar(
+                                                  radius: 100.0,
+                                                  backgroundColor:
+                                                      Colors.pink[200],
+                                                ),
                                         ),
                                         SizedBox(
                                           width: 20,
@@ -165,10 +179,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                               padding: EdgeInsets.only(top: 10),
                                               alignment: Alignment.topLeft,
                                               child: Text(
-                                                "No:" +
-                                                    bill.billNo +
-                                                    " ," +
-                                                    bill.meterNo,
+                                                "No:${bill.billNo},${bill.meterNo}",
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
@@ -186,17 +197,13 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                           .spaceAround,
                                                   children: [
                                                     Text(
-                                                      bill.monthName + "  ",
+                                                      "${bill.monthName}  ",
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold),
                                                     ),
-                                                    Text(bill.unitsToPay
-                                                                .toString() +
-                                                            " Unit  " +
-                                                            bill.totalCost
-                                                                .toString() +
-                                                            " Ks"
+                                                    Text(
+                                                        "${bill.unitsToPay.toString()} Unit  ${bill.totalCost.toString()} Ks"
                                                         // bill.readUnit
                                                         // NumberFormat('#,###,000').format(item.readUnit)
                                                         ),
@@ -206,9 +213,8 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                             ),
                                             Container(
                                               padding: EdgeInsets.only(top: 5),
-                                              child: Text(bill.consumerName +
-                                                      " - " +
-                                                      bill.state
+                                              child: Text(
+                                                  "${bill.consumerName} - ${bill.state}"
                                                   // bill.readUnit
                                                   // NumberFormat('#,###,000').format(item.readUnit)
                                                   ),
@@ -271,11 +277,17 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                               alignment: Alignment.centerRight,
                                               child: Text(
                                                 bill.isPaid
-                                                    ? bill.payDate
-                                                    : Formatter.getDate(new DateTime
+                                                    ? Formatter.getDate(new DateTime
                                                             .fromMillisecondsSinceEpoch(
-                                                        bill.readDate
-                                                            .millisecondsSinceEpoch)),
+                                                        bill.payDate
+                                                            .millisecondsSinceEpoch))
+                                                    // bill.payDate
+                                                    : Formatter.getDate(
+                                                        new DateTime
+                                                                .fromMillisecondsSinceEpoch(
+                                                            bill.readDate
+                                                                .millisecondsSinceEpoch),
+                                                      ),
                                                 textAlign: TextAlign.right,
                                                 style: TextStyle(
                                                     fontStyle: FontStyle.italic,

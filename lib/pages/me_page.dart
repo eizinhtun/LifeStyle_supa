@@ -9,7 +9,9 @@ import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/models/user_model.dart';
+import 'package:left_style/pages/current_location.dart';
 import 'package:left_style/pages/setting.dart';
+import 'package:left_style/pages/text_from_image_v2.dart';
 import 'package:left_style/pages/text_from_image.dart';
 import 'package:left_style/pages/user_profile_edit.dart';
 import 'package:left_style/providers/noti_provider.dart';
@@ -19,7 +21,7 @@ import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 import 'change_pin_phone.dart';
 import 'help.dart';
-import 'language_page_test.dart';
+import 'language_page.dart';
 import 'meter_list.dart';
 import 'notification_list.dart';
 
@@ -85,9 +87,12 @@ class _MePageState extends State<MePage> {
   double titleHeight = 50;
   double leadingWidth = 50;
   double iconSize = 30;
+  String initialName = "";
+
   @override
   Widget build(BuildContext context) {
     print("_isSigningOut : $_isSigningOut");
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -125,6 +130,10 @@ class _MePageState extends State<MePage> {
                         } else if (snapshot.hasData) {
                           UserModel _user =
                               UserModel.fromJson(snapshot.data.data());
+                          if (_user.fullName != null && _user.fullName == "") {
+                            initialName =
+                                _user.fullName.substring(0, 1).toUpperCase();
+                          }
                           return InkWell(
                             onTap: () {
                               Navigator.of(context).push(
@@ -150,9 +159,7 @@ class _MePageState extends State<MePage> {
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
                                         UserInfoScreenPhoto(
-                                          name: _user.fullName
-                                              .substring(0, 1)
-                                              .toUpperCase(),
+                                          name: initialName,
                                           imageurl: _user.photoUrl,
                                           width: 80,
                                           height: 80,
@@ -375,21 +382,86 @@ class _MePageState extends State<MePage> {
                       height: titleHeight,
                       child: ListTile(
                         onTap: () {
-                          // FirebaseAuth.instance.
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => TextFromImage()));
+                            builder: (context) => TextFromImage(),
+                          ));
                         },
                         leading: Container(
                           width: leadingWidth,
                           alignment: Alignment.centerLeft,
                           child: Icon(
-                            Icons.lock,
+                            Icons.image,
                             size: iconSize,
                             color: mainColor,
                           ),
                         ),
                         title: Text(
                           "Text From Image",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                          color: Colors.black26,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 1,
+                      height: 1,
+                    ),
+                    Container(
+                      height: titleHeight,
+                      child: ListTile(
+                        onTap: () {
+                          // FirebaseAuth.instance.
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => TextFromImageV2(),
+                          ));
+                        },
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.image,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
+                        ),
+                        title: Text(
+                          "Text From Image V2",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                          color: Colors.black26,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 1,
+                      height: 1,
+                    ),
+                    Container(
+                      height: titleHeight,
+                      child: ListTile(
+                        onTap: () {
+                          // FirebaseAuth.instance.
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => CurrentLocation()));
+                        },
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.location_city,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
+                        ),
+                        title: Text(
+                          "Current Location",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
@@ -529,7 +601,7 @@ class _MePageState extends State<MePage> {
                       child: ListTile(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => LanguagePageTest()));
+                              builder: (context) => LanguagePage()));
                         },
                         leading: Container(
                           width: leadingWidth,

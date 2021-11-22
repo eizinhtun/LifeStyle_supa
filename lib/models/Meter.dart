@@ -1,21 +1,19 @@
 // @dart=2.9
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Meter {
+  String meterName;
   bool autoPay;
   bool selfScan;
   bool requiredMatchGPS;
   String latitude;
   String longitude;
-  Timestamp joinDate;
-  Timestamp insertDate;
-  Timestamp lastDate;
-  Timestamp dueDate;
-  Timestamp readDate;
-  Null applyDate;
-  Null issueDate;
-  Null creditReason;
+  String joinDate;
+  String insertDate;
+  String lastDate;
+  String dueDate;
+  String readDate;
+  String applyDate;
+  String issueDate;
+  String creditReason;
   int creditUnit;
   int creditAmount;
   String mainLedgerTitle;
@@ -50,7 +48,7 @@ class Meter {
   double allowedUnit;
   String rate;
   String currencyType;
-  Null excelFileName;
+  String excelFileName;
   bool isShowDebt;
   bool noLayer;
   int noOfRoom;
@@ -59,27 +57,28 @@ class Meter {
   String layerAmount;
   int streetLightCost;
   String oldAccount;
-  Null poleNo;
-  Null tspEng;
-  Null tspMM;
+  String poleNo;
+  String tspEng;
+  String tspMM;
   String customerId;
   int avageUseUnit;
   int lastReadUnit;
-  Null lastMonthRedUnit;
+  String lastMonthRedUnit;
 
-  Null installPerson;
-  // double meterBill;
+  String installPerson;
+  double meterBill;
   String branchId;
   String categoryName;
-  Null block;
+  String block;
   bool outDemand;
-  Null terminalSeal;
-  Null coverSeal;
-  Null twinRightSeal;
-  Null twinLeftSeal;
+  String terminalSeal;
+  String coverSeal;
+  String twinRightSeal;
+  String twinLeftSeal;
 
   Meter(
-      {this.autoPay,
+      {this.meterName,
+      this.autoPay,
       this.selfScan,
       this.requiredMatchGPS,
       this.latitude,
@@ -154,6 +153,7 @@ class Meter {
       this.twinLeftSeal});
 
   Meter.fromJson(Map<String, dynamic> json) {
+    meterName = json['meterName'] ?? "";
     autoPay = json['AutoPay'];
     selfScan = json['SelfScan'];
     requiredMatchGPS = json['RequiredMatchGPS'];
@@ -171,8 +171,8 @@ class Meter {
     houseNo = json['HouseNo'];
     street = json['Street'];
     transformerID = json['TransformerID'];
-    // categoryId = json['CategoryId'];
-    // mainLedgerId = json['MainLedgerId'];
+    categoryId = json['CategoryId'];
+    mainLedgerId = json['MainLedgerId'];
     ledgerId = json['LedgerId'];
     ledgerPostFix = json['LedgerPostFix'];
     feederID = json['FeederID'];
@@ -192,7 +192,7 @@ class Meter {
     maintainenceCost = double.parse(json['MaintainenceCost'].toString());
     horsePowerCost = double.parse(json['HorsePowerCost'].toString());
     allowedUnit = double.parse(json['AllowedUnit'].toString());
-    // meterBill = double.parse(json['meterBill'].toString());
+    meterBill = double.parse(json['meterBill'].toString());
     chargePerUnit = json['ChargePerUnit'];
 
     rate = json['Rate'];
@@ -202,36 +202,37 @@ class Meter {
     isShowDebt = json['IsShowDebt'];
     noLayer = json['NoLayer'];
     noOfRoom = json['NoOfRoom'];
-    // layerDescription = json['LayerDescription'];
-    // layerRate = json['LayerRate'];
-    // layerAmount = json['LayerAmount'];
+    layerDescription = json['LayerDescription'];
+    layerRate = json['LayerRate'];
+    layerAmount = json['LayerAmount'];
     lastDate = json['LastDate'];
     dueDate = json['DueDate'];
     readDate = json['ReadDate'];
-    // streetLightCost = json['StreetLightCost'];
-    // oldAccount = json['OldAccount'];
-    // poleNo = json['PoleNo'];
-    // tspEng = json['TspEng'];
-    // tspMM = json['TspMM'];
+    streetLightCost = json['StreetLightCost'];
+    oldAccount = json['OldAccount'];
+    poleNo = json['PoleNo'];
+    tspEng = json['TspEng'];
+    tspMM = json['TspMM'];
     customerId = json['CustomerId'];
     avageUseUnit = json['AvageUseUnit'];
     lastReadUnit = json['LastReadUnit'];
     lastMonthRedUnit = json['LastMonthRedUnit'];
-    // applyDate = json['ApplyDate'];
-    // issueDate = json['IssueDate'];
-    //installPerson = json['InstallPerson'];
+    applyDate = json['ApplyDate'];
+    issueDate = json['IssueDate'];
+    installPerson = json['InstallPerson'];
     branchId = json['BranchId'];
     categoryName = json['CategoryName'];
     block = json['Block'];
-    //outDemand = json['OutDemand'];
-    //terminalSeal = json['TerminalSeal'];
-    //coverSeal = json['CoverSeal'];
-    // twinRightSeal = json['TwinRightSeal'];
-    //twinLeftSeal = json['TwinLeftSeal'];
+    outDemand = json['OutDemand'];
+    terminalSeal = json['TerminalSeal'];
+    coverSeal = json['CoverSeal'];
+    twinRightSeal = json['TwinRightSeal'];
+    twinLeftSeal = json['TwinLeftSeal'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['meterName'] = this.meterName;
     data['AutoPay'] = this.autoPay;
     data['SelfScan'] = this.selfScan;
     data['RequiredMatchGPS'] = this.requiredMatchGPS;

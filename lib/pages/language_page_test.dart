@@ -49,13 +49,11 @@ class _LanguagePageTestState extends State<LanguagePageTest> {
                       .then((value) {
                     Navigator.pop(context);
                   });
-
                 },
                 title: Text(
                   "မြန်မာ",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-
               ),
             ),
             Divider(
@@ -72,13 +70,13 @@ class _LanguagePageTestState extends State<LanguagePageTest> {
                       .then((value) {
                     Navigator.pop(context);
                   });
-
                 },
                 title: Text(
                   "English",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                trailing: isSelected? Icon(Icons.check,color: Colors.green):null,
+                trailing:
+                    isSelected ? Icon(Icons.check, color: Colors.green) : null,
               ),
             ),
             Divider(
@@ -95,7 +93,6 @@ class _LanguagePageTestState extends State<LanguagePageTest> {
                       .then((value) {
                     Navigator.pop(context);
                   });
-
                 },
                 title: Text(
                   "中文",

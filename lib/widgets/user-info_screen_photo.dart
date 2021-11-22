@@ -30,8 +30,8 @@ class UserInfoScreenPhoto extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => CommonExampleRouteWrapper(
-                      imageProvider: CachedNetworkImageProvider(imageurl),
-                      ),
+                    imageProvider: CachedNetworkImageProvider(imageurl),
+                  ),
                 ),
               );
             }

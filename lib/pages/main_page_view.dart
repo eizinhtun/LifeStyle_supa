@@ -46,11 +46,11 @@ class _HomePageDetailState extends State<HomePageDetail> {
   void initState() {
     super.initState();
     getData();
-    if (!kIsWeb) {
-      registerNotification(context);
+    // if (!kIsWeb) {
+    //   registerNotification(context);
 
-      initPlatformState();
-    }
+    //   initPlatformState();
+    // }
   }
 
   String _appBadgeSupported = 'Unknown';
@@ -88,8 +88,9 @@ class _HomePageDetailState extends State<HomePageDetail> {
       FlutterAppBadger.removeBadge();
     }
     context.read<NotiProvider>().updateNotiCount(context, SystemData.notiCount);
-
-    setState(() {});
+    // if (mounted) {
+    //   setState(() {});
+    // }
   }
 
   @override

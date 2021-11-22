@@ -1,10 +1,13 @@
 // @dart=2.9
+// import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:left_style/models/recognized_text.dart';
+// import 'package:left_style/widgets/my_image_cropper.dart';
+// import 'package:left_style/widgets/my_image_cropper_options.dart';
 
 class TextFromImage extends StatefulWidget {
   const TextFromImage({Key key}) : super(key: key);
@@ -19,7 +22,6 @@ class _TextFromImageState extends State<TextFromImage> {
   File imageFile;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     state = ImageState.free;
   }
@@ -28,84 +30,61 @@ class _TextFromImageState extends State<TextFromImage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Image recongnition'),
-        centerTitle: true,
+        title: Text("Text From Image"),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(
-            height: 25.0,
+          // Center(
+          //   child: imageFile != null
+          //       ? Image.file(
+          //           imageFile,
+          //           scale: 1.0,
+          //           width: 50,
+          //           height: 50,
+          //           fit: BoxFit.fill,
+          //         )
+          //       : Container(),
+          // ),
+          Column(
+            children: tlist.map((t) => Text(t.block)).toList(),
           ),
-          imagePath != null && imagePath != ""
-              ? Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 4.0),
-                        child: Image.file(
-                          File(imagePath),
-                          width: 350,
-                          height: 400,
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
-                      ElevatedButton(
-                        child: Text("Get another image"),
-                        onPressed: () async {
-                          if (state == ImageState.free)
-                            await _pickImage(context);
-                          // else if (state == ImageState.picked)
-                          // jake
-                          else if (state == ImageState.cropped) _clearImage();
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              : Center(
-                  child: ElevatedButton(
-                    child: Text("Upload image"),
-                    onPressed: () async {
-                      if (state == ImageState.free)
-                        await _pickImage(context);
-                      else if (state == ImageState.picked)
-                        _cropImage();
-                      else if (state == ImageState.cropped) _clearImage();
-                    },
-                  ),
-                ),
-          const SizedBox(
-            height: 15.0,
-          ),
-          imagePath != null && imagePath != ""
-              ? Center(
-                  child: ElevatedButton(
-                    onPressed: (imagePath == null)
-                        ? null
-                        : () {
-                            getText(imagePath);
-                          },
-                    child: const Text('Get text'),
-                  ),
-                )
-              : Text(""),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
+        // Colors.deepOrange,
+        onPressed: () {
+          if (state == ImageState.free)
+            _pickImage(context, ImageSource.gallery);
+          // else if (state == ImageState.picked)
+          //   _cropImage();
+          else if (state == ImageState.cropped) _clearImage();
+        },
+        child: _buildButtonIcon(),
       ),
     );
   }
 
-  _pickImage(BuildContext context) async {
+  Widget _buildButtonIcon() {
+    if (state == ImageState.free)
+      return Icon(Icons.add);
+    else if (state == ImageState.picked)
+      return Icon(Icons.crop);
+    else if (state == ImageState.cropped)
+      return Icon(Icons.clear);
+    else
+      return Container();
+  }
+
+  _pickImage(BuildContext context, ImageSource source) async {
     ImagePicker picker = ImagePicker();
-    imageFile = (await picker.pickImage(source: ImageSource.gallery)) as File;
+    var image = await picker.pickImage(source: source);
+    File imageFile = File(image.path);
     if (imageFile != null) {
-      _cropImage();
+      print(imageFile.path);
+
+      await _cropImage(imageFile.path);
       setState(() {
         imagePath = imageFile.path;
         state = ImageState.picked;
@@ -113,42 +92,45 @@ class _TextFromImageState extends State<TextFromImage> {
     }
   }
 
-  Future<List<RecognizedText>> getText(String path) async {
-    final inputImage = InputImage.fromFilePath(path);
+  Future<List<RecognizedText>> getText() async {
+    final inputImage = InputImage.fromFile(imageFile);
     final textDetector = GoogleMlKit.vision.textDetector();
-    // final RecognisedText recognisedText =
-    //     await textDetector.processImage(inputImage);
-    // List<RecognizedText> recognizedList = [];
-    // for (TextBlock block in recognisedText.blocks) {
-    //   recognizedList.add(
-    //       RecognizedText(lines: block.lines, block: block.text.toLowerCase()));
-    // }
-
     final RecognisedText recognisedText =
         await textDetector.processImage(inputImage);
     List<RecognizedText> recognizedList = [];
     for (TextBlock block in recognisedText.blocks) {
       print(block.text);
-
       recognizedList.add(
           RecognizedText(lines: block.lines, block: block.text.toLowerCase()));
-
       print(recognizedList.length);
     }
-
     return recognizedList;
   }
 
-  Future<Null> _cropImage() async {
+  List<RecognizedText> tlist = [];
+  Future<Null> _cropImage(String path) async {
     File croppedFile = await ImageCropper.cropImage(
-        sourcePath: imageFile.path,
+        sourcePath: path,
+        aspectRatio: CropAspectRatio(ratioX: 10, ratioY: 1),
+        // maxHeight: 10,
+        // maxWidth: 10,
+        cropStyle: CropStyle.rectangle,
+        // compressFormat: ImageCompressFormat.png,
+        // compressQuality: 60,
+
         aspectRatioPresets: Platform.isAndroid
             ? [
+                // CropAspectRatioPreset.values
+
                 CropAspectRatioPreset.square,
+                // CropAspectRatioPreset.ratio10x1,
                 CropAspectRatioPreset.ratio3x2,
                 CropAspectRatioPreset.original,
                 CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio16x9
+                CropAspectRatioPreset.ratio16x9,
+                CropAspectRatioPreset.ratio5x3,
+                CropAspectRatioPreset.ratio5x4,
+                CropAspectRatioPreset.ratio7x5,
               ]
             : [
                 CropAspectRatioPreset.original,
@@ -162,9 +144,13 @@ class _TextFromImageState extends State<TextFromImage> {
               ],
         androidUiSettings: AndroidUiSettings(
             toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
+            toolbarColor: Theme.of(context).primaryColor,
+            activeControlsWidgetColor: Theme.of(context).primaryColor,
+            // Colors.deepOrange,
             toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
+            initAspectRatio:
+                // CropAspectRatioPreset.ratio10x1,
+                CropAspectRatioPreset.original,
             lockAspectRatio: false),
         iosUiSettings: IOSUiSettings(
           title: 'Cropper',
@@ -174,6 +160,7 @@ class _TextFromImageState extends State<TextFromImage> {
       setState(() {
         state = ImageState.cropped;
       });
+      tlist = await getText();
     }
   }
 

@@ -3,7 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
-import 'package:flutter_share_file/flutter_share_file.dart';
+// import 'package:flutter_share/flutter_share.dart';
+// import 'package:flutter_share_file/flutter_share_file.dart';
+import 'package:left_style/widgets/code_Invoicepainter.dart';
 // import 'package:flutter_share/flutter_share.dart';
 // import 'package:left_style/widgets/code_painter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -19,6 +21,9 @@ import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/meter_bill.dart';
 import 'package:left_style/pages/pay_bill_page.dart';
 import 'package:left_style/utils/formatter.dart';
+import 'package:http/http.dart' as http;
+import 'package:share_plus/share_plus.dart';
+import 'package:image/image.dart' as Img;
 
 class MeterBillDetailPage extends StatefulWidget {
   final String docId;
@@ -87,6 +92,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
             meterNo = bill.meterNo;
             // isPaid = bill.isPaid;
             return Scaffold(
+              backgroundColor: Colors.white,
               appBar: AppBar(
                 elevation: 0.0,
                 centerTitle: true,
@@ -662,6 +668,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                           child: IconButton(
                             onPressed: () async {
                               await shareImage(context);
+                              //await shareDemoImage(context);
                             },
                             icon: Icon(
                               Icons.share,
@@ -739,6 +746,43 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
 
   final GlobalKey _globalKey = GlobalKey();
   String meterNo = "";
+
+  Future<void> shareDemoImage(BuildContext context) async {
+    // await Share.share("Hello");
+    if (Platform.isAndroid) {
+      var urlImg = 'https://i.ytimg.com/vi/fq4N0hgOWzU/maxresdefault.jpg';
+      var url = Uri.parse(urlImg);
+      var response = await http.get(url);
+      final documentDirectory = (await getExternalStorageDirectory()).path;
+      File imgFile = new File('$documentDirectory/flutter.png');
+      imgFile.writeAsBytesSync(response.bodyBytes);
+
+      // Share.shareFile(File('$documentDirectory/flutter.png'),
+      //     subject: 'URL File Share',
+      //     text: 'Hello, check your share files!',
+      //     sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    } else {}
+  }
+
+  Future<Uint8List> removeWhiteBackground(Uint8List bytes) async {
+    Img.Image image = Img.decodeImage(bytes);
+    Img.Image transparentImage = await colorTransparent(image, 255, 255, 255);
+    var newPng = Img.encodePng(transparentImage);
+    return newPng;
+  }
+
+  Future<Img.Image> colorTransparent(
+      Img.Image src, int red, int green, int blue) async {
+    var pixels = src.getBytes();
+    for (int i = 0, len = pixels.length; i < len; i += 4) {
+      if (pixels[i] == red && pixels[i + 1] == green && pixels[i + 2] == blue) {
+        pixels[i + 3] = 0;
+      }
+    }
+
+    return src;
+  }
+
   Future<void> shareImage(BuildContext context) async {
     String fileName = "MeterBill-$meterNo.png";
     final RenderBox box = context.findRenderObject() as RenderBox;
@@ -750,18 +794,33 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
       //extract bytes
       final RenderRepaintBoundary boundary =
           _globalKey.currentContext.findRenderObject();
-      final ui.Image image = await boundary.toImage(
-          pixelRatio: MediaQuery.of(context).devicePixelRatio);
-      // toImage(pixelRatio: 0.0);
-      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      // final byteData = await CodePainter(qrImage: image, margin: 0)
-      //     .toImageData(300, format: ui.ImageByteFormat.png);
+      final ui.Image image = await boundary.toImage();
+
+      // final ByteData byteData =
+      //     await image.toByteData(format: ui.ImageByteFormat.png);
+
+      // final image = await QrPainter(
+      //   data: widget.user.uid,
+      //   version: QrVersions.auto,
+      //   gapless: false,
+      //   color: Color(0xff000000),
+      //   emptyColor: Color(0xffffffff),
+      // ).toImage(300);
+      Size size = new Size(image.width.toDouble(), image.height.toDouble());
+      final byteData = await CodeInvoicePainter(qrImage: image, margin: 2)
+          .toImageData(size, format: ui.ImageByteFormat.png);
+
       final Uint8List pngBytes = byteData.buffer.asUint8List();
-      Directory dir = await getApplicationDocumentsDirectory();
+
+      final dir = (await getExternalStorageDirectory()).path;
       final String fullPath = '$dir/$fileName';
       File capturedFile = File(fullPath);
       await capturedFile.writeAsBytes(pngBytes);
-      FlutterShareFile.share(fullPath, fileName, ShareFileType.image);
+
+      await Share.shareFiles([fullPath],
+          text: "My Meter Lists",
+          sharePositionOrigin: box.localToGlobal(Offset.infinite) & box.size);
+      //FlutterShareFile.share(fullPath, fileName, ShareFileType.image);
       // FlutterShareFile.share(dir.path, fileName, ShareFileType.image);
 
       // await FlutterShare.shareFile(

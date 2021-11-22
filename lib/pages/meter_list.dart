@@ -138,9 +138,7 @@ class MeterListPageState extends State<MeterListPage>
                           children: [
                             Container(
                               padding: EdgeInsets.only(top: 5),
-                              child: Text(
-                                Formatter.getDate(item.insertDate.toDate()),
-                              ),
+                              child: Text(item.insertDate),
                             ),
 
                             Text(

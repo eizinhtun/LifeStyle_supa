@@ -282,7 +282,7 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "For: " + monthName,
+                              "For: " + meter.meterName + " " + monthName,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 20),
                             ),
@@ -309,14 +309,15 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
                         child: Container(
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            /* boxShadow: [
                                 BoxShadow(
                                     color: Color.fromRGBO(143, 148, 251, .2),
                                     blurRadius: 20.0,
                                     offset: Offset(0, 10))
-                              ]),
+                              ]*/
+                          ),
                           child: Column(
                             children: <Widget>[
                               Container(

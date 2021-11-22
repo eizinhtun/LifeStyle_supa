@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:left_style/NetworkUtil.dart';
@@ -17,31 +18,35 @@ class MeterApi {
 
   NetworkUtil _netUtil = new NetworkUtil();
 
-  Future<MeterPageObj> searchMeter(
-      {String apiUrl,
-      String searchKey,
-      String pageIndex,
-      String pageSize}) async {
+  Future<MeterPageObj> searchMeter({
+    String apiUrl,
+    String searchKey,
+  }) async {
     //String lang=await DatabaseHelper.getData(DataKeyValue.language);
     searchKey = (searchKey == null || searchKey == "null") ? "" : searchKey;
-    String url = apiUrl + searchKey;
 
-    var myHeaders = await getHeaders();
-    http.Response response = await _netUtil.get(this.context, url, myHeaders);
+    String signature = searchKey + secretkey;
+    String signatureKey =
+        md5.convert(signature.codeUnits).toString().toUpperCase();
+    String url = apiUrl + searchKey + "&signature=$signatureKey";
+
+    var myHeaders = await getHeadersWithOutToken();
+    http.Response response = await _netUtil.get(this.context, url, null);
     if (response != null) {
       if (response.statusCode == 200) {
+        MeterPageObj objpage = new MeterPageObj();
+        objpage.rowCount = 0;
         var obj = json.decode(response.body);
         if (obj != null) {
-          if (searchKey == "" && pageIndex == "1") {
-            var ordData = json.encode(obj);
-            DatabaseHelper.setData(ordData, DataKeyValue.meters);
-          }
-
-          MeterPageObj objpage = new MeterPageObj();
+          List<dynamic> list = jsonDecode(obj);
           objpage.results = [];
-          for (var item in obj) {
+          for (var item in list) {
             objpage.results.add(Meter.fromJson(item));
           }
+
+          objpage.pageIndex = 1;
+          objpage.pageSize = objpage.results.length;
+          objpage.rowCount = objpage.pageSize;
 
           return objpage;
         } else {

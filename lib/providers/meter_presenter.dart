@@ -20,37 +20,19 @@ class MeterPresenter {
     api = new MeterApi(context);
   }
 
-  loadData(
-      {String action,
-      String apiUrl,
-      String searchKey,
-      String pageIndex,
-      String pageSize}) async {
+  loadData({
+    String action,
+    String apiUrl,
+    String searchKey,
+  }) async {
     api
         .searchMeter(
-            apiUrl: apiUrl,
-            searchKey: searchKey,
-            pageIndex: pageIndex,
-            pageSize: pageSize)
+      apiUrl: apiUrl,
+      searchKey: searchKey,
+    )
         .then((page) {
       if (page != null) {
-        switch (action) {
-          case "onFirstLoad":
-            {
-              _view.onFirstLoadSuccess(page);
-            }
-            break;
-          case "onRefresh":
-            {
-              _view.onRefreshSuccess(page);
-            }
-            break;
-          default:
-            {
-              _view.onLoadMoreSuccess(page);
-            }
-            break;
-        }
+        _view.onFirstLoadSuccess(page);
       } else {
         _view.showError("no_data");
       }

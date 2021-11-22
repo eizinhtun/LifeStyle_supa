@@ -172,7 +172,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                   title: Container(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        widget.obj.meterNo,
+                                        "${widget.obj.meterNo}",
                                         style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold),
@@ -185,15 +185,14 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       Container(
                                         padding: EdgeInsets.only(top: 5),
                                         child: Text(
-                                          Formatter.getDate(
-                                            widget.obj.insertDate.toDate(),
-                                          ),
+                                          "${widget.obj.insertDate}",
+                                          // Formatter.getDate(
+                                          //   widget.obj.insertDate.toDate(),
+                                          // ),
                                         ),
                                       ),
                                       Text(
-                                        widget.obj.customerId +
-                                            " : " +
-                                            widget.obj.categoryName,
+                                        "${widget.obj.customerId} : ${widget.obj.categoryName}",
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w600),
@@ -253,8 +252,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                   padding: EdgeInsets.only(top: 5, bottom: 0),
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    widget.obj.consumerName +
-                                        " - " +
+                                    "${widget.obj.consumerName} - " +
                                         (widget.obj.mobile == null
                                             ? ""
                                             : widget.obj.mobile),
@@ -340,8 +338,9 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        Formatter.getDate(
-                                            widget.obj.readDate.toDate()),
+                                        "${widget.obj.readDate}",
+                                        // Formatter.getDate(
+                                        //     widget.obj.readDate.toDate()),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -374,8 +373,9 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        Formatter.getDate(
-                                            widget.obj.dueDate.toDate()),
+                                        "${widget.obj.dueDate}",
+                                        // Formatter.getDate(
+                                        //     widget.obj.dueDate.toDate()),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -408,8 +408,9 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        Formatter.getDate(
-                                            widget.obj.dueDate.toDate()),
+                                        "${widget.obj.dueDate}",
+                                        // Formatter.getDate(
+                                        //     widget.obj.dueDate.toDate()),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,

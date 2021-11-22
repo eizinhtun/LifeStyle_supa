@@ -2,6 +2,7 @@
 import 'package:barcode_scan_fix/barcode_scan.dart' as bar;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -147,7 +148,7 @@ class _HomePageState extends State<HomePage> {
     ),
     HomeItem(
         title: "Meter Bills",
-        iconData: Icons.history,
+        iconData: Icons.receipt_long,
         action: ActionButton.MeterBill),
   ];
 
@@ -262,6 +263,7 @@ class _HomePageState extends State<HomePage> {
                                         enlargeCenterPage: true,
                                         aspectRatio: 1.0,
                                         viewportFraction: 1,
+                                        height: 200,
                                         onPageChanged: (index, reason) {
                                           setState(() {
                                             _current = index;
@@ -278,8 +280,8 @@ class _HomePageState extends State<HomePage> {
                                         onTap: () => _controller
                                             .animateToPage(entry.key),
                                         child: Container(
-                                          width: 12.0,
-                                          height: 12.0,
+                                          width: 8.0,
+                                          height: 8.0,
                                           margin: EdgeInsets.symmetric(
                                               vertical: 8.0, horizontal: 4.0),
                                           decoration: BoxDecoration(
@@ -306,6 +308,44 @@ class _HomePageState extends State<HomePage> {
                         ),
                         SizedBox(
                           height: 10,
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            print("Pressed");
+                            var meterBillRef = FirebaseFirestore.instance
+                                .collection(meterBillsCollection);
+                            await meterBillRef
+                                .doc("7324392739_11_21")
+                                .set(meterbilljson);
+                          },
+                          child: Text(
+                            "Add Meter Bill",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            print("Pressed");
+                            String uid = FirebaseAuth.instance.currentUser.uid
+                                .toString();
+                            var meterRef = FirebaseFirestore.instance
+                                .collection(meterCollection);
+                            await meterRef
+                                .doc(uid)
+                                .collection(userMeterCollection)
+                                .add(meterjson);
+                          },
+                          child: Text(
+                            "Add Meter",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                         Container(
                           padding: EdgeInsets.all(8),
@@ -694,31 +734,31 @@ class _HomePageState extends State<HomePage> {
   String barcode = "";
   String meterBarcode = "";
   Future<void> uploadUnit(BuildContext context) async {
-    String s = await _showAlertDialog(context);
-    if (s != null) {
-      try {
-        String barcode = await bar.BarcodeScanner.scan();
-        setState(() => this.barcode = barcode);
+    ///String s = await _showAlertDialog(context);
+    //if (s != null) {
+    try {
+      String barcode = await bar.BarcodeScanner.scan();
+      setState(() => this.barcode = barcode);
 
-        if (barcode != null) {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => UploadMyReadScreen(customerId: barcode)));
-        }
-      } on PlatformException catch (e) {
-        if (e.code == bar.BarcodeScanner.CameraAccessDenied) {
-          setState(() {
-            this.barcode = 'The user did not grant the camera permission!';
-          });
-        } else {
-          setState(() => this.barcode = 'Unknown error: $e');
-        }
-      } on FormatException {
-        setState(() => this.barcode =
-            'null (User returned using the "back"-button before scanning anything. Result)');
-      } catch (e) {
+      if (barcode != null) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => UploadMyReadScreen(customerId: barcode)));
+      }
+    } on PlatformException catch (e) {
+      if (e.code == bar.BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          this.barcode = 'The user did not grant the camera permission!';
+        });
+      } else {
         setState(() => this.barcode = 'Unknown error: $e');
       }
+    } on FormatException {
+      setState(() => this.barcode =
+          'null (User returned using the "back"-button before scanning anything. Result)');
+    } catch (e) {
+      setState(() => this.barcode = 'Unknown error: $e');
     }
+    //}
     // String codeSanner = await BarcodeScanner.scan().then((value) {
     //   if (value != null) {
     //     Navigator.of(context).push(MaterialPageRoute(
@@ -739,11 +779,6 @@ class _HomePageState extends State<HomePage> {
           print(meterBarcode);
           setState(() => this.meterBarcode = meterBarcode);
 
-          if (meterBarcode != null) {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    UploadMyReadScreen(customerId: meterBarcode)));
-          }
           if (meterBarcode != null) {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => MeterSearchResultPage(
@@ -800,3 +835,154 @@ class HomeItem {
 
   HomeItem({this.title, this.iconData, this.onPressed, this.action});
 }
+
+var meterbilljson = {
+  "allowedUnit": 0,
+  "ampere": "10/30",
+  "applyDate": null,
+  "avageUseUnit": 99,
+  "billNeedModity": false,
+  "binderId": 5,
+  "block": null,
+  "branchId": "1",
+  "businessNo": "",
+  "categoryId": 1,
+  "categoryName": "ရိုးရိုး",
+  "chargePerUnit": 35,
+  "consumerName": "ဦးအိုက်နပ်",
+  "consumerType": "P",
+  "coverSeal": null,
+  "creditAmount": 79040,
+  "creditReason": null,
+  "creditUnit": 0,
+  "currencyType": "ks",
+  "customerId": "7324392739",
+  "dueDate": "2016-07-28T15:15:28.307",
+  "excelFileName": null,
+  "feederID": 3,
+  "groupId": 2,
+  "horsePower": 0,
+  "horsePowerCost": 0,
+  "houseNo": "အမှတ်-၂၀/၂၂၊ တက္ကသိုလ်ရိပ်သာလမ်း",
+  "id": 2,
+  "insertDate": "2016-07-28T15:15:28.307",
+  "installPerson": null,
+  "isShowDebt": true,
+  "issueDate": null,
+  "joinDate": "23-12-2019",
+  "lastDate": "2016-07-28T15:15:28.307",
+  "lastMonthRedUnit": null,
+  "lastReadUnit": 13151,
+  "latitude": "22.9534015",
+  "layerAmount": null,
+  "layerDescription": null,
+  "layerRate": null,
+  "ledgerId": "BH1",
+  "ledgerPostFix": "01/03",
+  "longitude": "97.7405598",
+  "mainLedgerId": 1,
+  "mainLedgerTitle": "2110",
+  "maintainenceCost": 500,
+  "manufacturerNo": "10/30",
+  "meterNo": "YA-046496",
+  "meterSerial": "",
+  "mobile": "09123456789",
+  "multiplier": "1",
+  "noLayer": false,
+  "noOfRoom": 1,
+  "oldAccount": null,
+  "outDemand": null,
+  "percentage": 0,
+  "poleNo": null,
+  "rate": "1 ",
+  "payDate": "2016-07-28T15:15:28.307",
+  "readDate": "2016-07-28T15:15:28.307",
+  "requiredMatchGPS": false,
+  "street": "နယ်မြေ(၁)",
+  "streetLightCost": null,
+  "terminalSeal": null,
+  "transformerID": 49,
+  "tspEng": null,
+  "tspMM": null,
+  "twinLeftSeal": null,
+  "twinRightSeal": null,
+  "voltage": "230",
+  "wattLoad": "",
+  "meterBill": 150000
+};
+
+var meterjson = {
+  "AllowedUnit": 0,
+  "Ampere": "10/30",
+  "ApplyDate": null,
+  "AutoPay": false,
+  "AvageUseUnit": 99,
+  "BillNeedModity": false,
+  "BinderId": 5,
+  "Block": null,
+  "BranchId": "1",
+  "BusinessNo": "",
+  "CategoryId": 1,
+  "CategoryName": "ရိုးရိုး",
+  "ChargePerUnit": 35,
+  "ConsumerName": "ဦးအိုက်နပ်",
+  "ConsumerType": "P",
+  "CoverSeal": null,
+  "CreditAmount": 79040,
+  "CreditReason": null,
+  "CreditUnit": 0,
+  "CurrencyType": "ks",
+  "CustomerId": "7324392739",
+  "DueDate": "November 17, 2021 at 12:00:00 AM UTC+6:30",
+  "ExcelFileName": null,
+  "FeederID": 3,
+  "GroupId": 2,
+  "HorsePower": 0,
+  "HorsePowerCost": 0,
+  "HouseNo": "အမှတ်-၂၀/၂၂၊ တက္ကသိုလ်ရိပ်သာလမ်း",
+  "Id": 2,
+  "InsertDate": "November 17, 2021 at 12:00:00 AM UTC+6:30",
+  "InstallPerson": null,
+  "IsShowDebt": true,
+  "IssueDate": null,
+  "JoinDate": "November 17, 2021 at 12:00:00 AM UTC+6:30",
+  "LastDate": "November 17, 2021 at 12:00:00 AM UTC+6:30",
+  "LastMonthRedUnit": null,
+  "LastReadUnit": 13151,
+  "Latitude": "22.9534015",
+  "LayerAmount": null,
+  "LayerDescription": null,
+  "LayerRate": null,
+  "LedgerId": "BH1",
+  "LedgerPostFix": "01/03",
+  "Longitude": "97.7405598",
+  "MainLedgerId": 1,
+  "MainLedgerTitle": "2110",
+  "MaintainenceCost": 500,
+  "ManufacturerNo": "10/30",
+  "MeterNo": "YA-046496",
+  "MeterSerial": "",
+  "Mobile": "09123456789",
+  "Multiplier": "1",
+  "NoLayer": false,
+  "NoOfRoom": 1,
+  "OldAccount": null,
+  "OutDemand": null,
+  "Percentage": 0,
+  "PoleNo": null,
+  "Rate": "1 ",
+  "ReadDate": "November 18, 2021 at 12:00:00 AM UTC+6:30",
+  "RequiredMatchGPS": false,
+  "Street": "နယ်မြေ(၁)",
+  "StreetLightCost": null,
+  "TerminalSeal": null,
+  "TransformerID": 49,
+  "TspEng": null,
+  "TspMM": null,
+  "TwinLeftSeal": null,
+  "TwinRightSeal": null,
+  "Voltage": "230",
+  "WattLoad": "",
+  "meterBill": 150000,
+  "meterName": "Home"
+};

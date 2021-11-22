@@ -8,6 +8,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
+import 'package:left_style/utils/message_handler.dart';
 
 class Authentication {
   static SnackBar customSnackBar({String content}) {
@@ -116,6 +117,10 @@ class Authentication {
           return null;
       }
     } on FirebaseAuthException catch (e) {
+      MessageHandler.showErrMessage(context, "Duplicate Account",
+          "An account already exists with the same email address but different sign-in credentials.");
+// An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.
+
       throw e;
     }
   }

@@ -1,6 +1,7 @@
 import UIKit
-// import WebKit
+import WebKit
 import Flutter
+import Firebase
 import FirebaseAnalytics
 import FirebaseCore
 import FirebaseMessaging

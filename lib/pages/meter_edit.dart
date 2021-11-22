@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Meter.dart';
+import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:flutter_dash/flutter_dash.dart';
@@ -84,6 +85,78 @@ class MeterEditPageState extends State<MeterEditPage>
       appBar: AppBar(
         centerTitle: true,
         title: Text(Tran.of(context).text("meter_detail").toString()),
+        actions: [
+          PopupMenuButton(
+              onSelected: (val) async {
+                if (val == 1) {
+                  await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => UploadMyReadScreen(
+                          customerId: widget.obj.customerId)));
+
+                  /*if (result != null && result == true) {
+                        _isLoading = true;
+                        _onRefresh();
+                      }*/
+                }
+                if (val == 2) {
+                  showAlertDialog(context);
+                  // var result = await Navigator.of(context).push(
+                  //     MaterialPageRoute(
+                  //         builder: (context) => WithdrawalPage()));
+                  // onWithdrawed(result);
+                  /*if (result != null && result == true) {
+                        _isLoading = true;
+                        _onRefresh();
+                      }*/
+                }
+              },
+              icon: Icon(
+                Icons.more_horiz_rounded,
+                color: Colors.white,
+              ),
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0, top: 10, bottom: 10),
+                                  child: Icon(
+                                    Icons.file_upload,
+                                    color: Theme.of(context).primaryColor,
+                                  )),
+                              Text(Tran.of(context).text("readMeter")),
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                      value: 1,
+                    ),
+                    PopupMenuItem(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0, top: 10, bottom: 10),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  )),
+                              Text(Tran.of(context).text("remove")),
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                      value: 2,
+                    )
+                  ]),
+        ],
         /*flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -178,9 +251,17 @@ class MeterEditPageState extends State<MeterEditPage>
                                   children: [
                                     Container(
                                       padding: EdgeInsets.only(top: 5),
-                                      child: Text(widget
-                                          .obj.insertDate //yyy-MM-ddTHH:mm:ss
-                                          .toString()),
+                                      child: Text(widget.obj.insertDate
+                                          // Formatter.dateTimeFormat(DateTime
+                                          //     .fromMillisecondsSinceEpoch(
+                                          //     widget.obj.insertDate.millisecondsSinceEpoch))
+
+                                          ),
+
+                                      // Text(
+                                      //     widget
+                                      //     .obj.insertDate //yyy-MM-ddTHH:mm:ss
+                                      //     .toString()),
                                     ),
                                     Text(
                                       widget.obj.customerId +
@@ -346,9 +427,9 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              // "date",
-                                              Formatter.getDate(
-                                                  widget.obj.readDate.toDate()),
+                                              widget.obj.readDate,
+                                              // Formatter.getDate(
+                                              //     widget.obj.readDate.toDate()),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -382,9 +463,10 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              Formatter.getDate(
-                                                widget.obj.dueDate.toDate(),
-                                              ),
+                                              widget.obj.dueDate,
+                                              // Formatter.getDate(
+                                              //   widget.obj.dueDate.toDate(),
+                                              // ),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -418,8 +500,9 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              Formatter.getDate(
-                                                  widget.obj.dueDate.toDate()),
+                                              widget.obj.dueDate,
+                                              // Formatter.getDate(
+                                              //     widget.obj.dueDate.toDate()),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -819,6 +902,77 @@ class MeterEditPageState extends State<MeterEditPage>
           ),
         ],
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = OutlinedButton(
+      style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          primary: Colors.white24,
+          padding: EdgeInsets.only(
+            left: 30,
+            right: 30,
+            top: 10,
+            bottom: 10,
+          ),
+          textStyle: TextStyle(fontWeight: FontWeight.bold)),
+      onPressed: () async {
+        Navigator.of(context).pop();
+      },
+      child: Text(
+        "Cancel",
+        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+      ),
+    );
+
+    Widget continueButton = ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
+            padding: EdgeInsets.only(
+              left: 30,
+              right: 30,
+              top: 10,
+              bottom: 10,
+            ) // foreground
+            ),
+        onPressed: () async {
+          // Navigator.of(context).pop(true);
+          Navigator.of(context).pop(true);
+          await FirebaseFirestore.instance
+              .collection(meterCollection)
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .collection(userMeterCollection)
+              .doc(widget.obj.customerId)
+              .delete();
+        },
+        child: Text("Ok"));
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Are Your Sure Delete?"),
+      // content: Text("Would you like to continue learning how to use Flutter alerts?"),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            cancelButton,
+            continueButton,
+          ],
+        ),
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

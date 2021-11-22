@@ -25,7 +25,7 @@ class RegisterVerifyPinPage extends StatefulWidget {
 
 class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
-  TextEditingController controller;
+  TextEditingController controller = TextEditingController();
   // ignore: close_sinks
   StreamController<ErrorAnimationType> errorController;
   bool hasError = false;
@@ -215,6 +215,7 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     print("Pressed");
+                                    print(controller.text);
                                     signInWithPhoneNumber();
                                   },
                                   child: Text(

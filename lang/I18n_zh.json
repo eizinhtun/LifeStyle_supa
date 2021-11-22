@@ -74,5 +74,7 @@
   "editProfileTitle": "Edit Profile",
   "topup": "Top Up",
   "withdrawal": "Withdrawal",
-  "sms_template": "@brand_name အတွက် အတည်ပြုရန်ကုဒ်နံပါတ်မှာ @code ဖြစ်ပါတယ်"
+  "sms_template": "{brand_name} အတွက် အတည်ပြုရန်ကုဒ်နံပါတ်မှာ {code} ဖြစ်ပါတယ်",
+  "readMeter": "Read Meter",
+  "meterRemove": "Remove"
 }

@@ -113,8 +113,11 @@
     	</array>
 
 		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>NSLocationWhenInUseUsageDescription</string>
 		<key>NSLocationAlwaysUsageDescription</key>
+		<string>NSLocationAlwaysUsageDescription</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>NSLocationAlwaysAndWhenInUseUsageDescription</string>
 		
 	</dict>
 </plist>
