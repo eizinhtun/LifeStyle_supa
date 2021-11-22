@@ -6,10 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:left_style/NetworkUtil.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/models/Meter.dart';
 import 'package:left_style/models/MeterPageObj.dart';
-import 'package:left_style/services/data_key_name.dart';
 import 'package:left_style/utils/message_handler.dart';
 
 class MeterApi {

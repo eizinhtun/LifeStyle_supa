@@ -69,8 +69,8 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       await FirebaseFirestore.instance
           .collection(userUploadUnitCollection)
-          .doc(FirebaseAuth.instance.currentUser.uid)
-          .collection(userReadUnitCollection)
+          // .doc(FirebaseAuth.instance.currentUser.uid)
+          // .collection(userReadUnitCollection)
           .doc(monthName.replaceAll("/", "-") + '-' + widget.customerId)
           .set(model.toJson());
       setState(() {
@@ -451,6 +451,8 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
                                         });
 
                                         MyReadUnit model = new MyReadUnit();
+                                        model.uid = FirebaseAuth
+                                            .instance.currentUser.uid;
                                         model.monthName = monthName;
                                         model.customerId = meter.customerId;
                                         model.meterNo = meter.meterNo;

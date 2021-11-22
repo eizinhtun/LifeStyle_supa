@@ -30,7 +30,25 @@ import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/providers/login_provider.dart';
 
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'id', // id
+  'title', // title
+  description: 'description', // description
+  importance: Importance.high,
+  playSound: true,
+);
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+Future<void> cancelNotification() async {
+  await flutterLocalNotificationsPlugin.cancelAll();
+}
+
 Future<void> _messageHandler(RemoteMessage message) async {
+  print('background message ${message.notification.body}');
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
   print('background message ${message.notification.body}');
 }
 
@@ -207,19 +225,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   FirebaseMessaging _messaging;
-  static const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'id', // id
-    'title', // title
-    description: 'description', // description
-    importance: Importance.high,
-    playSound: true,
-  );
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-  Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    await Firebase.initializeApp();
-  }
 
   Future<String> checkToken(String fcmtoken) async {
     String tokenStr = "";
@@ -252,12 +257,23 @@ class _MyAppState extends State<MyApp> {
         AndroidInitializationSettings('@mipmap/launcher_icon');
 
     const IOSInitializationSettings initializationSettingsIos =
-        IOSInitializationSettings();
+        IOSInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+    );
+    final MacOSInitializationSettings initializationSettingsMacOS =
+        MacOSInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+    );
 
     final InitializationSettings initializationSettings =
         InitializationSettings(
             android: initializationSettingsAndroid,
-            iOS: initializationSettingsIos);
+            iOS: initializationSettingsIos,
+            macOS: initializationSettingsMacOS);
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 

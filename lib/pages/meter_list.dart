@@ -9,7 +9,6 @@ import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Meter.dart';
 import 'package:left_style/pages/meter_edit.dart';
 import 'package:flutter_dash/flutter_dash.dart';
-import 'package:left_style/utils/formatter.dart';
 
 class MeterListScreen extends StatelessWidget {
   @override

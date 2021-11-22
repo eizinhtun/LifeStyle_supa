@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/sms_request_response.dart';
 import 'package:left_style/models/sms_verify_response.dart';
-import 'package:left_style/utils/message_handler.dart';
 import '../datas/constants.dart';
 
 class SmsApi {

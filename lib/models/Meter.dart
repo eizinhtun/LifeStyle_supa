@@ -11,9 +11,9 @@ class Meter {
   String lastDate;
   String dueDate;
   String readDate;
-  String applyDate;
-  String issueDate;
-  String creditReason;
+  Null applyDate;
+  Null issueDate;
+  Null creditReason;
   int creditUnit;
   int creditAmount;
   String mainLedgerTitle;
@@ -48,7 +48,7 @@ class Meter {
   double allowedUnit;
   String rate;
   String currencyType;
-  String excelFileName;
+  Null excelFileName;
   bool isShowDebt;
   bool noLayer;
   int noOfRoom;
@@ -57,24 +57,24 @@ class Meter {
   String layerAmount;
   int streetLightCost;
   String oldAccount;
-  String poleNo;
-  String tspEng;
-  String tspMM;
+  Null poleNo;
+  Null tspEng;
+  Null tspMM;
   String customerId;
   int avageUseUnit;
   int lastReadUnit;
-  String lastMonthRedUnit;
+  Null lastMonthRedUnit;
 
-  String installPerson;
-  double meterBill;
+  Null installPerson;
+
   String branchId;
   String categoryName;
-  String block;
+  Null block;
   bool outDemand;
-  String terminalSeal;
-  String coverSeal;
-  String twinRightSeal;
-  String twinLeftSeal;
+  Null terminalSeal;
+  Null coverSeal;
+  Null twinRightSeal;
+  Null twinLeftSeal;
 
   Meter(
       {this.meterName,
@@ -142,7 +142,6 @@ class Meter {
       this.applyDate,
       this.issueDate,
       this.installPerson,
-      //  this.meterBill,
       this.branchId,
       this.categoryName,
       this.block,
@@ -171,8 +170,7 @@ class Meter {
     houseNo = json['HouseNo'];
     street = json['Street'];
     transformerID = json['TransformerID'];
-    categoryId = json['CategoryId'];
-    mainLedgerId = json['MainLedgerId'];
+
     ledgerId = json['LedgerId'];
     ledgerPostFix = json['LedgerPostFix'];
     feederID = json['FeederID'];
@@ -192,7 +190,7 @@ class Meter {
     maintainenceCost = double.parse(json['MaintainenceCost'].toString());
     horsePowerCost = double.parse(json['HorsePowerCost'].toString());
     allowedUnit = double.parse(json['AllowedUnit'].toString());
-    meterBill = double.parse(json['meterBill'].toString());
+
     chargePerUnit = json['ChargePerUnit'];
 
     rate = json['Rate'];
@@ -202,32 +200,15 @@ class Meter {
     isShowDebt = json['IsShowDebt'];
     noLayer = json['NoLayer'];
     noOfRoom = json['NoOfRoom'];
-    layerDescription = json['LayerDescription'];
-    layerRate = json['LayerRate'];
-    layerAmount = json['LayerAmount'];
-    lastDate = json['LastDate'];
-    dueDate = json['DueDate'];
-    readDate = json['ReadDate'];
-    streetLightCost = json['StreetLightCost'];
-    oldAccount = json['OldAccount'];
-    poleNo = json['PoleNo'];
-    tspEng = json['TspEng'];
-    tspMM = json['TspMM'];
+
     customerId = json['CustomerId'];
     avageUseUnit = json['AvageUseUnit'];
     lastReadUnit = json['LastReadUnit'];
     lastMonthRedUnit = json['LastMonthRedUnit'];
-    applyDate = json['ApplyDate'];
-    issueDate = json['IssueDate'];
-    installPerson = json['InstallPerson'];
+
     branchId = json['BranchId'];
     categoryName = json['CategoryName'];
     block = json['Block'];
-    outDemand = json['OutDemand'];
-    terminalSeal = json['TerminalSeal'];
-    coverSeal = json['CoverSeal'];
-    twinRightSeal = json['TwinRightSeal'];
-    twinLeftSeal = json['TwinLeftSeal'];
   }
 
   Map<String, dynamic> toJson() {
@@ -298,7 +279,6 @@ class Meter {
     data['IssueDate'] = this.issueDate;
     data['InstallPerson'] = this.installPerson;
 
-    // data['meterBill'] = this.meterBill;
     data['BranchId'] = this.branchId;
     data['CategoryName'] = this.categoryName;
     data['Block'] = this.block;

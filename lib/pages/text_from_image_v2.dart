@@ -9,11 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:left_style/models/recognized_text.dart';
-import 'package:left_style/widgets/code_painter.dart' as cp;
-import 'dart:ui' as ui;
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
-// import 'package:tesseract_ocr/tesseract_ocr.dart';
 
 class TextFromImageV2 extends StatefulWidget {
   const TextFromImageV2({Key key}) : super(key: key);
@@ -87,8 +84,9 @@ class _TextFromImageV2State extends State<TextFromImageV2> {
                   height: 20,
                 ),
                 Column(
-                  children: [Text("text")],
-                  // tlist.map((t) => Text(t.block)).toList(),
+                  children:
+                      // [Text("text")],
+                      tlist.map((t) => Text(t.block)).toList(),
                 ),
               ],
             )
@@ -129,6 +127,17 @@ class _TextFromImageV2State extends State<TextFromImageV2> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               ElevatedButton(
+                  child: Text(
+                    'Crop Image',
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        .copyWith(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    await _cropImage();
+                  }),
+              ElevatedButton(
                 child: Text(
                   "OK",
                   // 'Crop Image',
@@ -154,17 +163,23 @@ class _TextFromImageV2State extends State<TextFromImageV2> {
 
                     // await getText(tempFile);
 
-                    //  final byteData = await cropFile.readAsBytes();
+                    final byteData = await cropFile.readAsBytes();
 
                     // final Uint8List pngBytes = byteData.buffer.asUint8List();
-                    img.Image image = img.decodeImage(sample.readAsBytesSync());
+                    img.Image image =
+                        img.decodeImage(cropFile.readAsBytesSync());
                     img.Image thumbnail =
-                        img.copyResize(image, width: 120, height: 120);
+                        img.copyResize(image, width: 480, height: 120);
                     final directory = await getApplicationDocumentsDirectory();
                     tempFile = File('${directory.path}/testImage.png')
                       ..writeAsBytesSync(img.encodePng(thumbnail));
                     await getText(tempFile);
-                    // await getText(cropFile);
+
+                    // cropFile=cropFile.
+                    // tlist = await getText(cropFile);
+                    // tlist = await getText(sample);
+                    // tlist = await getText(_file);
+
                     // await getText(sample);
                     // await getText(cropFile);
 
@@ -213,14 +228,14 @@ class _TextFromImageV2State extends State<TextFromImageV2> {
         });
 
         // left=pickedFile.
-        if (_file != null) {
-          Future.delayed(Duration(milliseconds: 1000), () async {
-            await _cropImage();
-          });
-          // WidgetsBinding.instance.addPostFrameCallback((_) async {
-          //   await _cropImage();
-          // });
-        }
+        // if (_file != null) {
+        //   Future.delayed(Duration(milliseconds: 1000), () async {
+        //     await _cropImage();
+        //   });
+        //   // WidgetsBinding.instance.addPostFrameCallback((_) async {
+        //   //   await _cropImage();
+        //   // });
+        // }
         // await _cropImage();
       }
     }
@@ -263,8 +278,7 @@ class _TextFromImageV2State extends State<TextFromImageV2> {
       print(sample.path);
 
       cropFile = await ImageCrop.cropImage(
-        file: _file,
-        // sample,
+        file: sample,
         area: area,
         scale: scale,
       );
@@ -296,14 +310,17 @@ class _TextFromImageV2State extends State<TextFromImageV2> {
 
   List<RecognizedText> tlist = [];
   Future<List<RecognizedText>> getText(File file) async {
-    // final byteData = await cropFile.readAsBytes();
-    // final Uint8List bytes = byteData.buffer.asUint8List();
+    final byteData = await file.readAsBytes();
+    final Uint8List bytes = byteData.buffer.asUint8List();
     final inputImage = InputImage.
-        // fromBytes(bytes: bytes,inputImageData: InputImageData());
+        //fromBytes(bytes: bytes, inputImageData: InputImageData());
         fromFile(file);
+    print(inputImage.bytes);
+
     final textDetector = GoogleMlKit.vision.textDetector();
     final RecognisedText recognisedText =
         await textDetector.processImage(inputImage);
+    print(recognisedText);
     List<RecognizedText> recognizedList = [];
     for (TextBlock block in recognisedText.blocks) {
       print(block.text);

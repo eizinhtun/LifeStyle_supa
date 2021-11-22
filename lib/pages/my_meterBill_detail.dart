@@ -734,12 +734,31 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
             );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                elevation: 0.0,
+                centerTitle: true,
+                title: Text(Tran.of(context).text("my_meter_bill").toString()),
+              ),
+              body: Center(
                 child: SpinKitDoubleBounce(
-              color: Theme.of(context).primaryColor,
-            ));
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            );
           } else {
-            return Center(child: Text("No data"));
+            return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                elevation: 0.0,
+                centerTitle: true,
+                title: Text(Tran.of(context).text("my_meter_bill").toString()),
+              ),
+              body: Center(
+                child: Text("No data"),
+              ),
+            );
           }
         });
   }

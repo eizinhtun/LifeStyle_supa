@@ -2,7 +2,6 @@
 import 'package:barcode_scan_fix/barcode_scan.dart' as bar;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -306,47 +305,48 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(
                           height: 20,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            print("Pressed");
-                            var meterBillRef = FirebaseFirestore.instance
-                                .collection(meterBillsCollection);
-                            await meterBillRef
-                                .doc("7324392739_11_21")
-                                .set(meterbilljson);
-                          },
-                          child: Text(
-                            "Add Meter Bill",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            print("Pressed");
-                            String uid = FirebaseAuth.instance.currentUser.uid
-                                .toString();
-                            var meterRef = FirebaseFirestore.instance
-                                .collection(meterCollection);
-                            await meterRef
-                                .doc(uid)
-                                .collection(userMeterCollection)
-                                .add(meterjson);
-                          },
-                          child: Text(
-                            "Add Meter",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                        // SizedBox(
+                        //   height: 10,
+                        // ),
+                        // ElevatedButton(
+                        //   onPressed: () async {
+                        //     print("Pressed");
+                        //     var meterBillRef = FirebaseFirestore.instance
+                        //         .collection(meterBillsCollection);
+                        //     await meterBillRef
+                        //         .doc("7324392739_11_21")
+                        //         .set(meterbilljson);
+                        //   },
+                        //   child: Text(
+                        //     "Add Meter Bill",
+                        //     style: TextStyle(
+                        //         color: Colors.white,
+                        //         fontWeight: FontWeight.bold),
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   height: 10,
+                        // ),
+                        // ElevatedButton(
+                        //   onPressed: () async {
+                        //     print("Pressed");
+                        //     String uid = FirebaseAuth.instance.currentUser.uid
+                        //         .toString();
+                        //     var meterRef = FirebaseFirestore.instance
+                        //         .collection(meterCollection);
+                        //     await meterRef
+                        //         .doc(uid)
+                        //         .collection(userMeterCollection)
+                        //         .add(meterjson);
+                        //   },
+                        //   child: Text(
+                        //     "Add Meter",
+                        //     style: TextStyle(
+                        //         color: Colors.white,
+                        //         fontWeight: FontWeight.bold),
+                        //   ),
+                        // ),
+
                         Container(
                           padding: EdgeInsets.all(8),
                           child: Column(
@@ -361,7 +361,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Positioned(
-            top: 60,
+            top: 10,
             left: 0,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 15),

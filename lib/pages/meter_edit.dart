@@ -8,7 +8,6 @@ import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Meter.dart';
 import 'package:left_style/pages/upload_my_read.dart';
-import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'map_screen.dart';
@@ -240,7 +239,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                 title: Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      widget.obj.meterNo,
+                                      "${widget.obj.meterNo}",
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold),
@@ -251,7 +250,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                   children: [
                                     Container(
                                       padding: EdgeInsets.only(top: 5),
-                                      child: Text(widget.obj.insertDate
+                                      child: Text("${widget.obj.insertDate}"
                                           // Formatter.dateTimeFormat(DateTime
                                           //     .fromMillisecondsSinceEpoch(
                                           //     widget.obj.insertDate.millisecondsSinceEpoch))
@@ -427,7 +426,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              widget.obj.readDate,
+                                              "${widget.obj.readDate}",
                                               // Formatter.getDate(
                                               //     widget.obj.readDate.toDate()),
                                               style: TextStyle(
@@ -463,7 +462,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              widget.obj.dueDate,
+                                              "${widget.obj.dueDate}",
                                               // Formatter.getDate(
                                               //   widget.obj.dueDate.toDate(),
                                               // ),
@@ -500,7 +499,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              widget.obj.dueDate,
+                                              "${widget.obj.dueDate}",
                                               // Formatter.getDate(
                                               //     widget.obj.dueDate.toDate()),
                                               style: TextStyle(

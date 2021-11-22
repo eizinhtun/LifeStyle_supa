@@ -112,6 +112,7 @@ dependencies:
   satya_textocr: ^0.0.2
   image: ^3.0.8
   crypto: ^3.0.1
+  # awesome_notifications: ^0.6.17
   # rxdart: ^0.23.1
 
 dependency_overrides:
@@ -142,8 +143,6 @@ flutter:
   assets:
     - assets/
     - assets/image/
-    - assets/tessdata/
-    - assets/tessdata/eng.traineddata
     - assets/language_icon/
     - assets/icon/
     - assets/payment/
