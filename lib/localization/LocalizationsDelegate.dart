@@ -8,16 +8,28 @@ class MyLocalizationsDelegate extends LocalizationsDelegate<Tran> {
 
   @override
   bool isSupported(Locale locale) =>
-      ['zh', 'en', 'my'].contains(locale.languageCode);
+      ['zh','en','my'].contains(locale.languageCode);
 
   @override
   Future<Tran> load(Locale locale) async {
     Tran localizations = new Tran(locale);
     await localizations.load();
 
+    //print("Load ${locale.languageCode}");
+
     return localizations;
   }
 
   @override
   bool shouldReload(MyLocalizationsDelegate old) => false;
+  // @override
+  // Future<Tran> load(Locale locale) async {
+  //   Tran localizations = new Tran(locale);
+  //   await localizations.load();
+  //
+  //   return localizations;
+  // }
+  //
+  // @override
+  // bool shouldReload(MyLocalizationsDelegate old) => false;
 }

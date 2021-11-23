@@ -1,4 +1,6 @@
 // @dart=2.9
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -7,12 +9,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/Translate.dart';
+import 'package:left_style/models/Meter.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/pages/me_page.dart';
 import 'package:left_style/providers/login_provider.dart';
+import 'package:left_style/providers/meter_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/widgets/wallet.dart';
 import 'package:provider/provider.dart';
@@ -23,10 +28,10 @@ class HomePageDetail extends StatefulWidget {
   const HomePageDetail({Key key}) : super(key: key);
 
   @override
-  _HomePageDetailState createState() => _HomePageDetailState();
+  HomePageDetailState createState() => HomePageDetailState();
 }
 
-class _HomePageDetailState extends State<HomePageDetail> {
+class HomePageDetailState extends State<HomePageDetail> {
   FirebaseMessaging _messaging;
   static const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'id', // id
@@ -45,6 +50,12 @@ class _HomePageDetailState extends State<HomePageDetail> {
   @override
   void initState() {
     super.initState();
+    _mePage = MePage(main: this);
+    _list = <Widget>[
+      Center(child: _homePage),
+      Center(child: _walletPage),
+      Center(child: _mePage),
+    ];
     getData();
     // if (!kIsWeb) {
     //   registerNotification(context);
@@ -52,6 +63,8 @@ class _HomePageDetailState extends State<HomePageDetail> {
     //   initPlatformState();
     // }
   }
+
+  void subscriptToMeters() {}
 
   String _appBadgeSupported = 'Unknown';
   initPlatformState() async {
@@ -78,8 +91,12 @@ class _HomePageDetailState extends State<HomePageDetail> {
   }
 
   List<NotiModel> notiList = [];
+  List<Meter> meterList = [];
+
   getData() async {
+    meterList = await context.read<MeterProvider>().getMeterList(context);
     notiList = await context.read<NotiProvider>().getNotiList(context);
+
     if (notiList != null && notiList.length > 0) {
       SystemData.notiCount = notiList.where((e) => e.status == false).length;
       FlutterAppBadger.updateBadgeCount(SystemData.notiCount);
@@ -97,6 +114,10 @@ class _HomePageDetailState extends State<HomePageDetail> {
   void dispose() {
     // controller.dispose();
     super.dispose();
+  }
+
+  void refreshPage() {
+    setState(() {});
   }
 
   void registerNotification(BuildContext context) async {
@@ -500,23 +521,20 @@ class _HomePageDetailState extends State<HomePageDetail> {
     }
   }
 
-  static MePage _mePage = MePage();
+  static MePage _mePage = null;
+
   static HomePage _homePage = HomePage();
   static Wallet _walletPage = Wallet();
 
   PageController controller = PageController();
-  List<Widget> _list = <Widget>[
-    Center(child: _homePage),
-    Center(child: _walletPage),
-    Center(child: _mePage),
-  ];
+  List<Widget> _list = [];
   int bottomSelectedIndex = 0;
 
   Future<void> bottomTapped(int index) async {
-    setState(() {
-      bottomSelectedIndex = index;
-      controller.jumpToPage(index);
-    });
+    // setState(() async {
+    bottomSelectedIndex = index;
+    controller.jumpToPage(index);
+    // });
   }
 
   @override

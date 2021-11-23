@@ -10,7 +10,7 @@ const String smsToken =
 const String version = "1.2.1";
 const String serverKey =
     "AAAAp5abKQ0:APA91bG6Vl7FxmbqOqM1mCeZUzSpI-nJ3ieMC_-YVCQF7CW5jzAs10u1iu5asZ5HnwCDKd5v8mCMYPGYw6cRVf8j-uU6hjP9AONShIM5Sgijgh6tODZym01C5-KmJB2QiHX7hMhvegjd";
-
+String language='';
 Future<Map<String, String>> getHeaders() async {
   //timezone
   try {

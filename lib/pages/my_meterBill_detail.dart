@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 // import 'package:flutter_share/flutter_share.dart';
 // import 'package:flutter_share_file/flutter_share_file.dart';
@@ -38,10 +39,13 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
   final db = FirebaseFirestore.instance;
   MeterBill bill = MeterBill();
   double x, y = 0;
-
+  String meterName="";
   @override
   void initState() {
     super.initState();
+    db.collection(meterCollection).doc(FirebaseAuth.instance.currentUser.uid).collection(userMeterCollection).doc(widget.docId).get().then((value){
+      meterName=value.data()["meterName"];
+    });
   }
 
   TextStyle getTextStyle() {
@@ -88,7 +92,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
         builder: (context, snapshot) {
           print(widget.docId);
           if (snapshot.hasData && snapshot.data.exists) {
-            bill = MeterBill.fromJson(snapshot.data.data());
+            bill = MeterBill.fromJson(snapshot.data.data(), meterName: meterName);
             meterNo = bill.meterNo;
             // isPaid = bill.isPaid;
             return Scaffold(
@@ -97,6 +101,17 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                 elevation: 0.0,
                 centerTitle: true,
                 title: Text(Tran.of(context).text("my_meter_bill").toString()),
+                actions: [
+                 IconButton(
+                    onPressed: () async {
+                      await shareImage(context);
+                    },
+                    icon: Icon(
+                      Icons.share,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
               body: InteractiveViewer(
                 constrained: false,
@@ -111,7 +126,6 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                     width: MediaQuery.of(context).size.width,
                     // height: MediaQuery.of(context).size.height,
 
-                    ///
                     //height:ScreenUtil().setSp(2100),//
                     // padding: EdgeInsets.only(
                     //     top: 10.0, left: 8.0, right: 10.0, bottom: 0.0),
@@ -119,497 +133,501 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(
-                              top: 10.0, left: 8.0, right: 10.0, bottom: 0.0),
+                              top: 10.0, bottom: 0.0),
                           child: Column(
                             children: [
                               RepaintBoundary(
                                 key: _globalKey,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text(
-                                      'လျှပ်စစ်နှင့်စွမ်းအင်ဝန်ကြီးဌာန',
-                                      style: getTextStyle(),
-                                    ),
-                                    Text(
-                                      'လျှပ်စစ်ဓာတ်အားဖြန့်ဖြူးရေးလုပ်ငန်း',
-                                      style: getTextStyle(),
-                                    ),
-                                    Text('ဓာတ်အားခတောင်းခံလွှာ',
-                                        style: getTextStyle()),
-                                    Text(
-                                        "Used: " +
-                                            bill.monthName +
-                                            " Last Date: " +
-                                            Formatter.getDate(
-                                                bill.dueDate.toDate()) +
-                                            "",
-                                        style: getTextStyle()),
-                                    Text(
-                                        bill.companyName +
-                                            '   လျှပ်စစ်ပုံစံ(၂၄၃)',
-                                        style: getTextStyle()),
-                                    // Text('',style: TextStyle(fontWeight: FontWeight.w900),),
-                                    //  Text(' '),
-
-                                    SizedBox(
-                                      width: ScreenUtil().setSp(900),
-                                      //// 360.0,//double.infinity,jake
-                                      // height: ScreenUtil().setSp(960,allowFontScalingSelf:false),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Container(
-                                              padding: EdgeInsets.only(left: 5),
-                                              child: Text(bill.state,
-                                                  style: getTextStyle()),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Container(
-                                              padding: EdgeInsets.only(left: 5),
-                                              child: Text(
-                                                "အမည်- " + bill.consumerName,
-                                                style: getTextStyle(),
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                  left: 5, bottom: 8),
-                                              child: Text(
-                                                "လိပ်စာ- " +
-                                                    (bill.block == null
-                                                        ? ""
-                                                        : bill.block) +
-                                                    " " +
-                                                    (bill.street == null
-                                                        ? ""
-                                                        : bill.street),
-                                                style: getTextStyle(),
-                                              ),
-                                            ),
-                                          ),
-                                          LayoutGrid(
-                                            columnGap: 0,
-                                            rowGap: 0,
-                                            columnSizes: [
-                                              FlexibleTrackSize(1),
-                                              FlexibleTrackSize(0.9),
-                                              FlexibleTrackSize(1.1),
-                                              FlexibleTrackSize(0.65),
-                                            ],
-                                            rowSizes: [
-                                              FixedTrackSize(32),
-                                              FixedTrackSize(32),
-                                              FixedTrackSize(32),
-                                              FixedTrackSize(32),
-                                              FixedTrackSize(32),
-                                              FixedTrackSize(32),
-                                              FixedTrackSize(32),
-                                              FixedTrackSize(32),
-                                              FixedTrackSize(32),
-                                              FixedTrackSize(32),
-                                              FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                              //                      FixedTrackSize(32),
-                                            ],
-                                            children: [
-                                              _buildItem(
-                                                  0, 0, 1, "ငွေစာရင်းအမှတ်"),
-                                              _buildItem(
-                                                  0,
-                                                  1,
-                                                  1,
-                                                  bill.ledgerNo +
-                                                      "/" +
-                                                      bill.ledgerPostFix),
-                                              _buildItem(0, 2, 1, "နှုန်းထား"),
-                                              _buildItem(0, 3, 1, "သင့်ငွေ"),
-                                              _buildItem(1, 0, 1, "နှုန်း"),
-                                              _buildItem(
-                                                  1,
-                                                  1,
-                                                  1,
-                                                  bill.mainLedgerTitle
-                                                      .toString()),
-                                              _buildItem(
-                                                  1,
-                                                  2,
-                                                  1,
-                                                  "(" +
-                                                      bill.layerDes1
-                                                          .toString() +
-                                                      ")" +
-                                                      bill.layerRate1
-                                                          .toString()
-                                                          .replaceAll(
-                                                              ".0", "")),
-                                              _buildItem(
-                                                  1,
-                                                  3,
-                                                  1,
-                                                  bill.layerAmount1
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(2, 0, 1, "မီတာအမှတ်"),
-                                              _buildItem(2, 1, 1, bill.meterNo),
-                                              _buildItem(
-                                                  2,
-                                                  2,
-                                                  1,
-                                                  "(" +
-                                                      bill.layerDes2
-                                                          .toString() +
-                                                      ")" +
-                                                      bill.layerRate2
-                                                          .toString()
-                                                          .replaceAll(
-                                                              ".0", "")),
-                                              _buildItem(
-                                                  2,
-                                                  3,
-                                                  1,
-                                                  bill.layerAmount2
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  3, 0, 1, "ယခင်လဖတ်ချက်"),
-                                              _buildItem(
-                                                  3,
-                                                  1,
-                                                  1,
-                                                  bill.oldUnit
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  3,
-                                                  2,
-                                                  1,
-                                                  "(" +
-                                                      bill.layerDes3
-                                                          .toString() +
-                                                      ")" +
-                                                      bill.layerRate3
-                                                          .toString()
-                                                          .replaceAll(
-                                                              ".0", "")),
-                                              _buildItem(
-                                                  3,
-                                                  3,
-                                                  1,
-                                                  bill.layerAmount3
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  4, 0, 1, "ယခုလဖတ်ချက်"),
-                                              _buildItem(
-                                                  4,
-                                                  1,
-                                                  1,
-                                                  bill.readUnit
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  4,
-                                                  2,
-                                                  1,
-                                                  "(" +
-                                                      bill.layerDes4
-                                                          .toString() +
-                                                      ")" +
-                                                      bill.layerRate4
-                                                          .toString()
-                                                          .replaceAll(
-                                                              ".0", "")),
-                                              _buildItem(
-                                                  4,
-                                                  3,
-                                                  1,
-                                                  bill.layerAmount4
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  5, 0, 1, "ကွာခြားယူနစ်"),
-                                              _buildItem(
-                                                  5,
-                                                  1,
-                                                  1,
-                                                  bill.totalUnitUsed
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  5,
-                                                  2,
-                                                  1,
-                                                  "(" +
-                                                      bill.layerDes5
-                                                          .toString() +
-                                                      ")" +
-                                                      bill.layerRate5
-                                                          .toString()
-                                                          .replaceAll(
-                                                              ".0", "")),
-                                              _buildItem(
-                                                  5,
-                                                  3,
-                                                  1,
-                                                  bill.layerAmount5
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  6, 0, 1, "မြှောက်ကိန်း"),
-                                              _buildItem(
-                                                  6,
-                                                  1,
-                                                  1,
-                                                  (bill.multiplier == null ||
-                                                          bill.multiplier == "")
-                                                      ? ""
-                                                      : bill.multiplier
-                                                          .toString()
-                                                          .replaceAll(
-                                                              ".0", "")),
-                                              _buildItem(
-                                                  6,
-                                                  2,
-                                                  1,
-                                                  "(" +
-                                                      bill.layerDes6
-                                                          .toString() +
-                                                      ")" +
-                                                      bill.layerRate6
-                                                          .toString()
-                                                          .replaceAll(
-                                                              ".0", "")),
-                                              _buildItem(
-                                                  6,
-                                                  3,
-                                                  1,
-                                                  bill.layerAmount6
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  7, 0, 1, "ပေါင်းခြင်း"),
-                                              _buildItem(
-                                                  7,
-                                                  1,
-                                                  1,
-                                                  bill.percentage
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  7,
-                                                  2,
-                                                  1,
-                                                  "(" +
-                                                      bill.layerDes7
-                                                          .toString() +
-                                                      ")" +
-                                                      bill.layerRate7
-                                                          .toString()
-                                                          .replaceAll(
-                                                              ".0", "")),
-                                              _buildItem(
-                                                  7,
-                                                  3,
-                                                  1,
-                                                  bill.layerAmount7
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  8, 0, 1, "သုံးစွဲယူနစ်"),
-                                              _buildItem(
-                                                  8,
-                                                  1,
-                                                  1,
-                                                  bill.unitsToPay
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  8, 2, 1, "မြင်းကောင်ရေ"),
-                                              _buildItem(
-                                                  8,
-                                                  3,
-                                                  1,
-                                                  bill.mHorsePower
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(9, 0, 1,
-                                                  "ဓာတ်အားခစုစုပေါင်း"),
-                                              _buildItem(
-                                                  9,
-                                                  1,
-                                                  1,
-                                                  bill.cost
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  9, 2, 1, "မီတာဝန်ဆောင်ခ"),
-                                              _buildItem(
-                                                  9,
-                                                  3,
-                                                  1,
-                                                  bill.mMaintenanceCost
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(
-                                                  10, 0, 1, "မြင်းကောင်ရေကြေး"),
-                                              _buildItem(
-                                                  10,
-                                                  1,
-                                                  1,
-                                                  bill.mHorsePowerCost
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                              _buildItem(10, 2, 1,
-                                                  "ကျသင့်ငွေစုစုပေါင်း"),
-                                              _buildItem(
-                                                  10,
-                                                  3,
-                                                  1,
-                                                  bill.totalCostOrg
-                                                      .toString()
-                                                      .replaceAll(".0", "")),
-                                            ],
-                                          ),
-                                        ],
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(
+                                        'လျှပ်စစ်နှင့်စွမ်းအင်ဝန်ကြီးဌာန',
+                                        style: getTextStyle(),
                                       ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        bill.creditAmount == null ||
-                                                bill.creditAmount == 0
-                                            ? Container()
-                                            : Container(
-                                                alignment: Alignment(1.0, 1.0),
-                                                padding: const EdgeInsets.only(
-                                                    top: 5.0),
-                                                child: Text(
-                                                  "ယခင်ကြွေးကျန်" +
-                                                      bill.creditAmount
-                                                          .toString(),
-                                                  style: getTextStyle(),
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                        bill.disscountAmt == null ||
-                                                bill.disscountAmt == 0
-                                            ? Container()
-                                            : Container(
-                                                alignment: Alignment(1.0, 1.0),
-                                                padding: const EdgeInsets.only(
-                                                    top: 5.0),
-                                                child: Text(
-                                                  "ကင်းလွတ်ခွင့် " +
-                                                      bill.disscountAmt
-                                                          .toString()
-                                                          .replaceAll(".0", ""),
-                                                  style: getTextStyle(),
-                                                  textAlign: TextAlign.right,
-                                                ),
-                                              ),
-                                        Container(
-                                          alignment: Alignment(1.0, 1.0),
-                                          padding:
-                                              const EdgeInsets.only(top: 5.0),
-                                          child: Text(
-                                            "Total   " +
-                                                ((bill.creditAmount == null
-                                                            ? 0
-                                                            : bill.creditAmount
-                                                                .toDouble()) +
-                                                        bill.totalCost)
-                                                    .toString()
-                                                    .replaceAll(".0", ""),
-                                            style: getTextStyle(),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      Text(
+                                        'လျှပ်စစ်ဓာတ်အားဖြန့်ဖြူးရေးလုပ်ငန်း',
+                                        style: getTextStyle(),
+                                      ),
+                                      Text('ဓာတ်အားခတောင်းခံလွှာ',
+                                          style: getTextStyle()),
+                                      Text(
+                                          "Used: " +
+                                              bill.monthName +
+                                              " Last Date: " +
+                                              Formatter.getDate(
+                                                  bill.dueDate.toDate()) +
+                                              "",
+                                          style: getTextStyle()),
+                                      Text(
+                                          bill.companyName +
+                                              '   လျှပ်စစ်ပုံစံ(၂၄၃)',
+                                          style: getTextStyle()),
+                                      // Text('',style: TextStyle(fontWeight: FontWeight.w900),),
+                                      //  Text(' '),
 
-                                    Container(
-                                      // height: 55.0,
-                                      // width: 75.0,
-                                      // color: Colors.red,
-                                      padding: EdgeInsets.only(top: 0.0),
-                                      margin: EdgeInsets.all(0.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
+                                      SizedBox(
+                                        width: ScreenUtil().setSp(900),
+                                        //// 360.0,//double.infinity,jake
+                                        // height: ScreenUtil().setSp(960,allowFontScalingSelf:false),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Container(
+                                                padding: EdgeInsets.only(left: 5),
+                                                child: Text(bill.state,
+                                                    style: getTextStyle()),
+                                              ),
+                                            ),
+
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Container(
+                                                padding: EdgeInsets.only(left: 5),
+                                                child: Text(
+                                                  "အမည်- "+ bill.consumerName+" ( "+ meterName +" )",
+                                                  style: getTextStyle(),
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                    left: 5, bottom: 8),
+                                                child: Text(
+                                                  "လိပ်စာ- " +
+                                                      (bill.block == null
+                                                          ? ""
+                                                          : bill.block) +
+                                                      " " +
+                                                      (bill.street == null
+                                                          ? ""
+                                                          : bill.street),
+                                                  style: getTextStyle(),
+                                                ),
+                                              ),
+                                            ),
+                                            LayoutGrid(
+                                              columnGap: 0,
+                                              rowGap: 0,
+                                              columnSizes: [
+                                                FlexibleTrackSize(1),
+                                                FlexibleTrackSize(0.9),
+                                                FlexibleTrackSize(1.1),
+                                                FlexibleTrackSize(0.65),
+                                              ],
+                                              rowSizes: [
+                                                FixedTrackSize(32),
+                                                FixedTrackSize(32),
+                                                FixedTrackSize(32),
+                                                FixedTrackSize(32),
+                                                FixedTrackSize(32),
+                                                FixedTrackSize(32),
+                                                FixedTrackSize(32),
+                                                FixedTrackSize(32),
+                                                FixedTrackSize(32),
+                                                FixedTrackSize(32),
+                                                FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                                //                      FixedTrackSize(32),
+                                              ],
+                                              children: [
+                                                _buildItem(
+                                                    0, 0, 1, "ငွေစာရင်းအမှတ်"),
+                                                _buildItem(
+                                                    0,
+                                                    1,
+                                                    1,
+                                                    bill.ledgerNo +
+                                                        "/" +
+                                                        bill.ledgerPostFix),
+                                                _buildItem(0, 2, 1, "နှုန်းထား"),
+                                                _buildItem(0, 3, 1, "သင့်ငွေ"),
+                                                _buildItem(1, 0, 1, "နှုန်း"),
+                                                _buildItem(
+                                                    1,
+                                                    1,
+                                                    1,
+                                                    bill.mainLedgerTitle
+                                                        .toString()),
+                                                _buildItem(
+                                                    1,
+                                                    2,
+                                                    1,
+                                                    "(" +
+                                                        bill.layerDes1
+                                                            .toString() +
+                                                        ")" +
+                                                        bill.layerRate1
+                                                            .toString()
+                                                            .replaceAll(
+                                                                ".0", "")),
+                                                _buildItem(
+                                                    1,
+                                                    3,
+                                                    1,
+                                                    bill.layerAmount1
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(2, 0, 1, "မီတာအမှတ်"),
+                                                _buildItem(2, 1, 1, bill.meterNo),
+                                                _buildItem(
+                                                    2,
+                                                    2,
+                                                    1,
+                                                    "(" +
+                                                        bill.layerDes2
+                                                            .toString() +
+                                                        ")" +
+                                                        bill.layerRate2
+                                                            .toString()
+                                                            .replaceAll(
+                                                                ".0", "")),
+                                                _buildItem(
+                                                    2,
+                                                    3,
+                                                    1,
+                                                    bill.layerAmount2
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    3, 0, 1, "ယခင်လဖတ်ချက်"),
+                                                _buildItem(
+                                                    3,
+                                                    1,
+                                                    1,
+                                                    bill.oldUnit
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    3,
+                                                    2,
+                                                    1,
+                                                    "(" +
+                                                        bill.layerDes3
+                                                            .toString() +
+                                                        ")" +
+                                                        bill.layerRate3
+                                                            .toString()
+                                                            .replaceAll(
+                                                                ".0", "")),
+                                                _buildItem(
+                                                    3,
+                                                    3,
+                                                    1,
+                                                    bill.layerAmount3
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    4, 0, 1, "ယခုလဖတ်ချက်"),
+                                                _buildItem(
+                                                    4,
+                                                    1,
+                                                    1,
+                                                    bill.readUnit
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    4,
+                                                    2,
+                                                    1,
+                                                    "(" +
+                                                        bill.layerDes4
+                                                            .toString() +
+                                                        ")" +
+                                                        bill.layerRate4
+                                                            .toString()
+                                                            .replaceAll(
+                                                                ".0", "")),
+                                                _buildItem(
+                                                    4,
+                                                    3,
+                                                    1,
+                                                    bill.layerAmount4
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    5, 0, 1, "ကွာခြားယူနစ်"),
+                                                _buildItem(
+                                                    5,
+                                                    1,
+                                                    1,
+                                                    bill.totalUnitUsed
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    5,
+                                                    2,
+                                                    1,
+                                                    "(" +
+                                                        bill.layerDes5
+                                                            .toString() +
+                                                        ")" +
+                                                        bill.layerRate5
+                                                            .toString()
+                                                            .replaceAll(
+                                                                ".0", "")),
+                                                _buildItem(
+                                                    5,
+                                                    3,
+                                                    1,
+                                                    bill.layerAmount5
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    6, 0, 1, "မြှောက်ကိန်း"),
+                                                _buildItem(
+                                                    6,
+                                                    1,
+                                                    1,
+                                                    (bill.multiplier == null ||
+                                                            bill.multiplier == "")
+                                                        ? ""
+                                                        : bill.multiplier
+                                                            .toString()
+                                                            .replaceAll(
+                                                                ".0", "")),
+                                                _buildItem(
+                                                    6,
+                                                    2,
+                                                    1,
+                                                    "(" +
+                                                        bill.layerDes6
+                                                            .toString() +
+                                                        ")" +
+                                                        bill.layerRate6
+                                                            .toString()
+                                                            .replaceAll(
+                                                                ".0", "")),
+                                                _buildItem(
+                                                    6,
+                                                    3,
+                                                    1,
+                                                    bill.layerAmount6
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    7, 0, 1, "ပေါင်းခြင်း"),
+                                                _buildItem(
+                                                    7,
+                                                    1,
+                                                    1,
+                                                    bill.percentage
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    7,
+                                                    2,
+                                                    1,
+                                                    "(" +
+                                                        bill.layerDes7
+                                                            .toString() +
+                                                        ")" +
+                                                        bill.layerRate7
+                                                            .toString()
+                                                            .replaceAll(
+                                                                ".0", "")),
+                                                _buildItem(
+                                                    7,
+                                                    3,
+                                                    1,
+                                                    bill.layerAmount7
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    8, 0, 1, "သုံးစွဲယူနစ်"),
+                                                _buildItem(
+                                                    8,
+                                                    1,
+                                                    1,
+                                                    bill.unitsToPay
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    8, 2, 1, "မြင်းကောင်ရေ"),
+                                                _buildItem(
+                                                    8,
+                                                    3,
+                                                    1,
+                                                    bill.mHorsePower
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(9, 0, 1,
+                                                    "ဓာတ်အားခစုစုပေါင်း"),
+                                                _buildItem(
+                                                    9,
+                                                    1,
+                                                    1,
+                                                    bill.cost
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    9, 2, 1, "မီတာဝန်ဆောင်ခ"),
+                                                _buildItem(
+                                                    9,
+                                                    3,
+                                                    1,
+                                                    bill.mMaintenanceCost
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(
+                                                    10, 0, 1, "မြင်းကောင်ရေကြေး"),
+                                                _buildItem(
+                                                    10,
+                                                    1,
+                                                    1,
+                                                    bill.mHorsePowerCost
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                                _buildItem(10, 2, 1,
+                                                    "ကျသင့်ငွေစုစုပေါင်း"),
+                                                _buildItem(
+                                                    10,
+                                                    3,
+                                                    1,
+                                                    bill.totalCostOrg
+                                                        .toString()
+                                                        .replaceAll(".0", "")),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
+                                          bill.creditAmount == null ||
+                                                  bill.creditAmount == 0
+                                              ? Container()
+                                              : Container(
+                                                  alignment: Alignment(1.0, 1.0),
+                                                  padding: const EdgeInsets.only(
+                                                      top: 5.0),
+                                                  child: Text(
+                                                    "ယခင်ကြွေးကျန်" +
+                                                        bill.creditAmount
+                                                            .toString(),
+                                                    style: getTextStyle(),
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                ),
+                                          bill.disscountAmt == null ||
+                                                  bill.disscountAmt == 0
+                                              ? Container()
+                                              : Container(
+                                                  alignment: Alignment(1.0, 1.0),
+                                                  padding: const EdgeInsets.only(
+                                                      top: 5.0),
+                                                  child: Text(
+                                                    "ကင်းလွတ်ခွင့် " +
+                                                        bill.disscountAmt
+                                                            .toString()
+                                                            .replaceAll(".0", ""),
+                                                    style: getTextStyle(),
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                ),
                                           Container(
-                                              height: 55.0,
-                                              width: 75.0,
-                                              child: CachedNetworkImage(
-                                                placeholder: (context, url) =>
-                                                    CircularProgressIndicator(),
-                                                imageUrl: bill.signUrl,
-                                              )),
-                                          //Container( height:60.0,width:90.0, child: Image.network(StaticCompanyInfo.signUrl),),
-
-                                          /// Text('လျှပ်စစ်ပုံစံ(၂၄၃)',style: getTextStyle()),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0),
-                                            child: BarCodeImage(
-                                              params: Code39BarCodeParams(
-                                                bill.customerId,
-                                                lineWidth:
-                                                    1.2, // width for a single black/white bar (default: 2.0)
-                                                barHeight:
-                                                    50.0, // height for the entire widget (default: 100.0)
-                                                withText:
-                                                    true, // Render with text label or not (default: false)
-                                              ),
-                                              onError: (error) {
-                                                // Error handler
-                                                print('error = $error');
-                                              },
+                                            alignment: Alignment(1.0, 1.0),
+                                            padding:
+                                                const EdgeInsets.only(top: 5.0),
+                                            child: Text(
+                                              "Total   " +
+                                                  ((bill.creditAmount == null
+                                                              ? 0
+                                                              : bill.creditAmount
+                                                                  .toDouble()) +
+                                                          bill.totalCost)
+                                                      .toString()
+                                                      .replaceAll(".0", ""),
+                                              style: getTextStyle(),
+                                              textAlign: TextAlign.right,
                                             ),
-                                          )
+                                          ),
                                         ],
                                       ),
-                                    ),
 
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 16.0,
+                                      Container(
+                                        // height: 55.0,
+                                        // width: 75.0,
+                                        // color: Colors.red,
+                                        padding: EdgeInsets.only(top: 0.0),
+                                        margin: EdgeInsets.all(0.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Container(
+                                                height: 55.0,
+                                                width: 75.0,
+                                                child: CachedNetworkImage(
+                                                  placeholder: (context, url) =>
+                                                      CircularProgressIndicator(),
+                                                  imageUrl: bill.signUrl,
+                                                )),
+                                            //Container( height:60.0,width:90.0, child: Image.network(StaticCompanyInfo.signUrl),),
+
+                                            /// Text('လျှပ်စစ်ပုံစံ(၂၄၃)',style: getTextStyle()),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10.0),
+                                              child: BarCodeImage(
+                                                params: Code39BarCodeParams(
+                                                  bill.customerId,
+                                                  lineWidth:
+                                                      1.2, // width for a single black/white bar (default: 2.0)
+                                                  barHeight:
+                                                      50.0, // height for the entire widget (default: 100.0)
+                                                  withText:
+                                                      true, // Render with text label or not (default: false)
+                                                ),
+                                                onError: (error) {
+                                                  // Error handler
+                                                  print('error = $error');
+                                                },
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                      child: Text(
-                                          (bill.refundAmount != null &&
-                                                      bill.refundAmount > 0
-                                                  ? "စားရင်းညှိ  " +
-                                                      bill.refundAmount
-                                                          .toString() +
-                                                      "   "
-                                                  : "") +
-                                              "hotline: " +
-                                              bill.hotline,
-                                          style: getTextStyle()),
-                                    ),
-                                  ],
+
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 16.0,
+                                        ),
+                                        child: Text(
+                                            (bill.refundAmount != null &&
+                                                        bill.refundAmount > 0
+                                                    ? "စားရင်းညှိ  " +
+                                                        bill.refundAmount
+                                                            .toString() +
+                                                        "   "
+                                                    : "") +
+                                                "hotline: " +
+                                                bill.hotline,
+                                            style: getTextStyle()),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               (bill.isPaid != null &&
@@ -658,24 +676,23 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                           ),
                         ),
                         Positioned(
-                          top: 40,
+                          top: 20,
                           right: 50,
                           child: getBillStatusWidget(bill),
                         ),
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: IconButton(
-                            onPressed: () async {
-                              await shareImage(context);
-                              //await shareDemoImage(context);
-                            },
-                            icon: Icon(
-                              Icons.share,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        )
+                        // Positioned(
+                        //   top: 0,
+                        //   right: 0,
+                        //   child: IconButton(
+                        //     onPressed: () async {
+                        //      await shareImage(context);
+                        //     },
+                        //     icon: Icon(
+                        //       Icons.share,
+                        //       color: Theme.of(context).primaryColor,
+                        //     ),
+                        //   ),
+                        // )
                       ],
                     ),
                   ),
@@ -766,22 +783,6 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
   final GlobalKey _globalKey = GlobalKey();
   String meterNo = "";
 
-  Future<void> shareDemoImage(BuildContext context) async {
-    // await Share.share("Hello");
-    if (Platform.isAndroid) {
-      var urlImg = 'https://i.ytimg.com/vi/fq4N0hgOWzU/maxresdefault.jpg';
-      var url = Uri.parse(urlImg);
-      var response = await http.get(url);
-      final documentDirectory = (await getExternalStorageDirectory()).path;
-      File imgFile = new File('$documentDirectory/flutter.png');
-      imgFile.writeAsBytesSync(response.bodyBytes);
-
-      // Share.shareFile(File('$documentDirectory/flutter.png'),
-      //     subject: 'URL File Share',
-      //     text: 'Hello, check your share files!',
-      //     sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-    } else {}
-  }
 
   Future<Uint8List> removeWhiteBackground(Uint8List bytes) async {
     Img.Image image = Img.decodeImage(bytes);
@@ -805,26 +806,12 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
   Future<void> shareImage(BuildContext context) async {
     String fileName = "MeterBill-$meterNo.png";
     final RenderBox box = context.findRenderObject() as RenderBox;
-    // Share.share("Hello",
-    //     subject: "subject",
-    //     sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
 
     try {
       //extract bytes
       final RenderRepaintBoundary boundary =
           _globalKey.currentContext.findRenderObject();
       final ui.Image image = await boundary.toImage();
-
-      // final ByteData byteData =
-      //     await image.toByteData(format: ui.ImageByteFormat.png);
-
-      // final image = await QrPainter(
-      //   data: widget.user.uid,
-      //   version: QrVersions.auto,
-      //   gapless: false,
-      //   color: Color(0xff000000),
-      //   emptyColor: Color(0xffffffff),
-      // ).toImage(300);
       Size size = new Size(image.width.toDouble(), image.height.toDouble());
       final byteData = await CodeInvoicePainter(qrImage: image, margin: 2)
           .toImageData(size, format: ui.ImageByteFormat.png);
@@ -871,10 +858,13 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
       );
     } else {
       if (bill.status == MeterBillStatus.paid) {
-        return Icon(
-          Icons.error,
-          color: Colors.red,
-          size: 40,
+        return Padding(
+          padding: EdgeInsets.only(left: 40),
+          child: Icon(
+            Icons.error,
+            color: Colors.red,
+            size: 40,
+          ),
         );
       } else {
         return Text("");

@@ -43,7 +43,7 @@ class CodeInvoicePainter extends CustomPainter {
 
   Future<ui.Image> toImage(Size size,
       {ui.ImageByteFormat format = ui.ImageByteFormat.png}) async {
-    return await toPicture(size).toImage(size.width.toInt() + margin.toInt() *2,size.height.toInt() + margin.toInt()*2);
+    return await toPicture(size).toImage(size.width.toInt(),size.height.toInt() );
   }
 
   Future<ByteData> toImageData(Size size,

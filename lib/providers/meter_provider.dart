@@ -28,4 +28,27 @@ class MeterProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
     return false;
   }
+
+  Future<List<Meter>> getMeterList(BuildContext context) async {
+    List<Meter> list = [];
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      try {
+        await meterRef
+            .doc(FirebaseAuth.instance.currentUser.uid)
+            .collection(userMeterCollection)
+            .get()
+            .then((value) {
+          value.docs.forEach((result) {
+            print(result.data());
+            list.add(Meter.fromJson(result.data()));
+          });
+        });
+      } catch (e) {
+        print("Failed to get meter list: $e");
+        MessageHandler.showErrMessage(context, "Fail", "Get meter list fail");
+      }
+    }
+    notifyListeners();
+    return list;
+  }
 }

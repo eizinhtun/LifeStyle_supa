@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> {
                     // ),
                     ),
                 bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(50),
+                  preferredSize: Size.fromHeight(20),
                   child: Container(),
                 ),
               ),

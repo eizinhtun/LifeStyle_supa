@@ -14,6 +14,7 @@ import 'package:left_style/pages/login.dart';
 import 'package:left_style/pages/user_not_active.dart';
 import 'package:left_style/pages/user_profile.dart';
 import 'package:left_style/providers/language_provider.dart';
+import 'package:left_style/providers/meter_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:provider/provider.dart';
@@ -78,8 +79,11 @@ void main() async {
   // runApp(TestFromImage());
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LoginProvider()),
-    ChangeNotifierProvider(create: (_) => LanguageProvider()),
+    ChangeNotifierProvider(
+      create: (_) => LanguageProvider(),
+    ),
     ChangeNotifierProvider(create: (_) => WalletProvider()),
+    ChangeNotifierProvider(create: (_) => MeterProvider()),
     ChangeNotifierProvider(create: (_) => MeterBillProvider()),
     ChangeNotifierProvider(create: (_) => NotiProvider()),
   ], child: MyApp()));
@@ -105,7 +109,73 @@ class _MyAppState extends State<MyApp> {
     800: Color.fromRGBO(136, 14, 79, .9),
     900: Color.fromRGBO(136, 14, 79, 1),
   };
-
+  // static MePage _mePage = MePage();
+  // static HomePage _homePage = HomePage();
+  // static Wallet _walletPage = Wallet();
+  // int bottomSelectedIndex = 0;
+  // PageController _pageController;
+  // List<Widget> _list = <Widget>[
+  //   Center(child: _homePage),
+  //   Center(child: _walletPage),
+  //   Center(child: _mePage),
+  // ];
+  //
+  // Future<void> bottomTapped(int index) async {
+  //   setState(() async {
+  //     bottomSelectedIndex = index;
+  //    _pageController.jumpToPage(index);
+  //   });
+  // }
+  // Widget _bottomNav(BuildContext context){
+  //   return Scaffold(
+  //     body: PageView(
+  //       children: <Widget>[
+  //         Center(child: _homePage),
+  //         Center(child: _walletPage),
+  //         Center(child: _mePage),
+  //       ],
+  //       scrollDirection: Axis.horizontal,
+  //       controller: _pageController,
+  //       onPageChanged: (num) {
+  //         setState(() {
+  //           bottomSelectedIndex = num;
+  //         });
+  //       },
+  //     ),
+  //     bottomNavigationBar:
+  //     BottomNavigationBar(
+  //       type: BottomNavigationBarType.fixed,
+  //       currentIndex: bottomSelectedIndex,
+  //       onTap: (index) {
+  //         setState(() async {
+  //           bottomSelectedIndex = index;
+  //           _pageController.jumpToPage(index);
+  //         });
+  //       },
+  //       items: [
+  //         BottomNavigationBarItem(
+  //           activeIcon: Icon(
+  //             FontAwesomeIcons.home,
+  //           ),
+  //           icon: Icon(FontAwesomeIcons.home),
+  //           label: Tran.of(context).text("home"),
+  //         ),
+  //         BottomNavigationBarItem(
+  //           activeIcon: Icon(
+  //             FontAwesomeIcons.wallet,
+  //           ),
+  //           icon: Icon(FontAwesomeIcons.wallet),
+  //           label: Tran.of(context).text("wallet"),
+  //         ),
+  //         BottomNavigationBarItem(
+  //             activeIcon: Icon(FontAwesomeIcons.user),
+  //             icon: Icon(FontAwesomeIcons.user),
+  //             label: Tran.of(context).text("me")),
+  //       ],
+  //     ),
+  //     // ),
+  //   );
+  // }
   @override
   void initState() {
     super.initState();
@@ -134,7 +204,6 @@ class _MyAppState extends State<MyApp> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
               User user = snapshot.data;
-
               if (user == null) {
                 return LoginPage();
                 // setState(() {});
@@ -152,6 +221,8 @@ class _MyAppState extends State<MyApp> {
                         // print(snapshot.data["isActive"]);
                         if (snapshot.data["isActive"]) {
                           return HomePageDetail();
+                          // return _bottomNav(context);
+
                         } else {
                           return UserNotActiveScreen();
                         }

@@ -5,11 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/current_location.dart';
+import 'package:left_style/pages/main_page_view.dart';
 import 'package:left_style/pages/setting.dart';
 import 'package:left_style/pages/text_from_image_v2.dart';
 import 'package:left_style/pages/text_from_image.dart';
@@ -26,21 +28,19 @@ import 'meter_list.dart';
 import 'notification_list.dart';
 
 class MePage extends StatefulWidget {
-  const MePage({Key key}) : super(key: key);
+  final HomePageDetailState main;
+  const MePage({Key key, this.main}) : super(key: key);
 
   @override
   _MePageState createState() => _MePageState();
 }
 
 class _MePageState extends State<MePage> {
-  final db = FirebaseFirestore.instance;
-  UserModel user = UserModel();
   bool _isSigningOut = false;
   String url = "";
   @override
-  void initState() {
+  Future<void> initState() {
     super.initState();
-    getUser();
     getData();
   }
 
@@ -75,15 +75,6 @@ class _MePageState extends State<MePage> {
   //   );
   // }
 
-  String fullName;
-  String photoUrl;
-  String address;
-
-  Future<UserModel> getUser() async {
-    user = await context.read<LoginProvider>().getUser(context);
-    return user;
-  }
-
   double titleHeight = 50;
   double leadingWidth = 50;
   double iconSize = 30;
@@ -95,211 +86,104 @@ class _MePageState extends State<MePage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: FutureBuilder(
-          future: getUser(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.data == null) {
-              return Container(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                  ],
-                ),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection(userCollection)
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .snapshots(),
+          // ignore: missing_return
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CupertinoActivityIndicator(),
               );
-            } else {
-              user = snapshot.data;
-              print(snapshot.data);
+            } else if (snapshot.hasData) {
+              UserModel _user = UserModel.fromJson(snapshot.data.data());
+              if (_user.fullName != null && _user.fullName == "") {
+                initialName = _user.fullName.substring(0, 1).toUpperCase();
+              }
+
               return Container(
                 margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 child: ListView(
                   children: [
-                    StreamBuilder(
-                      stream: db
-                          .collection(userCollection)
-                          .doc(FirebaseAuth.instance.currentUser.uid)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: CupertinoActivityIndicator(),
-                          );
-                        } else if (snapshot.hasData) {
-                          UserModel _user =
-                              UserModel.fromJson(snapshot.data.data());
-                          if (_user.fullName != null && _user.fullName == "") {
-                            initialName =
-                                _user.fullName.substring(0, 1).toUpperCase();
-                          }
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => EditUserProfilePage(
-                                    user: _user,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 0),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => EditUserProfilePage(
+                              user: _user,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        UserInfoScreenPhoto(
-                                          name: initialName,
-                                          imageurl: _user.photoUrl,
-                                          width: 80,
-                                          height: 80,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                          child: Expanded(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  height: 20,
-                                                ),
-                                                Text(
-                                                  "${_user.fullName}",
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(
-                                                    Tran.of(context)
-                                                        .text("balance")
-                                                        .replaceAll("@amount",
-                                                            " ${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)}")
-                                                        .replaceAll(
-                                                            "@balanceKs",
-                                                            Tran.of(context)
-                                                                .text("ks")),
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 13,
-                                                        color: Colors.black)),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  UserInfoScreenPhoto(
+                                    name: initialName,
+                                    imageurl: _user.photoUrl,
+                                    width: 80,
+                                    height: 80,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Icon(
-                                      Icons.qr_code,
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    child: Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Text(
+                                            "${_user.fullName}",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                              Tran.of(context)
+                                                  .text("balance")
+                                                  .replaceAll("@amount",
+                                                      " ${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)}")
+                                                  .replaceAll(
+                                                      "@balanceKs",
+                                                      Tran.of(context)
+                                                          .text("ks")),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13,
+                                                  color: Colors.black)),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          );
-                        } else {
-                          return Text("No data found");
-                        }
-                      },
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Icon(
+                                Icons.qr_code,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    // InkWell(
-                    //   onTap: () {
-                    //     fullName = user.fullName.toString();
-                    //     photoUrl = user.photoUrl.toString();
-                    //     address = user.address.toString();
-                    //     Navigator.of(context).push(
-                    //       MaterialPageRoute(
-                    //         builder: (context) => EditUserProfilePage(
-                    //           user: user,
-                    //         ),
-                    //       ),
-                    //     );
-                    //   },
-                    //   child: Container(
-                    //     padding:
-                    //         EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       children: [
-                    //         Flexible(
-                    //           child: Row(
-                    //             mainAxisAlignment: MainAxisAlignment.start,
-                    //             crossAxisAlignment: CrossAxisAlignment.start,
-                    //             children: <Widget>[
-                    //               // CircleAvatar(
-                    //               //   radius: 40,
-                    //               //   backgroundImage: AssetImage(
-                    //               //       "assets/image/user-photo.png"),
-                    //               // ),
-                    //               UserInfoScreenPhoto(
-                    //                 name: user.fullName
-                    //                     .substring(0, 1)
-                    //                     .toUpperCase(),
-                    //                 imageurl: user.photoUrl,
-                    //                 width: 80,
-                    //                 height: 80,
-                    //               ),
-                    //               SizedBox(
-                    //                 width: 20,
-                    //               ),
-                    //               Container(
-                    //                 child: Expanded(
-                    //                   child: Column(
-                    //                     mainAxisAlignment:
-                    //                         MainAxisAlignment.center,
-                    //                     crossAxisAlignment:
-                    //                         CrossAxisAlignment.start,
-                    //                     children: [
-                    //                       SizedBox(
-                    //                         height: 20,
-                    //                       ),
-                    //                       Text(
-                    //                         "${user.fullName}",
-                    //                         style: TextStyle(
-                    //                             fontSize: 16,
-                    //                             fontWeight: FontWeight.bold),
-                    //                       ),
-                    //                       Text(
-                    //                           "Balance : ${user.balance.toString()} Ks",
-                    //                           style: TextStyle(
-                    //                               fontSize: 16,
-                    //                               fontWeight: FontWeight.bold)),
-                    //                     ],
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //         Padding(
-                    //           padding: const EdgeInsets.only(right: 8.0),
-                    //           child: Icon(
-                    //             Icons.qr_code,
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
 
                     Divider(
                       thickness: 0.5,
@@ -309,13 +193,10 @@ class _MePageState extends State<MePage> {
                       height: titleHeight,
                       child: ListTile(
                         onTap: () async {
-                          fullName = user.fullName.toString();
-                          photoUrl = user.photoUrl.toString();
-                          address = user.address.toString();
                           var result = await Navigator.of(context)
                               .push(MaterialPageRoute(
                                   builder: (context) => EditUserProfilePage(
-                                        user: user,
+                                        user: _user,
                                       )));
                           if (result != null && result == true) {
                             setState(() {});
@@ -524,10 +405,6 @@ class _MePageState extends State<MePage> {
                             ],
                           ),
                         ),
-                        // leading: Icon(
-                        //   Icons.notifications,
-                        //   color: mainColor,
-                        // ),
                         title: Text(
                           Tran.of(context).text("notification"),
                           style: TextStyle(fontWeight: FontWeight.bold),
@@ -574,34 +451,13 @@ class _MePageState extends State<MePage> {
                       thickness: 0.5,
                       height: 1,
                     ),
-                    // Container(
-                    //   height: titleHeight,
-                    //   child: ListTile(
-                    //     onTap: () {
-                    //       Navigator.of(context).push(MaterialPageRoute(
-                    //           builder: (context) => LanguagePage()));
-                    //     },
-                    //     leading: Container(
-                    //       width: leadingWidth,
-                    //       alignment: Alignment.centerLeft,
-                    //       child: Icon(
-                    //         Icons.language,
-                    //         size: iconSize,
-                    //         color: mainColor,
-                    //       ),
-                    //     ),
-                    //     title: Text(
-                    //       Tran.of(context).text("languagePage"),
-                    //       style: TextStyle(fontWeight: FontWeight.bold),
-                    //     ),
-                    //   ),
-                    // ),
                     Container(
                       height: titleHeight,
                       child: ListTile(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => LanguagePage()));
+                          widget.main.refreshPage();
                         },
                         leading: Container(
                           width: leadingWidth,
@@ -616,9 +472,13 @@ class _MePageState extends State<MePage> {
                           Tran.of(context).text("languagePage"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                          color: Colors.black26,
+                        ),
                       ),
                     ),
-
                     Divider(
                       thickness: 0.5,
                       height: 1,
@@ -754,9 +614,7 @@ class _MePageState extends State<MePage> {
                 ),
               );
             }
-          },
-        ),
-      ),
+          }),
     );
   }
 
