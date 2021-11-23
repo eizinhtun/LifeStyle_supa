@@ -68,7 +68,6 @@ class DatabaseHelper {
   static Future<void> setLanguage(BuildContext context, String lang) async {
     try {
       SystemData.language = lang;
-
       await DatabaseHelper.setData(lang, "language").then((value) {});
       await Tran.of(context).load();
       return;

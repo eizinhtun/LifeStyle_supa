@@ -175,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                     // ),
                     ),
                 bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(50),
+                  preferredSize: Size.fromHeight(20),
                   child: Container(),
                 ),
               ),
@@ -348,7 +348,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Positioned(
-            top: 60,
+            top: 30,
             left: 0,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 15),

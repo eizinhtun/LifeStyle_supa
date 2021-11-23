@@ -168,9 +168,10 @@ class MeterBill {
       this.dueDate,
       this.readUnit});
 
-  MeterBill.fromJson(Map<String, dynamic> json) {
+  MeterBill.fromJson(Map<String, dynamic> json,{String meterName}) {
     // print(json['isPaid']);
     // print(json['isPaid'] == false);
+    meterName=meterName;
     isPaid = json['isPaid'];
     remark = json['remark'];
     payDate = json['payDate'];

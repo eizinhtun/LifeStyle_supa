@@ -2,7 +2,6 @@
   "verifying": "Verfying ...",
   "approved": "Approved",
   "rejected": "Rejected",
-
   "phone":"Phone number",
   "password":"Password",
   "login":"Login with Phone",
@@ -12,12 +11,12 @@
   "requiredField": " @value is required",
   "lenghtInvaild":"@filed is  @size number",
   "userInvaild":"Account is not correct",
-  "full_name":"Full Name",  
+  "full_name":"Full Name",
   "confirm_password":"确认密码",
   "register":"Register",
   "meter_rearch": "Search Meter",
   "meter_detail": "Meter Details",
-  "my_meters": "My meters",
+  "my_meters": "CH My meters",
   "current_unit": "Current Unit",
   "my_uploaded_unit": "My uploaded ",
   "my_meter_bills": "My meter bills",
@@ -48,11 +47,9 @@
   "phoneNumberVerificationFailedCode": "Phone number verification failed. Code: @authExceptionCode. Message: @authExceptionMessage",
   "checkPhoneNumberVerificationCode": "Please check your phone for the verification code.",
   "failVerifyPhoneNumber": "Failed to Verify Phone Number: @e",
-
-  "help": "Help",
+  "help": "Helpjj",
   "readMeterSearchTitle": "Select search option",
   "readMeterSearchClose": "Close",
-
   "logout": "退出",
   "meterList": "Meter List",
   "myAccount": "My Account",
@@ -64,7 +61,6 @@
   "home": "首页",
   "wallet": "钱包",
   "me": "我",
-
   "balance": "余额 : @amount @balanceKs",
   "address": "Address",
   "save": "Save",

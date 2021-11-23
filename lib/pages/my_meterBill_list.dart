@@ -90,6 +90,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
               child: CircularProgressIndicator(),
             )
           : StreamBuilder<QuerySnapshot>(
+
               stream: db
                   .collection(meterBillsCollection)
                   .where(FieldPath.documentId, whereIn: customerIds)
@@ -106,6 +107,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                     child: ListView(
                       children: snapshot.data.docs.map((doc) {
                         MeterBill bill = MeterBill.fromJson(doc.data());
+
                         // MyReadUnit item = MyReadUnit.fromJson(doc.data());
                         print(bill.readImageUrl);
                         return InkWell(
@@ -255,9 +257,13 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                     )
                                                   : Text(
                                                       "Due date " +
-                                                          Formatter.getDate(bill
-                                                              .dueDate
-                                                              .toDate()),
+                                                          Formatter.dateTimeFormat(DateTime
+                                                              .fromMillisecondsSinceEpoch(
+                                                              bill.dueDate
+                                                                  .millisecondsSinceEpoch)),
+                                                          // Formatter.getDate(bill
+                                                          //     .dueDate
+                                                          //     .toDate()),
                                                       style: TextStyle(
                                                           fontStyle:
                                                               FontStyle.italic,
@@ -271,11 +277,18 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                               alignment: Alignment.centerRight,
                                               child: Text(
                                                 bill.isPaid
-                                                    ? bill.payDate
-                                                    : Formatter.getDate(new DateTime
-                                                            .fromMillisecondsSinceEpoch(
-                                                        bill.readDate
-                                                            .millisecondsSinceEpoch)),
+                                                    ? Formatter.dateTimeFormat(DateTime
+                                                    .fromMillisecondsSinceEpoch(
+                                                    bill.payDate
+                                                        .millisecondsSinceEpoch))
+                                                    :Formatter.dateTimeFormat(DateTime
+                                                    .fromMillisecondsSinceEpoch(
+                                                   bill.readDate
+                                                        .millisecondsSinceEpoch)),
+                                                // Formatter.getDate(new DateTime
+                                                //             .fromMillisecondsSinceEpoch(
+                                                //         bill.readDate
+                                                //             .millisecondsSinceEpoch)),
                                                 textAlign: TextAlign.right,
                                                 style: TextStyle(
                                                     fontStyle: FontStyle.italic,

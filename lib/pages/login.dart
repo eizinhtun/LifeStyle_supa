@@ -276,7 +276,7 @@ class _LoginPageState extends State<LoginPage> {
     // setState(() {
     //   isWaiting = true;
     // });
-    // String token = await checkToken(fcmtoken);
+    String token = await checkToken(fcmtoken);
     await context.read<LoginProvider>().googleLogin(context, token);
     // setState(() {
     //   isWaiting = false;

@@ -22,11 +22,12 @@ import 'notification_detail.dart';
 class HomePageDetail extends StatefulWidget {
   const HomePageDetail({Key key}) : super(key: key);
 
+
   @override
-  _HomePageDetailState createState() => _HomePageDetailState();
+  HomePageDetailState createState() => HomePageDetailState();
 }
 
-class _HomePageDetailState extends State<HomePageDetail> {
+class HomePageDetailState extends State<HomePageDetail> {
   FirebaseMessaging _messaging;
   static const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'id', // id
@@ -45,6 +46,12 @@ class _HomePageDetailState extends State<HomePageDetail> {
   @override
   void initState() {
     super.initState();
+    _mePage = MePage(main: this);
+   _list= <Widget>[
+      Center(child: _homePage),
+      Center(child: _walletPage),
+      Center(child: _mePage),
+    ];
     getData();
     if (!kIsWeb) {
       registerNotification(context);
@@ -97,7 +104,10 @@ class _HomePageDetailState extends State<HomePageDetail> {
     // controller.dispose();
     super.dispose();
   }
-
+  void refreshPage(){
+    setState(() {
+    });
+  }
   void registerNotification(BuildContext context) async {
     _messaging = FirebaseMessaging.instance;
 
@@ -499,24 +509,23 @@ class _HomePageDetailState extends State<HomePageDetail> {
     }
   }
 
-  static MePage _mePage = MePage();
+  static MePage _mePage = null;
+
   static HomePage _homePage = HomePage();
   static Wallet _walletPage = Wallet();
 
   PageController controller = PageController();
-  List<Widget> _list = <Widget>[
-    Center(child: _homePage),
-    Center(child: _walletPage),
-    Center(child: _mePage),
-  ];
+  List<Widget> _list =[];
   int bottomSelectedIndex = 0;
 
   Future<void> bottomTapped(int index) async {
-    setState(() {
+    setState(() async {
       bottomSelectedIndex = index;
       controller.jumpToPage(index);
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {

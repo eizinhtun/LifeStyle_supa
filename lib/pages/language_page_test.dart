@@ -16,7 +16,6 @@ class LanguagePageTest extends StatefulWidget {
 class _LanguagePageTestState extends State<LanguagePageTest> {
   double height = 50;
   String lang = "en";
-  bool isSelected = true;
 
   @override
   void initState() {
@@ -33,7 +32,7 @@ class _LanguagePageTestState extends State<LanguagePageTest> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(Tran.of(context).text("languagePage")),
+        title: Text("Select Language"),
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -43,19 +42,15 @@ class _LanguagePageTestState extends State<LanguagePageTest> {
               height: height,
               child: ListTile(
                 onTap: () async {
-                  await context
-                      .read<LanguageProvider>()
-                      .changeLang(context, "my")
-                      .then((value) {
+                  await DatabaseHelper.setLanguage(context, "my");
+                  await Tran.of(context).load();
                     Navigator.pop(context);
-                  });
 
                 },
                 title: Text(
                   "မြန်မာ",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-
               ),
             ),
             Divider(
@@ -66,19 +61,14 @@ class _LanguagePageTestState extends State<LanguagePageTest> {
               height: height,
               child: ListTile(
                 onTap: () async {
-                  await context
-                      .read<LanguageProvider>()
-                      .changeLang(context, "en")
-                      .then((value) {
-                    Navigator.pop(context);
-                  });
-
+                  await DatabaseHelper.setLanguage(context, "en");
+                  await Tran.of(context).load();
+                  Navigator.pop(context);
                 },
                 title: Text(
                   "English",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                trailing: isSelected? Icon(Icons.check,color: Colors.green):null,
               ),
             ),
             Divider(
@@ -95,7 +85,6 @@ class _LanguagePageTestState extends State<LanguagePageTest> {
                       .then((value) {
                     Navigator.pop(context);
                   });
-
                 },
                 title: Text(
                   "中文",
