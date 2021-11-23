@@ -317,6 +317,32 @@ class _PayBillPageState extends State<PayBillPage> {
                           child: Container(
                             padding: EdgeInsets.all(12),
                             child: Text(
+                              "Close",
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            side: BorderSide(
+                              width: 1.0,
+                              color: Colors.black12,
+                              style: BorderStyle.solid,
+                            ),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.all(12),
+                            child: Text(
                               "Confirm",
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
@@ -337,34 +363,8 @@ class _PayBillPageState extends State<PayBillPage> {
                               print(widget.bill.toJson());
                               await context.read<WalletProvider>().payMeterBill(
                                   context, widget.bill, widget.docId);
-                                  Navigator.of(context).pop();
+                              Navigator.of(context).pop();
                             }
-                          },
-                        ),
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            side: BorderSide(
-                              width: 1.0,
-                              color: Colors.black12,
-                              style: BorderStyle.solid,
-                            ),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.all(12),
-                            child: Text(
-                              "Close",
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
                           },
                         ),
                       ],

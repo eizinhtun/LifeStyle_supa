@@ -13,14 +13,16 @@ import 'package:left_style/widgets/withdrawal_widget.dart';
 class ShowBalance extends StatelessWidget {
   ShowBalance(
       {Key key,
-      this.onTopued,
+      this.onTopuped,
       this.onWithdrawed,
       this.color = Colors.black38,
+      this.walletColor = Colors.white,
       this.showIconColor = Colors.pink})
       : super(key: key);
-  final ValueSetter<bool> onTopued; //= (value) {};
+  final ValueSetter<bool> onTopuped; //= (value) {};
   final ValueSetter<bool> onWithdrawed; // = (value) {};
   final Color color;
+  final Color walletColor;
   final Color showIconColor;
 
   @override
@@ -49,7 +51,7 @@ class ShowBalance extends StatelessWidget {
                   },
                   icon: Icon(
                     Icons.account_balance_wallet,
-                    color: color,
+                    color: walletColor,
                     size: 35,
                   ),
                   label: Row(
@@ -80,7 +82,7 @@ class ShowBalance extends StatelessWidget {
                     if (val == 1) {
                       var result = await Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => TopUpPage()));
-                      onTopued(result);
+                      onTopuped(result);
                       /*if (result != null && result == true) {
                         _isLoading = true;
                         _onRefresh();
@@ -132,7 +134,7 @@ class ShowBalance extends StatelessWidget {
                                           right: 8.0, top: 10, bottom: 10),
                                       child: Icon(
                                         Icons.remove_circle,
-                                        color: Colors.grey.withOpacity(0.5),
+                                        color: Theme.of(context).primaryColor,
                                       )),
                                   Text(Tran.of(context).text("withdrawal")),
                                 ],

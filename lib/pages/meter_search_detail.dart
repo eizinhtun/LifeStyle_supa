@@ -351,41 +351,41 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                 SizedBox(
                                   height: 5,
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding:
-                                          EdgeInsets.only(top: 0, bottom: 5),
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Last Date",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black87,
-                                            fontSize: 13),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding:
-                                          EdgeInsets.only(top: 0, bottom: 5),
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "${widget.obj.dueDate}",
-                                        // Formatter.getDate(
-                                        //     widget.obj.dueDate.toDate()),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
-                                            fontSize: 13),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
+                                // Row(
+                                //   mainAxisAlignment:
+                                //       MainAxisAlignment.spaceBetween,
+                                //   children: [
+                                //     Container(
+                                //       padding:
+                                //           EdgeInsets.only(top: 0, bottom: 5),
+                                //       alignment: Alignment.centerLeft,
+                                //       child: Text(
+                                //         "Last Date",
+                                //         style: TextStyle(
+                                //             fontWeight: FontWeight.bold,
+                                //             color: Colors.black87,
+                                //             fontSize: 13),
+                                //       ),
+                                //     ),
+                                //     Container(
+                                //       padding:
+                                //           EdgeInsets.only(top: 0, bottom: 5),
+                                //       alignment: Alignment.centerLeft,
+                                //       child: Text(
+                                //         "${widget.obj.dueDate}",
+                                //         // Formatter.getDate(
+                                //         //     widget.obj.dueDate.toDate()),
+                                //         style: TextStyle(
+                                //             fontWeight: FontWeight.bold,
+                                //             color: Colors.black54,
+                                //             fontSize: 13),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // SizedBox(
+                                //   height: 5,
+                                // ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -452,8 +452,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        NumberFormat('#,###,000')
-                                            .format(widget.obj.horsePower),
+                                        widget.obj.horsePower.toString(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -486,9 +485,10 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        NumberFormat('#,###,000').format(
-                                                widget.obj.horsePowerCost) +
-                                            " Kyat",
+                                        "${widget.obj.horsePowerCost} Kyat",
+                                        // NumberFormat('#,###,000').format(
+                                        //         widget.obj.horsePowerCost) +
+                                        //     " Kyat",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -528,9 +528,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        NumberFormat('#,###,000').format(
-                                                widget.obj.chargePerUnit) +
-                                            " Kyat",
+                                        "${widget.obj.chargePerUnit} Kyat",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -633,26 +631,10 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                                 "This Meter is already added");
                                             return;
                                           }
-
-                                          if (FirebaseAuth
-                                                  .instance.currentUser?.uid !=
-                                              null) {
-                                            String uid = FirebaseAuth
-                                                .instance.currentUser.uid
-                                                .toString();
-                                            await FirebaseFirestore.instance
-                                                .collection(meterCollection)
-                                                .doc(uid)
-                                                .collection(userMeterCollection)
-                                                .doc(widget.obj.customerId)
-                                                .set(widget.obj.toJson());
-
-                                            Navigator.pop(context, true);
-                                            MessageHandler.showMessage(
-                                                context,
-                                                "",
-                                                "This Meter is successfully added");
-                                          }
+                                          showMeterRemarkDialog(context);
+                                          setState(() {
+                                            _submiting = false;
+                                          });
                                         },
                                       ),
                               )
@@ -668,8 +650,176 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
     );
   }
 
-  // @override
-  // void showMessage(String text) {
-  //   MessageHandler.showMessage(context, "", text);
-  // }
+  final _meterRemarkformKey = GlobalKey<FormState>();
+  TextEditingController meterRemarkController = TextEditingController();
+  bool _submiting = false;
+
+  void showMeterRemarkDialog(BuildContext context) {
+    // showDialog(
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, setState) => Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Container(
+              padding: EdgeInsets.all(16),
+              margin: const EdgeInsets.only(
+                  top: 10, left: 15, right: 15, bottom: 10),
+              // height: 160,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
+              child: Form(
+                key: _meterRemarkformKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Text("Enter Password", style: TextStyle(fontSize: 16)),
+                    Center(
+                      child: Text(
+                        "Enter Your Meter Remark",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: TextFormField(
+                        autofocus: true,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: meterRemarkController,
+                        keyboardType: TextInputType.text,
+                        // validator: (val) {
+                        //   return Validator.requiredField(
+                        //     context,
+                        //     val.toString(),
+                        //     "Remark",
+                        //   );
+                        // },
+                        decoration: InputDecoration(
+                          labelText:
+                              "${Tran.of(context)?.text('meter_remark')}",
+                          labelStyle: TextStyle(),
+                          hintText: "${Tran.of(context)?.text('meter_remark')}",
+                          hintStyle: TextStyle(color: Colors.grey[400]),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        OutlinedButton(
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              primary: Colors.white24,
+                              padding: EdgeInsets.only(
+                                left: 30,
+                                right: 30,
+                                top: 10,
+                                bottom: 10,
+                              ),
+                              textStyle:
+                                  TextStyle(fontWeight: FontWeight.bold)),
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            Tran.of(context).text("cancel"),
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        _submiting
+                            ? SpinKitDoubleBounce(
+                                color: Theme.of(context).primaryColor,
+                              )
+                            : ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                    padding: EdgeInsets.only(
+                                      left: 30,
+                                      right: 30,
+                                      top: 10,
+                                      bottom: 10,
+                                    ) // foreground
+                                    ),
+                                onPressed: _submiting
+                                    ? null
+                                    : () async {
+                                        if (_meterRemarkformKey.currentState
+                                            .validate()) {
+                                          setState(() {
+                                            _submiting = true;
+                                          });
+                                          if (FirebaseAuth
+                                                  .instance.currentUser?.uid !=
+                                              null) {
+                                            String uid = FirebaseAuth
+                                                .instance.currentUser.uid
+                                                .toString();
+                                            widget.obj.meterName =
+                                                meterRemarkController.text;
+                                            await FirebaseFirestore.instance
+                                                .collection(meterCollection)
+                                                .doc(uid)
+                                                .collection(userMeterCollection)
+                                                .doc(widget.obj.customerId)
+                                                .set(widget.obj.toJson());
+
+                                            Navigator.pop(context, true);
+                                            Navigator.pop(context, true);
+
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) =>
+                                            //         MeterEditPage(
+                                            //             docId: widget
+                                            //                 .obj.customerId),
+                                            //   ),
+                                            // );
+
+                                          }
+                                        }
+                                      },
+                                child: Text("Submit")),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

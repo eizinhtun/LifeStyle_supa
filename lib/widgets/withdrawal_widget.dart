@@ -36,11 +36,10 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   }
 
   Future<void> upload(TransactionModel model) async {
-
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       model.status = "verifying";
-      model.uid=uid;
+      model.uid = uid;
       // var result = await FirebaseFirestore.instance
       //     .collection(transactions)
       //     .doc(uid)
@@ -170,8 +169,9 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _transferAccountController,
                         keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
                         validator: (val) {
-                          return Validator.requiredField(context, val, '');
+                          return Validator.transferAmount(context, val);
                         },
                         decoration: buildInputDecoration("Transfer Account"),
                       ),
@@ -228,7 +228,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                   ),
                               onPressed: () async {
                                 if (_withdrawformKey.currentState.validate()) {
-                                  _ShowPasswordAlertDialog(
+                                  _showPasswordAlertDialog(
                                       context,
                                       _paymentMethod.id,
                                       _amountController.text,
@@ -268,7 +268,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
     );
   }
 
-  _ShowPasswordAlertDialog(
+  _showPasswordAlertDialog(
       BuildContext context, paymentType, amount, transferAccount) {
     print(transferAccount);
     showModalBottomSheet(

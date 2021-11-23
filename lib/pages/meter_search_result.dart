@@ -244,13 +244,16 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                         children: [
                                           ListTile(
                                             onTap: () async {
-                                              Navigator.push(
+                                              var result = await Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           new MeterSearchDetailPage(
                                                               obj: items[
                                                                   index])));
+                                              if (result != null && result) {
+                                                Navigator.of(context).pop(true);
+                                              }
                                             },
                                             contentPadding: EdgeInsets.only(
                                                 top: 0.0,

@@ -1,0 +1,20 @@
+ 
+//  {
+    // "invalid_pin":"Invalid PIN", 
+    // "invalid_pin_str":"Your pin is invalid",
+    //  "Attempt Exceed", "PIN Verify Attempt Exceed",
+    //  "PIN Expired", "PIN Expired",
+    //  "PIN Verified", "PIN Vefify OK",
+    //  "Unknown", "Unknown Error!",
+    //  "Add Meter","My Meters","Read Meter","Meter Bills",
+    //  "The user did not grant the camera permission!",
+    //  "Unknown error:","null (User returned using the "back"-button before scanning anything. Result)",
+    //  "Select Language",
+    //  "Phone number verification failed. Code:",
+    //  "Message:",
+    //  "Please check your phone for the verification code.",
+    //  "Failed to Verify Phone Number: ",
+ 
+     //login
+
+    // }

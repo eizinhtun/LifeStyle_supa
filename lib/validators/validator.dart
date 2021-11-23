@@ -57,6 +57,17 @@ class Validator {
     return null;
   }
 
+  static String transferAmount(BuildContext context, String value) {
+    if (value.length == 0) {
+      return 'Please enter transfer amount';
+    }
+    int amount = int.parse(value.trim());
+    if (amount < 1000) {
+      return 'Please enter at least 1000Ks for transfer amount';
+    }
+    return null;
+  }
+
   static String requiredField(
       BuildContext context, String value, String fileName) {
     if (value.isEmpty) {

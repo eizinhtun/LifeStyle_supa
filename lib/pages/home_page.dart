@@ -13,6 +13,8 @@ import 'package:left_style/pages/my_meterBill_list.dart';
 import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/widgets/home_item.dart';
 import 'package:left_style/widgets/show_balance.dart';
+import 'package:left_style/widgets/topup_widget.dart';
+import 'package:left_style/widgets/withdrawal_widget.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'ads_detail.dart';
@@ -130,21 +132,35 @@ class _HomePageState extends State<HomePage> {
   Color iconColor = Colors.black87;
 
   List<HomeItem> datalist = [
+    // HomeItem(
+    //   title: "Add Meter",
+    //   iconData: Icons.qr_code,
+    //   action: ActionButton.AddMeter,
+    // ),
     HomeItem(
-      title: "Add Meter",
-      iconData: Icons.qr_code,
-      action: ActionButton.AddMeter,
+      title: "Top up",
+      action: ActionButton.Topup,
+      img: "assets/icon/cash_in.png",
+      iconData:
+          // FontAwesomeIcons.cash
+          Icons.list,
     ),
     HomeItem(
-      title: "Meter List",
+      title: "My Meters",
       action: ActionButton.MeterList,
       iconData: Icons.list,
     ),
     HomeItem(
-      action: ActionButton.ReadUnit,
-      title: "Read Meter",
-      iconData: Icons.file_upload,
+      action: ActionButton.Withdraw,
+      title: "Withdraw",
+      iconData: Icons.ac_unit,
+      img: "assets/icon/cash_out.png",
     ),
+    // HomeItem(
+    //   action: ActionButton.ReadUnit,
+    //   title: "Read Meter",
+    //   iconData: Icons.file_upload,
+    // ),
     HomeItem(
         title: "Meter Bills",
         iconData: Icons.receipt_long,
@@ -361,12 +377,13 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Positioned(
-            top: 10,
+            top: 30,
             left: 0,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 15),
               height: MediaQuery.of(context).size.height - 100,
               width: MediaQuery.of(context).size.width - 30,
+              alignment: Alignment.center,
               child: Column(
                 children: [
                   Container(
@@ -632,11 +649,12 @@ class _HomePageState extends State<HomePage> {
                   context: context,
                   title: datalist.elementAt(i).title,
                   iconData: datalist.elementAt(i).iconData,
+                  img: datalist.elementAt(i).img,
                   onPress: (context) {
                     switch (datalist.elementAt(i).action) {
-                      case ActionButton.AddMeter:
-                        addNewMeter(context);
-                        break;
+                      // case ActionButton.AddMeter:
+                      //   addNewMeter(context);
+                      //   break;
                       case ActionButton.MeterList:
                         Navigator.push(
                             context,
@@ -645,9 +663,9 @@ class _HomePageState extends State<HomePage> {
                                   MeterListPage(),
                             ));
                         break;
-                      case ActionButton.ReadUnit:
-                        uploadUnit(context);
-                        break;
+                      // case ActionButton.ReadUnit:
+                      //   uploadUnit(context);
+                      //   break;
                       case ActionButton.MeterBill:
                         Navigator.push(
                             context,
@@ -655,6 +673,14 @@ class _HomePageState extends State<HomePage> {
                               builder: (BuildContext context) =>
                                   MyMeterBillListPage(),
                             ));
+                        break;
+                      case ActionButton.Topup:
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => TopUpPage()));
+                        break;
+                      case ActionButton.Withdraw:
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => WithdrawalPage()));
                         break;
                     }
                   }
@@ -666,11 +692,12 @@ class _HomePageState extends State<HomePage> {
                       context: context,
                       title: datalist.elementAt(i + 1).title,
                       iconData: datalist.elementAt(i + 1).iconData,
+                      img: datalist.elementAt(i + 1).img,
                       onPress: (context) {
                         switch (datalist.elementAt(i + 1).action) {
-                          case ActionButton.AddMeter:
-                            addNewMeter(context);
-                            break;
+                          // case ActionButton.AddMeter:
+                          //   addNewMeter(context);
+                          //   break;
                           case ActionButton.MeterList:
                             Navigator.push(
                                 context,
@@ -679,9 +706,9 @@ class _HomePageState extends State<HomePage> {
                                       MeterListPage(),
                                 ));
                             break;
-                          case ActionButton.ReadUnit:
-                            uploadUnit(context);
-                            break;
+                          // case ActionButton.ReadUnit:
+                          //   uploadUnit(context);
+                          //   break;
                           case ActionButton.MeterBill:
                             Navigator.push(
                                 context,
@@ -689,6 +716,14 @@ class _HomePageState extends State<HomePage> {
                                   builder: (BuildContext context) =>
                                       MyMeterBillListPage(),
                                 ));
+                            break;
+                          case ActionButton.Topup:
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => TopUpPage()));
+                            break;
+                          case ActionButton.Withdraw:
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => WithdrawalPage()));
                             break;
                         }
                       }
@@ -830,10 +865,11 @@ class HomeItem {
   final String title;
   final IconData iconData;
   final String action;
+  final String img;
 
   final Function(BuildContext context) onPressed;
 
-  HomeItem({this.title, this.iconData, this.onPressed, this.action});
+  HomeItem({this.title, this.iconData, this.img, this.onPressed, this.action});
 }
 
 var meterbilljson = {

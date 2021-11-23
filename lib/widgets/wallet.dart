@@ -63,7 +63,8 @@ class WalletState extends State<Wallet> {
         _isLoading = false;
       });
       setState(() {});
-    } on SocketException {} catch (e) {
+    } on SocketException {
+    } catch (e) {
       print(e.toString());
     }
   }
@@ -93,7 +94,8 @@ class WalletState extends State<Wallet> {
       documentList.addAll(newDocumentList);
 
       setState(() {});
-    } on SocketException {} catch (e) {
+    } on SocketException {
+    } catch (e) {
       print(e.toString());
     }
   }
@@ -117,7 +119,6 @@ class WalletState extends State<Wallet> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -238,7 +239,10 @@ class WalletState extends State<Wallet> {
               //   },
               // ),
               child: ShowBalance(
-                onTopued: (result) {
+                color: Colors.black,
+                // showIconColor:
+                walletColor: Theme.of(context).primaryColor,
+                onTopuped: (result) {
                   if (result != null && result == true) {
                     _isLoading = true;
                     _onRefresh();
@@ -450,6 +454,8 @@ class WalletState extends State<Wallet> {
       case "verifying":
         return Text("");
         break;
+      default:
+        return Text(type);
     }
   }
 }

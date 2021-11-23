@@ -189,8 +189,9 @@ class _TopUpPageState extends State<TopUpPage> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _transferAmountController,
                         keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
                         validator: (val) {
-                          return Validator.requiredField(context, val, '');
+                          return Validator.transferAmount(context, val);
                         },
                         decoration: buildInputDecoration("Transfer Amount"),
                       ),
@@ -227,7 +228,6 @@ class _TopUpPageState extends State<TopUpPage> {
                                     TextStyle(fontWeight: FontWeight.bold)),
                             onPressed: () async {
                               Navigator.pop(context);
-
                             },
                             child: Text(
                               Tran.of(context).text("cancel"),

@@ -378,103 +378,103 @@ class _MePageState extends State<MePage> {
                       height: 1,
                     ),
 
-                    Container(
-                      height: titleHeight,
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => TextFromImage(),
-                          ));
-                        },
-                        leading: Container(
-                          width: leadingWidth,
-                          alignment: Alignment.centerLeft,
-                          child: Icon(
-                            Icons.image,
-                            size: iconSize,
-                            color: mainColor,
-                          ),
-                        ),
-                        title: Text(
-                          "Text From Image",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 15,
-                          color: Colors.black26,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      thickness: 1,
-                      height: 1,
-                    ),
-                    Container(
-                      height: titleHeight,
-                      child: ListTile(
-                        onTap: () {
-                          // FirebaseAuth.instance.
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => TextFromImageV2(),
-                          ));
-                        },
-                        leading: Container(
-                          width: leadingWidth,
-                          alignment: Alignment.centerLeft,
-                          child: Icon(
-                            Icons.image,
-                            size: iconSize,
-                            color: mainColor,
-                          ),
-                        ),
-                        title: Text(
-                          "Text From Image V2",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 15,
-                          color: Colors.black26,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      thickness: 1,
-                      height: 1,
-                    ),
-                    Container(
-                      height: titleHeight,
-                      child: ListTile(
-                        onTap: () {
-                          // FirebaseAuth.instance.
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => CurrentLocation()));
-                        },
-                        leading: Container(
-                          width: leadingWidth,
-                          alignment: Alignment.centerLeft,
-                          child: Icon(
-                            Icons.location_city,
-                            size: iconSize,
-                            color: mainColor,
-                          ),
-                        ),
-                        title: Text(
-                          "Current Location",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 15,
-                          color: Colors.black26,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      thickness: 1,
-                      height: 1,
-                    ),
+                    // Container(
+                    //   height: titleHeight,
+                    //   child: ListTile(
+                    //     onTap: () {
+                    //       Navigator.of(context).push(MaterialPageRoute(
+                    //         builder: (context) => TextFromImage(),
+                    //       ));
+                    //     },
+                    //     leading: Container(
+                    //       width: leadingWidth,
+                    //       alignment: Alignment.centerLeft,
+                    //       child: Icon(
+                    //         Icons.image,
+                    //         size: iconSize,
+                    //         color: mainColor,
+                    //       ),
+                    //     ),
+                    //     title: Text(
+                    //       "Text From Image",
+                    //       style: TextStyle(fontWeight: FontWeight.bold),
+                    //     ),
+                    //     trailing: Icon(
+                    //       Icons.arrow_forward_ios,
+                    //       size: 15,
+                    //       color: Colors.black26,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Divider(
+                    //   thickness: 1,
+                    //   height: 1,
+                    // ),
+                    // Container(
+                    //   height: titleHeight,
+                    //   child: ListTile(
+                    //     onTap: () {
+                    //       // FirebaseAuth.instance.
+                    //       Navigator.of(context).push(MaterialPageRoute(
+                    //         builder: (context) => TextFromImageV2(),
+                    //       ));
+                    //     },
+                    //     leading: Container(
+                    //       width: leadingWidth,
+                    //       alignment: Alignment.centerLeft,
+                    //       child: Icon(
+                    //         Icons.image,
+                    //         size: iconSize,
+                    //         color: mainColor,
+                    //       ),
+                    //     ),
+                    //     title: Text(
+                    //       "Text From Image V2",
+                    //       style: TextStyle(fontWeight: FontWeight.bold),
+                    //     ),
+                    //     trailing: Icon(
+                    //       Icons.arrow_forward_ios,
+                    //       size: 15,
+                    //       color: Colors.black26,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Divider(
+                    //   thickness: 1,
+                    //   height: 1,
+                    // ),
+                    // Container(
+                    //   height: titleHeight,
+                    //   child: ListTile(
+                    //     onTap: () {
+                    //       // FirebaseAuth.instance.
+                    //       Navigator.of(context).push(MaterialPageRoute(
+                    //           builder: (context) => CurrentLocation()));
+                    //     },
+                    //     leading: Container(
+                    //       width: leadingWidth,
+                    //       alignment: Alignment.centerLeft,
+                    //       child: Icon(
+                    //         Icons.location_city,
+                    //         size: iconSize,
+                    //         color: mainColor,
+                    //       ),
+                    //     ),
+                    //     title: Text(
+                    //       "Current Location",
+                    //       style: TextStyle(fontWeight: FontWeight.bold),
+                    //     ),
+                    //     trailing: Icon(
+                    //       Icons.arrow_forward_ios,
+                    //       size: 15,
+                    //       color: Colors.black26,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Divider(
+                    //   thickness: 1,
+                    //   height: 1,
+                    // ),
                     Container(
                       height: titleHeight,
                       child: ListTile(

@@ -72,5 +72,7 @@
   "withdrawal": "Withdrawal",
   "sms_template": "Verification Code for {brand_name} is {code}.",
   "readMeter": "Read Meter",
-  "meterRemove": "Remove"
+  "meterRemove": "Remove",
+  "meter_remark":"Meter Remark"
+  
 }

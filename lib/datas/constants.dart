@@ -87,10 +87,12 @@ const String myTransactions = "myTransactions";
 const int timeOut = 120;
 
 class ActionButton {
-  static const String ReadUnit = "ReadUnit";
+  static const String Topup = "Topup";
+  static const String Withdraw = "Withdraw";
+  // static const String ReadUnit = "ReadUnit";
   static const String MeterBill = "MeterBill";
   static const String MeterList = "MeterList";
-  static const String AddMeter = "AddMeter";
+  // static const String AddMeter = "AddMeter";
 }
 
 class TransactionType {

@@ -146,7 +146,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                     Icons.delete,
                                     color: Colors.red,
                                   )),
-                              Text(Tran.of(context).text("remove")),
+                              Text(Tran.of(context).text("meterRemove")),
                             ],
                           ),
                           Divider()
@@ -238,11 +238,21 @@ class MeterEditPageState extends State<MeterEditPage>
                                 ),
                                 title: Container(
                                     alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "${widget.obj.meterNo}",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "${widget.obj.meterNo}",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          " ${widget.obj.meterName}",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
                                     )),
                                 subtitle: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -441,43 +451,43 @@ class MeterEditPageState extends State<MeterEditPage>
                                       SizedBox(
                                         height: 5,
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.only(
-                                                top: 0, bottom: 5),
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "Last Date",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black87,
-                                                  fontSize: 13),
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.only(
-                                                top: 0, bottom: 5),
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "${widget.obj.dueDate}",
-                                              // Formatter.getDate(
-                                              //   widget.obj.dueDate.toDate(),
-                                              // ),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black54,
-                                                  fontSize: 13),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      // Row(
+                                      //   mainAxisAlignment:
+                                      //       MainAxisAlignment.spaceBetween,
+                                      //   children: [
+                                      //     Container(
+                                      //       padding: EdgeInsets.only(
+                                      //           top: 0, bottom: 5),
+                                      //       alignment: Alignment.centerLeft,
+                                      //       child: Text(
+                                      //         "Last Date",
+                                      //         style: TextStyle(
+                                      //             fontWeight: FontWeight.bold,
+                                      //             color: Colors.black87,
+                                      //             fontSize: 13),
+                                      //       ),
+                                      //     ),
+                                      //     Container(
+                                      //       padding: EdgeInsets.only(
+                                      //           top: 0, bottom: 5),
+                                      //       alignment: Alignment.centerLeft,
+                                      //       child: Text(
+                                      //         "${widget.obj.dueDate}",
+                                      //         // Formatter.getDate(
+                                      //         //   widget.obj.dueDate.toDate(),
+                                      //         // ),
+                                      //         style: TextStyle(
+                                      //             fontWeight: FontWeight.bold,
+                                      //             color: Colors.black54,
+                                      //             fontSize: 13),
+                                      //       ),
+                                      //     ),
+                                      //   ],
+                                      // ),
 
-                                      SizedBox(
-                                        height: 5,
-                                      ),
+                                      // SizedBox(
+                                      //   height: 5,
+                                      // ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -546,8 +556,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              NumberFormat('#,###,000').format(
-                                                  widget.obj.horsePower),
+                                              widget.obj.horsePower.toString(),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -581,10 +590,11 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              NumberFormat('#,###,000').format(
-                                                      widget
-                                                          .obj.horsePowerCost) +
-                                                  " Kyat",
+                                              "${widget.obj.horsePowerCost} Kyat",
+                                              // NumberFormat('#,###,000').format(
+                                              //         widget
+                                              //             .obj.horsePowerCost) +
+                                              //     " Kyat",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -626,10 +636,11 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              NumberFormat('#,###,000').format(
-                                                      widget
-                                                          .obj.chargePerUnit) +
-                                                  " Kyat",
+                                              "${widget.obj.chargePerUnit} Kyat",
+                                              // NumberFormat('#,###,000').format(
+                                              //         widget
+                                              //             .obj.chargePerUnit) +
+                                              //     " Kyat",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -663,10 +674,11 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              NumberFormat('#,###,000').format(
-                                                      widget.obj
-                                                          .maintainenceCost) +
-                                                  " Kyat",
+                                              "${widget.obj.maintainenceCost} Kyat",
+                                              // NumberFormat('#,###,000').format(
+                                              //         widget.obj
+                                              //             .maintainenceCost) +
+                                              //     " Kyat",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -941,14 +953,14 @@ class MeterEditPageState extends State<MeterEditPage>
             ) // foreground
             ),
         onPressed: () async {
-          // Navigator.of(context).pop(true);
-          Navigator.of(context).pop(true);
           await FirebaseFirestore.instance
               .collection(meterCollection)
               .doc(FirebaseAuth.instance.currentUser.uid)
               .collection(userMeterCollection)
               .doc(widget.obj.customerId)
               .delete();
+          Navigator.of(context).pop(true);
+          Navigator.of(context).pop(true);
         },
         child: Text("Ok"));
 

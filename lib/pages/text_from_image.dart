@@ -111,7 +111,7 @@ class _TextFromImageState extends State<TextFromImage> {
   Future<Null> _cropImage(String path) async {
     File croppedFile = await ImageCropper.cropImage(
         sourcePath: path,
-        aspectRatio: CropAspectRatio(ratioX: 10, ratioY: 1),
+        // aspectRatio: CropAspectRatio(ratioX: 10, ratioY: 1),
         // maxHeight: 10,
         // maxWidth: 10,
         cropStyle: CropStyle.rectangle,

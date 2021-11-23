@@ -10,7 +10,7 @@ class Meter {
   String insertDate;
   String lastDate;
   String dueDate;
-  String readDate;
+  int readDate;
   Null applyDate;
   Null issueDate;
   Null creditReason;
@@ -152,6 +152,8 @@ class Meter {
       this.twinLeftSeal});
 
   Meter.fromJson(Map<String, dynamic> json) {
+    readDate = json['ReadDate'] ?? "";
+    dueDate = json['DueDate'] ?? "";
     meterName = json['meterName'] ?? "";
     autoPay = json['AutoPay'];
     selfScan = json['SelfScan'];
@@ -213,6 +215,8 @@ class Meter {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ReadDate'] = readDate;
+    data['DueDate'] = dueDate;
     data['meterName'] = this.meterName;
     data['AutoPay'] = this.autoPay;
     data['SelfScan'] = this.selfScan;

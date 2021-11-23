@@ -47,6 +47,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
   final ImagePicker _picker = ImagePicker();
   bool _isuploadingPicture = false;
   XFile file;
+
   @override
   void initState() {
     super.initState();
@@ -196,7 +197,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                   ),
                   SliverToBoxAdapter(
                     child: Container(
-                        margin: EdgeInsets.only(top: 60),
+                        margin: EdgeInsets.only(top: 90),
                         padding: EdgeInsets.all(20),
                         child: Form(
                           key: _formKey,
