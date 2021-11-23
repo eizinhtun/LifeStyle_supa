@@ -13,6 +13,7 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/current_location.dart';
 import 'package:left_style/pages/main_page_view.dart';
 import 'package:left_style/pages/setting.dart';
+import 'package:left_style/pages/text_from_image_v2.dart';
 import 'package:left_style/pages/text_from_image.dart';
 import 'package:left_style/pages/user_profile_edit.dart';
 import 'package:left_style/providers/noti_provider.dart';
@@ -80,9 +81,12 @@ class _MePageState extends State<MePage> {
   double titleHeight = 50;
   double leadingWidth = 50;
   double iconSize = 30;
+  String initialName = "";
+
   @override
   Widget build(BuildContext context) {
     print("_isSigningOut : $_isSigningOut");
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder(
@@ -112,49 +116,79 @@ class _MePageState extends State<MePage> {
                               ),
                             ),
                           );
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 0),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    UserInfoScreenPhoto(
-                                      name: _user.fullName
-                                          .substring(0, 1)
-                                          .toUpperCase(),
-                                      imageurl: _user.photoUrl,
-                                      width: 80,
-                                      height: 80,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Container(
-                                      child: Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          crossAxisAlignment:
+                        } else if (snapshot.hasData) {
+                          UserModel _user =
+                              UserModel.fromJson(snapshot.data.data());
+                          if (_user.fullName != null && _user.fullName == "") {
+                            initialName =
+                                _user.fullName.substring(0, 1).toUpperCase();
+                          }
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => EditUserProfilePage(
+                                    user: _user,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              height: 20,
-                                            ),
-                                            Text(
-                                              "${_user.fullName}",
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight:
-                                                  FontWeight.bold),
+                                      children: <Widget>[
+                                        UserInfoScreenPhoto(
+                                          name: initialName,
+                                          imageurl: _user.photoUrl,
+                                          width: 80,
+                                          height: 80,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                          child: Expanded(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                Text(
+                                                  "${_user.fullName}",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(
+                                                    Tran.of(context)
+                                                        .text("balance")
+                                                        .replaceAll("@amount",
+                                                            " ${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)}")
+                                                        .replaceAll(
+                                                            "@balanceKs",
+                                                            Tran.of(context)
+                                                                .text("ks")),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13,
+                                                        color: Colors.black)),
+                                              ],
                                             ),
                                             Text(
                                                 Tran.of(context)
@@ -265,10 +299,8 @@ class _MePageState extends State<MePage> {
                       height: titleHeight,
                       child: ListTile(
                         onTap: () {
-                          // FirebaseAuth.instance.
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => TextFromImage()
-                            // Test()
+                            builder: (context) => TextFromImage(),
                           ));
                         },
                         leading: Container(
@@ -282,6 +314,39 @@ class _MePageState extends State<MePage> {
                         ),
                         title: Text(
                           "Text From Image",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                          color: Colors.black26,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 1,
+                      height: 1,
+                    ),
+                    Container(
+                      height: titleHeight,
+                      child: ListTile(
+                        onTap: () {
+                          // FirebaseAuth.instance.
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => TextFromImageV2(),
+                          ));
+                        },
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.image,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
+                        ),
+                        title: Text(
+                          "Text From Image V2",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
@@ -425,14 +490,9 @@ class _MePageState extends State<MePage> {
                     Container(
                       height: titleHeight,
                       child: ListTile(
-                        onTap: () async {
-                          await  Navigator.of(context).push(MaterialPageRoute(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => LanguagePage()));
-                          setState(() {
-
-                          });
-                          widget.main.refreshPage();
-
                         },
                         leading: Container(
                           width: leadingWidth,

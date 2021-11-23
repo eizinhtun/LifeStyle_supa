@@ -4,8 +4,8 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_share/flutter_share.dart';
-import 'package:flutter_share_file/flutter_share_file.dart';
+// import 'package:flutter_share/flutter_share.dart';
+// import 'package:flutter_share_file/flutter_share_file.dart';
 import 'package:left_style/widgets/code_Invoicepainter.dart';
 // import 'package:flutter_share/flutter_share.dart';
 // import 'package:left_style/widgets/code_painter.dart';
@@ -751,12 +751,31 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
             );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                elevation: 0.0,
+                centerTitle: true,
+                title: Text(Tran.of(context).text("my_meter_bill").toString()),
+              ),
+              body: Center(
                 child: SpinKitDoubleBounce(
-              color: Theme.of(context).primaryColor,
-            ));
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            );
           } else {
-            return Center(child: Text("No data"));
+            return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                elevation: 0.0,
+                centerTitle: true,
+                title: Text(Tran.of(context).text("my_meter_bill").toString()),
+              ),
+              body: Center(
+                child: Text("No data"),
+              ),
+            );
           }
         });
   }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
+const String secretkey = "31bf3856ad364e35";
+
 const String brandName = "Life Style";
 const int codeLength = 6;
-const String smsUrl = "https://verify.smspoh.com/api/";
-const String token =
-    "VcDFsbOAZ3xpFVql7yLczsbAZmihyV9eZnUBdJHiz6-4k7_ggfNVllQxie5gEPMc";
+const String smsUrl = "https://verify.smspoh.com/api";
 const String smsToken =
-    "SzhDl_-ytQEe2tTnRdg2UW4U7rFIbMmonUUQF8uJ1nAVxH5D08vNz8X_vA5TBLR1";
+    "VcDFsbOAZ3xpFVql7yLczsbAZmihyV9eZnUBdJHiz6-4k7_ggfNVllQxie5gEPMc";
 const String version = "1.2.1";
 const String serverKey =
     "AAAAp5abKQ0:APA91bG6Vl7FxmbqOqM1mCeZUzSpI-nJ3ieMC_-YVCQF7CW5jzAs10u1iu5asZ5HnwCDKd5v8mCMYPGYw6cRVf8j-uU6hjP9AONShIM5Sgijgh6tODZym01C5-KmJB2QiHX7hMhvegjd";
@@ -79,8 +79,8 @@ const String manyTransaction = "manyTransition";
 const String notifications = "notifications";
 const String testCollection = "tests";
 const String paymentMethodCollection = "payment_method";
-const String languageCollection= "languages";
-const String adsCollection="ads";
+const String languageCollection = "languages";
+const String adsCollection = "ads";
 
 const String notilist = "notilist";
 const String myTransactions = "myTransactions";

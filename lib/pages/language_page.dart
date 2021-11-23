@@ -21,10 +21,10 @@ class _LanguagePageState extends State<LanguagePage>
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   double height = 50;
   String lang = "en";
-  String systemLang="";
-  bool _selectedEn=false;
-  bool _selectedMy=false;
-  bool _selectedZh=false;
+  String systemLang = "";
+  bool _selectedEn = false;
+  bool _selectedMy = false;
+  bool _selectedZh = false;
 
   @override
   void initState() {
@@ -34,7 +34,6 @@ class _LanguagePageState extends State<LanguagePage>
 
   void getLang() async {
     lang = await DatabaseHelper.getLanguage();
-
   }
 
   @override
@@ -62,21 +61,26 @@ class _LanguagePageState extends State<LanguagePage>
                         SizedBox(
                             width: 30,
                             height: 30,
-                            child: Image.asset("assets/language_icon/my_flag.png")),
+                            child: Image.asset(
+                                "assets/language_icon/my_flag.png")),
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
                           child: Text("မြန်မာ"),
                         ),
-                       Spacer(),
-                        (SystemData.language == "my" || _selectedMy)?Icon(Icons.check,color: Colors.green,):Text(""),
-
+                        Spacer(),
+                        (SystemData.language == "my" || _selectedMy)
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.green,
+                              )
+                            : Text(""),
                       ],
                     ),
                   ),
                   onTap: () async {
                     await DatabaseHelper.setLanguage(context, "my");
                     setState(() {
-                      _selectedMy=true;
+                      _selectedMy = true;
                     });
                     Navigator.pop(context);
                   },
@@ -96,21 +100,26 @@ class _LanguagePageState extends State<LanguagePage>
                         SizedBox(
                             width: 30,
                             height: 30,
-                            child: Image.asset("assets/language_icon/en_flag.png")),
+                            child: Image.asset(
+                                "assets/language_icon/en_flag.png")),
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
                           child: Text("English"),
                         ),
                         Spacer(),
-                        (SystemData.language == "en" || _selectedMy)?Icon(Icons.check,color: Colors.green,):Text(""),
-
+                        (SystemData.language == "en" || _selectedMy)
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.green,
+                              )
+                            : Text(""),
                       ],
                     ),
                   ),
                   onTap: () async {
                     await DatabaseHelper.setLanguage(context, "en");
                     setState(() {
-                      _selectedEn=true;
+                      _selectedEn = true;
                     });
                     Navigator.pop(context);
                   },
@@ -130,21 +139,26 @@ class _LanguagePageState extends State<LanguagePage>
                         SizedBox(
                             width: 30,
                             height: 30,
-                            child: Image.asset("assets/language_icon/zh_flag.png")),
+                            child: Image.asset(
+                                "assets/language_icon/zh_flag.png")),
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
                           child: Text("中文"),
                         ),
                         Spacer(),
-                        (SystemData.language == "zh" || _selectedMy)?Icon(Icons.check,color: Colors.green,):Text(""),
-
+                        (SystemData.language == "zh" || _selectedMy)
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.green,
+                              )
+                            : Text(""),
                       ],
                     ),
                   ),
                   onTap: () async {
                     await DatabaseHelper.setLanguage(context, "zh");
                     setState(() {
-                      _selectedZh=true;
+                      _selectedZh = true;
                     });
                     Navigator.pop(context);
                   },

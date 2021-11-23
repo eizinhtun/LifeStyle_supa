@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <queries>
         <package android:name="com.whatsapp" />
     </queries>
@@ -17,13 +20,12 @@
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="@string/map_api_key"/>
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" 
-        android:value="@string/facebook_app_id"/>
-
-        <provider
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="3105247143054675"/>
+<!-- tools:replace="android:value" -->
+        <!-- <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider[@string/facebook_app_id]"
-            android:exported="false" />
+            android:exported="false" /> -->
     
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
@@ -39,7 +41,13 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
+        
+        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+            <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".MainActivity"

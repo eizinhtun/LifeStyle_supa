@@ -2,7 +2,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
@@ -28,6 +31,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   TextEditingController _confirmPasswordController = TextEditingController();
   bool isPhoneToken = false;
   User _user;
+
+  String fcmtoken = "";
+  FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
   @override
   void initState() {
     super.initState();
@@ -278,6 +285,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                               DBCrypt().gensalt());
                                           // var isCorrect = new DBCrypt().checkpw(plain, hashed);
 
+                                          String token =
+                                              await checkToken(fcmtoken);
                                           UserModel userModel = UserModel(
                                               uid: _user.uid,
                                               fullName: _nameController.text
@@ -288,9 +297,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                               password: pass,
                                               photoUrl: _user.photoURL,
                                               email: _user.email,
+                                              balance: 0,
+                                              showBalance: false,
+                                              address: "",
+                                              fcmtoken: token,
                                               isActive: true,
                                               createdDate: Timestamp.fromDate(
                                                   DateTime.now()));
+                                          print(userModel);
                                           await context
                                               .read<LoginProvider>()
                                               .updateUserInfo(
@@ -363,5 +377,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
     phoneNumber = "+95" + phoneNumber;
     return phoneNumber;
+  }
+
+  Future<String> checkToken(String fcmtoken) async {
+    String tokenStr = "";
+    if (!kIsWeb) {
+      if (fcmtoken == null || fcmtoken == "") {
+        tokenStr = await _messaging.getToken();
+        if (tokenStr == null || tokenStr == "") {
+          tokenStr = await checkToken(tokenStr);
+        } else {
+          SystemData.fcmtoken = tokenStr;
+        }
+        return tokenStr;
+      } else {
+        return fcmtoken;
+      }
+    } else {
+      return null;
+    }
   }
 }

@@ -175,7 +175,7 @@ class MeterBill {
     isPaid = json['isPaid'];
     remark = json['remark'];
     payDate = json['payDate'];
-    status = json['status'];
+    status = json['status'] == null ? "Unpaid" : json['status'];
     readDate = json['readDate'];
     readImageUrl = json['readImageUrl'];
     block = json['block'];

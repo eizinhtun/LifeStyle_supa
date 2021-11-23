@@ -8,7 +8,6 @@ import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/Meter.dart';
 import 'package:left_style/pages/upload_my_read.dart';
-import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'map_screen.dart';
@@ -89,8 +88,9 @@ class MeterEditPageState extends State<MeterEditPage>
           PopupMenuButton(
               onSelected: (val) async {
                 if (val == 1) {
-                  await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => UploadMyReadScreen(customerId: widget.obj.customerId)));
+                  await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => UploadMyReadScreen(
+                          customerId: widget.obj.customerId)));
 
                   /*if (result != null && result == true) {
                         _isLoading = true;
@@ -114,47 +114,47 @@ class MeterEditPageState extends State<MeterEditPage>
                 color: Colors.white,
               ),
               itemBuilder: (context) => [
-                PopupMenuItem(
-                  child: Column(
-                    children: [
-                      Row(
+                    PopupMenuItem(
+                      child: Column(
                         children: [
-                          Container(
-                              padding: const EdgeInsets.only(
-                                  right: 8.0, top: 10, bottom: 10),
-                              child: Icon(
-                                Icons.file_upload,
-                                color: Theme.of(context).primaryColor,
-                              )),
-                          Text(Tran.of(context).text("readMeter")),
+                          Row(
+                            children: [
+                              Container(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0, top: 10, bottom: 10),
+                                  child: Icon(
+                                    Icons.file_upload,
+                                    color: Theme.of(context).primaryColor,
+                                  )),
+                              Text(Tran.of(context).text("readMeter")),
+                            ],
+                          ),
+                          Divider()
                         ],
                       ),
-                      Divider()
-                    ],
-                  ),
-                  value: 1,
-                ),
-                PopupMenuItem(
-                  child: Column(
-                    children: [
-                      Row(
+                      value: 1,
+                    ),
+                    PopupMenuItem(
+                      child: Column(
                         children: [
-                          Container(
-                              padding: const EdgeInsets.only(
-                                  right: 8.0, top: 10, bottom: 10),
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              )),
-                          Text(Tran.of(context).text("remove")),
+                          Row(
+                            children: [
+                              Container(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0, top: 10, bottom: 10),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  )),
+                              Text(Tran.of(context).text("remove")),
+                            ],
+                          ),
+                          Divider()
                         ],
                       ),
-                      Divider()
-                    ],
-                  ),
-                  value: 2,
-                )
-              ]),
+                      value: 2,
+                    )
+                  ]),
         ],
         /*flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -239,7 +239,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                 title: Container(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      widget.obj.meterNo,
+                                      "${widget.obj.meterNo}",
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold),
@@ -250,12 +250,13 @@ class MeterEditPageState extends State<MeterEditPage>
                                   children: [
                                     Container(
                                       padding: EdgeInsets.only(top: 5),
-                                      child: Text(
-                                        Formatter.dateTimeFormat(DateTime
-                                            .fromMillisecondsSinceEpoch(
-                                            widget.obj.insertDate.millisecondsSinceEpoch))),
+                                      child: Text("${widget.obj.insertDate}"
+                                          // Formatter.dateTimeFormat(DateTime
+                                          //     .fromMillisecondsSinceEpoch(
+                                          //     widget.obj.insertDate.millisecondsSinceEpoch))
 
-                                       
+                                          ),
+
                                       // Text(
                                       //     widget
                                       //     .obj.insertDate //yyy-MM-ddTHH:mm:ss
@@ -425,9 +426,9 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              // "date",
-                                              Formatter.getDate(
-                                                  widget.obj.readDate.toDate()),
+                                              "${widget.obj.readDate}",
+                                              // Formatter.getDate(
+                                              //     widget.obj.readDate.toDate()),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -461,9 +462,10 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              Formatter.getDate(
-                                                widget.obj.dueDate.toDate(),
-                                              ),
+                                              "${widget.obj.dueDate}",
+                                              // Formatter.getDate(
+                                              //   widget.obj.dueDate.toDate(),
+                                              // ),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -497,8 +499,9 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              Formatter.getDate(
-                                                  widget.obj.dueDate.toDate()),
+                                              "${widget.obj.dueDate}",
+                                              // Formatter.getDate(
+                                              //     widget.obj.dueDate.toDate()),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -900,6 +903,7 @@ class MeterEditPageState extends State<MeterEditPage>
       ),
     );
   }
+
   showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = OutlinedButton(
@@ -935,14 +939,14 @@ class MeterEditPageState extends State<MeterEditPage>
               top: 10,
               bottom: 10,
             ) // foreground
-        ),
+            ),
         onPressed: () async {
-         // Navigator.of(context).pop(true);
+          // Navigator.of(context).pop(true);
           Navigator.of(context).pop(true);
           await FirebaseFirestore.instance
               .collection(meterCollection)
               .doc(FirebaseAuth.instance.currentUser.uid)
-              .collection(userMeterCollection )
+              .collection(userMeterCollection)
               .doc(widget.obj.customerId)
               .delete();
         },

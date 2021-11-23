@@ -1,22 +1,21 @@
 // @dart=2.9
 import 'dart:async';
-import 'dart:convert';
 import 'package:dbcrypt/dbcrypt.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/models/sms_request_response.dart';
-import 'package:left_style/models/sms_verify_response.dart';
+import 'package:left_style/services/smsApi.dart';
 import 'package:provider/provider.dart';
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/localization/Translate.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:left_style/validators/validator.dart';
-// import 'package:otp_autofill/otp_autofill.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:http/http.dart' as http;
 
 class ChangePinPhonePage extends StatefulWidget {
   const ChangePinPhonePage({Key key}) : super(key: key);
@@ -35,9 +34,12 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = false;
   bool isVisible = false;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
 
   UserModel user = UserModel();
+  FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  String fcmtoken = "";
 
   @override
   void initState() {
@@ -89,11 +91,12 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                 visible: !isVisible,
                 child: Center(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       setState(() {
                         isVisible = !isVisible;
                       });
-                      requestOTP(user.phone);
+
+                      await requestOTP(context, user.phone);
                     },
                     child: Text(Tran.of(context).text("getOtpCode")),
                   ),
@@ -197,7 +200,7 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                               width: 100,
                               onTap: (startTimer, btnState) async {
                                 if (btnState == ButtonState.Idle) {
-                                  requestOTP(user.phone);
+                                  await requestOTP(context, user.phone);
 
                                   startTimer(timeOut);
                                 }
@@ -300,9 +303,11 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState.validate()) {
-                                  await submit(context).then((value) {
-                                    Navigator.pop(context);
-                                  });
+                                  user.fcmtoken = await checkToken(fcmtoken);
+                                  await submit(context);
+                                  // await submit(context).then((value) {
+                                  //   Navigator.pop(context);
+                                  // });
                                 }
                               },
                               child: Padding(
@@ -331,24 +336,94 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
 
   String verificationId = "";
   int requestId;
-  Future<void> requestOTP(String phone) async {
-    String templateString =
-        "{brand_name} အတွက် အတည်ပြုရန်ကုဒ်နံပါတ်မှာ {code} ဖြစ်ပါတယ်";
-    // String templateString = Tran.of(context).text("sms_template");
-    // templateString.replaceAll('@brand_name', brandName);
-    // templateString.replaceAll('@code', '{code}');
-    var url =
-        "$smsUrl/v1/request?access-token=$smsToken&number=$phone&brand_name=$brandName&code_length=$codeLength&sender_name=$brandName&template=$templateString";
-//  body: {"to": phone, "message": "Hello World", "sender": "SMSPoh"},
-    var response = await http.get(
-      Uri.parse(url),
-    );
+  Future<void> requestOTP(BuildContext context, String phone) async {
+    SmsApi api = SmsApi(context);
+    // String templateString =
+    // "{brand_name} အတွက် အတည်ပြုရန်ကုဒ်နံပါတ်မှာ {code} ဖြစ်ပါတယ်";
+    String templateString = Tran.of(context).text("sms_template");
 
-    SmsRequestResponse resModel =
-        SmsRequestResponse.fromJson(json.decode(response.body));
+    // String phone = "09401531039";
+    // var url =
+    //     "$smsUrl/v1/request?access-token=$smsToken&number=$phone&brand_name=$brandName&code_length=$codeLength&sender_name=$brandName&template={brand_name} အတွက် အတည်ပြုရန်ကုဒ်နံပါတ်မှာ {code} ဖြစ်ပါတယ်";
+
+    SmsRequestResponse resModel = await api.requestPin(context, user.phone);
     requestId = resModel.requestId;
+  }
 
-    // try {
+  Future<void> submit(BuildContext context) async {
+    SmsApi api = SmsApi(context);
+    String smsCode = controller.text.trim();
+    await api.verifyPin(context, requestId, smsCode).then((statusCode) async {
+      if (statusCode == 0) {
+        MessageHandler.showError(context, "Invalid PIN", "Your pin is invalid");
+      } else if (statusCode == 10) {
+        MessageHandler.showError(
+            context, "Attempt Exceed", "PIN Verify Attempt Exceed");
+      } else if (statusCode == 11) {
+        MessageHandler.showError(context, "PIN Expired", "PIN Expired");
+      } else if (statusCode == 200) {
+        MessageHandler.showMessage(context, "PIN Verified", "PIN Vefify OK");
+        var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
+        user.password = pass;
+        // user.password = _pinController.text;
+        await context.read<LoginProvider>().updateUserInfo(context, user);
+        Navigator.of(context).pop();
+      } else {
+        MessageHandler.showError(context, "Unknown", "Unknown Error!");
+      }
+    });
+    // var url =
+    //     "$smsUrl/v1/verify?access-token=$smsToken&request_id=$requestId&code=$smsCode";
+    // var response = await http.get(
+    //   Uri.parse(url),
+    // );
+
+    // if (statusCode == 0) {
+    //   // Invalid PIN
+    //   MessageHandler.showErrMessage(
+    //       context, "Invalid PIN", "Your Pin is Invalid!");
+    // } else if (statusCode == 10) {
+    //   // PIN Verify Attempt Exceed
+    //   MessageHandler.showErrMessage(context, "PIN Verify Attempt Exceed",
+    //       "Your PIN Verify Attempt is Exceed!");
+    // } else if (statusCode == 11) {
+    //   // PIN Expired
+    //   MessageHandler.showErrMessage(
+    //       context, "PIN Expired", "Your Pin is Expired!");
+    // } else {
+    //   MessageHandler.showErrMessage(
+    //       context, "PIN Valid", "Your Pin is Success!");
+    //   var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
+    //   user.password = pass;
+    //   await context.read<LoginProvider>().updateUserInfo(context, user);
+    // }
+    // SmsVerifyResponse resModel =
+    //     SmsVerifyResponse.fromJson(json.decode(response.body));
+  }
+
+  Future<String> checkToken(String fcmtoken) async {
+    String tokenStr = "";
+    if (!kIsWeb) {
+      if (fcmtoken == null || fcmtoken == "") {
+        tokenStr = await _messaging.getToken();
+        if (tokenStr == null || tokenStr == "") {
+          tokenStr = await checkToken(tokenStr);
+        } else {
+          SystemData.fcmtoken = tokenStr;
+        }
+        return tokenStr;
+      } else {
+        return fcmtoken;
+      }
+    } else {
+      return null;
+    }
+  }
+}
+
+
+// void requestPin(){
+// try {
     //   await _auth.verifyPhoneNumber(
     //       phoneNumber: phone,
     //       timeout: const Duration(seconds: timeOut),
@@ -389,39 +464,10 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
     //       context,
     //       6);
     // }
-  }
+  
+// }
 
-  Future<void> submit(BuildContext context) async {
-    String smsCode = controller.text.trim();
-
-    var url =
-        "$smsUrl/v1/verify?access-token=$smsToken&request_id=$requestId&code=$smsCode";
-    var response = await http.get(
-      Uri.parse(url),
-    );
-
-    if (response.statusCode == 0) {
-      // Invalid PIN
-      MessageHandler.showErrMessage(
-          context, "Invalid PIN", "Your Pin is Invalid!");
-    } else if (response.statusCode == 10) {
-      // PIN Verify Attempt Exceed
-      MessageHandler.showErrMessage(context, "PIN Verify Attempt Exceed",
-          "Your PIN Verify Attempt is Exceed!");
-    } else if (response.statusCode == 11) {
-      // PIN Expired
-      MessageHandler.showErrMessage(
-          context, "PIN Expired", "Your Pin is Expired!");
-    } else {
-      MessageHandler.showErrMessage(
-          context, "PIN Valid", "Your Pin is Success!");
-      var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
-      user.password = pass;
-      await context.read<LoginProvider>().updateUserInfo(context, user);
-    }
-
-    SmsVerifyResponse resModel =
-        SmsVerifyResponse.fromJson(json.decode(response.body));
+// void submit(){
 
     //  FirebaseAuth auth = FirebaseAuth.instance;
     // print(verificationId);
@@ -445,5 +491,4 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
 
     //   await context.read<LoginProvider>().updateUserInfo(context, user);
     // }
-  }
-}
+// }

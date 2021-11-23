@@ -26,8 +26,10 @@ class MyReadUnit {
   String monthName;
   Timestamp readDate;
   String status;
+  String uid;
 
   MyReadUnit.fromJson(Map<String, dynamic> json) {
+    uid = json['uid'];
     meterNo = json['meterNo'];
     consumerName = json['consumerName'];
     customerId = json['customerId'];
@@ -43,6 +45,7 @@ class MyReadUnit {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['uid'] = this.uid;
     data['meterNo'] = this.meterNo;
     data['consumerName'] = this.consumerName;
     data['customerId'] = this.customerId;

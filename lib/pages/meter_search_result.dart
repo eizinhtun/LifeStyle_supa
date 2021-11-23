@@ -8,7 +8,6 @@ import 'package:left_style/models/Meter.dart';
 import 'package:left_style/models/MeterPageObj.dart';
 import 'package:left_style/pages/meter_search_detail.dart';
 import 'package:left_style/providers/meter_presenter.dart';
-import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_dash/flutter_dash.dart';
@@ -75,22 +74,17 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
   void _onRefresh() async {
     this.pageIndex = 1;
     _presenter.loadData(
-        action: "onRefresh",
-        apiUrl: apiUrl,
-        searchKey: _controllerSearch.text,
-        pageIndex: this.pageIndex.toString(),
-        pageSize: this.pageSize.toString());
+        action: "onRefresh", apiUrl: apiUrl, searchKey: _controllerSearch.text);
   }
 
   void _onMoreLoading() async {
     if (items.length < _page.rowCount) {
       this.pageIndex++;
       _presenter.loadData(
-          action: "onLoadMore",
-          apiUrl: apiUrl,
-          searchKey: _controllerSearch.text,
-          pageIndex: this.pageIndex.toString(),
-          pageSize: this.pageSize.toString());
+        action: "onLoadMore",
+        apiUrl: apiUrl,
+        searchKey: _controllerSearch.text,
+      );
     }
   }
 
@@ -104,11 +98,10 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
     this.pageIndex = 1;
     setState(() {});
     _presenter.loadData(
-        action: "onFirstLoad",
-        apiUrl: apiUrl,
-        searchKey: _controllerSearch.text,
-        pageIndex: this.pageIndex.toString(),
-        pageSize: this.pageSize.toString());
+      action: "onFirstLoad",
+      apiUrl: apiUrl,
+      searchKey: _controllerSearch.text,
+    );
   }
 
   @override
@@ -221,7 +214,8 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                         body = Text(Tran.of(context)
                                             .text("noMoreData"));
                                       }
-                                      if (items.length >= _page.rowCount) {
+                                      if (_page != null &&
+                                          items.length >= _page.rowCount) {
                                         body = Text(
                                           Tran.of(context).text("noMoreData"),
                                           style: TextStyle(color: Colors.grey),
@@ -310,12 +304,13 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                                 Container(
                                                   padding:
                                                       EdgeInsets.only(top: 5),
-                                                  child: Text(
-                                                    Formatter.getDate(
-                                                        items[index]
-                                                            .insertDate
-                                                            .toDate()),
-                                                  ),
+                                                  child: Text("insertDate"
+                                                      // Formatter.getDate(
+                                                      //     items[index]
+                                                      //         .insertDate
+                                                      //         .toDate()
+                                                      //         ),
+                                                      ),
                                                 ),
                                                 Text(
                                                   items[index].customerId +
