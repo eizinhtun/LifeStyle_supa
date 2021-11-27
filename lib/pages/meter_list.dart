@@ -5,12 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/models/Meter.dart';
-import 'package:left_style/pages/meter_edit.dart';
+import 'package:left_style/localization/translate.dart';
+import 'package:left_style/models/meter_model.dart';
+import 'package:left_style/pages/meter_edit_page.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart' as bar;
-import 'meter_city.dart';
+import 'meter_city_page.dart';
 import 'meter_search_result.dart';
 
 import 'package:left_style/utils/message_handler.dart' as msg;
@@ -241,7 +241,7 @@ class MeterListPageState extends State<MeterListPage>
       if (typeResult != null && typeResult == "QR") {
         try {
           String meterBarcode = await bar.BarcodeScanner.scan();
-          print(meterBarcode);
+
           setState(() => this.meterBarcode = meterBarcode);
 
           if (meterBarcode != null) {
@@ -283,7 +283,7 @@ class MeterListPageState extends State<MeterListPage>
         //   }).catchError((error) {}); //barcode scanner
 
         // } catch (ex) {
-        //   print("cancel scan");
+        //
         // }
       } else if (typeResult != null && typeResult == "Key") {
         Navigator.of(context).push(MaterialPageRoute(

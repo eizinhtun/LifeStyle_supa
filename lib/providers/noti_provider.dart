@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +21,6 @@ class NotiProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String uid = FirebaseAuth.instance.currentUser.uid;
       await notiRef.doc(uid).collection(notilist).get().then((value) {
         value.docs.forEach((result) {
-          print(result.data());
           list.add(NotiModel.fromJson(result.data()));
         });
       });
@@ -29,18 +29,18 @@ class NotiProvider with ChangeNotifier, DiagnosticableTreeMixin {
     return list;
   }
 
-  Future<void> addNotiToStore(NotiModel noti) async {
-    if (FirebaseAuth.instance.currentUser?.uid != null) {
-      String uid = FirebaseAuth.instance.currentUser?.uid;
-      await notiRef
-          .doc(uid)
-          .collection(notilist)
-          .doc(noti.messageId)
-          .set(noti.toJson());
-      notifyListeners();
-    }
-    notifyListeners();
-  }
+  // Future<void> addNotiToStore(NotiModel noti) async {
+  //   if (FirebaseAuth.instance.currentUser?.uid != null) {
+  //     String uid = FirebaseAuth.instance.currentUser?.uid;
+  //     await notiRef
+  //         .doc(uid)
+  //         .collection(notilist)
+  //         .doc(noti.messageId)
+  //         .set(noti.toJson());
+  //     notifyListeners();
+  //   }
+  //   notifyListeners();
+  // }
 
   Future<NotiModel> getNotiById(BuildContext context, String id) async {
     NotiModel noti = NotiModel();
@@ -64,6 +64,7 @@ class NotiProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<void> changeNotiStatus(BuildContext context, String id) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      await DatabaseHelper.setData("read", SystemData.backgroundNotiStatus);
       try {
         await notiRef
             .doc(uid)
@@ -72,9 +73,7 @@ class NotiProvider with ChangeNotifier, DiagnosticableTreeMixin {
             .update({"status": true}).then((value) {
           updateNotiCount(context, SystemData.notiCount);
         });
-      } catch (e) {
-        print("E: $e");
-      }
+      } catch (e) {}
     }
     notifyListeners();
   }
@@ -106,13 +105,9 @@ class NotiProvider with ChangeNotifier, DiagnosticableTreeMixin {
               },
             ),
           );
-          print(response.statusCode);
-          print(response.body);
         });
       });
-    } catch (e) {
-      print("error push notification");
-    }
+    } catch (e) {}
     notifyListeners();
   }
 

@@ -1,26 +1,31 @@
 // @dart=2.9
+import 'dart:convert';
+
 import 'package:barcode_scan_fix/barcode_scan.dart' as bar;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/models/Ads.dart';
+import 'package:left_style/localization/translate.dart';
+import 'package:left_style/models/ads_model.dart';
 import 'package:left_style/pages/my_meterBill_list.dart';
 import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/widgets/home_item.dart';
 import 'package:left_style/widgets/show_balance.dart';
-import 'package:left_style/widgets/topup_widget.dart';
-import 'package:left_style/widgets/withdrawal_widget.dart';
+import 'package:left_style/pages/wallet/withdrawal_page.dart';
+
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'ads_detail.dart';
-import 'meter_city.dart';
+import 'ads_detail_page.dart';
+import 'home_page_temp_data.dart';
+import 'meter_city_page.dart';
 import 'meter_list.dart';
 import 'meter_search_result.dart';
+import 'wallet/topup_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -30,7 +35,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
   int _current = 0;
   final CarouselController _controller = CarouselController();
   // List<Ads> adsItems = [
@@ -213,7 +217,8 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   CarouselSlider(
                                     items: snapshot.data.docs.map((doc) {
-                                      Ads item = Ads.fromJson(doc.data());
+                                      AdsModel item =
+                                          AdsModel.fromJson(doc.data());
                                       return Padding(
                                         padding: EdgeInsets.all(8.0),
                                         child: InkWell(
@@ -324,44 +329,71 @@ class _HomePageState extends State<HomePage> {
                         // SizedBox(
                         //   height: 10,
                         // ),
-                        // ElevatedButton(
-                        //   onPressed: () async {
-                        //     print("Pressed");
-                        //     var meterBillRef = FirebaseFirestore.instance
-                        //         .collection(meterBillsCollection);
-                        //     await meterBillRef
-                        //         .doc("7324392739_11_21")
-                        //         .set(meterbilljson);
-                        //   },
-                        //   child: Text(
-                        //     "Add Meter Bill",
-                        //     style: TextStyle(
-                        //         color: Colors.white,
-                        //         fontWeight: FontWeight.bold),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 10,
-                        // ),
-                        // ElevatedButton(
-                        //   onPressed: () async {
-                        //     print("Pressed");
-                        //     String uid = FirebaseAuth.instance.currentUser.uid
-                        //         .toString();
-                        //     var meterRef = FirebaseFirestore.instance
-                        //         .collection(meterCollection);
-                        //     await meterRef
-                        //         .doc(uid)
-                        //         .collection(userMeterCollection)
-                        //         .add(meterjson);
-                        //   },
-                        //   child: Text(
-                        //     "Add Meter",
-                        //     style: TextStyle(
-                        //         color: Colors.white,
-                        //         fontWeight: FontWeight.bold),
-                        //   ),
-                        // ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            String uid = "BzU2XhjfUDRT8Np3egtxlhWtyru2";
+
+                            var meterRef = FirebaseFirestore.instance
+                                .collection(meterCollection);
+                            await meterRef
+                                .doc(uid)
+                                .collection(userMeterCollection)
+                                .get()
+                                .then((value) {
+                              value.docs.forEach((doc) {
+                                String s = json.encode(doc.data());
+                                print(s);
+                              });
+                            });
+                          },
+                          child: Text(
+                            "Retrieve Firebase Data",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        ElevatedButton(
+                          onPressed: () async {
+                            var meterBillRef = FirebaseFirestore.instance
+                                .collection(meterBillsCollection);
+                            await meterBillRef
+                                .doc("7324392740_6-2021")
+                                .set(meterbilljson);
+                          },
+                          child: Text(
+                            "Add Meter Bill",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            String uid = FirebaseAuth.instance.currentUser.uid
+                                .toString();
+                            var meterRef = FirebaseFirestore.instance
+                                .collection(meterCollection);
+                            await meterRef
+                                .doc(uid)
+                                .collection(userMeterCollection)
+                                .doc("7324392740")
+                                .set(b);
+                          },
+                          child: Text(
+                            "Add Meter",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
 
                         Container(
                           padding: EdgeInsets.all(8),
@@ -424,7 +456,7 @@ class _HomePageState extends State<HomePage> {
                   //         children: [
                   //           CarouselSlider(
                   //             items: snapshot.data.docs.map((doc) {
-                  //               Ads item =Ads.fromJson(doc.data());
+                  //               AdsModel item =Ads.fromJson(doc.data());
                   //              return Padding(
                   //                 padding: EdgeInsets.all(8.0),
                   //                  child: InkWell(
@@ -595,7 +627,7 @@ class _HomePageState extends State<HomePage> {
                   // ),
                   // // ElevatedButton(
                   // //   onPressed: () async {
-                  // //     print("Pressed");
+                  // //
                   // //     var meterRef = FirebaseFirestore.instance
                   // //         .collection(meterCollection);
                   //
@@ -811,7 +843,7 @@ class _HomePageState extends State<HomePage> {
       if (typeResult != null && typeResult == "QR") {
         try {
           String meterBarcode = await bar.BarcodeScanner.scan();
-          print(meterBarcode);
+
           setState(() => this.meterBarcode = meterBarcode);
 
           if (meterBarcode != null) {
@@ -848,7 +880,7 @@ class _HomePageState extends State<HomePage> {
         //   }).catchError((error) {}); //barcode scanner
 
         // } catch (ex) {
-        //   print("cancel scan");
+        //
         // }
       } else if (typeResult != null && typeResult == "Key") {
         Navigator.of(context).push(MaterialPageRoute(
@@ -968,7 +1000,7 @@ var meterjson = {
   "CreditReason": null,
   "CreditUnit": 0,
   "CurrencyType": "ks",
-  "CustomerId": "7324392739",
+  "CustomerId": "7324392740",
   "DueDate": "November 17, 2021 at 12:00:00 AM UTC+6:30",
   "ExcelFileName": null,
   "FeederID": 3,
@@ -1019,6 +1051,5 @@ var meterjson = {
   "TwinRightSeal": null,
   "Voltage": "230",
   "WattLoad": "",
-  "meterBill": 150000,
   "meterName": "Home"
 };

@@ -7,26 +7,23 @@ class Formatter {
   }
 
   static String getDate(DateTime date) {
-    var dateFormat =
-        DateFormat("dd-MM-yyyy hh:mm a"); // you can change the format here
-    return dateFormat.format(date);
-  }
-  static String getDates(DateTime date) {
-    var dateFormat =
-    DateFormat("dd-MM-yyyy"); // you can change the format here
+    var dateFormat = DateFormat("dd-MM-yyyy hh:mm a");
     return dateFormat.format(date);
   }
 
-  static String getHour(DateTime date){
-    var dateFormat =
-    DateFormat("hh:mm a"); // you can change the format here
+  static String getDates(DateTime date) {
+    var dateFormat = DateFormat("dd-MM-yyyy");
+    return dateFormat.format(date);
+  }
+
+  static String getHour(DateTime date) {
+    var dateFormat = DateFormat("hh:mm a");
     return dateFormat.format(date);
   }
 
   static String balanceUnseenFormat(int num) {
     String s = "****";
-    // int length = num.toInt().toString().length;
-    // for (int i = 0; i < length; i++) s += "*";
+
     return s;
   }
 

@@ -1,18 +1,16 @@
 // @dart=2.9
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:left_style/datas/constants.dart';
-
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/providers/noti_provider.dart';
-import 'package:left_style/widgets/wallet_detail_success_page.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'wallet/wallet_detail_success_page.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
 import 'my_meterBill_detail.dart';
 import 'notification_detail.dart';
 
@@ -55,14 +53,7 @@ class _NotificationListPage extends State<NotificationListPage>
 
   getData() async {
     totalList = await context.read<NotiProvider>().getNotiList(context);
-    print(totalList.length);
-    if (notiList != null && notiList.length > 0) {
-      SystemData.notiCount = notiList.where((e) => e.status == false).length;
-      FlutterAppBadger.updateBadgeCount(SystemData.notiCount);
-    } else {
-      SystemData.notiCount = 0;
-      FlutterAppBadger.removeBadge();
-    }
+
     notiCount = context
         .read<NotiProvider>()
         .updateNotiCount(context, SystemData.notiCount);
@@ -86,9 +77,6 @@ class _NotificationListPage extends State<NotificationListPage>
     showlist = showlist + 10; //start +showlist;
     end = totalList.length;
     if (notiList.length < end) {
-      print(notiList.length);
-      print(end);
-      print(showlist);
       if (showlist > end) {
         notiList..addAll(totalList.sublist(start, end));
       } else {
@@ -178,10 +166,6 @@ class _NotificationListPage extends State<NotificationListPage>
                           .read<NotiProvider>()
                           .changeNotiStatus(context, notiList[index].messageId)
                           .then((value) {
-                        // context
-                        //     .read<NotiProvider>()
-                        //     .updateNotiCount(context, --SystemData.notiCount);
-
                         switch (notiList[index].type) {
                           case NotiType.topup:
                             Navigator.push(
@@ -207,7 +191,7 @@ class _NotificationListPage extends State<NotificationListPage>
                             break;
                           case NotiType.meterbill:
                             // String tempId = "7324392739";
-                            print(notiList[index].id);
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -252,11 +236,17 @@ class _NotificationListPage extends State<NotificationListPage>
                               borderRadius: BorderRadius.circular(8.0),
                               child: notiList[index].imageUrl != null &&
                                       notiList[index].imageUrl != ""
-                                  ? Image.network(
-                                      notiList[index].imageUrl,
+                                  ? CachedNetworkImage(
+                                      imageUrl: notiList[index].imageUrl,
                                       width: 60.0,
                                       height: 60.0,
                                       fit: BoxFit.fill,
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(
+                                        color: Colors.blue,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
                                     )
                                   : Image.asset(
                                       'assets/icon/icon.png',

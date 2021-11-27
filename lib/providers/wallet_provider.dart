@@ -4,10 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/utils/network_util.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/models/meter_bill.dart';
+import 'package:left_style/models/meter_bill_model.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/utils/message_handler.dart';
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
 
 class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var tracRef = FirebaseFirestore.instance.collection(transactions);
@@ -16,15 +19,16 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       FirebaseFirestore.instance.collection(meterBillsCollection);
   var balance;
   String uid = FirebaseAuth.instance.currentUser.uid.toString();
+  NetworkUtil _netUtil = new NetworkUtil();
 
   // Future<bool> topup(BuildContext context, String paymentType, double amount,
   //     String transactionId, imageFile) async {
-  //   print(imageFile);
+  //
   //   if (FirebaseAuth.instance.currentUser?.uid != null) {
   //     String uid = FirebaseAuth.instance.currentUser.uid.toString();
   //     var dateTime = DateTime.now();
   //     var dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss").format(dateTime);
-  //     print(dateFormat.toString());
+  //
   //     final ref = FirebaseStorage.instance
   //         .ref('user_topup')
   //         .child(dateFormat.toString() + "_" + uid + ".jpg");
@@ -33,12 +37,12 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //     if (downloadUrl != null) {
   //       userRef.doc(uid).get().then((value) {
   //         double balance = value.data()["balance"] ?? 0;
-  //         print(balance);
+  //
   //         if (balance != null) {
-  //           print(balance + amount);
+  //
   //           try {
   //             value.reference.update({"balance": balance + amount}).then((_) {
-  //               print("topup success!");
+  //
   //             });
 
   //             TransactionModel transactionModel = TransactionModel(
@@ -55,14 +59,14 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //                 .collection("manyTransition")
   //                 .add(transactionModel.toJson())
   //                 .catchError((error) {
-  //               print("Failed to add topup transaction: $error");
+  //
   //             });
   //             notifyListeners();
   //             MessageHandler.showMessage(
   //                 context, "Success", "Your topup is successful");
   //             return true;
   //           } catch (e) {
-  //             print("Failed to topup: $e");
+  //
   //             MessageHandler.showErrMessage(
   //                 context, "Fail", "Your topup is fail");
   //             return false;
@@ -89,7 +93,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //       } else {
   //         try {
   //           value.reference.update({"balance": balance - amount,}).then((_) {
-  //             print("withdrawl success!");
+  //
   //             MessageHandler.showMessage(
   //                 context, "Success", "Your withdrawl is successful");
   //             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Wallet()));
@@ -100,11 +104,11 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //               amount: -amount,
   //               createdDate: DateTime.now());
   //           tracRef.doc(uid).collection("manyTransition").add(transactionModel.toJson()).catchError((error) {
-  //             print("Failed to add withdrawl transaction: $error");
+  //
   //           });
   //           notifyListeners();
   //         } catch (e) {
-  //           print("Failed to withdrawl: $e");
+  //
   //           MessageHandler.showErrMessage(
   //               context, "Fail", "Your withdrawl is fail");
   //         }
@@ -129,7 +133,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //             value.reference.update({
   //               "balance": balance - amount,
   //             }).then((_) {
-  //               print("withdrawl success!");
+  //
   //               MessageHandler.showMessage(
   //                   context, "Success", "Your withdrawl is successful");
   //               Navigator.of(context)
@@ -147,11 +151,11 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //                 .collection("manyTransition")
   //                 .add(transactionModel.toJson())
   //                 .catchError((error) {
-  //               print("Failed to add withdrawl transaction: $error");
+  //
   //             });
   //             notifyListeners();
   //           } catch (e) {
-  //             print("Failed to withdrawl: $e");
+  //
   //             MessageHandler.showErrMessage(
   //                 context, "Fail", "Your withdrawl is fail");
   //           }
@@ -200,7 +204,7 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //   if (FirebaseAuth.instance.currentUser?.uid != null) {
   //     String uid = FirebaseAuth.instance.currentUser.uid;
   //     await tracRef.doc(uid).collection(manyTransaction).get().then((value) {
-  //       print(value.docs);
+  //
   //       value.docs.forEach((result) {
   //         list.add(TransactionModel.fromJson(result.data()));
   //       });
@@ -216,7 +220,6 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid;
       await tracRef.doc(uid).collection(manyTransaction).get().then((value) {
-        print(value.docs);
         value.docs.forEach((result) {
           list.add(TransactionModel.fromJson(result.data()));
         });
@@ -226,51 +229,81 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
     return list;
   }
 
-  Future<void> payMeterBill(
-      BuildContext context, MeterBill bill, String docId) async {
+// api/Value?customerId={customerId}&paymentAmount={paymentAmount}&uid={uid}&branchId={branchId}&signature={signature}
+  Future<bool> payMeterBill(BuildContext context, MeterBill bill) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
-      userRef.doc(uid).get().then((value) async {
-        int balance = value.data()["balance"];
-
-        if (bill.totalCost > balance) {
-          MessageHandler.showErrMessage(context, "Insufficient Balance",
-              "Your meter bill is higher than your balance");
+      var myHeaders = await getHeadersWithOutToken();
+      String signature = bill.customerId +
+          bill.branchId +
+          uid +
+          (bill.totalCost + bill.creditAmount).toString() +
+          secretkey;
+      String signatureKey =
+          md5.convert(signature.codeUnits).toString().toUpperCase();
+      var url =
+          "$domainName/Value?customerId=${bill.customerId}&paymentAmount=${bill.totalCost + bill.creditAmount}&uid=$uid&branchId=${bill.branchId}&signature=$signatureKey";
+      http.Response response = await _netUtil.get(context, url, null);
+      if (response != null) {
+        if (response.statusCode == 200) {
+          MessageHandler.showMessage(
+              context, "Success", "Your  meter bill payment is successful");
+          return true;
         } else {
-          try {
-            userRef
-                .doc(uid)
-                .update({"balance": balance - bill.totalCost}).then((_) {
-              print("meter bill payment success!");
-              MessageHandler.showMessage(
-                  context, "Success", "Your  meter bill payment is successful");
-            });
-            TransactionModel transactionModel = TransactionModel(
-                uid: uid,
-                type: TransactionType.meterbill,
-                // paymentType: ,
-                // amount: bill.totalCost.toDouble(),
-                createdDate: Timestamp.fromDate(DateTime.now()));
-
-            tracRef
-                .doc(uid)
-                .collection("manyTransition")
-                .add(transactionModel.toJson())
-                .catchError((error) {
-              print("Failed to add meter bill payment transaction: $error");
-            });
-
-            await meterBillRef.doc(docId).set(bill.toJson());
-
-            notifyListeners();
-          } catch (e) {
-            print("Failed to meter bill payment: $e");
-            MessageHandler.showErrMessage(
-                context, "Fail", "Your meter bill payment is fail");
-          }
+          MessageHandler.showErrMessage(
+              context, "Fail", "Your meter bill payment is fail");
+          return false;
         }
-      });
+      }
     }
     notifyListeners();
   }
+
+  // Future<void> payMeterBill(
+  //     BuildContext context, MeterBill bill, String docId) async {
+  //   if (FirebaseAuth.instance.currentUser?.uid != null) {
+  //     String uid = FirebaseAuth.instance.currentUser.uid.toString();
+  //     userRef.doc(uid).get().then((value) async {
+  //       int balance = value.data()["balance"];
+
+  //       if (bill.totalCost > balance) {
+  //         MessageHandler.showErrMessage(context, "Insufficient Balance",
+  //             "Your meter bill is higher than your balance");
+  //       } else {
+  //         try {
+  //           userRef
+  //               .doc(uid)
+  //               .update({"balance": balance - bill.totalCost}).then((_) {
+  //
+  //             MessageHandler.showMessage(
+  //                 context, "Success", "Your  meter bill payment is successful");
+  //           });
+  //           TransactionModel transactionModel = TransactionModel(
+  //               uid: uid,
+  //               type: TransactionType.meterbill,
+  //               // paymentType: ,
+  //               // amount: bill.totalCost.toDouble(),
+  //               createdDate: Timestamp.fromDate(DateTime.now()));
+
+  //           tracRef
+  //               .doc(uid)
+  //               .collection("manyTransition")
+  //               .add(transactionModel.toJson())
+  //               .catchError((error) {
+  //
+  //           });
+
+  //           await meterBillRef.doc(docId).set(bill.toJson());
+
+  //           notifyListeners();
+  //         } catch (e) {
+  //
+  //           MessageHandler.showErrMessage(
+  //               context, "Fail", "Your meter bill payment is fail");
+  //         }
+  //       }
+  //     });
+  //   }
+  //   notifyListeners();
+  // }
 }

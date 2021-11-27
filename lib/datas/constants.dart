@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 const String secretkey = "31bf3856ad364e35";
+const String domainName = "https://leftstyle.thai2d3d.com/api";
+const String domainNameLocal = "http://192.168.1.10/LifeStyleWebApi/api";
 
 const String brandName = "Life Style";
 const int codeLength = 6;
@@ -10,7 +12,7 @@ const String smsToken =
 const String version = "1.2.1";
 const String serverKey =
     "AAAAp5abKQ0:APA91bG6Vl7FxmbqOqM1mCeZUzSpI-nJ3ieMC_-YVCQF7CW5jzAs10u1iu5asZ5HnwCDKd5v8mCMYPGYw6cRVf8j-uU6hjP9AONShIM5Sgijgh6tODZym01C5-KmJB2QiHX7hMhvegjd";
-String language='';
+String language = '';
 Future<Map<String, String>> getHeaders() async {
   //timezone
   try {
@@ -70,6 +72,7 @@ Future<Map<String, String>> getHeadersWithOutToken() async {
 const Color mainColor = Color(0xFFfa2e73);
 const String userCollection = "users";
 const String meterCollection = "meters";
+const String subscriptionCollection = "subscription";
 const String userUploadUnitCollection = "user_upload_unit";
 const String meterBillsCollection = "meter_bills";
 const String userMeterCollection = "user_meters";
@@ -81,7 +84,7 @@ const String testCollection = "tests";
 const String paymentMethodCollection = "payment_method";
 const String languageCollection = "languages";
 const String adsCollection = "ads";
-
+const String introCollection = "intro";
 const String notilist = "notilist";
 const String myTransactions = "myTransactions";
 const int timeOut = 120;
@@ -117,5 +120,6 @@ class NotiType {
   static const String withdraw = "withdraw";
   static const String meterbill = "meterbill";
   static const String appupdate = "appupdate";
-  static const String notice = "notice";
+  static const String content = "content";
+  static const String readMeter = "readMeter";
 }

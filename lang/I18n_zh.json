@@ -73,5 +73,10 @@
   "sms_template": "{brand_name} အတွက် အတည်ပြုရန်ကုဒ်နံပါတ်မှာ {code} ဖြစ်ပါတယ်",
   "readMeter": "读表",
   "meterRemove": "消除",
-  "meter_remark":"米备注"
+  "meter_remark":"米备注",
+  "meter_date_expired":"电表付款日期已过期。",
+  "go_to_detail":"Go To Detail",
+  "close":"Close",
+  "go_noti_confirm":"Do you want to go to the detail page?",
+  "q_go_to_detail":"Go To Detail?"
 }

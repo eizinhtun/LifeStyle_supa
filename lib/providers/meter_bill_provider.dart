@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/models/meter_bill.dart';
+import 'package:left_style/models/meter_bill_model.dart';
 import 'package:left_style/utils/message_handler.dart';
 
 class MeterBillProvider with ChangeNotifier, DiagnosticableTreeMixin {
@@ -22,7 +22,6 @@ class MeterBillProvider with ChangeNotifier, DiagnosticableTreeMixin {
         notifyListeners();
         return true;
       } catch (e) {
-        print("Failed to update user: $e");
         MessageHandler.showErrMessage(
             context, "Fail", "Updating User Info is fail");
         return false;

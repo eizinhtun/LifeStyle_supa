@@ -1,14 +1,18 @@
 // @dart=2.9
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/shims/dart_ui_real.dart';
+import 'package:http/http.dart' as http;
+import 'package:left_style/utils/network_util.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/models/meter_bill.dart';
+import 'package:left_style/localization/translate.dart';
+import 'package:left_style/models/meter_bill_model.dart';
 import 'package:left_style/pages/my_meterBill_detail.dart';
 import 'package:left_style/utils/formatter.dart';
+import 'package:left_style/utils/message_handler.dart';
 
 class MyMeterBillList extends StatelessWidget {
   @override
@@ -32,7 +36,9 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final db = FirebaseFirestore.instance;
 
-  List<String> customerIds = [];
+  List<String> customerIds = [
+    // "3333",
+  ];
 
   bool _isLoading = true;
 
@@ -43,7 +49,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
   }
 
   getBandingMeterList() async {
-    var data = db
+    db
         .collection(meterCollection)
         .doc(FirebaseAuth.instance.currentUser.uid)
         .collection(userMeterCollection)
@@ -93,12 +99,14 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
               ? StreamBuilder<QuerySnapshot>(
                   stream: db
                       .collection(meterBillsCollection)
-                      .where("customerId", isEqualTo: customerIds.first
-                          // isGreaterThanOrEqualTo: customerIds.first
-                          //FieldPath.documentId,
-                          // arrayContainsAny: customerIds,
-                          // whereIn: customerIds
-                          )
+                      .where("customerId", isEqualTo: customerIds.first)
+                      .orderBy("dueDate", descending: true)
+                      // .where("customerId", arrayContains: customerIds)
+                      // isGreaterThanOrEqualTo: customerIds.first
+                      //FieldPath.documentId,
+                      // arrayContainsAny: customerIds,
+                      // whereIn: customerIds
+                      // )
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
@@ -106,7 +114,6 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                      print(snapshot.data.docs.length);
                       return Container(
                         padding: EdgeInsets.only(
                             top: 8, bottom: 8, left: 8, right: 8),
@@ -114,12 +121,18 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                           children: snapshot.data.docs.map((doc) {
                             MeterBill bill = MeterBill.fromJson(doc.data());
                             // MyReadUnit item = MyReadUnit.fromJson(doc.data());
-                            print(bill.readImageUrl);
-                            print(bill.isPaid);
+
                             print(bill.readImageUrl != null &&
                                 bill.readImageUrl != "");
+                            DateTime now = DateTime.now();
+                            DateTime currentDate =
+                                DateTime(now.year, now.month, now.day);
+                            DateTime temp = bill.dueDate.toDate();
+                            DateTime dueDate =
+                                DateTime(temp.year, temp.month, temp.day);
                             return InkWell(
                               onTap: () async {
+                                // syncBillLatestInfo(context, bill, doc.id);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -155,16 +168,12 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                               ),
                                               width: 60,
                                               height: 60,
-                                              child: bill.readImageUrl !=
-                                                          null &&
-                                                      bill.readImageUrl != ""
-                                                  ? CircleAvatar(
-                                                      radius: 100.0,
-                                                      backgroundImage:
-                                                          CachedNetworkImageProvider(
-                                                        bill.readImageUrl,
-                                                      ),
-                                                    )
+                                              child: (!bill.isPaid &&
+                                                      (dueDate.isBefore(
+                                                          currentDate)))
+                                                  ? Icon(Icons.error,
+                                                      color: Colors.red[600],
+                                                      size: 50)
                                                   : CircleAvatar(
                                                       radius: 100.0,
                                                       backgroundColor:
@@ -231,88 +240,106 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                           ],
                                         ),
                                         Container(
-                                            alignment: Alignment.centerLeft,
-                                            padding: EdgeInsets.only(
-                                                left: 20,
-                                                top: 5,
-                                                bottom: 10,
-                                                right: 20),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.only(
-                                                      top: 5, bottom: 5),
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: bill.isPaid
-                                                      ? Row(
-                                                          children: [
-                                                            Icon(
-                                                              Icons
-                                                                  .check_circle,
-                                                              color: Colors
-                                                                  .green
-                                                                  .withOpacity(
-                                                                      0.8),
-                                                            ),
-                                                            Text(
-                                                              " paid",
-                                                              style: TextStyle(
-                                                                  fontStyle:
-                                                                      FontStyle
-                                                                          .italic,
-                                                                  color: Colors
-                                                                      .green),
-                                                            )
-                                                          ],
-                                                        )
-                                                      : Text(
-                                                          "Due date " +
-                                                              Formatter.getDate(
-                                                                  bill.dueDate
-                                                                      .toDate()),
-                                                          style: TextStyle(
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic,
-                                                              color: Colors
-                                                                  .black26,
-                                                              fontSize: 12),
-                                                        ),
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.only(
-                                                      top: 5, bottom: 5),
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Text(
-                                                    bill.isPaid
-                                                        ? Formatter.getDate(new DateTime
-                                                                .fromMillisecondsSinceEpoch(
-                                                            bill.payDate
-                                                                .millisecondsSinceEpoch))
-                                                        // bill.payDate
-                                                        : Formatter.getDate(
-                                                            new DateTime
-                                                                    .fromMillisecondsSinceEpoch(
-                                                                bill.readDate
-                                                                    .millisecondsSinceEpoch),
+                                          alignment: Alignment.centerLeft,
+                                          padding: EdgeInsets.only(
+                                              left: 20,
+                                              top: 5,
+                                              bottom: 0,
+                                              right: 20),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.only(
+                                                    top: 5, bottom: 5),
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: bill.isPaid
+                                                    ? Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.check_circle,
+                                                            color: Colors.green
+                                                                .withOpacity(
+                                                                    0.8),
                                                           ),
-                                                    textAlign: TextAlign.right,
-                                                    style: TextStyle(
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                        color: Colors.black26,
-                                                        fontSize: 12),
+                                                          Text(
+                                                            " paid",
+                                                            style: TextStyle(
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic,
+                                                                color: Colors
+                                                                    .green),
+                                                          )
+                                                        ],
+                                                      )
+                                                    : Text(
+                                                        "Due date " +
+                                                            Formatter.getDate(
+                                                                bill.dueDate
+                                                                    .toDate()),
+                                                        style: TextStyle(
+                                                            fontStyle: FontStyle
+                                                                .italic,
+                                                            color:
+                                                                Colors.black26,
+                                                            fontSize: 12),
+                                                      ),
+                                              ),
+                                              Container(
+                                                padding: EdgeInsets.only(
+                                                    top: 5, bottom: 5),
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Text(
+                                                  bill.isPaid
+                                                      ? Formatter.getDate(new DateTime
+                                                              .fromMillisecondsSinceEpoch(
+                                                          bill.payDate
+                                                              .millisecondsSinceEpoch))
+                                                      // bill.payDate
+                                                      : Formatter.getDate(
+                                                          new DateTime
+                                                                  .fromMillisecondsSinceEpoch(
+                                                              bill.readDate
+                                                                  .millisecondsSinceEpoch),
+                                                        ),
+                                                  textAlign: TextAlign.right,
+                                                  style: TextStyle(
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                      color: Colors.black26,
+                                                      fontSize: 12),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        (!bill.isPaid &&
+                                                bill.dueDate
+                                                    .toDate()
+                                                    .isBefore(currentDate))
+                                            ? Container(
+                                                alignment: Alignment.topRight,
+                                                padding: EdgeInsets.only(
+                                                    left: 0,
+                                                    top: 0,
+                                                    bottom: 5,
+                                                    right: 0),
+                                                child: Text(
+                                                  Tran.of(context).text(
+                                                      "meter_date_expired"),
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.red[600],
                                                   ),
                                                 ),
-                                              ],
-                                            )),
+                                              )
+                                            : Container(),
                                       ],
                                     ),
                                     Visibility(
@@ -323,7 +350,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                           top: 10,
                                           right: 10,
                                           child: Icon(
-                                            Icons.error,
+                                            Icons.warning,
                                             color: Colors.red,
                                           )),
                                     )
@@ -339,5 +366,33 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                 )
               : Container(),
     );
+  }
+
+  Future<void> syncBillLatestInfo(
+      BuildContext context, MeterBill bill, String docId) async {
+    NetworkUtil _netUtil = new NetworkUtil();
+
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String signature = docId + bill.id + bill.branchId + secretkey;
+      String signatureKey =
+          md5.convert(signature.codeUnits).toString().toUpperCase();
+      // api/Meter/getBillLatestInfo?refNo={refNo}&id={id}&branchId={branchId}&signature={signature}
+      var url =
+          "$domainNameLocal/Meter/getBillLatestInfo?refNo=$docId&id=${bill.id}&branchId=${bill.branchId}&signature=$signatureKey";
+      http.Response response = await _netUtil.get(context, url, null);
+      if (response != null) {
+        if (response.statusCode == 200) {
+          MessageHandler.showMessage(
+              context, "Success", "Syncing Bill latest info is successful");
+          return true;
+        } else {
+          MessageHandler.showErrMessage(
+              context, "Fail", "Syncing Bill latest info is fail");
+          return false;
+        }
+      }
+    }
+
+    // http://localhost/LifeStyleWebApi/api/Value/%7Bid%7D?refNo={refNo}&branchId={branchId}&signature={signature}
   }
 }

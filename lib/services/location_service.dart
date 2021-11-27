@@ -36,9 +36,7 @@ class LocationService {
         latitude: userLocation.latitude,
         longitude: userLocation.longitude,
       );
-    } on Exception catch (e) {
-      print('Could not get location: ${e.toString()}');
-    }
+    } on Exception catch (e) {}
 
     return _currentLocation;
   }

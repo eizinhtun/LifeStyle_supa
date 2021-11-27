@@ -17,8 +17,8 @@ class _LanguagePageState extends State<LanguagePage>
   double height = 50;
   String lang = "en";
   String systemLang = "";
-  bool _selectedEn = false;
   bool _selectedMy = false;
+  bool _selectedEn = false;
   bool _selectedZh = false;
 
   @override

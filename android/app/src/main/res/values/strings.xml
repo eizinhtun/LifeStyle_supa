@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Facebook Login</string>
-    <string name="facebook_app_id">3105247143054675</string>
-    <string name="fb_login_protocol_scheme">fb3105247143054675</string>
+    <string name="facebook_app_id">894777384749453</string>
+    <string name="fb_login_protocol_scheme">fb894777384749453</string>
     <string name="map_api_key">AIzaSyA7TRogvV360fOZNbhcjaa3fioVzNH3Qug</string>
+    <string name="default_notification_channel_id" translatable="false">high_thai2d3d_channel</string>
 </resources>

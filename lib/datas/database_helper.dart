@@ -2,7 +2,7 @@
 import 'dart:async';
 import 'package:left_style/datas/system_data.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:left_style/localization/Translate.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DatabaseHelper {

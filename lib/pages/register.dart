@@ -6,10 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/system_data.dart';
-import 'package:left_style/localization/Translate.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/message_handler.dart';
-import 'package:left_style/validators/validator.dart';
+import 'package:left_style/utils/validator.dart';
 
 import 'register_verify_pin_page.dart';
 
@@ -299,7 +299,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void register() async {
     if (_registerformKey.currentState.validate()) {
-      print("Validate");
       // var pass = new DBCrypt()
       //     .hashpw(_passwordController.text, new DBCrypt().gensalt());
       // var isCorrect = new DBCrypt().checkpw(plain, hashed);
@@ -333,14 +332,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   context,
                   6);
               verificationId = verificationId;
-              print("Before: $verificationId");
+
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => RegisterVerifyPinPage(
                       user: user, verificationId: verificationId)));
             },
             // codeSent,
             codeAutoRetrievalTimeout: (String verificationId) {
-              print("verification code: " + verificationId);
               MessageHandler.showSnackbar(
                   "verification code: " + verificationId, context, 6);
               verificationId = verificationId;

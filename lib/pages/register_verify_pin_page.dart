@@ -36,7 +36,7 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
     super.initState();
     // OTPInteractor.getAppSignature()
     //     //ignore: avoid_print
-    //     .then((value) => print('signature - $value'));
+    //     .then((value) =>
     // controller = OTPTextEditController(
     //   codeLength: 6,
     //   //ignore: avoid_print
@@ -133,20 +133,16 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                                     blurRadius: 10,
                                   )
                                 ],
-                                onCompleted: (v) {
-                                  print("Completed");
-                                },
+                                onCompleted: (v) {},
                                 // onTap: () {
-                                //   print("Pressed");
+                                //
                                 // },
                                 onChanged: (value) {
-                                  print(value);
                                   setState(() {
                                     currentText = value;
                                   });
                                 },
                                 beforeTextPaste: (text) {
-                                  print("Allowing to paste $text");
                                   //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
                                   //but you can show anything you want here, like your pop up saying wrong paste format or etc
                                   return true;
@@ -214,8 +210,6 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                                     maxHeight: 400),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    print("Pressed");
-                                    print(controller.text);
                                     signInWithPhoneNumber();
                                   },
                                   child: Text(
@@ -265,15 +259,12 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                 context,
                 6);
             verificationId = verificationId;
-            print("Before: $verificationId");
 
             // Navigator.of(context).push(MaterialPageRoute(
             //     builder: (context) => RegisterVerifyPinPage(
             //         user: user, verificationId: verificationId)));
           },
           codeAutoRetrievalTimeout: (String verificationId) {
-            print("verification code: " + verificationId);
-
             verificationId = verificationId;
           });
     } catch (e) {
@@ -293,31 +284,30 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
   }
 }
 
-
 // var recaptchaVerifier = RecaptchaVerifier(
-    //   container: null,
-    //   size: RecaptchaVerifierSize.compact,
-    //   theme: RecaptchaVerifierTheme.dark,
-    //   onSuccess: () async {
-    //     print('reCAPTCHA Completed!');
-    //     // setState(() {
-    //     //   currentInput = "otp";
-    //     //   _isLoading = false;
-    //     // });
-    //   },
-    //   onError: (FirebaseAuthException error) async {
-    //     print("error");
-    //     print(error);
-    //     // setState(() {
-    //     //   _isLoading = false;
-    //     // });
-    //     _scaffoldKey.currentState
-    //         .showSnackBar(SnackBar(content: Text(error.message)));
-    //   },
-    //   onExpired: () async {
-    //     print('reCAPTCHA Expired!');
-    //     // setState(() {
-    //     //   _isLoading = false;
-    //     // });
-    //   },
-    // );
+//   container: null,
+//   size: RecaptchaVerifierSize.compact,
+//   theme: RecaptchaVerifierTheme.dark,
+//   onSuccess: () async {
+//
+//     // setState(() {
+//     //   currentInput = "otp";
+//     //   _isLoading = false;
+//     // });
+//   },
+//   onError: (FirebaseAuthException error) async {
+//
+//
+//     // setState(() {
+//     //   _isLoading = false;
+//     // });
+//     _scaffoldKey.currentState
+//         .showSnackBar(SnackBar(content: Text(error.message)));
+//   },
+//   onExpired: () async {
+//
+//     // setState(() {
+//     //   _isLoading = false;
+//     // });
+//   },
+// );

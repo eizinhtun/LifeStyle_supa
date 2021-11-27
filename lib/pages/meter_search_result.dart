@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
-import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/models/Meter.dart';
-import 'package:left_style/models/MeterPageObj.dart';
+import 'package:left_style/localization/translate.dart';
+import 'package:left_style/models/meter_model.dart';
+import 'package:left_style/models/meter_page_obj.dart';
 import 'package:left_style/pages/meter_search_detail.dart';
 import 'package:left_style/providers/meter_presenter.dart';
 import 'package:left_style/utils/message_handler.dart';
@@ -474,7 +474,9 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
       setState(() {
         _onFirstLoading = false;
       });
-      _scaffoldKey.currentState.showSnackBar(new SnackBar(
+
+      // _scaffoldKey.currentState.
+      ScaffoldMessenger.maybeOf(context).showSnackBar(new SnackBar(
           backgroundColor: Colors.red,
           content: new Text(Tran.of(context).text(text))));
     }

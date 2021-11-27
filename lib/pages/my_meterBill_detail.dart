@@ -18,11 +18,10 @@ import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/models/meter_bill.dart';
+import 'package:left_style/localization/translate.dart';
+import 'package:left_style/models/meter_bill_model.dart';
 import 'package:left_style/pages/pay_bill_page.dart';
 import 'package:left_style/utils/formatter.dart';
-import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
 import 'package:image/image.dart' as Img;
 
@@ -39,17 +38,60 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
   final db = FirebaseFirestore.instance;
   MeterBill bill = MeterBill();
   double x, y = 0;
-  String meterName="";
+  String meterName = "";
   @override
   void initState() {
     super.initState();
-    db.collection(meterCollection).doc(FirebaseAuth.instance.currentUser.uid).collection(userMeterCollection).doc(widget.docId).get().then((value){
-      meterName=value.data()["meterName"];
+    db
+        .collection(meterCollection)
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .collection(userMeterCollection)
+        .doc(widget.docId)
+        .get()
+        .then((value) {
+      if (value.data() != null) {
+        meterName = value.data()["meterName"];
+      }
     });
   }
 
+  Future<bool> checkEnableBtn(MeterBill bill) async {
+    firstLaod = false;
+    if (bill != null && !bill.isPaid) {
+      DateTime now = DateTime.now();
+      DateTime currentDate = DateTime(now.year, now.month, now.day);
+      Timestamp currentDateTimeStamp = Timestamp.fromDate(currentDate);
+      bool overDue = bill.dueDate.toDate().isBefore(currentDate);
+      if (!overDue) {
+        enablePaid = true;
+
+        return enablePaid;
+      }
+
+      await FirebaseFirestore.instance
+          .collection(meterBillsCollection)
+          .where(
+            "customerId",
+            isEqualTo: bill.customerId,
+          )
+          // .where("dueDate", isEqualTo: tempTimeStamp)
+          .where("dueDate", isLessThan: currentDateTimeStamp)
+          .orderBy("dueDate", descending: true)
+          .limit(1)
+          .get()
+          .then((value) {
+        value.docs.forEach((result) {
+          enablePaid = result.id == widget.docId;
+          setState(() {});
+          return enablePaid;
+        });
+      });
+    }
+    return enablePaid;
+  }
+
   TextStyle getTextStyle() {
-    //print("HorsePower:"+(consumer.meterBill.mHorsePowerCost!=0?consumer.meterBill.mHorsePowerCost.toString():"0"));
+    //
     return TextStyle(
         fontWeight: FontWeight.w900,
         fontSize: ScreenUtil().setSp(10),
@@ -81,6 +123,8 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
 
   //Widget getInvoice(Consumer consumer,bool loadingConsumer){
 
+  bool enablePaid = false;
+  bool firstLaod = true;
   @override
   Widget build(BuildContext context) {
     _context = context;
@@ -90,11 +134,15 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
         stream:
             db.collection(meterBillsCollection).doc(widget.docId).snapshots(),
         builder: (context, snapshot) {
-          print(widget.docId);
           if (snapshot.hasData && snapshot.data.exists) {
-            bill = MeterBill.fromJson(snapshot.data.data(), meterName: meterName);
+            bill =
+                MeterBill.fromJson(snapshot.data.data(), meterName: meterName);
+
             meterNo = bill.meterNo;
-            // isPaid = bill.isPaid;
+            if (firstLaod) {
+              checkEnableBtn(bill);
+            }
+
             return Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
@@ -102,7 +150,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                 centerTitle: true,
                 title: Text(Tran.of(context).text("my_meter_bill").toString()),
                 actions: [
-                 IconButton(
+                  IconButton(
                     onPressed: () async {
                       await shareImage(context);
                     },
@@ -132,8 +180,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                     child: Stack(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(
-                              top: 10.0, bottom: 0.0),
+                          padding: EdgeInsets.only(top: 10.0, bottom: 0.0),
                           child: Column(
                             children: [
                               RepaintBoundary(
@@ -181,18 +228,23 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                             Align(
                                               alignment: Alignment.centerLeft,
                                               child: Container(
-                                                padding: EdgeInsets.only(left: 5),
+                                                padding:
+                                                    EdgeInsets.only(left: 5),
                                                 child: Text(bill.state,
                                                     style: getTextStyle()),
                                               ),
                                             ),
-
                                             Align(
                                               alignment: Alignment.centerLeft,
                                               child: Container(
-                                                padding: EdgeInsets.only(left: 5),
+                                                padding:
+                                                    EdgeInsets.only(left: 5),
                                                 child: Text(
-                                                  "အမည်- "+ bill.consumerName+" ( "+ meterName +" )",
+                                                  "အမည်- " +
+                                                      bill.consumerName +
+                                                      " ( " +
+                                                      meterName +
+                                                      " )",
                                                   style: getTextStyle(),
                                                 ),
                                               ),
@@ -258,7 +310,8 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                                     bill.ledgerNo +
                                                         "/" +
                                                         bill.ledgerPostFix),
-                                                _buildItem(0, 2, 1, "နှုန်းထား"),
+                                                _buildItem(
+                                                    0, 2, 1, "နှုန်းထား"),
                                                 _buildItem(0, 3, 1, "သင့်ငွေ"),
                                                 _buildItem(1, 0, 1, "နှုန်း"),
                                                 _buildItem(
@@ -286,8 +339,10 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                                     bill.layerAmount1
                                                         .toString()
                                                         .replaceAll(".0", "")),
-                                                _buildItem(2, 0, 1, "မီတာအမှတ်"),
-                                                _buildItem(2, 1, 1, bill.meterNo),
+                                                _buildItem(
+                                                    2, 0, 1, "မီတာအမှတ်"),
+                                                _buildItem(
+                                                    2, 1, 1, bill.meterNo),
                                                 _buildItem(
                                                     2,
                                                     2,
@@ -398,7 +453,9 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                                     1,
                                                     1,
                                                     (bill.multiplier == null ||
-                                                            bill.multiplier == "")
+                                                            // ignore: unrelated_type_equality_checks
+                                                            bill.multiplier ==
+                                                                "")
                                                         ? ""
                                                         : bill.multiplier
                                                             .toString()
@@ -487,8 +544,8 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                                     bill.mMaintenanceCost
                                                         .toString()
                                                         .replaceAll(".0", "")),
-                                                _buildItem(
-                                                    10, 0, 1, "မြင်းကောင်ရေကြေး"),
+                                                _buildItem(10, 0, 1,
+                                                    "မြင်းကောင်ရေကြေး"),
                                                 _buildItem(
                                                     10,
                                                     1,
@@ -518,9 +575,11 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                                   bill.creditAmount == 0
                                               ? Container()
                                               : Container(
-                                                  alignment: Alignment(1.0, 1.0),
-                                                  padding: const EdgeInsets.only(
-                                                      top: 5.0),
+                                                  alignment:
+                                                      Alignment(1.0, 1.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 5.0),
                                                   child: Text(
                                                     "ယခင်ကြွေးကျန်" +
                                                         bill.creditAmount
@@ -533,14 +592,17 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                                   bill.disscountAmt == 0
                                               ? Container()
                                               : Container(
-                                                  alignment: Alignment(1.0, 1.0),
-                                                  padding: const EdgeInsets.only(
-                                                      top: 5.0),
+                                                  alignment:
+                                                      Alignment(1.0, 1.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 5.0),
                                                   child: Text(
                                                     "ကင်းလွတ်ခွင့် " +
                                                         bill.disscountAmt
                                                             .toString()
-                                                            .replaceAll(".0", ""),
+                                                            .replaceAll(
+                                                                ".0", ""),
                                                     style: getTextStyle(),
                                                     textAlign: TextAlign.right,
                                                   ),
@@ -553,7 +615,8 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                               "Total   " +
                                                   ((bill.creditAmount == null
                                                               ? 0
-                                                              : bill.creditAmount
+                                                              : bill
+                                                                  .creditAmount
                                                                   .toDouble()) +
                                                           bill.totalCost)
                                                       .toString()
@@ -602,7 +665,6 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                                 ),
                                                 onError: (error) {
                                                   // Error handler
-                                                  print('error = $error');
                                                 },
                                               ),
                                             )
@@ -621,9 +683,9 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                                         bill.refundAmount
                                                             .toString() +
                                                         "   "
-                                                    : "") +
+                                                    : " ") +
                                                 "hotline: " +
-                                                bill.hotline,
+                                                bill.hotline.toString(),
                                             style: getTextStyle()),
                                       ),
                                     ],
@@ -664,7 +726,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 10,
+                                            height: 70,
                                           ),
                                         ],
                                       ),
@@ -698,54 +760,50 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                   ),
                 ),
               ),
-              floatingActionButton: (bill.isPaid != null &&
-                      !bill.isPaid &&
-                      (bill.status != null) &&
-                      (bill.status == MeterBillStatus.unpaid))
-                  ?
-                  // FloatingActionButton.extended(
-                  //     isExtended: true,
-                  //     backgroundColor: Colors.red,
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(30),
-                  //       // Radius.circular(15),
-                  //       // BorderRadius.zero,
-                  //     ),
-                  //  elevation: 12,
-                  OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        side: BorderSide(
-                          width: 3.0,
-                          color: Theme.of(context).primaryColor,
-                          style: BorderStyle.solid,
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PayBillPage(bill: bill, docId: widget.docId),
+              floatingActionButton:
+
+                  // (bill.isPaid != null &&
+                  //         !bill.isPaid &&
+                  //         (bill.status != null) &&
+                  //         (bill.status == MeterBillStatus.unpaid))
+                  //     ?
+                  // (!bill.isPaid && (dueDate.isBefore(currentDate))) ||
+                  //         bill.isPaid && bill.status == MeterBillStatus.paid
+                  !enablePaid
+                      ? Text("")
+                      : OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            side: BorderSide(
+                              width: 3.0,
+                              color: Theme.of(context).primaryColor,
+                              style: BorderStyle.solid,
+                            ),
                           ),
-                        );
-                        setState(() {});
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(14),
-                        child: Text(
-                          "Pay Bill",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PayBillPage(
+                                    bill: bill, docId: widget.docId),
+                              ),
+                            );
+                            setState(() {});
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(14),
+                            child: Text(
+                              "Pay Bill",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  : Text(""),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerFloat,
             );
@@ -782,7 +840,6 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
 
   final GlobalKey _globalKey = GlobalKey();
   String meterNo = "";
-
 
   Future<Uint8List> removeWhiteBackground(Uint8List bytes) async {
     Img.Image image = Img.decodeImage(bytes);
@@ -839,15 +896,13 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
       // final String fullPath = '$dir/${DateTime.now().millisecond}.png';
       // File capturedFile = File(fullPath);
       // await capturedFile.writeAsBytes(pngBytes);
-      // print(capturedFile.path);
+      //
 
       // Share.shareFiles([fullPath],
       //       subject: "subject",
       //       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
 
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Widget getBillStatusWidget(MeterBill bill) {
@@ -861,7 +916,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
         return Padding(
           padding: EdgeInsets.only(left: 40),
           child: Icon(
-            Icons.error,
+            Icons.warning,
             color: Colors.red,
             size: 40,
           ),

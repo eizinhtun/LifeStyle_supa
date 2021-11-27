@@ -82,8 +82,6 @@ class _TextFromImageState extends State<TextFromImage> {
     var image = await picker.pickImage(source: source);
     File imageFile = File(image.path);
     if (imageFile != null) {
-      print(imageFile.path);
-
       await _cropImage(imageFile.path);
       setState(() {
         imagePath = imageFile.path;
@@ -99,10 +97,8 @@ class _TextFromImageState extends State<TextFromImage> {
         await textDetector.processImage(inputImage);
     List<RecognizedText> recognizedList = [];
     for (TextBlock block in recognisedText.blocks) {
-      print(block.text);
       recognizedList.add(
           RecognizedText(lines: block.lines, block: block.text.toLowerCase()));
-      print(recognizedList.length);
     }
     return recognizedList;
   }

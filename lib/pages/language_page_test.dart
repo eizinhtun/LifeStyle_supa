@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/database_helper.dart';
-import 'package:left_style/localization/Translate.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/providers/language_provider.dart';
 import 'package:provider/provider.dart';
 

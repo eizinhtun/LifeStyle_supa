@@ -1,17 +1,20 @@
 // @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/models/Meter.dart';
+import 'package:left_style/localization/translate.dart';
+import 'package:left_style/models/meter_model.dart';
 import 'package:left_style/utils/message_handler.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:location/location.dart';
-import 'map_screen.dart';
+
+import 'package:flutter/foundation.dart';
+import 'map_page.dart';
 
 class MeterSearchDetailScreen extends StatelessWidget {
   @override
@@ -38,7 +41,7 @@ class MeterSearchDetailPage extends StatefulWidget {
 class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
     with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  FirebaseMessaging _messaging;
   bool isExist = true;
   bool _isLoading = true;
   Location location;
@@ -290,7 +293,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          MapScreen(
+                                                          MapPage(
                                                             meter: widget.obj,
                                                           )));
                                             },
@@ -794,6 +797,9 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                                 .doc(widget.obj.customerId)
                                                 .set(widget.obj.toJson());
 
+                                            subscriptToAddedMeter(
+                                                widget.obj.customerId);
+
                                             Navigator.pop(context, true);
                                             Navigator.pop(context, true);
 
@@ -821,5 +827,11 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
         );
       },
     );
+  }
+
+  Future<void> subscriptToAddedMeter(String customerId) async {
+    if (!kIsWeb) {
+      await _messaging.subscribeToTopic('meter_$customerId');
+    }
   }
 }

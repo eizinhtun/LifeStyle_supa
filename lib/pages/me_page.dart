@@ -1,34 +1,32 @@
 // @dart=2.9
-import 'dart:async';
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
-import 'package:left_style/localization/Translate.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/models/user_model.dart';
-import 'package:left_style/pages/current_location.dart';
-import 'package:left_style/pages/main_page_view.dart';
+import 'package:left_style/pages/main_screen.dart';
 import 'package:left_style/pages/setting.dart';
-import 'package:left_style/pages/text_from_image_v2.dart';
-import 'package:left_style/pages/text_from_image.dart';
 import 'package:left_style/pages/user_profile_edit.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/login_provider.dart';
-import 'change_pin_phone.dart';
-import 'help.dart';
+import 'change_pin_phone_page.dart';
+import 'help_page.dart';
 import 'language_page.dart';
 import 'meter_list.dart';
 import 'notification_list.dart';
 
 class MePage extends StatefulWidget {
-  final HomePageDetailState main;
+  final MainScreenState main;
   const MePage({Key key, this.main}) : super(key: key);
 
   @override
@@ -39,7 +37,7 @@ class _MePageState extends State<MePage> {
   bool _isSigningOut = false;
   String url = "";
   @override
-  Future<void> initState() {
+  void initState() {
     super.initState();
     getData();
   }
@@ -82,8 +80,6 @@ class _MePageState extends State<MePage> {
 
   @override
   Widget build(BuildContext context) {
-    print("_isSigningOut : $_isSigningOut");
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder(
@@ -454,10 +450,16 @@ class _MePageState extends State<MePage> {
                     Container(
                       height: titleHeight,
                       child: ListTile(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => LanguagePage()));
-                          widget.main.refreshPage();
+                        onTap: () async {
+                          bool result = await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => LanguagePage()));
+
+                          if (result != null && result == true) {
+                            widget.main.refreshPage();
+                          }
+                          // setState(() {});
+                          // widget.main.refreshPage();
                         },
                         leading: Container(
                           width: leadingWidth,

@@ -10,11 +10,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/models/Meter.dart';
+import 'package:left_style/localization/translate.dart';
+import 'package:left_style/models/meter_model.dart';
 import 'package:left_style/models/my_read_unit.dart';
 import 'package:left_style/utils/message_handler.dart' as myMsg;
-import 'package:left_style/validators/validator.dart';
+import 'package:left_style/utils/validator.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 

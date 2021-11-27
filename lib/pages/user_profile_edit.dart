@@ -14,9 +14,9 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/user_model.dart';
-import 'package:left_style/validators/validator.dart';
+import 'package:left_style/utils/validator.dart';
 import 'package:left_style/widgets/code_painter.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter/services.dart';
@@ -80,7 +80,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
         oldUserModel.address = model.address;
         oldUserModel.photoUrl = model.photoUrl;
         oldUserModel.fullName = model.fullName;
-        print(oldUserModel);
+
         try {
           await FirebaseFirestore.instance
               .collection(userCollection)
@@ -151,14 +151,14 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
   //     String uid = FirebaseAuth.instance.currentUser.uid.toString();
   //     try {
   //       FirebaseFirestore.instance.collection(userCollection).doc(uid).set(user.toJson()).then((value) {
-  //         print("update user success!");
+  //
   //         MessageHandler.showMessage(
   //             context, "Success", "Updating User Info is successful");
   //       });
   //
   //       notifyListeners();
   //     } catch (e) {
-  //       print("Failed to update user: $e");
+  //
   //       MessageHandler.showErrMessage(
   //           context, "Fail", "Updating User Info is fail");
   //     }
@@ -587,7 +587,6 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
       final String fullPath = '$dir/${DateTime.now().millisecond}.png';
       File capturedFile = File(fullPath);
       await capturedFile.writeAsBytes(pngBytes);
-      print(capturedFile.path);
 
       await GallerySaver.saveImage(capturedFile.path, albumName: albumName)
           .then((value) {
@@ -595,9 +594,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
           saveBtnText = 'screenshot saved!';
         });
       });
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   // void _saveNetworkImage() async {
@@ -605,7 +602,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
   //       'https://image.shutterstock.com/image-photo/montreal-canada-july-11-2019-600w-1450023539.jpg';
   //   GallerySaver.saveImage(path).then((bool success) {
   //     setState(() {
-  //       print('Image is saved');
+  //
   //     });
   //   });
   // }
@@ -737,7 +734,6 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
   //   }
   // }
   Widget _previewProfileImages() {
-    print(photoUrl);
     if (file != null || photoUrl != null) {
       // if (file != null || myReadUnit != null && myReadUnit.readImageUrl != null) {
       return Align(
@@ -931,15 +927,15 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
     setState(() {});
   }
 
-  _showImageCircle() => Container(
-        height: 120,
-        width: 120,
-        child: CircleAvatar(
-          backgroundColor: Colors.pink[300],
-          backgroundImage: Image.file(File(newImage.path)).image,
-          radius: 50,
-        ),
-      );
+  // _showImageCircle() => Container(
+  //       height: 120,
+  //       width: 120,
+  //       child: CircleAvatar(
+  //         backgroundColor: Colors.pink[300],
+  //         backgroundImage: Image.file(File(newImage.path)).image,
+  //         radius: 50,
+  //       ),
+  //     );
 
   Future<void> showImage() async {
     final ImagePicker _picker = ImagePicker();

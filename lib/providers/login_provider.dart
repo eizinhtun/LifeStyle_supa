@@ -5,12 +5,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/database_helper.dart';
+import 'package:left_style/models/intro_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/authentication.dart';
 import 'package:left_style/utils/message_handler.dart';
 
 class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
+  var introRef = FirebaseFirestore.instance.collection(introCollection);
 
   Future<UserModel> getUser(BuildContext context) async {
     UserModel userModel = UserModel();
@@ -22,7 +24,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
           .get(GetOptions(source: Source.server))
           .then((value) {
         userModel = UserModel.fromJson(value.data());
-        print(userModel.isActive);
+
         notifyListeners();
         return userModel;
       });
@@ -62,14 +64,13 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
-      print("Provider After: $vId");
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: vId,
         smsCode: vCode,
       );
       await _auth.signInWithCredential(credential).then((value) {
         User user = value.user;
-        print("Successfully signed in UID: ${user.uid}");
+
         MessageHandler.showSnackbar(
             "Successfully signed in UID: ${user.uid}", context, 5);
         if (user.uid != null) {
@@ -78,7 +79,6 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
         } else {}
       });
     } catch (e) {
-      print(e.toString());
       MessageHandler.showSnackbar(
           "Failed to sign in: " + e.toString(), context, 5);
     }
@@ -91,7 +91,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       DatabaseHelper.setAppLoggedIn(context, true);
       notifyListeners();
       // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
-      // print("UserIdExist : $userIdExist");
+      //
       // if (!userIdExist) {
       //   UserModel userModel = UserModel(
       //       uid: user.uid,
@@ -114,7 +114,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       //           // }
       //           )
       //       // .then((value) => print("User Added $value"))
-      //       .catchError((error) => print("Failed to add user: $error"));
+      //       .catchError((error) =>
       // }
 
     } else {}
@@ -128,7 +128,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       // FirebaseAuth.instance.currentUser.
       notifyListeners();
       // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
-      // print("UserIdExist : $userIdExist");
+      //
       // if (!userIdExist) {
       //   UserModel userModel = UserModel(
       //       uid: user.uid,
@@ -152,7 +152,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
       //           )
       //       // .then((value) => print("User Added $value"))
-      //       .catchError((error) => print("Failed to add user: $error"));
+      //       .catchError((error) =>
       // }
     } else {}
   }
@@ -161,13 +161,12 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       UserModel userModel) async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
-      print("After: $vId");
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: vId,
         smsCode: vCode,
       );
       final User user = (await _auth.signInWithCredential(credential)).user;
-      print("Successfully signed in UID: ${user.uid}");
+
       MessageHandler.showSnackbar(
           "Successfully signed in UID: ${user.uid}", context, 5);
 
@@ -175,11 +174,10 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
         DatabaseHelper.setAppLoggedIn(context, true);
         userModel.uid = user.uid;
 
-        print("UserModel: $userModel");
-        userRef
-            .doc(user.uid)
-            .set(userModel.toJson())
-            .catchError((error) => print("Failed to add user: $error"));
+        // userRef
+        //     .doc(user.uid)
+        //     .set(userModel.toJson())
+        //     .catchError((error) =>
         notifyListeners();
         return true;
       } else {
@@ -187,7 +185,6 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
         return false;
       }
     } catch (e) {
-      print(e.toString());
       MessageHandler.showErrSnackbar(
           "Failed to sign in: " + e.toString(), context, 5);
       return false;
@@ -199,14 +196,12 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       try {
         userRef.doc(uid).set(userModel.toJson()).then((value) {
-          print("Add user success!");
           MessageHandler.showMessage(
               context, "Success", "Updating User Info is successful");
         });
 
         notifyListeners();
       } catch (e) {
-        print("Failed to update user: $e");
         MessageHandler.showErrMessage(
             context, "Fail", "Updating User Info is fail");
       }
@@ -218,16 +213,13 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       try {
-        print(user.toJson());
         userRef.doc(uid).set(user.toJson()).then((value) {
-          print("update user success!");
           MessageHandler.showMessage(
               context, "Success", "Updating User Info is successful");
         });
 
         notifyListeners();
       } catch (e) {
-        print("Failed to update user: $e");
         MessageHandler.showErrMessage(
             context, "Fail", "Updating User Info is fail");
       }
@@ -241,8 +233,6 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
       try {
         userRef.doc(uid).update({"fcmToken": fcmtoken}).then((_) {
-          print("update token success!");
-
           MessageHandler.showMessage(
               context, "Success", "Updating token is successful");
           return true;
@@ -250,7 +240,6 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
         notifyListeners();
       } catch (e) {
-        print("Failed to update token: $e");
         MessageHandler.showErrMessage(
             context, "Fail", "Updating token is fail");
       }
@@ -258,5 +247,20 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
     notifyListeners();
     return false;
+  }
+
+  Future<List<IntroModel>> getIntroList(BuildContext context) async {
+    List<IntroModel> list = [];
+
+    await introRef.get().then((value) {
+      value.docs.forEach((result) {
+        if (result.data()['isActive']) {
+          list.add(IntroModel.fromJson(result.data()));
+        }
+      });
+    });
+
+    notifyListeners();
+    return list;
   }
 }

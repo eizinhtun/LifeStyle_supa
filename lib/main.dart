@@ -1,40 +1,46 @@
 // @dart=2.9
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-// import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:left_style/pages/main_page_view.dart';
-import 'package:left_style/pages/login.dart';
+import 'package:left_style/datas/database_helper.dart';
+import 'package:left_style/datas/system_data.dart';
+import 'package:left_style/models/noti_model.dart';
+import 'package:left_style/pages/content_notification_detail_page.dart';
+import 'package:left_style/pages/login_page.dart';
+import 'package:left_style/pages/main_screen.dart';
+import 'package:left_style/pages/my_meterBill_detail.dart';
+import 'package:left_style/pages/notification_list.dart';
+import 'package:left_style/pages/pop_up_ads.dart';
+import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/pages/user_not_active.dart';
 import 'package:left_style/pages/user_profile.dart';
 import 'package:left_style/providers/language_provider.dart';
+import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/providers/meter_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'datas/constants.dart';
-import 'localization/LocalizationsDelegate.dart';
+import 'localization/localizations_delegate.dart';
+import 'localization/translate.dart';
 import 'pages/notification_detail.dart';
+import 'pages/wallet/wallet_detail_success_page.dart';
 import 'providers/login_provider.dart';
 import 'providers/meter_bill_provider.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:left_style/datas/database_helper.dart';
-import 'package:left_style/datas/system_data.dart';
-import 'package:left_style/models/noti_model.dart';
-import 'package:left_style/providers/login_provider.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'id', // id
-  'title', // title
-  description: 'description', // description
+  'id',
+  'title',
+  description: 'description',
   importance: Importance.high,
   playSound: true,
 );
@@ -44,13 +50,10 @@ Future<void> cancelNotification() async {
   await flutterLocalNotificationsPlugin.cancelAll();
 }
 
-Future<void> _messageHandler(RemoteMessage message) async {
-  print('background message ${message.notification.body}');
-}
+Future<void> _messageHandler(RemoteMessage message) async {}
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('background message ${message.notification.body}');
 }
 
 void main() async {
@@ -69,14 +72,13 @@ void main() async {
   if (kIsWeb) {
     // initialiaze the facebook javascript SDK
     FacebookAuth.i.webInitialize(
-      appId: "3105247143054675", //<-- YOUR APP_ID
+      appId: "894777384749453", //<-- YOUR APP_ID
       cookie: true,
       xfbml: true,
       version: "v9.0",
     );
   }
 
-  // runApp(TestFromImage());
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LoginProvider()),
     ChangeNotifierProvider(
@@ -91,12 +93,15 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({Key key}) : super(key: key);
+  static final navKey = new GlobalKey<NavigatorState>();
 
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> key = new GlobalKey<NavigatorState>();
+
   Map<int, Color> color = {
     50: Color.fromRGBO(136, 14, 79, .1),
     100: Color.fromRGBO(136, 14, 79, .2),
@@ -109,81 +114,27 @@ class _MyAppState extends State<MyApp> {
     800: Color.fromRGBO(136, 14, 79, .9),
     900: Color.fromRGBO(136, 14, 79, 1),
   };
-  // static MePage _mePage = MePage();
-  // static HomePage _homePage = HomePage();
-  // static Wallet _walletPage = Wallet();
-  // int bottomSelectedIndex = 0;
-  // PageController _pageController;
-  // List<Widget> _list = <Widget>[
-  //   Center(child: _homePage),
-  //   Center(child: _walletPage),
-  //   Center(child: _mePage),
-  // ];
-  //
-  // Future<void> bottomTapped(int index) async {
-  //   setState(() async {
-  //     bottomSelectedIndex = index;
-  //    _pageController.jumpToPage(index);
-  //   });
-  // }
-  // Widget _bottomNav(BuildContext context){
-  //   return Scaffold(
-  //     body: PageView(
-  //       children: <Widget>[
-  //         Center(child: _homePage),
-  //         Center(child: _walletPage),
-  //         Center(child: _mePage),
-  //       ],
-  //       scrollDirection: Axis.horizontal,
-  //       controller: _pageController,
-  //       onPageChanged: (num) {
-  //         setState(() {
-  //           bottomSelectedIndex = num;
-  //         });
-  //       },
-  //     ),
-  //     bottomNavigationBar:
-  //     BottomNavigationBar(
-  //       type: BottomNavigationBarType.fixed,
-  //       currentIndex: bottomSelectedIndex,
-  //       onTap: (index) {
-  //         setState(() async {
-  //           bottomSelectedIndex = index;
-  //           _pageController.jumpToPage(index);
-  //         });
-  //       },
-  //       items: [
-  //         BottomNavigationBarItem(
-  //           activeIcon: Icon(
-  //             FontAwesomeIcons.home,
-  //           ),
-  //           icon: Icon(FontAwesomeIcons.home),
-  //           label: Tran.of(context).text("home"),
-  //         ),
-  //         BottomNavigationBarItem(
-  //           activeIcon: Icon(
-  //             FontAwesomeIcons.wallet,
-  //           ),
-  //           icon: Icon(FontAwesomeIcons.wallet),
-  //           label: Tran.of(context).text("wallet"),
-  //         ),
-  //         BottomNavigationBarItem(
-  //             activeIcon: Icon(FontAwesomeIcons.user),
-  //             icon: Icon(FontAwesomeIcons.user),
-  //             label: Tran.of(context).text("me")),
-  //       ],
-  //     ),
-  //     // ),
-  //   );
-  // }
+
   @override
   void initState() {
     super.initState();
     if (!kIsWeb) {
       registerNotification(context);
-
-      initPlatformState();
+      subscriptToPublicChannel();
     }
+  }
+
+  Future<void> subscriptToPublicChannel() async {
+    _messaging = FirebaseMessaging.instance;
+    var subscriptionRef =
+        FirebaseFirestore.instance.collection(subscriptionCollection);
+    try {
+      await subscriptionRef.get().then((value) {
+        value.docs.forEach((result) async {
+          await _messaging.subscribeToTopic(result.data()['channel_id']);
+        });
+      });
+    } catch (e) {}
   }
 
   @override
@@ -193,75 +144,63 @@ class _MyAppState extends State<MyApp> {
     return ScreenUtilInit(
       designSize: Size(360, 690),
       builder: () => MaterialApp(
+        key: key,
+        navigatorKey: MyApp.navKey,
         debugShowCheckedModeBanner: false,
         title: 'Unifine',
         theme: ThemeData(
           primarySwatch: colorCustom,
           fontFamily: 'NotoSansMyanmar',
         ),
-        home: StreamBuilder<User>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active) {
-              User user = snapshot.data;
-              if (user == null) {
-                return LoginPage();
-                // setState(() {});
-              }
-              return StreamBuilder<DocumentSnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection(userCollection)
-                      .doc(FirebaseAuth.instance.currentUser.uid)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      // && snapshot.data.exists
-                      if (snapshot.hasData && snapshot.data.exists) {
-                        print(snapshot.data);
-                        // print(snapshot.data["isActive"]);
-                        if (snapshot.data["isActive"]) {
-                          return HomePageDetail();
-                          // return _bottomNav(context);
+        initialRoute: '/ads',
+        routes: {
+          '/': (context) {
+            return StreamBuilder<User>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  User user = snapshot.data;
+                  if (user == null) {
+                    return LoginPage();
+                    // setState(() {});
+                  }
 
-                        } else {
-                          return UserNotActiveScreen();
+                  return StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection(userCollection)
+                          .doc(FirebaseAuth.instance.currentUser.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.active) {
+                          // && snapshot.data.exists
+                          if (snapshot.hasData && snapshot.data.exists) {
+                            //
+                            if (snapshot.data["isActive"]) {
+                              return MainScreen();
+                              // return _bottomNav(context);
+
+                            } else {
+                              return UserNotActiveScreen();
+                            }
+                          } else
+                            return UserProfileScreen();
                         }
-                      } else
-                        return UserProfileScreen();
-                    }
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  });
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      });
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            );
           },
-        ),
-
-        // onGenerateRoute: (RouteSettings settings) {
-        //   if (settings.name == "/meterlist") {
-        //     return MaterialPageRoute(builder: (_) => MeterListPage());
-        //   }
-        //   return MaterialPageRoute(builder: (_) => HomePage());
-        // },
-
-        // initialRoute: '/',
-        // routes: {
-        //   // When navigating to the "/" route, build the FirstScreen widget.
-        //   '/': (context) =>
-        //       // NotiScreen(),
-        //       InitScreen(),
-        //   // When navigating to the "/second" route, build the SecondScreen widget.
-        //   '/login': (context) {
-        //     return LoginPage();
-        //   },
-        // },
-
+          '/ads': (context) => PopupIntroModelPage(),
+        },
         supportedLocales: [
-          ///////const Locale('', ''),
           const Locale('zh', 'CN'),
           const Locale('en', 'US'),
           const Locale('my', 'MM'),
@@ -271,26 +210,6 @@ class _MyAppState extends State<MyApp> {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate
         ],
-        //     home:  FutureBuilder<User>(
-        //   future:FirebaseAuth.instance.currentUser(),
-        //   //  FirebaseAuth!.instance!.currentUser(),
-        //   builder: (BuildContext context, AsyncSnapshot<User> snapshot){
-        //              if (snapshot.hasData){
-        //                  User user = snapshot.data; // this is your user instance
-        //                  /// is because there is user already logged
-        //                  return MainScreen();
-        //               }
-        //                /// other way there is no user logged.
-        //                return LoginScreen();
-        //    }
-        // );
-
-        // RegisterVerifyPinPage(),
-        // OTPFill()
-        //home: SignInScreen(),
-        //home: AuthLogin(),
-        // PhoneNumberPage(),
-        //home: UploadImageFirebase(),
       ),
     );
   }
@@ -354,10 +273,7 @@ class _MyAppState extends State<MyApp> {
       sound: true,
     );
 
-    if (!kIsWeb) {
-      //await _messaging.subscribeToTopic('devTesting');
-      await _messaging.subscribeToTopic('fcmtesting');
-    }
+    await _messaging.subscribeToTopic('fcmtesting');
 
     var datatoken = await DatabaseHelper.getData("fcmToken");
 
@@ -367,7 +283,6 @@ class _MyAppState extends State<MyApp> {
         if (data != null && data != "") {
           context.read<LoginProvider>().updateFCMtoken(context, data);
         }
-        //print(token); // Print the Token in Console
       });
     } else {
       SystemData.fcmtoken = "";
@@ -381,7 +296,6 @@ class _MyAppState extends State<MyApp> {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      //print('User granted permission');
       FirebaseMessaging.onBackgroundMessage(
           _firebaseMessagingBackgroundHandler);
 
@@ -390,182 +304,169 @@ class _MyAppState extends State<MyApp> {
       onMessageOpenedApp(context);
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      //print('User granted permission');
       FirebaseMessaging.onBackgroundMessage(
           _firebaseMessagingBackgroundHandler);
       await checkForInitialMessage();
       await onMessage();
       onMessageOpenedApp(context);
-    } else {
-      //print('User declined or has not accepted permission');
-    }
+    } else {}
   }
 
   checkForInitialMessage() async {
+    var backgroundNotificationStatus =
+        await DatabaseHelper.getData(SystemData.backgroundNotiStatus);
+
     await Firebase.initializeApp();
     RemoteMessage initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
 
-    if (initialMessage != null) {
-      //print(
-      //'Message title: ${initialMessage.notification?.title}, body: ${initialMessage.notification?.body}, data: ${initialMessage.data}');
-
-      //MessageHandel.ShowError(context, "", initialMessage.messageId);
-      AndroidNotification android = initialMessage.notification?.android;
-      if (initialMessage != null && android != null) {
-        // flutterLocalNotificationsPlugin.show(
-        //     initialMessage.hashCode,
-        //     initialMessage.notification.title,
-        //     initialMessage.notification.body,
-        //     NotificationDetails(
-        //       android: AndroidNotificationDetails(channel.id, channel.name,
-        //           channelDescription: channel.description,
-        //           playSound: true,
-        //           importance: Importance.max,
-        //           priority: Priority.high,
-        //           enableVibration: true,
-        //           autoCancel: true
-        //           //sound: RawResourceAndroidNotificationSound('noti')
-        //           ),
-        //     ));
-      }
+    if (initialMessage != null &&
+        (backgroundNotificationStatus == null ||
+            backgroundNotificationStatus == "")) {
+      print(
+          'Message title: ${initialMessage.notification?.title}, body: ${initialMessage.notification?.body}, data: ${initialMessage.data}');
 
       NotiModel _notification = NotiModel(
-        // id: int.parse(initialMessage.data['id']),
-        // userId: int.parse(initialMessage.data['userId']),
+        id: initialMessage.data['id'],
         title: initialMessage.data['title'].toString(),
         body: initialMessage.data['body'].toString(),
+
         imageUrl: initialMessage.data['imageUrl'].toString(),
         type: initialMessage.data['type'].toString(),
-        // status: initialMessage.data['status'].toString(),
-        // currentdate: initialMessage.data['currentdate'].toString(),
+        amount: int.parse(initialMessage.data['amount']),
+
+        clickAction: initialMessage.data["click_action"].toString(),
+        status: initialMessage.data['status'],
+        createdDate: initialMessage.data['created_date'],
+
+        messageId: initialMessage.notification.hashCode.toString(),
+        transactionNo: initialMessage.data['transaction_no'],
+
+        content: initialMessage.data['content'].toString(),
+
+        // currentdate: initialMessage.data['currentdate'],
+        // userId: int.parse(initialMessage.data['userId']),
         // sound: initialMessage.data['sound'].toString(),
         // createdDateTimeStr:
         //     initialMessage.data['created_date_time_Str'].toString(),
-        // clickAction: initialMessage.data["click_action"].toString(),
         // accountNo: initialMessage.data['account_no'].toString(),
         // bodyValue: initialMessage.data['body_value'].toString(),
-        // content: initialMessage.data['content'].toString(),
         // number: initialMessage.data['number'].toString(),
         // balance: int.parse(initialMessage.data['balance']),
         // refid: int.parse(initialMessage.data['refid']),
         // state: initialMessage.data['state'].toString(),
         // requestDateStr: initialMessage.data['request_date_Str'].toString(),
-        // amount: int.parse(initialMessage.data['amount']),
         // bill: initialMessage.data['bill'].toString(),
         // phoneno: initialMessage.data['phoneno'].toString(),
         // currentDateStr: initialMessage.data['current_date_Str'].toString(),
         // fortime: initialMessage.data['fortime'].toString(),
         // requestDate: initialMessage.data['request_date'].toString(),
         // time: initialMessage.data['time'].toString(),
-        // createdDate: initialMessage.data['created_date'].toString(),
         // category: initialMessage.data['category'].toString(),
         // transactionNo: initialMessage.data['transaction_no'].toString(),
         // odd: int.parse(initialMessage.data['odd']),
         // guid: initialMessage.data['guid'].toString(),
-        // messageId: initialMessage.notification.hashCode.toString(),
       );
-      // await context.read<NotiProvider>().addNotiToStore(_notification);
 
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (BuildContext context) =>
-      //           // NotificationListPage()
-      //           NotificationDetailPage(noti: _notification, status: "false"), //
-      //     ));
-
-      setState(() {
-        SystemData.notiCount = SystemData.notiCount + 1;
-        context
-            .read<NotiProvider>()
-            .updateNotiCount(context, SystemData.notiCount);
-      });
+      await MyApp.navKey.currentState.push(
+        MaterialPageRoute(
+          builder: (_) =>
+              NotificationDetailPage(noti: _notification, status: "false"),
+        ),
+      );
+      if (SystemData.isLoggedIn) {
+        setState(() {
+          SystemData.notiCount = SystemData.notiCount + 1;
+          context
+              .read<NotiProvider>()
+              .updateNotiCount(context, SystemData.notiCount);
+        });
+      }
     }
   }
 
-  onMessage() async {
+  onMessage() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print(message.data);
-      // NotiModel _notification = NotiModel(
-      // id: int.parse(message.data['id']),
-      // userId: int.parse(message.data['userId']),
-      // messageId: message.notification.hashCode.toString(),
-      // title: message.data['title'].toString(),
-      // body: message.data['body'].toString(),
-      // imageUrl: message.data['imageUrl'].toString(),
-      // type: message.data['type'].toString(),
-      // status: message.data['status'].toString(),
-      // currentdate: message.data['currentdate'].toString(),
-      // sound: message.data['sound'].toString(),
-      // createdDateTimeStr:
-      //     message.data['created_date_time_Str'].toString(),
-      // clickAction: message.data["click_action"].toString(),
-      // accountNo: message.data['account_no'].toString(),
-      // bodyValue: message.data['body_value'].toString(),
-      // content: message.data['content'].toString(),
-      // number: message.data['number'].toString(),
-      // balance: int.parse(message.data['balance']),
-      // refid: int.parse(message.data['refid']),
-      // state: message.data['state'].toString(),
-      // requestDateStr: message.data['request_date_Str'].toString(),
-      // amount: int.parse(message.data['amount']),
-      // bill: message.data['bill'].toString(),
-      // phoneno: message.data['phoneno'].toString(),
-      // currentDateStr: message.data['current_date_Str'].toString(),
-      // fortime: message.data['fortime'].toString(),
-      // requestDate: message.data['request_date'].toString(),
-      // time: message.data['time'].toString(),
-      // createdDate: message.data['created_date'].toString(),
-      // category: message.data['category'].toString(),
-      // transactionNo: message.data['transaction_no'].toString(),
-      // odd: int.parse(message.data['odd']),
-      // guid: message.data['guid'].toString(),
-      // messageId: message.notification.hashCode.toString(),
-      // );
-      // NotiModel _notification = NotiModel(
-      //   // id: int.parse(initialMessage.data['id']),
-      //   // userId: int.parse(initialMessage.data['userId']),
-      //   title: message.data['title'].toString(),
-      //   body: message.data['body'].toString(),
-      //   imageUrl: message.data['imageUrl'].toString(),
-      //   type: message.data['type'].toString(),
-      //   status: message.data['status'].toString(),
-      //   currentdate: message.data['currentdate'].toString(),
-      //   // sound: initialMessage.data['sound'].toString(),
-      //   // createdDateTimeStr:
-      //   //     initialMessage.data['created_date_time_Str'].toString(),
-      //   // clickAction: initialMessage.data["click_action"].toString(),
-      //   // accountNo: initialMessage.data['account_no'].toString(),
-      //   // bodyValue: initialMessage.data['body_value'].toString(),
-      //   // content: initialMessage.data['content'].toString(),
-      //   // number: initialMessage.data['number'].toString(),
-      //   // balance: int.parse(initialMessage.data['balance']),
-      //   // refid: int.parse(initialMessage.data['refid']),
-      //   // state: initialMessage.data['state'].toString(),
-      //   // requestDateStr: initialMessage.data['request_date_Str'].toString(),
-      //   // amount: int.parse(initialMessage.data['amount']),
-      //   // bill: initialMessage.data['bill'].toString(),
-      //   // phoneno: initialMessage.data['phoneno'].toString(),
-      //   // currentDateStr: initialMessage.data['current_date_Str'].toString(),
-      //   // fortime: initialMessage.data['fortime'].toString(),
-      //   // requestDate: initialMessage.data['request_date'].toString(),
-      //   // time: initialMessage.data['time'].toString(),
-      //   // createdDate: initialMessage.data['created_date'].toString(),
-      //   // category: initialMessage.data['category'].toString(),
-      //   // transactionNo: initialMessage.data['transaction_no'].toString(),
-      //   // odd: int.parse(initialMessage.data['odd']),
-      //   // guid: initialMessage.data['guid'].toString(),
-      //   messageId: message.notification.hashCode.toString(),
-      // );
+      print(
+          'Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');
 
-      // await context.read<NotiProvider>().addNotiToStore(_notification);
-      setState(() {
+      var androidPlatformChannel = AndroidNotificationDetails(
+        channel.id,
+        channel.name,
+        channelShowBadge: true,
+        channelDescription: channel.description,
+        color: Color.fromARGB(255, 0, 0, 0),
+        importance: Importance.max,
+        sound: RawResourceAndroidNotificationSound('noti'),
+        playSound: true,
+        priority: Priority.high,
+      );
+
+      var platform =
+          NotificationDetails(android: androidPlatformChannel, iOS: null);
+
+      await flutterLocalNotificationsPlugin.show(
+          0,
+          message.data['title'].toString(),
+          message.data['body'].toString(),
+          platform,
+          payload: message.data['body'].toString());
+
+      Timer(Duration(seconds: 4), () {
+        flutterLocalNotificationsPlugin.cancel(0);
+      });
+
+      NotiModel _notification = NotiModel(
+        id: message.data['id'].toString(),
+        title: message.data['title'].toString(),
+        body: message.data['body'].toString(),
+
+        imageUrl: message.data['imageUrl'].toString(),
+        type: message.data['type'].toString(),
+
+        clickAction: message.data["click_action"].toString(),
+        status: message.data['status'] ?? false,
+        createdDate: message.data['created_date'],
+
+        messageId: message.notification.hashCode.toString(),
+        transactionNo: message.data['transaction_no'].toString(),
+
+        content: message.data['content'].toString(),
+        // amount: (message.data['amount'] == null || message.data['amount'] == "")
+        //     ? 0
+        //     : int.parse(message.data['amount']),
+        // currentdate: message.data['currentdate'],
+        // userId: int.parse(message.data['userId']),
+        // sound: message.data['sound'].toString(),
+        // createdDateTimeStr:
+        //     message.data['created_date_time_Str'].toString(),
+        // accountNo: message.data['account_no'].toString(),
+        // bodyValue: message.data['body_value'].toString(),
+        // number: message.data['number'].toString(),
+        // balance: int.parse(message.data['balance']),
+        // refid: int.parse(message.data['refid']),
+        // state: message.data['state'].toString(),
+        // requestDateStr: message.data['request_date_Str'].toString(),
+        // bill: message.data['bill'].toString(),
+        // phoneno: message.data['phoneno'].toString(),
+        // currentDateStr: message.data['current_date_Str'].toString(),
+        // fortime: message.data['fortime'].toString(),
+        // requestDate: message.data['request_date'].toString(),
+        // time: message.data['time'].toString(),
+        // category: message.data['category'].toString(),
+        // transactionNo: message.data['transaction_no'].toString(),
+        // odd: int.parse(message.data['odd']),
+        // guid: message.data['guid'].toString(),
+      );
+
+      final context = MyApp.navKey.currentState.overlay.context;
+      _showAlertDialog(context, _notification);
+      if (SystemData.isLoggedIn) {
         SystemData.notiCount = SystemData.notiCount + 1;
         context
             .read<NotiProvider>()
             .updateNotiCount(context, SystemData.notiCount);
-      });
+      }
     });
   }
 
@@ -574,162 +475,247 @@ class _MyAppState extends State<MyApp> {
       print(
           'Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');
 
-      AndroidNotification android = message.notification?.android;
-      if (message != null && android != null) {
-        // flutterLocalNotificationsPlugin.show(
-        //     message.hashCode,
-        //     message.notification.title,
-        //     message.notification.body,
-        //     NotificationDetails(
-        //       android: AndroidNotificationDetails(channel.id, channel.name,
-        //           channelDescription: channel.description,
-        //           playSound: true,
-        //           sound: RawResourceAndroidNotificationSound('noti'),
-        //           importance: Importance.high,
-        //           enableVibration: true,
-        //           autoCancel: true),
-        //     ));
+      NotiModel _notification = NotiModel(
+        id: message.data['id'].toString(),
+        title: message.data['title'].toString(),
+        body: message.data['body'].toString(),
+
+        imageUrl: message.data['imageUrl'].toString(),
+        type: message.data['type'].toString(),
+
+        clickAction: message.data["click_action"].toString(),
+        status: message.data['status'] ?? false,
+        createdDate: message.data['created_date'],
+
+        messageId: message.notification.hashCode.toString(),
+        transactionNo: message.data['transaction_no'].toString(),
+
+        content: message.data['content'].toString(),
+
+        // amount: (message.data['amount'] == null || message.data['amount'] == "")
+        //     ? 0
+        //     : int.parse(message.data['amount']),
+        // currentdate: message.data['currentdate'],
+
+        // userId: int.parse(message.data['userId']),
+        // sound: message.data['sound'].toString(),
+        // createdDateTimeStr:
+        //     message.data['created_date_time_Str'].toString(),
+        // accountNo: message.data['account_no'].toString(),
+        // bodyValue: message.data['body_value'].toString(),
+        // number: message.data['number'].toString(),
+        // balance: int.parse(message.data['balance']),
+        // refid: int.parse(message.data['refid']),
+        // state: message.data['state'].toString(),
+        // requestDateStr: message.data['request_date_Str'].toString(),
+        // bill: message.data['bill'].toString(),
+        // phoneno: message.data['phoneno'].toString(),
+        // currentDateStr: message.data['current_date_Str'].toString(),
+        // fortime: message.data['fortime'].toString(),
+        // requestDate: message.data['request_date'].toString(),
+        // time: message.data['time'].toString(),
+        // category: message.data['category'].toString(),
+        // transactionNo: message.data['transaction_no'].toString(),
+        // odd: int.parse(message.data['odd']),
+        // guid: message.data['guid'].toString(),
+      );
+
+      switch (_notification.type) {
+        case NotiType.topup:
+          await MyApp.navKey.currentState.push(
+            MaterialPageRoute(
+              builder: (_) => WalletDetailSuccessPage(
+                docId: _notification.id,
+              ),
+            ),
+          );
+          break;
+        case NotiType.withdraw:
+          await MyApp.navKey.currentState.push(
+            MaterialPageRoute(
+              builder: (_) => WalletDetailSuccessPage(
+                docId: _notification.id,
+              ),
+            ),
+          );
+          break;
+        case NotiType.meterbill:
+          // String tempId = "7324392739";
+
+          await MyApp.navKey.currentState.push(
+            MaterialPageRoute(
+              builder: (_) => MeterBillDetailPage(
+                docId: _notification.id,
+              ),
+            ),
+          );
+          break;
+        case NotiType.readMeter:
+          // String tempId = "7324392739";
+
+          await MyApp.navKey.currentState.push(
+            MaterialPageRoute(
+                builder: (_) => UploadMyReadScreen(
+                      customerId: _notification.id,
+                    )),
+          );
+          break;
+
+        case NotiType.content:
+          await MyApp.navKey.currentState.push(
+            MaterialPageRoute(
+              builder: (_) => ContentNotificationDetailPage(
+                  noti: _notification, status: "true"),
+            ),
+          );
+          break;
+        default:
+          await MyApp.navKey.currentState.push(
+            MaterialPageRoute(
+              builder: (_) => NotificationListPage(),
+            ),
+          );
+          break;
       }
 
-      // NotiModel _notification = NotiModel(
-      //   id: int.parse(message.data['id']),
-      //   sound: message.data['sound'].toString(),
-      //   createdDateTimeStr: message.data['created_date_time_Str'].toString(),
-      //   body: message.data['body'].toString(),
-      //   type: message.data['type'].toString(),
-      //   title: message.data['title'].toString(),
-      //   clickAction: message.data["click_action"].toString(),
-      //   accountNo: message.data['account_no'].toString(),
-      //   bodyValue: message.data['body_value'].toString(),
-      //   content: message.data['content'].toString(),
-      //   number: message.data['number'].toString(),
-      //   balance: int.parse(message.data['balance']),
-      //   imageUrl: message.data['imageUrl'].toString(),
-      //   refid: int.parse(message.data['refid']),
-      //   state: message.data['state'].toString(),
-      //   requestDateStr: message.data['request_date_Str'].toString(),
-      //   amount: int.parse(message.data['amount']),
-      //   bill: message.data['bill'].toString(),
-      //   phoneno: message.data['phoneno'].toString(),
-      //   currentDateStr: message.data['current_date_Str'].toString(),
-      //   fortime: message.data['fortime'].toString(),
-      //   userId: int.parse(message.data['userId']),
-      //   requestDate: message.data['request_date'].toString(),
-      //   currentdate: message.data['currentdate'].toString(),
-      //   time: message.data['time'].toString(),
-      //   createdDate: message.data['created_date'].toString(),
-      //   category: message.data['category'].toString(),
-      //   transactionNo: message.data['transaction_no'].toString(),
-      //   status: message.data['status'].toString(),
-      //   odd: int.parse(message.data['odd']),
-      //   guid: message.data['guid'].toString(),
-      //   messageId:message.notification.hashCode.toString(),
-      // );
-      // NotiModel _notification = NotiModel(
-      //   // id: int.parse(message.data['id']),
-      //   // userId: int.parse(message.data['userId']),
-      //   title: message.data['title'].toString(),
-      //   body: message.data['body'].toString(),
-      //   imageUrl: message.data['imageUrl'].toString(),
-      //   type: message.data['type'].toString(),
-      //   status: message.data['status'].toString(),
-      //   currentdate: message.data['currentdate'].toString(),
-      //   // sound: message.data['sound'].toString(),
-      //   // createdDateTimeStr:
-      //   //     message.data['created_date_time_Str'].toString(),
-      //   // clickAction: message.data["click_action"].toString(),
-      //   // accountNo: message.data['account_no'].toString(),
-      //   // bodyValue: message.data['body_value'].toString(),
-      //   // content: message.data['content'].toString(),
-      //   // number: message.data['number'].toString(),
-      //   // balance: int.parse(message.data['balance']),
-      //   // refid: int.parse(message.data['refid']),
-      //   // state: message.data['state'].toString(),
-      //   // requestDateStr: message.data['request_date_Str'].toString(),
-      //   // amount: int.parse(message.data['amount']),
-      //   // bill: message.data['bill'].toString(),
-      //   // phoneno: message.data['phoneno'].toString(),
-      //   // currentDateStr: message.data['current_date_Str'].toString(),
-      //   // fortime: message.data['fortime'].toString(),
-      //   // requestDate: message.data['request_date'].toString(),
-      //   // time: message.data['time'].toString(),
-      //   // createdDate: message.data['created_date'].toString(),
-      //   // category: message.data['category'].toString(),
-      //   // transactionNo: message.data['transaction_no'].toString(),
-      //   // odd: int.parse(message.data['odd']),
-      //   // guid: message.data['guid'].toString(),
-      // messageId: message.notification.hashCode.toString(),
-      // );
-
-      NotiModel _notification = NotiModel(
-          // id: int.parse(message.data['id']),
-          // userId: int.parse(message.data['userId']),
-          title: message.notification.title,
-          // title: message.data['title'].toString(),
-          body: message.notification.body,
-          imageUrl: message.notification.android.imageUrl,
-          type: message.messageType,
-          status: true,
-          messageId: message.notification.hashCode.toString()
-          // message.data['message_id'].toString(),
-// currentdate:DateTime. message.sentTime.
-//  content:message.sentTime,
-
-          // imageUrl: message.data['imageUrl'].toString(),
-          // type: message.data['type'].toString(),
-          // status: message.data['status'].toString(),
-          // currentdate: message.data['currentdate'].toString(),
-          );
-
-      print(_notification);
-      await context.read<NotiProvider>().addNotiToStore(_notification);
-      // Navigator.pushNamed(context, routeName)
-      Future.delayed(Duration(milliseconds: 1000)).then((value) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => NotificationDetailPage(
-                  noti: _notification, status: "true"), //
-            ));
-      });
-
-      // await Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (BuildContext context) => NotificationListPage(), //
-      //   ),
-      // );
-
-      setState(() {
-        SystemData.notiCount = SystemData.notiCount + 1;
-        context
-            .read<NotiProvider>()
-            .updateNotiCount(context, SystemData.notiCount);
-      });
+      if (SystemData.isLoggedIn) {
+        setState(() {
+          SystemData.notiCount = SystemData.notiCount + 1;
+          context
+              .read<NotiProvider>()
+              .updateNotiCount(context, SystemData.notiCount);
+        });
+      }
     });
   }
 
-  String _appBadgeSupported = 'Unknown';
-  initPlatformState() async {
-    String appBadgeSupported;
-    try {
-      bool res = await FlutterAppBadger.isAppBadgeSupported();
-      if (res) {
-        appBadgeSupported = 'Supported';
-      } else {
-        appBadgeSupported = 'Not supported';
-      }
-    } on PlatformException {
-      appBadgeSupported = 'Failed to get badge support.';
-    }
+  Future<void> _showAlertDialog(BuildContext context, NotiModel _notification) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            actionsPadding: EdgeInsets.fromLTRB(4, 4, 4, 4),
+            actions: [
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  side: BorderSide(
+                    width: 1.0,
+                    color: Colors.black12,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                child: Text(
+                  Tran.of(context).text("close"),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  return null;
+                },
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  side: BorderSide(
+                    width: 1.0,
+                    color: Colors.black12,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                child: Text(
+                  Tran.of(context).text("go_to_detail"),
+                ),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  switch (_notification.type) {
+                    case NotiType.topup:
+                      await MyApp.navKey.currentState.push(
+                        MaterialPageRoute(
+                          builder: (_) => WalletDetailSuccessPage(
+                            docId: _notification.id,
+                          ),
+                        ),
+                      );
+                      break;
+                    case NotiType.withdraw:
+                      await MyApp.navKey.currentState.push(
+                        MaterialPageRoute(
+                          builder: (_) => WalletDetailSuccessPage(
+                            docId: _notification.id,
+                          ),
+                        ),
+                      );
+                      break;
+                    case NotiType.meterbill:
+                      // String tempId = "7324392739";
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
+                      await MyApp.navKey.currentState.push(
+                        MaterialPageRoute(
+                          builder: (_) => MeterBillDetailPage(
+                            docId: _notification.id,
+                          ),
+                        ),
+                      );
+                      break;
+                    case NotiType.readMeter:
+                      await MyApp.navKey.currentState.push(
+                        MaterialPageRoute(
+                            builder: (_) => UploadMyReadScreen(
+                                  customerId: _notification.id,
+                                )),
+                      );
+                      break;
 
-    setState(() {
-      _appBadgeSupported = appBadgeSupported;
-    });
+                    case NotiType.content:
+                      await MyApp.navKey.currentState.push(
+                        MaterialPageRoute(
+                          builder: (_) => ContentNotificationDetailPage(
+                              noti: _notification, status: "true"),
+                        ),
+                      );
+                      break;
+
+                    default:
+                      await MyApp.navKey.currentState.push(
+                        MaterialPageRoute(
+                          builder: (_) => NotificationListPage(),
+                        ),
+                      );
+                      break;
+                  }
+                },
+              ),
+            ],
+            title: Center(
+              child: Text(
+                // "Confirm",
+                Tran.of(context).text("confirm"),
+              ),
+            ),
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.details,
+                  size: 20,
+                  color: Theme.of(context).primaryColor,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  Tran.of(context).text("q_go_to_detail"),
+                ),
+              ],
+            ));
+      },
+    );
   }
 }

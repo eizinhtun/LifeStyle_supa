@@ -3,4 +3,5 @@ class SystemData {
   static bool isLoggedIn = false;
   static int notiCount = 0;
   static String fcmtoken = '';
+  static String backgroundNotiStatus = '';
 }

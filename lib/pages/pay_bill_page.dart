@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:intl/intl.dart';
-import 'package:left_style/localization/Translate.dart';
-import 'package:left_style/models/meter_bill.dart';
+import 'package:left_style/localization/translate.dart';
+import 'package:left_style/models/meter_bill_model.dart';
 import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
-import 'package:left_style/validators/validator.dart';
+import 'package:left_style/utils/validator.dart';
 import 'package:provider/provider.dart';
 
 class PayBillPage extends StatefulWidget {
@@ -358,12 +358,13 @@ class _PayBillPageState extends State<PayBillPage> {
                               widget.bill.status = "Paid";
                               widget.bill.payDate =
                                   Timestamp.fromDate(DateTime.now());
-                              print(widget.bill.readDate);
-                              print(widget.bill.readImageUrl);
-                              print(widget.bill.toJson());
-                              await context.read<WalletProvider>().payMeterBill(
-                                  context, widget.bill, widget.docId);
+
+                              bool isSuccess = await context
+                                  .read<WalletProvider>()
+                                  .payMeterBill(context, widget.bill);
                               Navigator.of(context).pop();
+                              if (isSuccess) {
+                              } else {}
                             }
                           },
                         ),

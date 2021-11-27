@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/models/Meter.dart';
+import 'package:left_style/models/meter_model.dart';
 import 'package:left_style/utils/message_handler.dart';
 
 class MeterProvider with ChangeNotifier, DiagnosticableTreeMixin {
@@ -19,7 +19,6 @@ class MeterProvider with ChangeNotifier, DiagnosticableTreeMixin {
         notifyListeners();
         return true;
       } catch (e) {
-        print("Failed to update user: $e");
         MessageHandler.showErrMessage(
             context, "Fail", "Updating User Info is fail");
         return false;
@@ -39,13 +38,11 @@ class MeterProvider with ChangeNotifier, DiagnosticableTreeMixin {
             .get()
             .then((value) {
           value.docs.forEach((result) {
-            print(result.data());
             list.add(Meter.fromJson(result.data()));
           });
         });
       } catch (e) {
-        print("Failed to get meter list: $e");
-        MessageHandler.showErrMessage(context, "Fail", "Get meter list fail");
+        // MessageHandler.showErrMessage(context, "Fail", "Get meter list fail");
       }
     }
     notifyListeners();

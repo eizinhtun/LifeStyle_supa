@@ -32,7 +32,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //     });
   //     // await testRef.where("uid", isEqualTo: uid).get().then((value) {
   //     //   value.docs.forEach((result) {
-  //     //     print(result.data());
+  //     //     
   //     //     list.add(TestModel.fromJson(result.data()));
   //     //   });
   //     // });
@@ -53,18 +53,18 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //           address: "Dawei"
   //       );
   //       testRef.doc("$uid").set({"data$randomNumber": testModel.toJson()},SetOptions(merge: true)).then((value) {
-  //         print("Add user success!");
+  //         
   //         MessageHandler.showMessage(
   //             context, "Success", "Updating User Info is successful");
   //       });
   //       // testRef.doc("$uid").collection("userData").add({"data$randomNumber": testModel.toJson()}).then((value) {
-  //       //   print("Add user success!");
+  //       //   
   //       //   MessageHandler.showMessage(
   //       //       context, "Success", "Updating User Info is successful");
   //       // });
   //       notifyListeners();
   //     } catch (e) {
-  //       print("Failed to update user: $e");
+  //       
   //       MessageHandler.showErrMessage(
   //           context, "Fail", "Updating User Info is fail");
   //     }
@@ -92,18 +92,18 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //       // );
   //
   //       testRef.doc("$uid").update({"data36": testModel.toJson()}).then((_) {
-  //         print(" Update user success!");
+  //         
   //         MessageHandler.showMessage(
   //             context, "Success", "Updating User Info is successful");
   //       });
   //       // testRef.update({"data1": testModel.toJson()}).then((_) {
-  //       //   print(" Update user success!");
+  //       //   
   //       //   MessageHandler.showMessage(
   //       //       context, "Success", "Updating User Info is successful");
   //       // });
   //       notifyListeners();
   //     } catch (e) {
-  //       print("Failed to update user: $e");
+  //       
   //       MessageHandler.showErrMessage(
   //           context, "Fail", "Updating User Info is fail");
   //     }
@@ -118,18 +118,18 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //         "data57": FieldValue.delete()
   //       });
   //       // testRef.doc("$uid").delete({"data36":}).then((_) {
-  //       //   print(" Update user success!");
+  //       //   
   //       //   MessageHandler.showMessage(
   //       //       context, "Success", "Updating User Info is successful");
   //       // });
   //       // testRef.update({"data1": testModel.toJson()}).then((_) {
-  //       //   print(" Update user success!");
+  //       //   
   //       //   MessageHandler.showMessage(
   //       //       context, "Success", "Updating User Info is successful");
   //       // });
   //       notifyListeners();
   //     } catch (e) {
-  //       print("Failed to update user: $e");
+  //       
   //       MessageHandler.showErrMessage(
   //           context, "Fail", "Updating User Info is fail");
   //     }
@@ -148,7 +148,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
         if (balance != null) {
           try {
             userRef.doc(uid).update({"balance": balance + amount}).then((_) {
-              print("topup success!");
+              
             });
             MessageHandler.showMessage(
                 context, "Success", "Your topup is successful");
@@ -163,11 +163,11 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 .collection('topup')
                 .add(testModel.toJson())
                 .catchError((error) {
-              print("Failed to add topup transaction: $error");
+              
             });
             notifyListeners();
           } catch (e) {
-            print("Failed to topup: $e");
+            
             MessageHandler.showErrMessage(
                 context, "Fail", "Your topup is fail");
           }
@@ -195,7 +195,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
         } else {
           try {
             userRef.doc(uid).update({"balance": balance - amount}).then((_) {
-              print("withdrawl success!");
+              
               MessageHandler.showMessage(
                   context, "Success", "Your withdrawl is successful");
             });
@@ -210,11 +210,11 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 .collection("withdraw")
                 .add(testModel.toJson())
                 .catchError((error) {
-              print("Failed to add withdrawl transaction: $error");
+              
             });
             notifyListeners();
           } catch (e) {
-            print("Failed to withdrawl: $e");
+            
             MessageHandler.showErrMessage(
                 context, "Fail", "Your withdrawl is fail");
           }
@@ -253,7 +253,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
                 .collection("withdraw")
                 .add(testModel.toJson())
                 .catchError((error) {
-              print("Failed to add withdrawl transaction: $error");
+              
             });
             MessageHandler.showMessage(
                 context, "Success", "Your withdrawl is successful");
@@ -262,7 +262,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
           //MessageHandler.showMessage(context, "Success", "Your Password is successful");
           // notifyListeners();
         } else {
-          print("Failed to password: $e");
+          
           MessageHandler.showErrMessage(context, "Fail", "Password is fail");
         }
       });
@@ -278,7 +278,7 @@ class FirebaseCRUDProvider with ChangeNotifier, DiagnosticableTreeMixin {
   //     String uid = FirebaseAuth.instance.currentUser.uid;
   //     await testRef.doc("$uid").collection("topup").where("uid", isEqualTo: uid).get().then((value) {
   //       value.docs.forEach((result) {
-  //         print(result.data());
+  //         
   //         list.add(TransactionModel.fromJson(result.data()));
   //       });
   //     });

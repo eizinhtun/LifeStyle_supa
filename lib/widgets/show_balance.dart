@@ -4,11 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/localization/Translate.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/user_model.dart';
+import 'package:left_style/pages/wallet/topup_page.dart';
+import 'package:left_style/pages/wallet/withdrawal_page.dart';
 import 'package:left_style/utils/formatter.dart';
-import 'package:left_style/widgets/topup_widget.dart';
-import 'package:left_style/widgets/withdrawal_widget.dart';
 
 class ShowBalance extends StatelessWidget {
   ShowBalance(

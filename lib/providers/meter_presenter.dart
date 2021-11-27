@@ -1,7 +1,7 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
-import 'package:left_style/models/MeterPageObj.dart';
-import 'package:left_style/services/MeterApi.dart';
+import 'package:left_style/models/meter_page_obj.dart';
+import 'package:left_style/services/meter_api.dart';
 
 abstract class MeterContract {
   void showError(String text);

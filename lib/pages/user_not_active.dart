@@ -37,7 +37,6 @@ class _UserNotActiveScreenState extends State<UserNotActiveScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    print("Pressed");
                     await context.read<LoginProvider>().logOut(context);
                   },
                   child: Text(

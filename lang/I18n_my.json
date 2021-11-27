@@ -73,5 +73,10 @@
   "sms_template": "{brand_name} အတွက် အတည်ပြုရန်ကုဒ်နံပါတ်မှာ {code} ဖြစ်ပါတယ်",
   "readMeter": "မီတာဖတ်သည်",
   "meterRemove": "ဖယ်ရှားရန်" ,
-   "meter_remark":"မီတာမှတ်ချက်"
+   "meter_remark":"မီတာမှတ်ချက်",
+  "meter_date_expired":"မီတာဆောင်ရန် ရက်လွန်နေပါသည်။",
+  "go_to_detail":"Go To Detail",
+  "close":"Close",
+  "go_noti_confirm":"Do you want to go to the detail page?",
+  "q_go_to_detail":"Go To Detail?"
 }

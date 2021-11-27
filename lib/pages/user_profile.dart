@@ -6,11 +6,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/system_data.dart';
-import 'package:left_style/localization/Translate.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/utils/formatter.dart';
-import 'package:left_style/validators/validator.dart';
+import 'package:left_style/utils/validator.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -304,7 +304,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                               isActive: true,
                                               createdDate: Timestamp.fromDate(
                                                   DateTime.now()));
-                                          print(userModel);
+
                                           await context
                                               .read<LoginProvider>()
                                               .updateUserInfo(

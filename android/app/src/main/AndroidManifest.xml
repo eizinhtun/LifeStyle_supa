@@ -15,12 +15,12 @@
     </queries>
 
    <application
-        android:label="left_style"
+        android:label="Life Style"
         android:icon="@mipmap/launcher_icon">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="@string/map_api_key"/>
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="3105247143054675"/>
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 <!-- tools:replace="android:value" -->
         <!-- <provider
             android:name="com.facebook.FacebookContentProvider"
@@ -73,10 +73,14 @@
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
               />
-            <intent-filter>
+         
+             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
         </activity>
 
         <activity android:name="com.apptreesoftware.barcodescan.BarcodeScannerActivity"/>
@@ -85,6 +89,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- <meta-data
+           android:name="com.google.firebase.messaging.default_notification_channel_id"
+           android:value="@string/default_notification_channel_id"/> -->
+
         <meta-data
         android:name="com.google.mlkit.vision.DEPENDENCIES"
         android:value="ica,ocr,face" />
@@ -109,3 +118,9 @@
     
     </application>
 </manifest>
+
+
+
+
+
+

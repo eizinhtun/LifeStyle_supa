@@ -26,14 +26,14 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.719786289421-kqt8q595rq3a28fn7vsemn2r824sjt18</string>
-				<string>fb3105247143054675</string>
+				<string>fb894777384749453</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FacebookAppID</key>
-	<string>3105247143054675</string>
+	<string>894777384749453</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>

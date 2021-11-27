@@ -19,8 +19,6 @@ class UserInfoScreenPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(imageurl);
-    print(imageurl != null);
     return Row(
       children: [
         InkWell(

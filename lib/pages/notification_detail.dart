@@ -30,6 +30,7 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
     super.initState();
     //sysData.notiCount = 0;
     widget.status == "false"
+        // ignore: unnecessary_statements
         ? ""
         : context
             .read<NotiProvider>()
@@ -50,7 +51,7 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
   String notiStr(String str, String bill, String transactionNo) {
     str = str.replaceAll('@kyat', bill);
     str = str.replaceAll('@tracNo', transactionNo);
-    print("NOTI:$str");
+
     return str;
   }
 

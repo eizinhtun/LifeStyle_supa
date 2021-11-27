@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
-import 'package:left_style/validators/validator.dart';
+import 'package:left_style/utils/validator.dart';
 import 'package:provider/provider.dart';
 
 class ScanQRData extends StatefulWidget {

@@ -39,9 +39,7 @@ class Authentication {
             await auth.signInWithPopup(authProvider);
 
         user = userCredential.user;
-      } catch (e) {
-        print(e);
-      }
+      } catch (e) {}
     } else {
       final GoogleSignIn googleSignIn = GoogleSignIn();
       if (await googleSignIn.isSignedIn()) {
@@ -65,7 +63,6 @@ class Authentication {
 
           user = userCredential.user;
         } on FirebaseAuthException catch (e) {
-          print(e);
           if (e.code == 'account-exists-with-different-credential') {
             ScaffoldMessenger.of(context).showSnackBar(
               Authentication.customSnackBar(

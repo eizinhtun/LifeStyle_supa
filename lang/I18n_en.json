@@ -73,6 +73,12 @@
   "sms_template": "Verification Code for {brand_name} is {code}.",
   "readMeter": "Read Meter",
   "meterRemove": "Remove",
-  "meter_remark":"Meter Remark"
+  "meter_remark":"Meter Remark",
+  "meter_date_expired":"Meter Pay Date is Expired",
+  "go_to_detail":"Go To Detail",
+  "close":"Close",
+  "go_noti_confirm":"Do you want to go to the detail page?",
+  "q_go_to_detail":"Go To Detail?"
+  
   
 }
