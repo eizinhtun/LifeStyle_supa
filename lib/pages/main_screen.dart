@@ -13,6 +13,7 @@ import 'package:left_style/providers/meter_provider.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'explore_page.dart';
 import 'home_page.dart';
 import 'wallet/wallet_page.dart';
 
@@ -40,6 +41,11 @@ class MainScreenState extends State<MainScreen> {
   //   await Firebase.initializeApp();
   // }
 
+  static MePage _mePage = MePage();
+  static HomePage _homePage = HomePage();
+  static Wallet _walletPage = Wallet();
+  static ExplorePage _explorePage = ExplorePage();
+
   PageController controller = PageController();
   List<Widget> _list = [];
   int bottomSelectedIndex = 0;
@@ -51,9 +57,10 @@ class MainScreenState extends State<MainScreen> {
     _list = <Widget>[
       Center(child: _homePage),
       Center(child: _walletPage),
+      Center(child: _explorePage),
       Center(child: _mePage),
     ];
-    getData();
+    // getData();
     if (!kIsWeb) {
       subscriptToMeters();
     }
@@ -109,10 +116,6 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
-  static MePage _mePage = null;
-  static HomePage _homePage = HomePage();
-  static Wallet _walletPage = Wallet();
-
   Future<void> bottomTapped(int index) async {
     // setState(() async {
     bottomSelectedIndex = index;
@@ -162,6 +165,13 @@ class MainScreenState extends State<MainScreen> {
             label: Tran.of(context).text("wallet"),
           ),
           BottomNavigationBarItem(
+            activeIcon: Icon(
+              FontAwesomeIcons.wallet,
+            ),
+            icon: Icon(FontAwesomeIcons.search),
+            label: Tran.of(context).text("explore"),
+          ),
+          BottomNavigationBarItem(
               activeIcon: Icon(FontAwesomeIcons.user),
               icon: Icon(FontAwesomeIcons.user),
               label: Tran.of(context).text("me")),
@@ -173,3 +183,67 @@ class MainScreenState extends State<MainScreen> {
 
   double iconSize = 20;
 }
+
+
+            // Container(
+            //           height: titleHeight,
+            //           child: ListTile(
+            //             onTap: () {
+            //               Navigator.of(context).push(MaterialPageRoute(
+            //                   builder: (context) => NotificationListPage()));
+            //               setState(() {});
+            //             },
+            //             leading: Container(
+            //               width: leadingWidth,
+            //               alignment: Alignment.centerLeft,
+            //               child: Stack(
+            //                 children: [
+            //                   Icon(
+            //                     Icons.notifications,
+            //                     size: iconSize,
+            //                     color: mainColor,
+            //                   ),
+            //                   (SystemData.notiCount != null &&
+            //                           SystemData.notiCount > 0)
+            //                       ? Container(
+            //                           width: iconSize,
+            //                           height: iconSize,
+            //                           alignment: Alignment.topRight,
+            //                           margin: EdgeInsets.only(top: 5),
+            //                           child: Container(
+            //                             width: iconSize / 2,
+            //                             height: iconSize / 2,
+            //                             alignment: Alignment.center,
+            //                             // padding: EdgeInsets.all(2),
+            //                             decoration: BoxDecoration(
+            //                               shape: BoxShape.circle,
+            //                               border: Border.all(
+            //                                   color: Colors.white, width: 1),
+            //                               color: Colors.red,
+            //                             ),
+            //                             child: Text(
+            //                               getNotiCount(SystemData.notiCount),
+            //                               style: TextStyle(
+            //                                 fontSize: 10,
+            //                                 color: Colors.white,
+            //                               ),
+            //                             ),
+            //                           ),
+            //                         )
+            //                       : Text(""),
+            //                 ],
+            //               ),
+            //             ),
+            //             title: Text(
+            //               Tran.of(context).text("notification"),
+            //               style: TextStyle(fontWeight: FontWeight.bold),
+            //             ),
+            //             trailing: Icon(
+            //               Icons.arrow_forward_ios,
+            //               size: 15,
+            //               color: Colors.black26,
+            //             ),
+            //           ),
+            //         ),
+                    
+                    

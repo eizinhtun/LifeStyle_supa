@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
+import 'package:left_style/localization/translate.dart';
 
 class LanguagePage extends StatefulWidget {
   const LanguagePage({Key key}) : super(key: key);
@@ -37,7 +38,9 @@ class _LanguagePageState extends State<LanguagePage>
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Select Language"),
+        title: Text(
+          Tran.of(context).text("select_language"),
+        ),
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),

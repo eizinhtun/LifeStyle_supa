@@ -4,6 +4,7 @@ import 'dart:convert';
 // import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:left_style/localization/translate.dart';
 
 import 'message_handler.dart';
 
@@ -19,11 +20,13 @@ class NetworkUtil {
           .then((http.Response response) async {
         return handleResponse(context, response, url);
       }).catchError((onError) {
-        MessageHandler.showError(context, "Tip", "Check Internet Connection");
+        MessageHandler.showError(context, Tran.of(context).text("tip"),
+            Tran.of(context).text("check_internet"));
         return null;
       });
     } catch (ex) {
-      MessageHandler.showError(context, "Tip", "Check Internet Connection");
+      MessageHandler.showError(context, Tran.of(context).text("tip"),
+          Tran.of(context).text("check_internet"));
       return null;
     }
   }
@@ -89,7 +92,8 @@ class NetworkUtil {
     if (response.statusCode == 410) {
       var body = json.decode(response.body);
       if (body != null && body["Message"] != null)
-        MessageHandler.showError(context, "Tip", body["Message"]);
+        MessageHandler.showError(
+            context, Tran.of(context).text("tip"), body["Message"]);
       return response;
     }
     if (statusCode == 401 || statusCode == 304 || statusCode == 416) {
@@ -97,18 +101,21 @@ class NetworkUtil {
       //throw  Exception("Unauthorized or Logout then login again");
     }
     if (statusCode == 403) {
-      MessageHandler.showError(context, "Tip", "You may need to Log in");
+      MessageHandler.showError(context, Tran.of(context).text("tip"),
+          Tran.of(context).text("need_login"));
       return response;
     }
     if (statusCode == 404) {
-      MessageHandler.showError(context, "Tip", "Not found");
+      MessageHandler.showError(context, Tran.of(context).text("tip"),
+          Tran.of(context).text("not_found"));
       //showError(context,"Not found");
       return response;
       //throw  Exception("Unauthorized or Logout then login again");
     }
     if (statusCode == 405) {
-      MessageHandler.showError(context, "Tip", "Access right limited");
-      //showError(context,"Access right limited");
+      MessageHandler.showError(context, Tran.of(context).text("tip"),
+          Tran.of(context).text("access_limited"));
+      //showError(context, Tran.of(context).text("access_limited"));
       return response;
       //throw  Exception("Unauthorized or Logout then login again");
     }
@@ -117,13 +124,15 @@ class NetworkUtil {
       //throw  Exception("Unauthorized or Logout then login again");
     }
     if (statusCode == 415) {
-      MessageHandler.showError(context, "Tip", "Access right limited");
-      //showError(context,"Access right limited");
+      MessageHandler.showError(context, Tran.of(context).text("tip"),
+          Tran.of(context).text("access_limited"));
+      //showError(context, Tran.of(context).text("access_limited"));
       return response;
       //throw  Exception("Unauthorized or Logout then login again");
     }
     if (statusCode == 500) {
-      MessageHandler.showError(context, "Tip", "Internal server error");
+      MessageHandler.showError(context, Tran.of(context).text("tip"),
+          Tran.of(context).text("internal_server_err"));
       //
       return response;
       //throw  Exception("Unauthorized or Logout then login again");
@@ -136,11 +145,14 @@ class NetworkUtil {
       String msg = body["error_description"];
       msg = msg == null || msg == "" ? body["Message"] : msg;
       if (msg != null && msg.isNotEmpty) {
-        MessageHandler.showError(context, "Tip", msg);
+        MessageHandler.showError(context, Tran.of(context).text("tip"), msg);
         return null;
       }
-      MessageHandler.showError(context, "Tip",
-          "System Data Error"); //Tran.of(context).text("sys_errorFeachData")
+      MessageHandler.showError(
+          context,
+          Tran.of(context).text("tip"),
+          Tran.of(context).text(
+              "sys_data_err")); //Tran.of(context).text("sys_errorFeachData")
       return response;
     }
     return response;

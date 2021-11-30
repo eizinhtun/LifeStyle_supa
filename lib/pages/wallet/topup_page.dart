@@ -94,7 +94,8 @@ class _TopUpPageState extends State<TopUpPage> {
           .add(model.toJson());
       if (result.id.isNotEmpty) {
         Navigator.pop(context, true);
-        myMsg.MessageHandler.showMessage(context, "", "Successfully added");
+        myMsg.MessageHandler.showMessage(
+            context, "", Tran.of(context).text("success_added"));
       } else {
         setState(() {
           _submiting = false;
@@ -193,7 +194,8 @@ class _TopUpPageState extends State<TopUpPage> {
                         validator: (val) {
                           return Validator.transferAmount(context, val);
                         },
-                        decoration: buildInputDecoration("Transfer Amount"),
+                        decoration: buildInputDecoration(
+                            Tran.of(context).text("transfer_amount")),
                       ),
                       SizedBox(height: 20),
                       TextFormField(
@@ -205,8 +207,8 @@ class _TopUpPageState extends State<TopUpPage> {
                         validator: (val) {
                           return Validator.requiredField(context, val, '');
                         },
-                        decoration:
-                            buildInputDecoration("Transaction Id 6 digit"),
+                        decoration: buildInputDecoration(
+                            Tran.of(context).text("transaction_id_6")),
                       ),
                       SizedBox(height: 20),
                       Row(
@@ -258,8 +260,10 @@ class _TopUpPageState extends State<TopUpPage> {
                                           if (file == null) {
                                             myMsg.MessageHandler.showErrMessage(
                                                 context,
-                                                "Picture is required",
-                                                "Plase take a picture and upload");
+                                                Tran.of(context)
+                                                    .text("pic_required"),
+                                                Tran.of(context)
+                                                    .text("pic_required_str"));
                                             return;
                                           }
                                           if (_topupformKey.currentState
@@ -396,7 +400,7 @@ class _TopUpPageState extends State<TopUpPage> {
                   size: 30,
                 ),
               ),
-              Text("Take picture of read unit."),
+              Text(Tran.of(context).text("pic_read_unit")),
             ],
           ));
     }

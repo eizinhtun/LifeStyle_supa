@@ -51,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
         slivers: <Widget>[
           SliverAppBar(
             title: Text(
-              "Register",
+              Tran.of(context).text("register"),
               style: TextStyle(fontSize: 20, color: Colors.black54),
             ),
             iconTheme: IconThemeData(color: Colors.black),
@@ -107,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             }
                                             String data =
                                                 Validator.showPhoneToken(
-                                                    isPhoneToken);
+                                                    isPhoneToken, context);
                                             if (data != "") {
                                               return data;
                                             }
@@ -137,7 +137,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                             return Validator.userName(
                                                 context,
                                                 val.toString(),
-                                                "User Name",
+                                                Tran.of(context)
+                                                    .text("user_name"),
                                                 true);
                                           },
                                           decoration: InputDecoration(
@@ -159,7 +160,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                             return Validator.password(
                                                 context,
                                                 val.toString(),
-                                                "Password",
+                                                Tran.of(context)
+                                                    .text("password"),
                                                 true);
                                           },
                                           decoration: InputDecoration(
@@ -194,7 +196,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 context,
                                                 val.toString(),
                                                 _passwordController.text,
-                                                "Confirm Password",
+                                                Tran.of(context)
+                                                    .text("confirm_password"),
                                                 true);
                                           },
                                           decoration: InputDecoration(

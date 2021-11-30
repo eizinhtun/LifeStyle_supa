@@ -160,7 +160,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                         fit: BoxFit.contain,
                                       ),
                                     ),
-                              hintText: "Select Payment",
+                              hintText: Tran.of(context).text("select_payment"),
                             ),
                           )),
                       SizedBox(height: 20),
@@ -173,7 +173,9 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                         validator: (val) {
                           return Validator.transferAmount(context, val);
                         },
-                        decoration: buildInputDecoration("Transfer Account"),
+                        decoration: buildInputDecoration(
+                          Tran.of(context).text("transfer_account"),
+                        ),
                       ),
                       SizedBox(height: 20),
                       TextFormField(
@@ -184,7 +186,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                         validator: (val) {
                           return Validator.requiredField(context, val, '');
                         },
-                        decoration: buildInputDecoration("Withdraw Amount"),
+                        decoration: buildInputDecoration(
+                            Tran.of(context).text("withdraw_amount")),
                       ),
                       SizedBox(height: 20),
                       Row(
@@ -208,7 +211,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                               Navigator.pop(context);
                             },
                             child: Text(
-                              "Cancel",
+                              Tran.of(context).text("cancel"),
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold),
@@ -293,7 +296,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                   // Text("Enter Password", style: TextStyle(fontSize: 16)),
                   Center(
                     child: Text(
-                      "Enter Your Password",
+                      Tran.of(context).text("enter_password"),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -312,8 +315,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                       keyboardType: TextInputType.text,
                       obscureText: _obscureText,
                       validator: (val) {
-                        return Validator.password(
-                            context, val.toString(), "Password", true);
+                        return Validator.password(context, val.toString(),
+                            Tran.of(context)?.text('password'), true);
                       },
                       decoration: InputDecoration(
                         labelText: "${Tran.of(context)?.text('password')}",
@@ -416,12 +419,14 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                                         } else {
                                           myMsg.MessageHandler.showErrMessage(
                                               context,
-                                              "Can not edit",
-                                              "Pin is not correct");
+                                              Tran.of(context)
+                                                  .text("can_not_edit"),
+                                              Tran.of(context)
+                                                  .text("pin_not_correct"));
                                         }
                                       }
                                     },
-                              child: Text("Submit")),
+                              child: Text(Tran.of(context)?.text("submit"))),
                     ],
                   ),
                 ],

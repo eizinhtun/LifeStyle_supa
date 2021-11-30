@@ -33,7 +33,9 @@ class _LanguagePageTestState extends State<LanguagePageTest> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Select Language"),
+        title: Text(
+          Tran.of(context).text("select_language"),
+        ),
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),

@@ -408,7 +408,7 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
                                 Navigator.pop(context);
                               },
                               child: Text(
-                                "Cancel",
+                                Tran.of(context).text("cancel"),
                                 style: TextStyle(
                                     color: Colors.grey,
                                     fontWeight: FontWeight.bold),
@@ -430,8 +430,10 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
                                                   1)) {
                                         myMsg.MessageHandler.showErrMessage(
                                             context,
-                                            "Picture is required",
-                                            "Plase take a picture and upload");
+                                            Tran.of(context)
+                                                .text("pic_required"),
+                                            Tran.of(context)
+                                                .text("pic_required_str"));
                                         return;
                                       }
                                       if (_profileformKey.currentState
@@ -441,7 +443,8 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
                                         if (existAndApproved) {
                                           myMsg.MessageHandler.showErrMessage(
                                               context,
-                                              "Can not edit",
+                                              Tran.of(context)
+                                                  .text("can_not_edit"),
                                               monthName +
                                                   "\' s unit is been approved");
                                           return;
@@ -509,7 +512,7 @@ class _UploadMyReadScreenState extends State<UploadMyReadScreen> {
                                       }
                                     },
                                     child: Text(
-                                      "Upload",
+                                      Tran.of(context).text("upload"),
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),

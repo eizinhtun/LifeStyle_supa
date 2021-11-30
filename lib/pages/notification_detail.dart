@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/providers/noti_provider.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +62,7 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text("Notification Detail"),
+        title: Text(Tran.of(context).text("noti_detail")),
         flexibleSpace: Container(
           decoration: BoxDecoration(color: mainColor
               //     gradient: LinearGradient(
@@ -136,7 +137,9 @@ class _NotificationDetailPage extends State<NotificationDetailPage> {
                                   alignment: Alignment.center,
                                   child: RichText(
                                     text: TextSpan(
-                                      text: "Created Date : ",
+                                      text: Tran.of(context)
+                                              .text("created_date") +
+                                          " : ",
                                       style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.black,

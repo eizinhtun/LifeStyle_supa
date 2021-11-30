@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/utils/network_util.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/meter_bill_model.dart';
@@ -242,16 +243,19 @@ class WalletProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String signatureKey =
           md5.convert(signature.codeUnits).toString().toUpperCase();
       var url =
-          "$domainName/Value?customerId=${bill.customerId}&paymentAmount=${bill.totalCost + bill.creditAmount}&uid=$uid&branchId=${bill.branchId}&signature=$signatureKey";
+          "$domainNameLocal/Value?customerId=${bill.customerId}&paymentAmount=${bill.totalCost + bill.creditAmount}&uid=$uid&branchId=${bill.branchId}&signature=$signatureKey";
       http.Response response = await _netUtil.get(context, url, null);
       if (response != null) {
         if (response.statusCode == 200) {
-          MessageHandler.showMessage(
-              context, "Success", "Your  meter bill payment is successful");
+          MessageHandler.showMessage(context, Tran.of(context).text("success"),
+              Tran.of(context).text("bill_pay_success"));
           return true;
         } else {
           MessageHandler.showErrMessage(
-              context, "Fail", "Your meter bill payment is fail");
+            context,
+            Tran.of(context).text("fail"),
+            Tran.of(context).text("bill_pay_fail"),
+          );
           return false;
         }
       }

@@ -8,6 +8,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/utils/message_handler.dart';
 
 class Authentication {
@@ -66,22 +67,20 @@ class Authentication {
           if (e.code == 'account-exists-with-different-credential') {
             ScaffoldMessenger.of(context).showSnackBar(
               Authentication.customSnackBar(
-                content:
-                    'The account already exists with a different credential',
+                content: Tran.of(context).text("acc_exist_diff_credential"),
               ),
             );
           } else if (e.code == 'invalid-credential') {
             ScaffoldMessenger.of(context).showSnackBar(
               Authentication.customSnackBar(
-                content:
-                    'Error occurred while accessing credentials. Try again.',
+                content: Tran.of(context).text("err_with_credential"),
               ),
             );
           }
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             Authentication.customSnackBar(
-              content: 'Error occurred using Google Sign In. Try again.',
+              content: Tran.of(context).text("err_with_google_signin"),
             ),
           );
         }
@@ -114,8 +113,10 @@ class Authentication {
           return null;
       }
     } on FirebaseAuthException catch (e) {
-      MessageHandler.showErrMessage(context, "Duplicate Account",
-          "An account already exists with the same email address but different sign-in credentials.");
+      MessageHandler.showErrMessage(
+          context,
+          Tran.of(context).text("duplicate_account"),
+          Tran.of(context).text("acc_already_exist"));
 // An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.
 
       throw e;

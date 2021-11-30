@@ -18,7 +18,6 @@ import 'package:left_style/pages/content_notification_detail_page.dart';
 import 'package:left_style/pages/login_page.dart';
 import 'package:left_style/pages/main_screen.dart';
 import 'package:left_style/pages/my_meterBill_detail.dart';
-import 'package:left_style/pages/notification_list.dart';
 import 'package:left_style/pages/pop_up_ads.dart';
 import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/pages/user_not_active.dart';
@@ -569,13 +568,13 @@ class _MyAppState extends State<MyApp> {
             ),
           );
           break;
-        default:
-          await MyApp.navKey.currentState.push(
-            MaterialPageRoute(
-              builder: (_) => NotificationListPage(),
-            ),
-          );
-          break;
+        // default:
+        //   await MyApp.navKey.currentState.push(
+        //     MaterialPageRoute(
+        //       builder: (_) => ),
+        //     ),
+        //   );
+        //   break;
       }
 
       if (SystemData.isLoggedIn) {
@@ -682,13 +681,13 @@ class _MyAppState extends State<MyApp> {
                       );
                       break;
 
-                    default:
-                      await MyApp.navKey.currentState.push(
-                        MaterialPageRoute(
-                          builder: (_) => NotificationListPage(),
-                        ),
-                      );
-                      break;
+                    // default:
+                    //   await MyApp.navKey.currentState.push(
+                    //     MaterialPageRoute(
+                    //       builder: (_) =>,
+                    //     ),
+                    //   );
+                    //   break;
                   }
                 },
               ),

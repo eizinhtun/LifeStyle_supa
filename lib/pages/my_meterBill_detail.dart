@@ -201,9 +201,13 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                       Text('ဓာတ်အားခတောင်းခံလွှာ',
                                           style: getTextStyle()),
                                       Text(
-                                          "Used: " +
+                                          Tran.of(context).text("used") +
+                                              ": " +
                                               bill.monthName +
-                                              " Last Date: " +
+                                              " " +
+                                              Tran.of(context)
+                                                  .text("last_date") +
+                                              ": " +
                                               Formatter.getDate(
                                                   bill.dueDate.toDate()) +
                                               "",
@@ -639,14 +643,19 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
-                                            Container(
-                                                height: 55.0,
-                                                width: 75.0,
-                                                child: CachedNetworkImage(
-                                                  placeholder: (context, url) =>
-                                                      CircularProgressIndicator(),
-                                                  imageUrl: bill.signUrl,
-                                                )),
+                                            bill.signUrl == null ||
+                                                    bill.signUrl == ""
+                                                ? Container()
+                                                : Container(
+                                                    height: 55.0,
+                                                    width: 75.0,
+                                                    child: CachedNetworkImage(
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          CircularProgressIndicator(),
+                                                      imageUrl: bill.signUrl,
+                                                    ),
+                                                  ),
                                             //Container( height:60.0,width:90.0, child: Image.network(StaticCompanyInfo.signUrl),),
 
                                             /// Text('လျှပ်စစ်ပုံစံ(၂၄၃)',style: getTextStyle()),
@@ -718,7 +727,8 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                               //TODO
                                             },
                                             child: Text(
-                                              "Contact Office",
+                                              Tran.of(context)
+                                                  .text("contact_office"),
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
@@ -796,7 +806,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                           child: Container(
                             padding: EdgeInsets.all(14),
                             child: Text(
-                              "Pay Bill",
+                              Tran.of(context).text("pay_bill"),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).primaryColor,
@@ -831,7 +841,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                 title: Text(Tran.of(context).text("my_meter_bill").toString()),
               ),
               body: Center(
-                child: Text("No data"),
+                child: Text(Tran.of(context).text("no_data")),
               ),
             );
           }
@@ -881,7 +891,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
       await capturedFile.writeAsBytes(pngBytes);
 
       await Share.shareFiles([fullPath],
-          text: "My Meter Lists",
+          text: Tran.of(context).text("my_meter_list"),
           sharePositionOrigin: box.localToGlobal(Offset.infinite) & box.size);
       //FlutterShareFile.share(fullPath, fileName, ShareFileType.image);
       // FlutterShareFile.share(dir.path, fileName, ShareFileType.image);

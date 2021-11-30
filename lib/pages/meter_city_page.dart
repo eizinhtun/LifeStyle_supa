@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:left_style/localization/translate.dart';
 
 class MeterCityPage extends StatefulWidget {
   @override
@@ -20,7 +21,9 @@ class _MeterCityPageState extends State<MeterCityPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Select City"),
+        title: Text(
+          Tran.of(context).text("select_city"),
+        ),
         centerTitle: true,
       ),
       body: Column(

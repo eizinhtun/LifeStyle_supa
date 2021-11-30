@@ -382,12 +382,12 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
       http.Response response = await _netUtil.get(context, url, null);
       if (response != null) {
         if (response.statusCode == 200) {
-          MessageHandler.showMessage(
-              context, "Success", "Syncing Bill latest info is successful");
+          MessageHandler.showMessage(context, Tran.of(context).text("success"),
+              Tran.of(context).text("sync_success"));
           return true;
         } else {
-          MessageHandler.showErrMessage(
-              context, "Fail", "Syncing Bill latest info is fail");
+          MessageHandler.showErrMessage(context, Tran.of(context).text("fail"),
+              Tran.of(context).text("sync_fail"));
           return false;
         }
       }

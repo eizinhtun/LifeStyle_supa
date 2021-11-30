@@ -6,9 +6,9 @@ import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/translate.dart';
 
 class Validator {
-  static String showPhoneToken(bool isToken) {
+  static String showPhoneToken(bool isToken, BuildContext context) {
     if (isToken) {
-      return "This Phone is already registered";
+      return Tran.of(context).text("already_register_phone");
     }
     return null;
   }
@@ -152,7 +152,9 @@ class Validator {
       }
     }
     if (value != confirmValue) {
-      return "$fileName is not match!";
+      return Tran.of(context)
+          .text("no_match_str")
+          .replaceAll('@fileName', fileName);
     }
     return null;
   }

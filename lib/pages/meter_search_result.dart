@@ -156,7 +156,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                 BorderRadius.all(Radius.circular(30.0))),
 
                         //labelText: "Search",
-                        hintText: "Search",
+                        hintText: Tran.of(context).text("search"),
                         prefixIcon: Icon(Icons.search),
                         contentPadding: EdgeInsets.all(0.0),
                         border: OutlineInputBorder(
@@ -353,7 +353,9 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                                                   .format(items[
                                                                           index]
                                                                       .lastReadUnit) +
-                                                              " Unit",
+                                                              " " +
+                                                              Tran.of(context)
+                                                                  .text("unit"),
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.black,

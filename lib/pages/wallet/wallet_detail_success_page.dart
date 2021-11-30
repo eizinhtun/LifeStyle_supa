@@ -186,7 +186,9 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                   Spacer(),
                                   Text(
                                       Formatter.balanceFormat(item.amount) +
-                                          " (Ks)",
+                                          " (" +
+                                          Tran.of(context).text("ks") +
+                                          ")",
                                       style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w900)),
@@ -232,7 +234,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                 child: CircularProgressIndicator(),
               );
             } else {
-              return Center(child: Text("No data"));
+              return Center(child: Text(Tran.of(context).text("no_data")));
             }
           }),
     );
@@ -283,7 +285,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
         Navigator.of(context).pop();
       },
       child: Text(
-        "Cancel",
+        Tran.of(context).text("cancel"),
         style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
       ),
     );
@@ -310,12 +312,11 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
               .doc(widget.docId)
               .delete();
         },
-        child: Text("Ok"));
+        child: Text(Tran.of(context).text("ok")));
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Are Your Sure Delete?"),
-      // content: Text("Would you like to continue learning how to use Flutter alerts?"),
+      title: Text(Tran.of(context).text("delete_confirm")),
       actions: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

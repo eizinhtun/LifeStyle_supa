@@ -175,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Container(
                           padding: EdgeInsets.all(12.0),
                           child: Text(
-                            "Select Language",
+                            Tran.of(context).text("select_language"),
                             style: TextStyle(color: mainColor),
                           ),
                         ),
@@ -252,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
             });
       } catch (e) {
         MessageHandler.showSnackbar(
-            "Failed to Verify Phone Number: $e", context, 6);
+            Tran.of(context).text("failVerifyPhoneNumber $e"), context, 6);
       }
     }
   }

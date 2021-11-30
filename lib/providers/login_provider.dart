@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/database_helper.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/intro_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/authentication.dart';
@@ -72,7 +73,9 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
         User user = value.user;
 
         MessageHandler.showSnackbar(
-            "Successfully signed in UID: ${user.uid}", context, 5);
+            "${Tran.of(context).text("success_sigin_uid")}: ${user.uid}",
+            context,
+            5);
         if (user.uid != null) {
           DatabaseHelper.setAppLoggedIn(context, true);
           notifyListeners();
@@ -80,7 +83,9 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       });
     } catch (e) {
       MessageHandler.showSnackbar(
-          "Failed to sign in: " + e.toString(), context, 5);
+          "${Tran.of(context).text("fail_sigin")}: " + e.toString(),
+          context,
+          5);
     }
   }
 
@@ -168,7 +173,9 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       final User user = (await _auth.signInWithCredential(credential)).user;
 
       MessageHandler.showSnackbar(
-          "Successfully signed in UID: ${user.uid}", context, 5);
+          "${Tran.of(context).text("success_sigin_uid")}: ${user.uid}",
+          context,
+          5);
 
       if (user.uid != null) {
         DatabaseHelper.setAppLoggedIn(context, true);
@@ -186,7 +193,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       }
     } catch (e) {
       MessageHandler.showErrSnackbar(
-          "Failed to sign in: " + e.toString(), context, 5);
+          "${Tran.of(context).text("fail_sigin")}" + e.toString(), context, 5);
       return false;
     }
   }
@@ -196,14 +203,14 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       try {
         userRef.doc(uid).set(userModel.toJson()).then((value) {
-          MessageHandler.showMessage(
-              context, "Success", "Updating User Info is successful");
+          MessageHandler.showMessage(context, Tran.of(context).text("success"),
+              Tran.of(context).text("update_user_success"));
         });
 
         notifyListeners();
       } catch (e) {
-        MessageHandler.showErrMessage(
-            context, "Fail", "Updating User Info is fail");
+        MessageHandler.showErrMessage(context, Tran.of(context).text("fail"),
+            Tran.of(context).text("update_user_fail"));
       }
     }
     notifyListeners();
@@ -212,16 +219,33 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<void> updateUserInfo(BuildContext context, UserModel user) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
+
       try {
-        userRef.doc(uid).set(user.toJson()).then((value) {
-          MessageHandler.showMessage(
-              context, "Success", "Updating User Info is successful");
+        userRef.doc(uid).set(user.toJson())
+            // update({
+            //   'full_name': user.fullName,
+            //   'email': user.email,
+            //   'phone': user.phone,
+            //   'photoUrl': user.photoUrl,
+            //   'uid': user.uid,
+            //   'balance': user.balance,
+            //   'fcmtoken': user.fcmtoken,
+            //   'password': user.password,
+            //   'isActive': user.isActive,
+            //   'createdDate': user.createdDate,
+            //   'address': user.address,
+            //   'showBalance': user.showBalance
+            // })
+
+            .then((value) {
+          MessageHandler.showMessage(context, Tran.of(context).text("success"),
+              Tran.of(context).text("update_user_success"));
         });
 
         notifyListeners();
       } catch (e) {
-        MessageHandler.showErrMessage(
-            context, "Fail", "Updating User Info is fail");
+        MessageHandler.showErrMessage(context, Tran.of(context).text("fail"),
+            Tran.of(context).text("update_user_fail"));
       }
     }
     notifyListeners();
@@ -233,15 +257,18 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
       try {
         userRef.doc(uid).update({"fcmToken": fcmtoken}).then((_) {
-          MessageHandler.showMessage(
-              context, "Success", "Updating token is successful");
+          MessageHandler.showMessage(context, Tran.of(context).text("success"),
+              Tran.of(context).text("update_token_success"));
           return true;
         });
 
         notifyListeners();
       } catch (e) {
         MessageHandler.showErrMessage(
-            context, "Fail", "Updating token is fail");
+          context,
+          Tran.of(context).text("fail"),
+          Tran.of(context).text("update_token_fail"),
+        );
       }
     }
 

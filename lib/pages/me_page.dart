@@ -23,7 +23,6 @@ import 'change_pin_phone_page.dart';
 import 'help_page.dart';
 import 'language_page.dart';
 import 'meter_list.dart';
-import 'notification_list.dart';
 
 class MePage extends StatefulWidget {
   final MainScreenState main;
@@ -39,7 +38,7 @@ class _MePageState extends State<MePage> {
   @override
   void initState() {
     super.initState();
-    getData();
+    // getData();
   }
 
   List<NotiModel> notiList = [];
@@ -180,7 +179,6 @@ class _MePageState extends State<MePage> {
                         ),
                       ),
                     ),
-
                     Divider(
                       thickness: 0.5,
                       height: 1,
@@ -254,168 +252,6 @@ class _MePageState extends State<MePage> {
                       thickness: 1,
                       height: 1,
                     ),
-
-                    // Container(
-                    //   height: titleHeight,
-                    //   child: ListTile(
-                    //     onTap: () {
-                    //       Navigator.of(context).push(MaterialPageRoute(
-                    //         builder: (context) => TextFromImage(),
-                    //       ));
-                    //     },
-                    //     leading: Container(
-                    //       width: leadingWidth,
-                    //       alignment: Alignment.centerLeft,
-                    //       child: Icon(
-                    //         Icons.image,
-                    //         size: iconSize,
-                    //         color: mainColor,
-                    //       ),
-                    //     ),
-                    //     title: Text(
-                    //       "Text From Image",
-                    //       style: TextStyle(fontWeight: FontWeight.bold),
-                    //     ),
-                    //     trailing: Icon(
-                    //       Icons.arrow_forward_ios,
-                    //       size: 15,
-                    //       color: Colors.black26,
-                    //     ),
-                    //   ),
-                    // ),
-                    // Divider(
-                    //   thickness: 1,
-                    //   height: 1,
-                    // ),
-                    // Container(
-                    //   height: titleHeight,
-                    //   child: ListTile(
-                    //     onTap: () {
-                    //       // FirebaseAuth.instance.
-                    //       Navigator.of(context).push(MaterialPageRoute(
-                    //         builder: (context) => TextFromImageV2(),
-                    //       ));
-                    //     },
-                    //     leading: Container(
-                    //       width: leadingWidth,
-                    //       alignment: Alignment.centerLeft,
-                    //       child: Icon(
-                    //         Icons.image,
-                    //         size: iconSize,
-                    //         color: mainColor,
-                    //       ),
-                    //     ),
-                    //     title: Text(
-                    //       "Text From Image V2",
-                    //       style: TextStyle(fontWeight: FontWeight.bold),
-                    //     ),
-                    //     trailing: Icon(
-                    //       Icons.arrow_forward_ios,
-                    //       size: 15,
-                    //       color: Colors.black26,
-                    //     ),
-                    //   ),
-                    // ),
-                    // Divider(
-                    //   thickness: 1,
-                    //   height: 1,
-                    // ),
-                    // Container(
-                    //   height: titleHeight,
-                    //   child: ListTile(
-                    //     onTap: () {
-                    //       // FirebaseAuth.instance.
-                    //       Navigator.of(context).push(MaterialPageRoute(
-                    //           builder: (context) => CurrentLocation()));
-                    //     },
-                    //     leading: Container(
-                    //       width: leadingWidth,
-                    //       alignment: Alignment.centerLeft,
-                    //       child: Icon(
-                    //         Icons.location_city,
-                    //         size: iconSize,
-                    //         color: mainColor,
-                    //       ),
-                    //     ),
-                    //     title: Text(
-                    //       "Current Location",
-                    //       style: TextStyle(fontWeight: FontWeight.bold),
-                    //     ),
-                    //     trailing: Icon(
-                    //       Icons.arrow_forward_ios,
-                    //       size: 15,
-                    //       color: Colors.black26,
-                    //     ),
-                    //   ),
-                    // ),
-                    // Divider(
-                    //   thickness: 1,
-                    //   height: 1,
-                    // ),
-                    Container(
-                      height: titleHeight,
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => NotificationListPage()));
-                          setState(() {});
-                        },
-                        leading: Container(
-                          width: leadingWidth,
-                          alignment: Alignment.centerLeft,
-                          child: Stack(
-                            children: [
-                              Icon(
-                                Icons.notifications,
-                                size: iconSize,
-                                color: mainColor,
-                              ),
-                              (SystemData.notiCount != null &&
-                                      SystemData.notiCount > 0)
-                                  ? Container(
-                                      width: iconSize,
-                                      height: iconSize,
-                                      alignment: Alignment.topRight,
-                                      margin: EdgeInsets.only(top: 5),
-                                      child: Container(
-                                        width: iconSize / 2,
-                                        height: iconSize / 2,
-                                        alignment: Alignment.center,
-                                        // padding: EdgeInsets.all(2),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              color: Colors.white, width: 1),
-                                          color: Colors.red,
-                                        ),
-                                        child: Text(
-                                          getNotiCount(SystemData.notiCount),
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Text(""),
-                            ],
-                          ),
-                        ),
-                        title: Text(
-                          Tran.of(context).text("notification"),
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 15,
-                          color: Colors.black26,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      thickness: 0.5,
-                      height: 1,
-                    ),
                     Container(
                       height: titleHeight,
                       child: ListTile(
@@ -454,12 +290,8 @@ class _MePageState extends State<MePage> {
                           bool result = await Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) => LanguagePage()));
-
-                          if (result != null && result == true) {
-                            widget.main.refreshPage();
-                          }
-                          // setState(() {});
-                          // widget.main.refreshPage();
+                          widget.main.refreshPage();
+                          setState(() {});
                         },
                         leading: Container(
                           width: leadingWidth,
@@ -566,7 +398,9 @@ class _MePageState extends State<MePage> {
                           ),
                           onPressed: () {
                             Widget continueButton = TextButton(
-                              child: Text("Confirm"),
+                              child: Text(
+                                Tran.of(context).text("confirm"),
+                              ),
                               onPressed: () async {
                                 // setState(() {
                                 //   _isSigningOut = true;
@@ -583,7 +417,9 @@ class _MePageState extends State<MePage> {
                               },
                             );
                             Widget cancelButton = TextButton(
-                              child: Text("Cancel"),
+                              child: Text(
+                                Tran.of(context).text("cancel"),
+                              ),
                               onPressed: () {
                                 Navigator.pop(context);
                                 // setState(() {});
@@ -595,7 +431,7 @@ class _MePageState extends State<MePage> {
                             );
                             AlertDialog alert = AlertDialog(
                               title: Text(
-                                "Are you sure logout?",
+                                Tran.of(context).text("logout_confirm"),
                                 style: TextStyle(fontSize: 20),
                               ),
                               actions: [

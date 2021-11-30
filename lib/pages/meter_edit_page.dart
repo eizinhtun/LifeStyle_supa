@@ -305,7 +305,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                             Text(
                                               NumberFormat('#,###,000').format(
                                                       widget.obj.lastReadUnit) +
-                                                  " Unit",
+                                                  " " +
+                                                  Tran.of(context).text("unit"),
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w600),
@@ -424,7 +425,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              "Read Date",
+                                              Tran.of(context)
+                                                  .text("read_date"),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
@@ -460,7 +462,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                       //           top: 0, bottom: 5),
                                       //       alignment: Alignment.centerLeft,
                                       //       child: Text(
-                                      //         "Last Date",
+                                      //        Tran.of(context).text("last_date"),
                                       //         style: TextStyle(
                                       //             fontWeight: FontWeight.bold,
                                       //             color: Colors.black87,
@@ -497,7 +499,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              "Due Date",
+                                              Tran.of(context).text("due_date"),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
@@ -544,7 +546,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              "Horse Power",
+                                              Tran.of(context)
+                                                  .text("horse_power"),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
@@ -578,7 +581,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              "Horse Power Cost",
+                                              Tran.of(context)
+                                                  .text("horse_power_cost"),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
@@ -590,7 +594,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              "${widget.obj.horsePowerCost} Kyat",
+                                              "${widget.obj.horsePowerCost} " +
+                                                  Tran.of(context).text("kyat"),
                                               // NumberFormat('#,###,000').format(
                                               //         widget
                                               //             .obj.horsePowerCost) +
@@ -624,7 +629,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              "Charge Per Unit",
+                                              Tran.of(context)
+                                                  .text("charge_per_unit"),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
@@ -636,7 +642,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              "${widget.obj.chargePerUnit} Kyat",
+                                              "${widget.obj.chargePerUnit} " +
+                                                  Tran.of(context).text("kyat"),
                                               // NumberFormat('#,###,000').format(
                                               //         widget
                                               //             .obj.chargePerUnit) +
@@ -662,7 +669,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              "Maintainence Cost",
+                                              Tran.of(context)
+                                                  .text("maintainence_cost"),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
@@ -674,7 +682,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              "${widget.obj.maintainenceCost} Kyat",
+                                              "${widget.obj.maintainenceCost} " +
+                                                  Tran.of(context).text("kyat"),
                                               // NumberFormat('#,###,000').format(
                                               //         widget.obj
                                               //             .maintainenceCost) +
@@ -698,7 +707,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
                                           Text(
-                                            "Auto Pay Meter Bill",
+                                            Tran.of(context)
+                                                .text("auto_pay_bill"),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black54,
@@ -734,7 +744,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                                   });
                                                   MessageHandler.showErrMessage(
                                                       context,
-                                                      "Unavailable",
+                                                      Tran.of(context)
+                                                          .text("unavailable"),
                                                       e.toString().replaceAll(
                                                           "[cloud_firestore/unavailable]",
                                                           ""));
@@ -752,7 +763,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
                                           Text(
-                                            "Scan Meter by Me",
+                                            Tran.of(context).text("self_scan"),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black54,
@@ -789,7 +800,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                                     });
                                                     MessageHandler.showErrMessage(
                                                         context,
-                                                        "Unavailable",
+                                                        Tran.of(context).text(
+                                                            "unavailable"),
                                                         e.toString().replaceAll(
                                                             "[cloud_firestore/unavailable]",
                                                             ""));
@@ -873,14 +885,17 @@ class MeterEditPageState extends State<MeterEditPage>
                                                   color: Colors.red)))),
 
                                   // color: Colors.black12,
-                                  child: new Text('Add',
+                                  child: new Text(Tran.of(context).text("add"),
                                       style: new TextStyle(
                                           fontSize: 16.0, color: Colors.white)),
                                   onPressed: () async {
                                     bool isMeterExist = await checkExist();
                                     if (isMeterExist) {
-                                      MessageHandler.showMessage(context, "",
-                                          "This Meter is already added");
+                                      MessageHandler.showMessage(
+                                          context,
+                                          "",
+                                          Tran.of(context)
+                                              .text("already_meter"));
                                       return;
                                     }
 
@@ -899,7 +914,7 @@ class MeterEditPageState extends State<MeterEditPage>
 
                                       Navigator.pop(context, true);
                                       MessageHandler.showMessage(context, "",
-                                          "This Meter is successfully added");
+                                          Tran.of(context).text("meter_added"));
                                     }
                                   },
                                 ),
@@ -935,38 +950,41 @@ class MeterEditPageState extends State<MeterEditPage>
         Navigator.of(context).pop();
       },
       child: Text(
-        "Cancel",
+        Tran.of(context).text("cancel"),
         style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
       ),
     );
 
     Widget continueButton = ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25),
-            ),
-            padding: EdgeInsets.only(
-              left: 30,
-              right: 30,
-              top: 10,
-              bottom: 10,
-            ) // foreground
-            ),
-        onPressed: () async {
-          await FirebaseFirestore.instance
-              .collection(meterCollection)
-              .doc(FirebaseAuth.instance.currentUser.uid)
-              .collection(userMeterCollection)
-              .doc(widget.obj.customerId)
-              .delete();
-          Navigator.of(context).pop(true);
-          Navigator.of(context).pop(true);
-        },
-        child: Text("Ok"));
+      style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          padding: EdgeInsets.only(
+            left: 30,
+            right: 30,
+            top: 10,
+            bottom: 10,
+          ) // foreground
+          ),
+      onPressed: () async {
+        await FirebaseFirestore.instance
+            .collection(meterCollection)
+            .doc(FirebaseAuth.instance.currentUser.uid)
+            .collection(userMeterCollection)
+            .doc(widget.obj.customerId)
+            .delete();
+        Navigator.of(context).pop(true);
+        Navigator.of(context).pop(true);
+      },
+      child: Text(
+        Tran.of(context).text("ok"),
+      ),
+    );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Are Your Sure Delete?"),
+      title: Text(Tran.of(context).text("delete_confirm")),
       // content: Text("Would you like to continue learning how to use Flutter alerts?"),
       actions: [
         Row(

@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:left_style/localization/translate.dart';
 
 class HomeItemWidget extends StatelessWidget {
   const HomeItemWidget(
@@ -40,7 +41,7 @@ class HomeItemWidget extends StatelessWidget {
               height: 10,
             ),
             Text(
-              title,
+              Tran.of(context).text(title),
               style: TextStyle(color: Colors.black87),
             )
           ],

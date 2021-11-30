@@ -2,6 +2,7 @@
 
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/widgets/scan_qr_data.dart';
 
 class ScanQR extends StatefulWidget {
@@ -91,7 +92,7 @@ class _ScanQRState extends State<ScanQR> {
                                         setState(() {});
                                       },
                                       child: Text(
-                                        "Open Scanner",
+                                        Tran.of(context).text("open_scanner"),
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       //Button having rounded rectangle border

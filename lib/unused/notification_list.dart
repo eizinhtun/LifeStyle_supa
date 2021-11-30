@@ -5,25 +5,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/datas/system_data.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/noti_model.dart';
+import 'package:left_style/pages/my_meterBill_detail.dart';
+import 'package:left_style/pages/notification_detail.dart';
+import 'package:left_style/pages/wallet/wallet_detail_success_page.dart';
 import 'package:left_style/providers/noti_provider.dart';
-import 'wallet/wallet_detail_success_page.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'my_meterBill_detail.dart';
-import 'notification_detail.dart';
 
-class NotificationListPage extends StatefulWidget {
-  NotificationListPage({
+class NotificationList extends StatefulWidget {
+  NotificationList({
     Key key,
   }) : super(key: key);
 
   @override
-  _NotificationListPage createState() => _NotificationListPage();
+  _NotificationList createState() => _NotificationList();
 }
 
-class _NotificationListPage extends State<NotificationListPage>
+class _NotificationList extends State<NotificationList>
     with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   RefreshController _refreshController =
@@ -95,7 +96,7 @@ class _NotificationListPage extends State<NotificationListPage>
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
-        title: Text("Notifications"),
+        title: Text(Tran.of(context).text("explore")),
         centerTitle: true,
       ),
       body: Column(
@@ -129,18 +130,20 @@ class _NotificationListPage extends State<NotificationListPage>
                 builder: (BuildContext context, LoadStatus mode) {
                   Widget body;
                   if (mode == LoadStatus.idle) {
-                    body = Text("pull up load");
+                    body = Text(
+                      Tran.of(context).text("pull_up_load"),
+                    );
                   } else if (mode == LoadStatus.loading) {
                     body = CupertinoActivityIndicator();
                   } else if (mode == LoadStatus.failed) {
-                    body = Text("Load Failed!Click retry!");
+                    body = Text(Tran.of(context).text("load_failed"));
                   } else if (mode == LoadStatus.canLoading) {
-                    body = Text("release to load more");
+                    body = Text(Tran.of(context).text("release_to_load"));
                   } else {
-                    body = Text("No more Data");
+                    body = Text(Tran.of(context).text("no_more_data"));
                   }
                   if (notiList.length == end) {
-                    body = Text("No more Data");
+                    body = Text(Tran.of(context).text("no_more_data"));
                   }
                   return Container(
                     height: 55.0,

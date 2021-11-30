@@ -35,8 +35,6 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
   bool _obscureText = false;
   bool isVisible = false;
 
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
-
   UserModel user = UserModel();
   FirebaseMessaging _messaging = FirebaseMessaging.instance;
   String fcmtoken = "";
@@ -45,22 +43,6 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
   void initState() {
     super.initState();
     getUser();
-    // OTPInteractor.getAppSignature()
-    //     //ignore: avoid_print
-    //     .then((value) =>
-    // controller = OTPTextEditController(
-    //   codeLength: 6,
-    //   //ignore: avoid_print
-    //   onCodeReceive: (code) => print('Your Application receive code - $code'),
-    // )..startListenUserConsent(
-    //     (code) {
-    //       final exp = RegExp(r'(\d{6})');
-    //       return exp.stringMatch(code ?? '') ?? '';
-    //     },
-    //     strategies: [
-    //       // SampleStrategy(),
-    //     ],
-    //   );
   }
 
   Future<UserModel> getUser() async {
@@ -143,8 +125,8 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                             // blinkWhenObscuring: true,
                             animationType: AnimationType.fade,
                             validator: (val) {
-                              return Validator.pin(
-                                  context, val.toString(), "Pin", true);
+                              return Validator.pin(context, val.toString(),
+                                  Tran.of(context).text("pin"), true);
                             },
                             pinTheme: PinTheme(
                                 inactiveFillColor: Colors.white,
@@ -248,8 +230,8 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                             keyboardType: TextInputType.text,
                             obscureText: _obscureText,
                             validator: (val) {
-                              return Validator.password(
-                                  context, val.toString(), "Password", true);
+                              return Validator.password(context, val.toString(),
+                                  Tran.of(context).text("password"), true);
                             },
                             // decoration: InputDecoration(
                             //   labelText: "Password",
@@ -351,50 +333,31 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
     String smsCode = controller.text.trim();
     await api.verifyPin(context, requestId, smsCode).then((statusCode) async {
       if (statusCode == 0) {
-        MessageHandler.showError(context, "Invalid PIN", "Your pin is invalid");
+        MessageHandler.showError(context, Tran.of(context).text("invalid_pin"),
+            Tran.of(context).text("invalid_pin_str"));
       } else if (statusCode == 10) {
         MessageHandler.showError(
-            context, "Attempt Exceed", "PIN Verify Attempt Exceed");
+            context,
+            Tran.of(context).text("attempt_exceed"),
+            Tran.of(context).text("attempt_exceed_str"));
       } else if (statusCode == 11) {
-        MessageHandler.showError(context, "PIN Expired", "PIN Expired");
+        MessageHandler.showError(context, Tran.of(context).text("pin_expired"),
+            Tran.of(context).text("pin_expired_str"));
       } else if (statusCode == 200) {
-        MessageHandler.showMessage(context, "PIN Verified", "PIN Vefify OK");
+        MessageHandler.showMessage(
+            context,
+            Tran.of(context).text("pin_verified"),
+            Tran.of(context).text("pin_verified_str"));
         var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
         user.password = pass;
         // user.password = _pinController.text;
         await context.read<LoginProvider>().updateUserInfo(context, user);
         Navigator.of(context).pop();
       } else {
-        MessageHandler.showError(context, "Unknown", "Unknown Error!");
+        MessageHandler.showError(context, Tran.of(context).text("unknown"),
+            Tran.of(context).text("unknown_str"));
       }
     });
-    // var url =
-    //     "$smsUrl/v1/verify?access-token=$smsToken&request_id=$requestId&code=$smsCode";
-    // var response = await http.get(
-    //   Uri.parse(url),
-    // );
-
-    // if (statusCode == 0) {
-    //   // Invalid PIN
-    //   MessageHandler.showErrMessage(
-    //       context, "Invalid PIN", "Your Pin is Invalid!");
-    // } else if (statusCode == 10) {
-    //   // PIN Verify Attempt Exceed
-    //   MessageHandler.showErrMessage(context, "PIN Verify Attempt Exceed",
-    //       "Your PIN Verify Attempt is Exceed!");
-    // } else if (statusCode == 11) {
-    //   // PIN Expired
-    //   MessageHandler.showErrMessage(
-    //       context, "PIN Expired", "Your Pin is Expired!");
-    // } else {
-    //   MessageHandler.showErrMessage(
-    //       context, "PIN Valid", "Your Pin is Success!");
-    //   var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
-    //   user.password = pass;
-    //   await context.read<LoginProvider>().updateUserInfo(context, user);
-    // }
-    // SmsVerifyResponse resModel =
-    //     SmsVerifyResponse.fromJson(json.decode(response.body));
   }
 
   Future<String> checkToken(String fcmtoken) async {
@@ -416,74 +379,3 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
     }
   }
 }
-
-// void requestPin(){
-// try {
-//   await _auth.verifyPhoneNumber(
-//       phoneNumber: phone,
-//       timeout: const Duration(seconds: timeOut),
-//       verificationCompleted:
-//           (PhoneAuthCredential phoneAuthCredential) async {},
-//       verificationFailed: (FirebaseAuthException authException) {
-//         print(
-//             'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-//         MessageHandler.showSnackbar(
-//             Tran.of(context)
-//                 .text("phoneNumberVerificationFailedCode")
-//                 .replaceAll("@authExceptionCode", "${authException.code}")
-//                 .replaceAll(
-//                     "@authExceptionMessage", "${authException.message}"),
-//             //'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
-//             context,
-//             6);
-//       },
-//       codeSent: (String vId, [int forceResendingToken]) async {
-//         verificationId = vId;
-//
-//         MessageHandler.showSnackbar(
-//             Tran.of(context).text("checkPhoneNumberVerificationCode"),
-//             //'Please check your phone for the verification code.',
-//             context,
-//             6);
-//         verificationId = vId;
-//
-//       },
-//       codeAutoRetrievalTimeout: (String verificationId) {
-//
-//         verificationId = verificationId;
-//       });
-// } catch (e) {
-//   MessageHandler.showSnackbar(
-//       Tran.of(context).text('failVerifyPhoneNumber').replaceAll("@e", "$e"),
-//       // "Failed to Verify Phone Number: $e",
-//       context,
-//       6);
-// }
-
-// }
-
-// void submit(){
-
-//  FirebaseAuth auth = FirebaseAuth.instance;
-//
-// PhoneAuthCredential _phCredential = PhoneAuthProvider.credential(
-//     verificationId: verificationId, smsCode: smsCode);
-// EmailAuthCredential _emailCredential =
-// EmailAuthProvider.credential(email: email, password: password);
-// FacebookAuthCredential _fbCredential =
-//     FacebookAuthProvider.credential(accessToken);
-//         UserCredential euserCredential =
-// await auth.signInWithPhoneNumber(phoneNumber)
-// signInWithCredential(_phCredential);
-//
-
-// auth.
-// UserCredential userCredential =
-//     await auth.signInWithCredential(_phCredential);
-// if (userCredential.user != null) {
-//   var pass = DBCrypt().hashpw(_pinController.text, DBCrypt().gensalt());
-//   user.password = pass;
-
-//   await context.read<LoginProvider>().updateUserInfo(context, user);
-// }
-// }

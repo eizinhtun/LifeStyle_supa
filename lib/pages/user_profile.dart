@@ -52,7 +52,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           SliverAppBar(
             title: Center(
               child: Text(
-                "User Profile",
+                Tran.of(context).text("user_profile"),
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.black54,
@@ -123,7 +123,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                             }
                                             String data =
                                                 Validator.showPhoneToken(
-                                                    isPhoneToken);
+                                                    isPhoneToken, context);
                                             if (data != "") {
                                               return data;
                                             }
@@ -153,7 +153,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                             return Validator.userName(
                                                 context,
                                                 val.toString(),
-                                                "User Name",
+                                                Tran.of(context)
+                                                    .text("user_name"),
                                                 true);
                                           },
                                           decoration: InputDecoration(
@@ -175,7 +176,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                             return Validator.password(
                                                 context,
                                                 val.toString(),
-                                                "Password",
+                                                Tran.of(context)
+                                                    .text("password"),
                                                 true);
                                           },
                                           decoration: InputDecoration(
@@ -210,7 +212,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                 context,
                                                 val.toString(),
                                                 _passwordController.text,
-                                                "Confirm Password",
+                                                Tran.of(context)
+                                                    .text("confirm_password"),
                                                 true);
                                           },
                                           decoration: InputDecoration(
@@ -261,7 +264,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                             .logOut(context);
                                       },
                                       child: Text(
-                                        "Cancel",
+                                        Tran.of(context).text("cancel"),
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
@@ -312,7 +315,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         }
                                       },
                                       child: Text(
-                                        "Add User Profile",
+                                        Tran.of(context)
+                                            .text("add_user_profile"),
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),

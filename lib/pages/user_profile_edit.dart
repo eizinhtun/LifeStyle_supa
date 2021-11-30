@@ -88,10 +88,13 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
               .update(oldUserModel.toJson());
           Navigator.pop(context, true);
 
-          myMsg.MessageHandler.showMessage(context, "", "Successfully added");
+          myMsg.MessageHandler.showMessage(
+              context, "", Tran.of(context).text("success_added"));
         } catch (e) {
           myMsg.MessageHandler.showErrMessage(
-              context, "fail", "User Update Successfully");
+              context,
+              Tran.of(context).text("fail"),
+              Tran.of(context).text("user_update_success"));
           setState(() {
             _submiting = false;
           });
@@ -344,11 +347,12 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                                   ? null
                                                   : () async {
                                                       if (file == null) {
-                                                        myMsg.MessageHandler
-                                                            .showErrMessage(
-                                                                context,
-                                                                "Picture is required",
-                                                                "Plase take a picture and upload");
+                                                        myMsg.MessageHandler.showErrMessage(
+                                                            context,
+                                                            Tran.of(context).text(
+                                                                "pic_required"),
+                                                            Tran.of(context).text(
+                                                                "pic_required_str"));
                                                         return;
                                                       }
                                                       if (_formKey.currentState
@@ -470,7 +474,11 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
       builder: (BuildContext context) {
         return AlertDialog(
             actionsPadding: EdgeInsets.all(10),
-            title: Center(child: new Text("Do you want to save QR image?")),
+            title: Center(
+              child: new Text(
+                Tran.of(context).text("want_save_qr"),
+              ),
+            ),
             content: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -494,7 +502,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                   child: Container(
                     padding: EdgeInsets.all(14),
                     child: Text(
-                      "Yes",
+                      Tran.of(context).text("yes"),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).primaryColor,
@@ -523,7 +531,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                   child: Container(
                     padding: EdgeInsets.all(14),
                     child: Text(
-                      "No",
+                      Tran.of(context).text("no"),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).primaryColor,

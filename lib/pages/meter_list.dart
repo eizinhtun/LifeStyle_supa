@@ -253,23 +253,27 @@ class MeterListPageState extends State<MeterListPage>
                         )));
             if (returnResult != null && returnResult) {
               msg.MessageHandler.showMessage(
-                  context, "", "This Meter is successfully added");
+                context,
+                "",
+                Tran.of(context).text("meter_added"),
+              );
             }
           }
         } on PlatformException catch (e) {
           if (e.code == bar.BarcodeScanner.CameraAccessDenied) {
             setState(() {
-              this.meterBarcode =
-                  'The user did not grant the camera permission!';
+              this.meterBarcode = Tran.of(context).text("user_not_grant");
             });
           } else {
-            setState(() => this.meterBarcode = 'Unknown error: $e');
+            setState(() => this.meterBarcode =
+                '${Tran.of(context).text("unknown_str")}: $e');
           }
         } on FormatException {
           setState(() => this.meterBarcode =
               'null (User returned using the "back"-button before scanning anything. Result)');
         } catch (e) {
-          setState(() => this.meterBarcode = 'Unknown error: $e');
+          setState(() => this.meterBarcode =
+              '${Tran.of(context).text("unknown_str")}: $e');
         }
         // try {
         //   String codeSanner = await BarcodeScanner.scan().then((value) {

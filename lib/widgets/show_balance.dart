@@ -148,7 +148,7 @@ class ShowBalance extends StatelessWidget {
             ],
           );
         } else {
-          return Text("No data found");
+          return Text(Tran.of(context).text("no_data_found"));
         }
       },
     );

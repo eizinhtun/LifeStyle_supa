@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/utils/validator.dart';
@@ -101,7 +102,10 @@ class _ScanQRDataState extends State<ScanQRData> {
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     color: Colors.grey))
-                                            : Text("loading..."),
+                                            : Text(
+                                                Tran.of(context)
+                                                    .text("loading"),
+                                              ),
                                       ),
                                       Container(
                                         child: Form(
@@ -125,11 +129,11 @@ class _ScanQRDataState extends State<ScanQRData> {
                                                     keyboardType:
                                                         TextInputType.number,
                                                     validator: (val) {
-                                                      return Validator
-                                                          .requiredField(
-                                                              context,
-                                                              val,
-                                                              "transfer amount");
+                                                      return Validator.requiredField(
+                                                          context,
+                                                          val,
+                                                          Tran.of(context).text(
+                                                              "transfer_amount"));
                                                     },
                                                     decoration: InputDecoration(
                                                       border:

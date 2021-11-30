@@ -129,111 +129,6 @@ class WalletState extends State<Wallet> {
               padding: EdgeInsets.only(left: 20, right: 20, bottom: 0, top: 10),
               alignment: Alignment.bottomCenter,
               color: Colors.transparent,
-              // child: StreamBuilder(
-              //   stream: db
-              //       .collection(userCollection)
-              //       .doc(FirebaseAuth.instance.currentUser.uid)
-              //       .snapshots(),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return Center(
-              //         child: CupertinoActivityIndicator(),
-              //       );
-              //     } else if (snapshot.hasData) {
-              //       UserModel _user = UserModel.fromJson(snapshot.data.data());
-              //       return Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           TextButton.icon(
-              //               onPressed: () {
-              //                 db
-              //                     .collection(userCollection)
-              //                     .doc(FirebaseAuth.instance.currentUser.uid)
-              //                     .update({"showBalance": !_user.showBalance});
-              //               },
-              //               icon: Icon(
-              //                 Icons.account_balance_wallet,
-              //                 color: Colors.black38,
-              //                 size: 35,
-              //               ),
-              //               label: Row(
-              //                 children: [
-              //                   Text(
-              //                     "${_user.showBalance ? Formatter.balanceFormat(_user.balance) : Formatter.balanceFormat(_user.balance)} ${Tran.of(context).text("ks")}",
-              //                     style: TextStyle(
-              //                         fontWeight: FontWeight.bold,
-              //                         fontSize: 16,
-              //                         color: Colors.black),
-              //                   ),
-              //                   InkWell(
-              //                     child: Padding(
-              //                       padding: const EdgeInsets.all(8.0),
-              //                       child: Icon(
-              //                         _user.showBalance
-              //                             ? Icons.visibility
-              //                             : Icons.visibility_off,
-              //                         size: 15,
-              //                       ),
-              //                     ),
-              //                   ),
-              //                 ],
-              //               )
-              //           ),
-              //
-              //
-              //           /* Expanded(
-              //       child: ElevatedButton(
-              //           style: ElevatedButton.styleFrom(
-              //               // primary: Colors.white,
-              //               padding: EdgeInsets.only(
-              //             left: 15,
-              //             right: 15,
-              //             top: 10,
-              //             bottom: 10,
-              //           ) // foreground
-              //               ),
-              //           onPressed: () {
-              //             Navigator.of(context).push(MaterialPageRoute(
-              //                 builder: (contex) => TopUpPage()));
-              //           },
-              //           child: Row(
-              //             children: [
-              //               Icon(Icons.cached),
-              //               SizedBox(width: 5),
-              //               Text("Top Up"),
-              //             ],
-              //           )),
-              //     ),
-              //     SizedBox(width: 5),
-              //     Expanded(
-              //       child: ElevatedButton(
-              //           style: ElevatedButton.styleFrom(
-              //               padding: EdgeInsets.only(
-              //             left: 15,
-              //             right: 15,
-              //             top: 10,
-              //             bottom: 10,
-              //           ) // foreground
-              //               ),
-              //           onPressed: () {
-              //             Navigator.of(context).push(MaterialPageRoute(
-              //                 builder: (contex) => WithdrawalPage()));
-              //           },
-              //           child: Row(
-              //             children: [
-              //               Icon(Icons.payments),
-              //               SizedBox(width: 5),
-              //               Text("Withdrawal"),
-              //             ],
-              //           )),
-              //     ),*/
-              //         ],
-              //       );
-              //     } else {
-              //       return Text("No data found");
-              //     }
-              //   },
-              // ),
               child: ShowBalance(
                 color: Colors.black,
                 // showIconColor:
@@ -268,19 +163,31 @@ class WalletState extends State<Wallet> {
                     builder: (BuildContext context, LoadStatus mode) {
                       Widget body;
                       if (mode == LoadStatus.idle) {
-                        body = Center(child: Text("pull up load"));
+                        body = Center(
+                            child: Text(
+                          Tran.of(context).text("pull_up_load"),
+                        ));
                         return body;
                       } else if (mode == LoadStatus.loading) {
                         body = Center(child: CupertinoActivityIndicator());
                         return body;
                       } else if (mode == LoadStatus.failed) {
-                        body = Center(child: Text("Load Failed!Click retry!"));
+                        body = Center(
+                          child: Text(
+                            Tran.of(context).text("load_failed"),
+                          ),
+                        );
                         return body;
                       } else if (mode == LoadStatus.canLoading) {
-                        body = Center(child: Text("release to load more"));
+                        body = Center(
+                          child: Text(
+                            Tran.of(context).text("release_to_load"),
+                          ),
+                        );
                         return body;
                       } else {
-                        body = Center(child: Text("No more Data"));
+                        body = Center(
+                            child: Text(Tran.of(context).text("no_more_data")));
                         return body;
                       }
                       /*  if (tracList.length == end) {

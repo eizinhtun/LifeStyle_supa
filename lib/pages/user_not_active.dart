@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -22,14 +23,14 @@ class _UserNotActiveScreenState extends State<UserNotActiveScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "The user is not active.",
+                  Tran.of(context).text("user_not_active"),
                   style: TextStyle(fontSize: 20, color: Colors.pink),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "Login with another acount OR Contact Admin",
+                  Tran.of(context).text("login_with_another"),
                   style: TextStyle(fontSize: 14, color: Colors.pink),
                 ),
                 SizedBox(
@@ -40,7 +41,7 @@ class _UserNotActiveScreenState extends State<UserNotActiveScreen> {
                     await context.read<LoginProvider>().logOut(context);
                   },
                   child: Text(
-                    "Log out",
+                    Tran.of(context).text("log_out"),
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),

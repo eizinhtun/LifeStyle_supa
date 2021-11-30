@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:provider/provider.dart';
@@ -134,7 +135,8 @@ class _GenerateQRState extends State<GenerateQR> {
                                           Container(
                                             margin: EdgeInsets.only(
                                                 top: 20, bottom: 20),
-                                            child: Text("Scan to pay"),
+                                            child: Text(Tran.of(context)
+                                                .text("scan_to_pay")),
                                           ),
                                           Container(
                                             margin: EdgeInsets.only(bottom: 50),
@@ -150,7 +152,11 @@ class _GenerateQRState extends State<GenerateQR> {
                                 ),
                               ),
                             )
-                          : Container(child: Text("loading..."))
+                          : Container(
+                              child: Text(
+                                Tran.of(context).text("loading"),
+                              ),
+                            ),
                     ],
                   ),
                 ),

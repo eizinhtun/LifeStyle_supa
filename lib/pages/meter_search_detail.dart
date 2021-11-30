@@ -223,7 +223,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           Text(
                                             NumberFormat('#,###,000').format(
                                                     widget.obj.lastReadUnit) +
-                                                " Unit",
+                                                " " +
+                                                Tran.of(context).text("unit"),
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.w600),
@@ -328,7 +329,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "Read Date",
+                                        Tran.of(context).text("read_date"),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
@@ -363,7 +364,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                 //           EdgeInsets.only(top: 0, bottom: 5),
                                 //       alignment: Alignment.centerLeft,
                                 //       child: Text(
-                                //         "Last Date",
+                                //        Tran.of(context).text("last_date"),
+                                //"Last Date",
                                 //         style: TextStyle(
                                 //             fontWeight: FontWeight.bold,
                                 //             color: Colors.black87,
@@ -398,7 +400,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "Due Date",
+                                        Tran.of(context).text("due_date"),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
@@ -443,7 +445,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "Horse Power",
+                                        Tran.of(context).text("horse_power"),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
@@ -476,7 +478,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "Horse Power Cost",
+                                        Tran.of(context)
+                                            .text("horse_power_cost"),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
@@ -488,7 +491,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "${widget.obj.horsePowerCost} Kyat",
+                                        "${widget.obj.horsePowerCost} " +
+                                            Tran.of(context).text("kyat"),
                                         // NumberFormat('#,###,000').format(
                                         //         widget.obj.horsePowerCost) +
                                         //     " Kyat",
@@ -519,7 +523,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "Charge Per Unit",
+                                        Tran.of(context)
+                                            .text("charge_per_unit"),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
@@ -531,7 +536,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "${widget.obj.chargePerUnit} Kyat",
+                                        "${widget.obj.chargePerUnit} " +
+                                            Tran.of(context).text("kyat"),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -552,7 +558,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           EdgeInsets.only(top: 0, bottom: 5),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "Maintainence Cost",
+                                        Tran.of(context)
+                                            .text("maintainence_cost"),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
@@ -566,7 +573,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       child: Text(
                                         NumberFormat('#,###,000').format(
                                                 widget.obj.maintainenceCost) +
-                                            " Kyat",
+                                            " " +
+                                            Tran.of(context).text("kyat"),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
@@ -600,7 +608,8 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           primary: Colors.white, // background
                                           onPrimary: Colors.white, // foreground
                                         ),
-                                        child: new Text('Close',
+                                        child: new Text(
+                                            Tran.of(context).text("close"),
                                             style: new TextStyle(
                                                 fontSize: 16.0,
                                                 color: Colors.black54)),
@@ -629,9 +638,11 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                               await checkExist();
                                           if (isMeterExist) {
                                             MessageHandler.showMessage(
-                                                context,
-                                                "",
-                                                "This Meter is already added");
+                                              context,
+                                              "",
+                                              Tran.of(context)
+                                                  .text("already_meter"),
+                                            );
                                             return;
                                           }
                                           showMeterRemarkDialog(context);
@@ -684,7 +695,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                     // Text("Enter Password", style: TextStyle(fontSize: 16)),
                     Center(
                       child: Text(
-                        "Enter Your Meter Remark",
+                        Tran.of(context).text("enter_meter_remark"),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -816,7 +827,10 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           }
                                         }
                                       },
-                                child: Text("Submit")),
+                                child: Text(
+                                  Tran.of(context).text("submit"),
+                                ),
+                              ),
                       ],
                     ),
                   ],

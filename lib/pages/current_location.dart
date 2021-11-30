@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/user_location.dart';
 import 'package:left_style/services/location_service.dart';
 // import 'package:location/location.dart';
@@ -106,7 +107,9 @@ class HomeView extends StatelessWidget {
     var userLocation = Provider.of<UserLocation>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Current Location"),
+        title: Text(
+          Tran.of(context).text("current_location"),
+        ),
         centerTitle: true,
       ),
       body: Container(

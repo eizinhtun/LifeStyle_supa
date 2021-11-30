@@ -79,7 +79,7 @@ class _PayBillPageState extends State<PayBillPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Read Date :",
+                              Tran.of(context).text("read_date") + " :",
                               style: style,
                             ),
                             Text(
@@ -112,13 +112,14 @@ class _PayBillPageState extends State<PayBillPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Meter Unit :",
+                              Tran.of(context).text("meter_unit") + " :",
                               style: style,
                             ),
                             Text(
                               NumberFormat('#,###,000')
                                       .format(widget.bill.unitsToPay) +
-                                  " Unit",
+                                  " " +
+                                  Tran.of(context).text("unit"),
                               style: style,
                             ),
                           ],
@@ -137,13 +138,14 @@ class _PayBillPageState extends State<PayBillPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Meter Bill :",
+                              Tran.of(context).text("meter_bill") + " :",
                               style: style,
                             ),
                             Text(
                               NumberFormat('#,###,000')
                                       .format(widget.bill.totalCost) +
-                                  " Ks",
+                                  " " +
+                                  Tran.of(context).text("ks"),
                               style: style,
                             ),
                           ],
@@ -169,7 +171,7 @@ class _PayBillPageState extends State<PayBillPage> {
                         //       context, val.toString(), "Remark");
                         // },
                         decoration: InputDecoration(
-                          labelText: "Enter your remark",
+                          labelText: Tran.of(context).text("enter_remark"),
                           // hintText: "Enter your remark",
                           // hintStyle: TextStyle(),
                           contentPadding: EdgeInsets.all(16),
@@ -249,7 +251,7 @@ class _PayBillPageState extends State<PayBillPage> {
                   children: [
                     Center(
                       child: Text(
-                        "Enter Your Password",
+                        Tran.of(context).text("enter_password"),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -266,8 +268,8 @@ class _PayBillPageState extends State<PayBillPage> {
                       keyboardType: TextInputType.text,
                       obscureText: _obscureText,
                       validator: (val) {
-                        return Validator.password(
-                            context, val.toString(), "Password", true);
+                        return Validator.password(context, val.toString(),
+                            Tran.of(context).text("password"), true);
                       },
                       decoration: InputDecoration(
                         labelText: "${Tran.of(context)?.text('password')}",
@@ -317,7 +319,7 @@ class _PayBillPageState extends State<PayBillPage> {
                           child: Container(
                             padding: EdgeInsets.all(12),
                             child: Text(
-                              "Close",
+                              Tran.of(context)?.text("close"),
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.bold,
@@ -343,7 +345,7 @@ class _PayBillPageState extends State<PayBillPage> {
                           child: Container(
                             padding: EdgeInsets.all(12),
                             child: Text(
-                              "Confirm",
+                              Tran.of(context)?.text("confirm"),
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.bold,
@@ -353,18 +355,13 @@ class _PayBillPageState extends State<PayBillPage> {
                           ),
                           onPressed: () async {
                             if (_pwformKey.currentState.validate()) {
-                              // widget.bill.isPaid = true;
                               widget.bill.remark = _remarkController.text;
-                              widget.bill.status = "Paid";
                               widget.bill.payDate =
                                   Timestamp.fromDate(DateTime.now());
-
-                              bool isSuccess = await context
+                              await context
                                   .read<WalletProvider>()
                                   .payMeterBill(context, widget.bill);
                               Navigator.of(context).pop();
-                              if (isSuccess) {
-                              } else {}
                             }
                           },
                         ),

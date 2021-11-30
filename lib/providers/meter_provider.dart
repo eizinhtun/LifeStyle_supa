@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/meter_model.dart';
 import 'package:left_style/utils/message_handler.dart';
 
@@ -19,8 +20,8 @@ class MeterProvider with ChangeNotifier, DiagnosticableTreeMixin {
         notifyListeners();
         return true;
       } catch (e) {
-        MessageHandler.showErrMessage(
-            context, "Fail", "Updating User Info is fail");
+        MessageHandler.showErrMessage(context, Tran.of(context).text("fail"),
+            Tran.of(context).text("update_user_fail"));
         return false;
       }
     }
@@ -42,7 +43,8 @@ class MeterProvider with ChangeNotifier, DiagnosticableTreeMixin {
           });
         });
       } catch (e) {
-        // MessageHandler.showErrMessage(context, "Fail", "Get meter list fail");
+        MessageHandler.showErrMessage(context, Tran.of(context).text("fail"),
+            Tran.of(context).text("get_meter_fail"));
       }
     }
     notifyListeners();

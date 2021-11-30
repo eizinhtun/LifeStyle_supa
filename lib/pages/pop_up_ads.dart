@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/intro_model.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:provider/provider.dart';
@@ -162,7 +163,7 @@ class BetConfirmPageState extends State<PopupIntroModelPage>
                                       right: 0,
                                     ),
                                     child: Text(
-                                      "Skip",
+                                      Tran.of(context).text("skip"),
                                       style: TextStyle(
                                           color: Theme.of(context).primaryColor,
                                           // Colors.white,
