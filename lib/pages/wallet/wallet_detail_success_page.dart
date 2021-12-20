@@ -29,7 +29,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
   Widget build(BuildContext context) {
     //Locale myLocale = Localizations.localeOf(context);
 
-    return new Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: AppBar(
@@ -59,7 +59,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                   margin: const EdgeInsets.all(0.0),
                   width: ScreenUtil().setSp(900), //
                   //height:ScreenUtil().setSp(2100),//
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                       top: 10.0, left: 8.0, right: 8.0, bottom: 0.0),
                   child: Container(
                     child: Column(
@@ -69,7 +69,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                           children: [
                             Container(
                               color: Colors.transparent,
-                              margin: EdgeInsets.only(bottom: 5),
+                              margin: const EdgeInsets.only(bottom: 5),
                               alignment: Alignment.center,
                               width: 60,
                               height: 60,
@@ -124,7 +124,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                         ),
                         SizedBox(height: 20),
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
                             children: [
                               Row(
@@ -204,7 +204,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
                                 borderRadius: BorderRadius.circular(25),
                               ),
                               primary: Colors.white24,
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                 left: 30,
                                 right: 30,
                                 top: 10,
@@ -274,7 +274,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
             borderRadius: BorderRadius.circular(25),
           ),
           primary: Colors.white24,
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 30,
             right: 30,
             top: 10,
@@ -295,7 +295,7 @@ class _WalletDetailSuccessPageState extends State<WalletDetailSuccessPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25),
             ),
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 30,
               right: 30,
               top: 10,

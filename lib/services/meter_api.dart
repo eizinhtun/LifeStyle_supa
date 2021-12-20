@@ -8,13 +8,13 @@ import 'package:left_style/utils/network_util.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/models/meter_model.dart';
 import 'package:left_style/models/meter_page_obj.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 
 class MeterApi {
   BuildContext context;
   MeterApi(this.context);
 
-  NetworkUtil _netUtil = new NetworkUtil();
+  NetworkUtil _netUtil = NetworkUtil();
 
   Future<MeterPageObj> searchMeter({
     String apiUrl,
@@ -32,7 +32,7 @@ class MeterApi {
     http.Response response = await _netUtil.get(this.context, url, null);
     if (response != null) {
       if (response.statusCode == 200) {
-        MeterPageObj objpage = new MeterPageObj();
+        MeterPageObj objpage = MeterPageObj();
         objpage.rowCount = 0;
         var obj = json.decode(response.body);
         if (obj != null) {
@@ -49,7 +49,7 @@ class MeterApi {
           return objpage;
         } else {
           var errorMsg = obj["message"];
-          MessageHandler.showMessage(context, "Error", errorMsg);
+          ShowMessageHandler.showMessage(context, "Error", errorMsg);
           return null;
         }
       }

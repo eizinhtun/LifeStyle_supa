@@ -2,7 +2,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,9 +18,8 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/validator.dart';
 import 'package:left_style/widgets/code_painter.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:left_style/utils/message_handler.dart' as myMsg;
+import 'package:left_style/utils/show_message_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class EditUserProfilePage extends StatefulWidget {
@@ -64,7 +62,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
   // }
 
   Future<void> updateUser(UserModel model) async {
-    UserModel oldUserModel = new UserModel();
+    UserModel oldUserModel = UserModel();
 
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
@@ -88,13 +86,15 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
               .update(oldUserModel.toJson());
           Navigator.pop(context, true);
 
-          myMsg.MessageHandler.showMessage(
-              context, "", Tran.of(context).text("success_added"));
-        } catch (e) {
-          myMsg.MessageHandler.showErrMessage(
+          ShowMessageHandler.showMessage(
               context,
-              Tran.of(context).text("fail"),
-              Tran.of(context).text("user_update_success"));
+              Tran.of(context).text("updated_success"),
+              Tran.of(context).text("user_updated_success"));
+        } catch (e) {
+          ShowMessageHandler.showErrMessage(
+              context,
+              Tran.of(context).text("update_fail"),
+              Tran.of(context).text("user_update_fail"));
           setState(() {
             _submiting = false;
           });
@@ -107,9 +107,9 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
       //       .set(model.toJson());
       //   Navigator.pop(context, true);
       //   // Navigator.pop(contexts, true);
-      //   myMsg.MessageHandler.showMessage(context, "", "Successfully added");
+      //   ShowMessageHandler.showMessage(context, "", "Successfully added");
       // } catch (e) {
-      //   myMsg.MessageHandler.showErrMessage(
+      //   ShowMessageHandler.showErrMessage(
       //       context, "fail", "User Update Successfully");
       //   setState(() {
       //     _submiting = false;
@@ -155,14 +155,14 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
   //     try {
   //       FirebaseFirestore.instance.collection(userCollection).doc(uid).set(user.toJson()).then((value) {
   //
-  //         MessageHandler.showMessage(
+  //         ShowMessageHandler.showMessage(
   //             context, "Success", "Updating User Info is successful");
   //       });
   //
   //       notifyListeners();
   //     } catch (e) {
   //
-  //       MessageHandler.showErrMessage(
+  //       ShowMessageHandler.showErrMessage(
   //           context, "Fail", "Updating User Info is fail");
   //     }
   //   }
@@ -187,8 +187,8 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                     floating: false,
                     expandedHeight: 0.0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.vertical(
-                        bottom: new Radius.elliptical(200, 30
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.elliptical(200, 30
                             // 56.0
                             ),
                       ),
@@ -200,8 +200,8 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                   ),
                   SliverToBoxAdapter(
                     child: Container(
-                        margin: EdgeInsets.only(top: 90),
-                        padding: EdgeInsets.all(20),
+                        margin: const EdgeInsets.only(top: 90),
+                        padding: const EdgeInsets.all(20),
                         child: Form(
                           key: _formKey,
                           child: Column(
@@ -229,7 +229,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                               //   height: 10,
                               // ),
                               // Container(
-                              //   padding: EdgeInsets.all(4),
+                              //   padding: const EdgeInsets.all(4),
                               //   child: Center(
                               //     child: _previewImages(),
                               //   ),
@@ -242,16 +242,16 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                 controller: _nameController,
                                 keyboardType: TextInputType.text,
                                 validator: (val) {
-                                  return Validator.requiredField(
-                                      context, val, '');
+                                  return Validator.userName(context, val,
+                                      Tran.of(context).text("full_name"), true);
                                 },
                                 decoration: InputDecoration(
                                   labelText: Tran.of(context).text("full_name"),
-                                  // contentPadding: EdgeInsets.all(16),
+                                  // contentPadding: const EdgeInsets.all(16),
                                 ),
                                 // decoration: InputDecoration(
                                 //   labelText: "Name",
-                                //   labelStyle: TextStyle(),
+                                //   labelStyle: const TextStyle(),
                                 //   border: OutlineInputBorder(
                                 //     borderSide: BorderSide(
                                 //       color: Colors.black12,
@@ -261,7 +261,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                 //     borderSide: BorderSide(
                                 //         color: Theme.of(context).primaryColor),
                                 //   ),
-                                //   contentPadding: EdgeInsets.symmetric(
+                                //   contentPadding: const EdgeInsets.symmetric(
                                 //       horizontal: 20, vertical: 12),
                                 // ),
                               ),
@@ -276,12 +276,12 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                 controller: _addressController,
                                 keyboardType: TextInputType.text,
                                 validator: (val) {
-                                  return Validator.requiredField(
-                                      context, val, '');
+                                  return Validator.requiredField(context, val,
+                                      Tran.of(context).text("address"));
                                 },
                                 decoration: InputDecoration(
                                   labelText: Tran.of(context).text("address"),
-                                  labelStyle: TextStyle(),
+                                  labelStyle: const TextStyle(),
                                   // border: OutlineInputBorder(
                                   //   borderSide: BorderSide(
                                   //     color: Colors.black12,
@@ -291,7 +291,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                   //   borderSide: BorderSide(
                                   //       color: Theme.of(context).primaryColor),
                                   // ),
-                                  // contentPadding: EdgeInsets.symmetric(
+                                  // contentPadding: const EdgeInsets.symmetric(
                                   //     horizontal: 20, vertical: 12),
                                 ),
                               ),
@@ -318,7 +318,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                         setState(() {});
                                       },
                                       child: Container(
-                                          padding: EdgeInsets.all(12),
+                                          padding: const EdgeInsets.all(12),
                                           child: Text(
                                               Tran.of(context).text("cancel"))),
                                     ),
@@ -346,17 +346,26 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                               onPressed: _submiting
                                                   ? null
                                                   : () async {
-                                                      if (file == null) {
-                                                        myMsg.MessageHandler.showErrMessage(
-                                                            context,
-                                                            Tran.of(context).text(
-                                                                "pic_required"),
-                                                            Tran.of(context).text(
-                                                                "pic_required_str"));
-                                                        return;
-                                                      }
+                                                      // if (file == null) {
+                                                      //   ShowMessageHandler.showErrMessage(
+                                                      //       context,
+                                                      //       Tran.of(context).text(
+                                                      //           "pic_required"),
+                                                      //       Tran.of(context).text(
+                                                      //           "pic_required_str"));
+                                                      //   return;
+                                                      // }
                                                       if (_formKey.currentState
                                                           .validate()) {
+                                                        if (file == null) {
+                                                          ShowMessageHandler.showErrMessage(
+                                                              context,
+                                                              Tran.of(context).text(
+                                                                  "pic_required"),
+                                                              Tran.of(context).text(
+                                                                  "pic_required_str"));
+                                                          return;
+                                                        }
                                                         setState(() {
                                                           _submiting = true;
                                                           if (file != null) {
@@ -366,7 +375,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                                         });
 
                                                         UserModel model =
-                                                            new UserModel();
+                                                            UserModel();
 
                                                         model.fullName =
                                                             _nameController
@@ -404,7 +413,8 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                                                       }
                                                     },
                                               child: Container(
-                                                  padding: EdgeInsets.all(12),
+                                                  padding:
+                                                      const EdgeInsets.all(12),
                                                   child: Text(Tran.of(context)
                                                       .text("save")))),
                                         )
@@ -420,7 +430,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
               // Align(
               //   alignment: Alignment.topCenter,
               //   child: Container(
-              //     margin: EdgeInsets.only(top: 60),
+              //     margin: const EdgeInsets.only(top: 60),
               //     height: 120,
               //     width: 120,
               //     child: Stack(
@@ -473,9 +483,9 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            actionsPadding: EdgeInsets.all(10),
+            actionsPadding: const EdgeInsets.all(10),
             title: Center(
-              child: new Text(
+              child: Text(
                 Tran.of(context).text("want_save_qr"),
               ),
             ),
@@ -495,12 +505,15 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                     ),
                   ),
                   onPressed: () {
-                    // setState(() {});
                     _saveQrImage();
                     Navigator.of(context).pop();
+                    ShowMessageHandler.showErrMessage(
+                        context,
+                        Tran.of(context).text("success"),
+                        Tran.of(context).text("qr_save_success"));
                   },
                   child: Container(
-                    padding: EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(14),
                     child: Text(
                       Tran.of(context).text("yes"),
                       style: TextStyle(
@@ -529,7 +542,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
                     Navigator.of(context).pop();
                   },
                   child: Container(
-                    padding: EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(14),
                     child: Text(
                       Tran.of(context).text("no"),
                       style: TextStyle(
@@ -622,7 +635,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
   //       Align(
   //         alignment: Alignment.topCenter,
   //         child: Container(
-  //           margin: EdgeInsets.only(top: 60),
+  //           margin: const EdgeInsets.only(top: 60),
   //           height: 120,
   //           width: 120,
   //           child: Stack(
@@ -718,7 +731,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
   //   } else {
   //     return ElevatedButton(
   //         style: ElevatedButton.styleFrom(
-  //           padding: EdgeInsets.only(
+  //           padding: const EdgeInsets.only(
   //             left: 15,
   //             right: 15,
   //             top: 10,
@@ -729,7 +742,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
   //         child: Row(
   //           children: [
   //             Padding(
-  //               padding: EdgeInsets.only(right: 10),
+  //               padding: const EdgeInsets.only(right: 10),
   //               child: Icon(
   //                 Icons.photo,
   //                 color: Colors.white,
@@ -747,7 +760,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
       return Align(
         alignment: Alignment.topCenter,
         child: Container(
-          margin: EdgeInsets.only(top: 60),
+          margin: const EdgeInsets.only(top: 60),
           height: 120,
           width: 120,
           child: Stack(
@@ -853,7 +866,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
       return Align(
         alignment: Alignment.topCenter,
         child: Container(
-          margin: EdgeInsets.only(top: 60),
+          margin: const EdgeInsets.only(top: 60),
           height: 120,
           width: 120,
           child: Stack(
@@ -905,7 +918,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
     // else {
     //   return ElevatedButton(
     //       style: ElevatedButton.styleFrom(
-    //         padding: EdgeInsets.only(
+    //         padding: const EdgeInsets.only(
     //           left: 15,
     //           right: 15,
     //           top: 10,
@@ -916,7 +929,7 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
     //       child: Row(
     //         children: [
     //           Padding(
-    //             padding: EdgeInsets.only(right: 10),
+    //             padding: const EdgeInsets.only(right: 10),
     //             child: Icon(
     //               Icons.photo,
     //               color: Colors.white,

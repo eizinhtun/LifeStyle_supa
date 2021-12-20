@@ -52,8 +52,8 @@ class UserInfoScreenPhoto extends StatelessWidget {
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.white, width: 3.0),
-                          borderRadius: new BorderRadius.all(
-                              const Radius.circular(100.0)),
+                          borderRadius:
+                              BorderRadius.all(const Radius.circular(100.0)),
                           image: DecorationImage(
                               image: imageProvider,
                               fit: BoxFit.cover,
@@ -79,7 +79,7 @@ class UserInfoScreenPhoto extends StatelessWidget {
                       child: Center(
                         child: Text(
                           name,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 20),

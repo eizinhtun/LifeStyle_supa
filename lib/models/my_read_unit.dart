@@ -44,7 +44,7 @@ class MyReadUnit {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['uid'] = this.uid;
     data['meterNo'] = this.meterNo;
     data['consumerName'] = this.consumerName;

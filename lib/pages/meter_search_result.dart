@@ -8,16 +8,16 @@ import 'package:left_style/models/meter_model.dart';
 import 'package:left_style/models/meter_page_obj.dart';
 import 'package:left_style/pages/meter_search_detail.dart';
 import 'package:left_style/providers/meter_presenter.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 
 class MeterSearchResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      home: new MeterSearchResultPage(),
+      home: MeterSearchResultPage(),
     );
   }
 }
@@ -29,7 +29,7 @@ class MeterSearchResultPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  MeterSearchResultPageState createState() => new MeterSearchResultPageState();
+  MeterSearchResultPageState createState() => MeterSearchResultPageState();
 }
 
 class MeterSearchResultPageState extends State<MeterSearchResultPage>
@@ -53,8 +53,8 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
   void initState() {
     super.initState();
 
-    _presenter = new MeterPresenter(this, context);
-    _controllerSearch = new TextEditingController();
+    _presenter = MeterPresenter(this, context);
+    _controllerSearch = TextEditingController();
     apiUrl = widget.apiUrl;
     if (widget.apiUrl != null && widget.searchKey != null) {
       _controllerSearch.text = widget.searchKey;
@@ -106,7 +106,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
@@ -158,7 +158,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                         //labelText: "Search",
                         hintText: Tran.of(context).text("search"),
                         prefixIcon: Icon(Icons.search),
-                        contentPadding: EdgeInsets.all(0.0),
+                        contentPadding: const EdgeInsets.all(0.0),
                         border: OutlineInputBorder(
                             borderSide: const BorderSide(width: 0.0),
                             gapPadding: 0,
@@ -166,14 +166,14 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                 BorderRadius.all(Radius.circular(30.0)))),
                   ),
                 ),
-                /* new Divider(
+                /* Divider(
                   height: 1.0,
                   color: Colors.grey.withOpacity(0.3),
                 ),*/
                 Expanded(
                   flex: 3,
                   child: Container(
-                    padding: EdgeInsets.all(0.0),
+                    padding: const EdgeInsets.all(0.0),
                     child: Column(
                       children: [
                         Expanded(
@@ -199,7 +199,8 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                       if (mode == LoadStatus.idle) {
                                         body = Text(
                                           Tran.of(context).text("loadMore"),
-                                          style: TextStyle(color: Colors.grey),
+                                          style: const TextStyle(
+                                              color: Colors.grey),
                                         );
                                       } else if (mode == LoadStatus.loading) {
                                         body = CupertinoActivityIndicator();
@@ -218,7 +219,8 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                           items.length >= _page.rowCount) {
                                         body = Text(
                                           Tran.of(context).text("noMoreData"),
-                                          style: TextStyle(color: Colors.grey),
+                                          style: const TextStyle(
+                                              color: Colors.grey),
                                         );
                                       }
                                       return Container(
@@ -233,7 +235,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                   child: ListView.builder(
                                     itemCount: items.length,
                                     itemBuilder: (context, index) => Card(
-                                      margin: EdgeInsets.only(
+                                      margin: const EdgeInsets.only(
                                           top: 7, left: 5, right: 5, bottom: 5),
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
@@ -248,18 +250,19 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          new MeterSearchDetailPage(
+                                                          MeterSearchDetailPage(
                                                               obj: items[
                                                                   index])));
                                               if (result != null && result) {
                                                 Navigator.of(context).pop(true);
                                               }
                                             },
-                                            contentPadding: EdgeInsets.only(
-                                                top: 0.0,
-                                                left: 0.0,
-                                                right: 0.0,
-                                                bottom: 0.0),
+                                            contentPadding:
+                                                const EdgeInsets.only(
+                                                    top: 0.0,
+                                                    left: 0.0,
+                                                    right: 0.0,
+                                                    bottom: 0.0),
                                             leading: Container(
                                               padding:
                                                   EdgeInsets.only(left: 10),
@@ -272,7 +275,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                               ),
                                               width: 60,
                                               height: 60,
-                                              child: new CircleAvatar(
+                                              child: CircleAvatar(
                                                 radius: 100.0,
                                                 // backgroundColor:MyTheme.getPrimaryColor(),
                                                 //backgroundImage: MeScreenState.fileAvatar!=null?
@@ -293,7 +296,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
                                                   items[index].meterNo,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontSize: 15,
                                                       fontWeight:
                                                           FontWeight.bold),
@@ -307,7 +310,9 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                                 Container(
                                                   padding:
                                                       EdgeInsets.only(top: 5),
-                                                  child: Text("insertDate"
+                                                  child: Text(
+                                                      items[index].insertDate
+
                                                       // Formatter.getDate(
                                                       //     items[index]
                                                       //         .insertDate
@@ -319,7 +324,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                                   items[index].customerId +
                                                       " : " +
                                                       items[index].categoryName,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       color: Colors.black,
                                                       fontWeight:
                                                           FontWeight.w600),
@@ -356,7 +361,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                                               " " +
                                                               Tran.of(context)
                                                                   .text("unit"),
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                               color:
                                                                   Colors.black,
                                                               fontWeight:
@@ -391,7 +396,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                           ),
                                           Container(
                                               alignment: Alignment.centerLeft,
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                   left: 20,
                                                   top: 5,
                                                   bottom: 10,
@@ -399,8 +404,9 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                               child: Column(
                                                 children: [
                                                   Container(
-                                                    padding: EdgeInsets.only(
-                                                        top: 5, bottom: 5),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 5, bottom: 5),
                                                     alignment:
                                                         Alignment.centerLeft,
                                                     child: Text(
@@ -408,7 +414,7 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
                                                               .consumerName +
                                                           " - " +
                                                           items[index].houseNo,
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.red,
                                                           fontSize: 13),
                                                     ),
@@ -477,15 +483,18 @@ class MeterSearchResultPageState extends State<MeterSearchResultPage>
         _onFirstLoading = false;
       });
 
-      // _scaffoldKey.currentState.
-      ScaffoldMessenger.maybeOf(context).showSnackBar(new SnackBar(
+      // _scaffoldKey.currentState.showSnackBar(SnackBar(
+      //     backgroundColor: Colors.red,
+      //     content: Text(Tran.of(context).text(text))));
+
+      ScaffoldMessenger.maybeOf(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
-          content: new Text(Tran.of(context).text(text))));
+          content: Text(Tran.of(context).text(text))));
     }
   }
 
   @override
   void showMessage(String text) {
-    MessageHandler.showMessage(context, "", text);
+    ShowMessageHandler.showSnackbar(text, context, 3);
   }
 }

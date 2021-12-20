@@ -12,7 +12,7 @@ class MyLocalizationsDelegate extends LocalizationsDelegate<Tran> {
 
   @override
   Future<Tran> load(Locale locale) async {
-    Tran localizations = new Tran(locale);
+    Tran localizations = Tran(locale);
     await localizations.load();
 
     //
@@ -24,7 +24,7 @@ class MyLocalizationsDelegate extends LocalizationsDelegate<Tran> {
   bool shouldReload(MyLocalizationsDelegate old) => false;
   // @override
   // Future<Tran> load(Locale locale) async {
-  //   Tran localizations = new Tran(locale);
+  //   Tran localizations = Tran(locale);
   //   await localizations.load();
   //
   //   return localizations;

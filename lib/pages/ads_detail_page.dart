@@ -1,10 +1,8 @@
 // @dart=2.9
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/ads_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class AdsDetailPage extends StatefulWidget {
@@ -12,7 +10,7 @@ class AdsDetailPage extends StatefulWidget {
   final String id;
 
   @override
-  _AdsDetailPage createState() => new _AdsDetailPage();
+  _AdsDetailPage createState() => _AdsDetailPage();
 }
 
 class _AdsDetailPage extends State<AdsDetailPage> {
@@ -53,10 +51,10 @@ class _AdsDetailPage extends State<AdsDetailPage> {
                 color: Theme.of(context).primaryColor,
               ),
             )
-          : new Container(
-              margin: EdgeInsets.only(top: 0.0, right: 0, left: 0),
-              padding:
-                  EdgeInsets.only(bottom: 20.0, left: 10, right: 10, top: 20),
+          : Container(
+              margin: const EdgeInsets.only(top: 0.0, right: 0, left: 0),
+              padding: const EdgeInsets.only(
+                  bottom: 20.0, left: 10, right: 10, top: 20),
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(
                 child: Html(
@@ -72,11 +70,11 @@ class _AdsDetailPage extends State<AdsDetailPage> {
           border: Border(bottom: BorderSide(color: Colors.grey)),
         ),
         "th": Style(
-          padding: EdgeInsets.all(6),
+          padding: const EdgeInsets.all(6),
           backgroundColor: Colors.grey,
         ),
         "td": Style(
-          padding: EdgeInsets.all(6),
+          padding: const EdgeInsets.all(6),
           alignment: Alignment.topLeft,
         ),
         'h5': Style(maxLines: 2, textOverflow: TextOverflow.ellipsis),

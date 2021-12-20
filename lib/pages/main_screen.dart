@@ -1,18 +1,23 @@
 // @dart=2.9
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:left_style/datas/constants.dart';
+import 'package:left_style/datas/data_key_name.dart';
+import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/meter_model.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/pages/me_page.dart';
-import 'package:left_style/providers/meter_provider.dart';
-import 'package:left_style/providers/noti_provider.dart';
-import 'package:provider/provider.dart';
-
+import 'package:left_style/utils/show_message_handler.dart';
+import 'package:upgrader/upgrader.dart';
 import 'explore_page.dart';
 import 'home_page.dart';
 import 'wallet/wallet_page.dart';
@@ -49,10 +54,12 @@ class MainScreenState extends State<MainScreen> {
   PageController controller = PageController();
   List<Widget> _list = [];
   int bottomSelectedIndex = 0;
+  String link = "";
 
   @override
   void initState() {
     super.initState();
+    getLink();
     _mePage = MePage(main: this);
     _list = <Widget>[
       Center(child: _homePage),
@@ -66,26 +73,54 @@ class MainScreenState extends State<MainScreen> {
     }
   }
 
+  getLink() async {
+    link = await DatabaseHelper.getData(DataKeyValue.updateLink);
+  }
+
   Future<void> subscriptToMeters() async {
     _messaging = FirebaseMessaging.instance;
-    meterList = await context.read<MeterProvider>().getMeterList(context);
+    meterList = await getMeterList(context);
 
     meterList.forEach((m) async {
       await _messaging.subscribeToTopic('meter_${m.customerId}');
     });
   }
 
+  Future<List<Meter>> getMeterList(BuildContext context) async {
+    var meterRef = FirebaseFirestore.instance.collection(meterCollection);
+    List<Meter> list = [];
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      try {
+        await meterRef
+            .doc(FirebaseAuth.instance.currentUser.uid)
+            .collection(userMeterCollection)
+            .get()
+            .then((value) {
+          value.docs.forEach((result) {
+            list.add(Meter.fromJson(result.data()));
+          });
+        });
+      } catch (e) {
+        ShowMessageHandler.showErrMessage(
+            context,
+            Tran.of(context).text("fail"),
+            Tran.of(context).text("get_meter_fail"));
+      }
+    }
+    return list;
+  }
+
   List<NotiModel> notiList = [];
   List<Meter> meterList = [];
 
-  getData() async {
-    notiList = await context.read<NotiProvider>().getNotiList(context);
+  // getData() async {
+  //   notiList = await context.read<NotiProvider>().getNotiList(context);
 
-    context.read<NotiProvider>().updateNotiCount(context, SystemData.notiCount);
-    // if (mounted) {
-    //   setState(() {});
-    // }
-  }
+  //   context.read<NotiProvider>().updateNotiCount(context, SystemData.notiCount);
+  //   // if (mounted) {
+  //   //   setState(() {});
+  //   // }
+  // }
 
   @override
   void dispose() {
@@ -125,18 +160,37 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cfg = AppcastConfiguration(url: link, supportedOS: ['android']);
+    if (kIsWeb) {
+      //running on web
+    } else {
+      if (Platform.isAndroid) {
+        Upgrader().clearSavedSettings();
+      }
+    }
     return Scaffold(
-      body: PageView(
-        children: _list,
-        scrollDirection: Axis.horizontal,
-        // reverse: true,
-        // physics: BouncingScrollPhysics(),
-        controller: controller,
-        onPageChanged: (num) {
-          setState(() {
-            bottomSelectedIndex = num;
-          });
-        },
+      body: UpgradeAlert(
+        showReleaseNotes: true,
+        appcastConfig: cfg,
+        debugAlwaysUpgrade: false,
+        debugDisplayOnce: false,
+        durationToAlertAgain: const Duration(minutes: 3),
+        debugLogging: true,
+        canDismissDialog: true,
+        // minAppVersion: ,
+        dialogStyle: UpgradeDialogStyle.cupertino,
+        child: PageView(
+          children: _list,
+          scrollDirection: Axis.horizontal,
+          // reverse: true,
+          // physics: BouncingScrollPhysics(),
+          controller: controller,
+          onPageChanged: (num) {
+            setState(() {
+              bottomSelectedIndex = num;
+            });
+          },
+        ),
       ),
       bottomNavigationBar:
           // SizedBox(
@@ -166,7 +220,7 @@ class MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             activeIcon: Icon(
-              FontAwesomeIcons.wallet,
+              FontAwesomeIcons.search,
             ),
             icon: Icon(FontAwesomeIcons.search),
             label: Tran.of(context).text("explore"),
@@ -209,12 +263,12 @@ class MainScreenState extends State<MainScreen> {
             //                           width: iconSize,
             //                           height: iconSize,
             //                           alignment: Alignment.topRight,
-            //                           margin: EdgeInsets.only(top: 5),
+            //                           margin: const EdgeInsets.only(top: 5),
             //                           child: Container(
             //                             width: iconSize / 2,
             //                             height: iconSize / 2,
             //                             alignment: Alignment.center,
-            //                             // padding: EdgeInsets.all(2),
+            //                             // padding: const EdgeInsets.all(2),
             //                             decoration: BoxDecoration(
             //                               shape: BoxShape.circle,
             //                               border: Border.all(
@@ -223,7 +277,7 @@ class MainScreenState extends State<MainScreen> {
             //                             ),
             //                             child: Text(
             //                               getNotiCount(SystemData.notiCount),
-            //                               style: TextStyle(
+            //                               style: const TextStyle(
             //                                 fontSize: 10,
             //                                 color: Colors.white,
             //                               ),
@@ -236,7 +290,7 @@ class MainScreenState extends State<MainScreen> {
             //             ),
             //             title: Text(
             //               Tran.of(context).text("notification"),
-            //               style: TextStyle(fontWeight: FontWeight.bold),
+            //               style: const TextStyle(fontWeight: FontWeight.bold),
             //             ),
             //             trailing: Icon(
             //               Icons.arrow_forward_ios,

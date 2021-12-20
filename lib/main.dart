@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'dart:async';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:left_style/datas/database_helper.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/models/noti_model.dart';
+import 'package:left_style/models/system_config.dart';
 import 'package:left_style/pages/content_notification_detail_page.dart';
 import 'package:left_style/pages/login_page.dart';
 import 'package:left_style/pages/main_screen.dart';
@@ -22,19 +24,18 @@ import 'package:left_style/pages/pop_up_ads.dart';
 import 'package:left_style/pages/upload_my_read.dart';
 import 'package:left_style/pages/user_not_active.dart';
 import 'package:left_style/pages/user_profile.dart';
-import 'package:left_style/providers/language_provider.dart';
+import 'package:left_style/providers/intro_provider.dart';
 import 'package:left_style/providers/login_provider.dart';
-import 'package:left_style/providers/meter_provider.dart';
-import 'package:left_style/providers/noti_provider.dart';
-import 'package:left_style/providers/wallet_provider.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:upgrader/upgrader.dart';
 import 'datas/constants.dart';
+import 'datas/data_key_name.dart';
 import 'localization/localizations_delegate.dart';
 import 'localization/translate.dart';
-import 'pages/notification_detail.dart';
 import 'pages/wallet/wallet_detail_success_page.dart';
+import 'providers/hotline_provider.dart';
 import 'providers/login_provider.dart';
-import 'providers/meter_bill_provider.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'id',
@@ -77,29 +78,24 @@ void main() async {
       version: "v9.0",
     );
   }
-
+  // runApp(MyAppUpdate1());
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LoginProvider()),
-    ChangeNotifierProvider(
-      create: (_) => LanguageProvider(),
-    ),
-    ChangeNotifierProvider(create: (_) => WalletProvider()),
-    ChangeNotifierProvider(create: (_) => MeterProvider()),
-    ChangeNotifierProvider(create: (_) => MeterBillProvider()),
-    ChangeNotifierProvider(create: (_) => NotiProvider()),
+    ChangeNotifierProvider(create: (_) => HotlineProvider()),
+    ChangeNotifierProvider(create: (_) => IntroProvider()),
   ], child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
   const MyApp({Key key}) : super(key: key);
-  static final navKey = new GlobalKey<NavigatorState>();
+  static final navKey = GlobalKey<NavigatorState>();
 
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  final GlobalKey<NavigatorState> key = new GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
 
   Map<int, Color> color = {
     50: Color.fromRGBO(136, 14, 79, .1),
@@ -114,13 +110,47 @@ class _MyAppState extends State<MyApp> {
     900: Color.fromRGBO(136, 14, 79, 1),
   };
 
+  SystemConfig systemConfig = SystemConfig();
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
+    getAppUpdateLink();
     if (!kIsWeb) {
       registerNotification(context);
       subscriptToPublicChannel();
     }
+
+    getSystemConfig();
+  }
+
+  Future<void> getAppUpdateLink() async {
+    String link = "";
+    var appUpdateLinkRef = FirebaseFirestore.instance.collection(appUpdateLink);
+    try {
+      await appUpdateLinkRef.get().then((value) {
+        value.docs.forEach((result) {
+          link = result.data()['url'];
+        });
+
+        DatabaseHelper.setData(link, DataKeyValue.updateLink);
+      });
+    } catch (e) {}
+  }
+
+  Future<void> getSystemConfig() async {
+    var systemConfigRef =
+        FirebaseFirestore.instance.collection(systemConfigCollection);
+    try {
+      await systemConfigRef.limit(1).get().then((value) {
+        value.docs.forEach((result) async {
+          systemConfig = SystemConfig.fromJson(result.data());
+        });
+      });
+
+      DatabaseHelper.setSystemConfigData(context, systemConfig);
+    } catch (e) {}
   }
 
   Future<void> subscriptToPublicChannel() async {
@@ -136,8 +166,37 @@ class _MyAppState extends State<MyApp> {
     } catch (e) {}
   }
 
+  void _showError(dynamic exception) {
+    ShowMessageHandler.showMessage(
+      MyApp.navKey.currentState.context,
+      "Error",
+      exception.toString(),
+    );
+    // MyApp.navKey.currentState.showSnackBar(SnackBar(
+    //   backgroundColor: Colors.black38,
+    //   content: Text(
+    //     exception.toString(),
+    //     style: TextStyle(
+    //       fontSize: 15,
+    //       color: Colors.white,
+    //       fontFamily: "Quicksand",
+    //       fontWeight: FontWeight.bold,
+    //     ),
+    //   ),
+    //   duration: Duration(seconds: 3),
+    // ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      //running on web
+    } else {
+      if (Platform.isAndroid) {
+        Upgrader().clearSavedSettings();
+      }
+    }
+
     MaterialColor colorCustom = MaterialColor(0xFFfa2e73, color);
 
     return ScreenUtilInit(
@@ -151,7 +210,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: colorCustom,
           fontFamily: 'NotoSansMyanmar',
         ),
-        initialRoute: '/ads',
+        initialRoute: '/intros',
         routes: {
           '/': (context) {
             return StreamBuilder<User>(
@@ -197,7 +256,8 @@ class _MyAppState extends State<MyApp> {
               },
             );
           },
-          '/ads': (context) => PopupIntroModelPage(),
+          '/intros': (context) => PopupAdsPage(),
+          // '/intros': (context) => IntroScreenPage(),
         },
         supportedLocales: [
           const Locale('zh', 'CN'),
@@ -211,6 +271,127 @@ class _MyAppState extends State<MyApp> {
         ],
       ),
     );
+
+    // return ScreenUtilInit(
+    //   designSize: Size(360, 690),
+    //   builder: () => MaterialApp(
+    //     key: key,
+    //     navigatorKey: MyApp.navKey,
+    //     debugShowCheckedModeBanner: false,
+    //     title: 'Unifine',
+    //     theme: ThemeData(
+    //       primarySwatch: colorCustom,
+    //       fontFamily: 'NotoSansMyanmar',
+    //     ),
+    //     initialRoute: '/intros',
+    //     routes: {
+    //       '/': (context) {
+    //         return isLoading
+    //             ? Center(
+    //                 child: SpinKitCircle(
+    //                   color: Colors.blueGrey.shade900,
+    //                   size: 50.0,
+    //                 ),
+    //               )
+    //             : (_updateInfo?.updateAvailability != null &&
+    //                     _updateInfo?.updateAvailability ==
+    //                         UpdateAvailability.updateAvailable)
+    //                 ? Container(
+    //                     // decoration: BoxDecoration(
+    //                     //   image: DecorationImage(image: AssetImage("assets/images/bg3.jpg"),fit: BoxFit.cover)
+    //                     // ),
+    //                     child: AlertDialog(
+    //                       backgroundColor: Colors.blueGrey.shade900,
+    //                       title: Text(
+    //                         "New Update Available! Please Update",
+    //                         style: TextStyle(
+    //                             fontFamily: "Quicksand",
+    //                             fontWeight: FontWeight.bold,
+    //                             color: Colors.white),
+    //                       ),
+    //                       actions: [
+    //                         TextButton(
+    //                             onPressed: (_updateInfo?.updateAvailability !=
+    //                                         null &&
+    //                                     _updateInfo?.updateAvailability ==
+    //                                         UpdateAvailability
+    //                                             .updateAvailable)
+    //                                 ? () {
+    //                                     InAppUpdate.performImmediateUpdate()
+    //                                         .catchError((e) => _showError(e));
+    //                                   }
+    //                                 : null,
+    //                             child: Text(
+    //                               "Update",
+    //                               style: TextStyle(
+    //                                   fontFamily: "Quicksand",
+    //                                   fontWeight: FontWeight.bold,
+    //                                   color: Colors.white),
+    //                             ))
+    //                       ],
+    //                     ),
+    //                   )
+    //                 : StreamBuilder<User>(
+    //                     stream: FirebaseAuth.instance.authStateChanges(),
+    //                     builder: (context, snapshot) {
+    //                       if (snapshot.connectionState ==
+    //                           ConnectionState.active) {
+    //                         User user = snapshot.data;
+    //                         if (user == null) {
+    //                           return LoginPage();
+    //                           // setState(() {});
+    //                         }
+
+    //                         return StreamBuilder<DocumentSnapshot>(
+    //                             stream: FirebaseFirestore.instance
+    //                                 .collection(userCollection)
+    //                                 .doc(
+    //                                     FirebaseAuth.instance.currentUser.uid)
+    //                                 .snapshots(),
+    //                             builder: (context, snapshot) {
+    //                               if (snapshot.connectionState ==
+    //                                   ConnectionState.active) {
+    //                                 // && snapshot.data.exists
+    //                                 if (snapshot.hasData &&
+    //                                     snapshot.data.exists) {
+    //                                   //
+    //                                   if (snapshot.data["isActive"]) {
+    //                                     return MainScreen();
+    //                                     // return _bottomNav(context);
+
+    //                                   } else {
+    //                                     return UserNotActiveScreen();
+    //                                   }
+    //                                 } else
+    //                                   return UserProfileScreen();
+    //                               }
+    //                               return Center(
+    //                                 child: CircularProgressIndicator(),
+    //                               );
+    //                             });
+    //                       } else {
+    //                         return Center(
+    //                           child: CircularProgressIndicator(),
+    //                         );
+    //                       }
+    //                     },
+    //                   );
+    //       },
+    //       '/intros': (context) => PopupAdsPage(),
+    //       // '/intros': (context) => IntroScreenPage(),
+    //     },
+    //     supportedLocales: [
+    //       const Locale('zh', 'CN'),
+    //       const Locale('en', 'US'),
+    //       const Locale('my', 'MM'),
+    //     ],
+    //     localizationsDelegates: [
+    //       const MyLocalizationsDelegate(),
+    //       GlobalMaterialLocalizations.delegate,
+    //       GlobalWidgetsLocalizations.delegate
+    //     ],
+    //   ),
+    // );
   }
 
   FirebaseMessaging _messaging;
@@ -367,20 +548,20 @@ class _MyAppState extends State<MyApp> {
         // guid: initialMessage.data['guid'].toString(),
       );
 
-      await MyApp.navKey.currentState.push(
-        MaterialPageRoute(
-          builder: (_) =>
-              NotificationDetailPage(noti: _notification, status: "false"),
-        ),
-      );
-      if (SystemData.isLoggedIn) {
-        setState(() {
-          SystemData.notiCount = SystemData.notiCount + 1;
-          context
-              .read<NotiProvider>()
-              .updateNotiCount(context, SystemData.notiCount);
-        });
-      }
+      // await MyApp.navKey.currentState.push(
+      //   MaterialPageRoute(
+      //     builder: (_) =>
+      //         NotificationDetailPage(noti: _notification, status: "false"),
+      //   ),
+      // );
+      // if (SystemData.isLoggedIn) {
+      //   setState(() {
+      //     SystemData.notiCount = SystemData.notiCount + 1;
+      //     context
+      //         .read<NotiProvider>()
+      //         .updateNotiCount(context, SystemData.notiCount);
+      //   });
+      // }
     }
   }
 
@@ -460,12 +641,12 @@ class _MyAppState extends State<MyApp> {
 
       final context = MyApp.navKey.currentState.overlay.context;
       _showAlertDialog(context, _notification);
-      if (SystemData.isLoggedIn) {
-        SystemData.notiCount = SystemData.notiCount + 1;
-        context
-            .read<NotiProvider>()
-            .updateNotiCount(context, SystemData.notiCount);
-      }
+      // if (SystemData.isLoggedIn) {
+      //   SystemData.notiCount = SystemData.notiCount + 1;
+      //   context
+      //       .read<NotiProvider>()
+      //       .updateNotiCount(context, SystemData.notiCount);
+      // }
     });
   }
 
@@ -577,14 +758,14 @@ class _MyAppState extends State<MyApp> {
         //   break;
       }
 
-      if (SystemData.isLoggedIn) {
-        setState(() {
-          SystemData.notiCount = SystemData.notiCount + 1;
-          context
-              .read<NotiProvider>()
-              .updateNotiCount(context, SystemData.notiCount);
-        });
-      }
+      // if (SystemData.isLoggedIn) {
+      //   setState(() {
+      //     SystemData.notiCount = SystemData.notiCount + 1;
+      //     context
+      //         .read<NotiProvider>()
+      //         .updateNotiCount(context, SystemData.notiCount);
+      //   });
+      // }
     });
   }
 
@@ -593,7 +774,7 @@ class _MyAppState extends State<MyApp> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            actionsPadding: EdgeInsets.fromLTRB(4, 4, 4, 4),
+            actionsPadding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
             actions: [
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
@@ -693,24 +874,47 @@ class _MyAppState extends State<MyApp> {
               ),
             ],
             title: Center(
-              child: Text(
-                // "Confirm",
-                Tran.of(context).text("confirm"),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      _notification.title,
+                      maxLines: null,
+                      style: TextStyle(
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             content: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.details,
-                  size: 20,
-                  color: Theme.of(context).primaryColor,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  Tran.of(context).text("q_go_to_detail"),
+                Expanded(
+                  child: RichText(
+                    maxLines: null,
+                    text: TextSpan(
+                      children: [
+                        WidgetSpan(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(2, 0, 4, 0),
+                            child: Icon(
+                              Icons.warning,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                        TextSpan(
+                          text: _notification.body,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ));

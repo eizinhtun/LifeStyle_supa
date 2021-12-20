@@ -51,7 +51,7 @@ class TransactionModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['uid'] = this.uid;
     data['type'] = this.type;
     data['paymentType'] = this.paymentType;

@@ -2,9 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:http/http.dart' as http;
 import 'package:left_style/utils/network_util.dart';
 import 'package:left_style/datas/constants.dart';
@@ -12,14 +10,14 @@ import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/meter_bill_model.dart';
 import 'package:left_style/pages/my_meterBill_detail.dart';
 import 'package:left_style/utils/formatter.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 
 class MyMeterBillList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'My uploaded unit',
-      home: new MyMeterBillListPage(),
+      home: MyMeterBillListPage(),
     );
   }
 }
@@ -28,7 +26,7 @@ class MyMeterBillListPage extends StatefulWidget {
   const MyMeterBillListPage({Key key}) : super(key: key);
 
   @override
-  MyMeterBillListPageState createState() => new MyMeterBillListPageState();
+  MyMeterBillListPageState createState() => MyMeterBillListPageState();
 }
 
 class MyMeterBillListPageState extends State<MyMeterBillListPage>
@@ -36,9 +34,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final db = FirebaseFirestore.instance;
 
-  List<String> customerIds = [
-    // "3333",
-  ];
+  List<String> customerIds = []; //["2494805754", "7284600000"];
 
   bool _isLoading = true;
 
@@ -74,7 +70,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
@@ -99,7 +95,9 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
               ? StreamBuilder<QuerySnapshot>(
                   stream: db
                       .collection(meterBillsCollection)
-                      .where("customerId", isEqualTo: customerIds.first)
+                      .where("customerId", whereIn: customerIds)
+                      // .where("customerId", isEqualTo: customerIds.first
+                      //  )
                       .orderBy("dueDate", descending: true)
                       // .where("customerId", arrayContains: customerIds)
                       // isGreaterThanOrEqualTo: customerIds.first
@@ -115,7 +113,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                       );
                     } else {
                       return Container(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                             top: 8, bottom: 8, left: 8, right: 8),
                         child: ListView(
                           children: snapshot.data.docs.map((doc) {
@@ -132,7 +130,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                 DateTime(temp.year, temp.month, temp.day);
                             return InkWell(
                               onTap: () async {
-                                // syncBillLatestInfo(context, bill, doc.id);
+                                syncBillLatestInfo(context, bill, doc.id);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -142,7 +140,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                 );
                               },
                               child: Card(
-                                margin: EdgeInsets.only(
+                                margin: const EdgeInsets.only(
                                     top: 0, left: 0, right: 0, bottom: 1),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(0.0),
@@ -157,8 +155,8 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                               MainAxisAlignment.start,
                                           children: [
                                             Container(
-                                              padding:
-                                                  EdgeInsets.only(left: 10),
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
@@ -189,11 +187,12 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                               children: [
                                                 Container(
                                                   padding:
-                                                      EdgeInsets.only(top: 10),
+                                                      const EdgeInsets.only(
+                                                          top: 10),
                                                   alignment: Alignment.topLeft,
                                                   child: Text(
                                                     "No:${bill.billNo},${bill.meterNo}",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -204,7 +203,8 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                       Alignment.bottomLeft,
                                                   child: Container(
                                                     padding:
-                                                        EdgeInsets.only(top: 5),
+                                                        const EdgeInsets.only(
+                                                            top: 5),
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -212,7 +212,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                       children: [
                                                         Text(
                                                           "${bill.monthName}  ",
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold),
@@ -228,7 +228,8 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                 ),
                                                 Container(
                                                   padding:
-                                                      EdgeInsets.only(top: 5),
+                                                      const EdgeInsets.only(
+                                                          top: 5),
                                                   child: Text(
                                                       "${bill.consumerName} - ${bill.state}"
                                                       // bill.readUnit
@@ -241,7 +242,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                         ),
                                         Container(
                                           alignment: Alignment.centerLeft,
-                                          padding: EdgeInsets.only(
+                                          padding: const EdgeInsets.only(
                                               left: 20,
                                               top: 5,
                                               bottom: 0,
@@ -253,7 +254,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                 CrossAxisAlignment.end,
                                             children: [
                                               Container(
-                                                padding: EdgeInsets.only(
+                                                padding: const EdgeInsets.only(
                                                     top: 5, bottom: 5),
                                                 alignment:
                                                     Alignment.centerRight,
@@ -268,7 +269,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                           ),
                                                           Text(
                                                             " paid",
-                                                            style: TextStyle(
+                                                            style: const TextStyle(
                                                                 fontStyle:
                                                                     FontStyle
                                                                         .italic,
@@ -282,7 +283,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                             Formatter.getDate(
                                                                 bill.dueDate
                                                                     .toDate()),
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             fontStyle: FontStyle
                                                                 .italic,
                                                             color:
@@ -291,25 +292,24 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                       ),
                                               ),
                                               Container(
-                                                padding: EdgeInsets.only(
+                                                padding: const EdgeInsets.only(
                                                     top: 5, bottom: 5),
                                                 alignment:
                                                     Alignment.centerRight,
                                                 child: Text(
                                                   bill.isPaid
-                                                      ? Formatter.getDate(new DateTime
-                                                              .fromMillisecondsSinceEpoch(
-                                                          bill.payDate
+                                                      ? Formatter.getDate(DateTime
+                                                          .fromMillisecondsSinceEpoch(bill
+                                                              .payDate
                                                               .millisecondsSinceEpoch))
                                                       // bill.payDate
                                                       : Formatter.getDate(
-                                                          new DateTime
-                                                                  .fromMillisecondsSinceEpoch(
-                                                              bill.readDate
-                                                                  .millisecondsSinceEpoch),
+                                                          DateTime.fromMillisecondsSinceEpoch(bill
+                                                              .readDate
+                                                              .millisecondsSinceEpoch),
                                                         ),
                                                   textAlign: TextAlign.right,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontStyle:
                                                           FontStyle.italic,
                                                       color: Colors.black26,
@@ -325,7 +325,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
                                                     .isBefore(currentDate))
                                             ? Container(
                                                 alignment: Alignment.topRight,
-                                                padding: EdgeInsets.only(
+                                                padding: const EdgeInsets.only(
                                                     left: 0,
                                                     top: 0,
                                                     bottom: 5,
@@ -370,7 +370,7 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
 
   Future<void> syncBillLatestInfo(
       BuildContext context, MeterBill bill, String docId) async {
-    NetworkUtil _netUtil = new NetworkUtil();
+    NetworkUtil _netUtil = NetworkUtil();
 
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       String signature = docId + bill.id + bill.branchId + secretkey;
@@ -378,15 +378,15 @@ class MyMeterBillListPageState extends State<MyMeterBillListPage>
           md5.convert(signature.codeUnits).toString().toUpperCase();
       // api/Meter/getBillLatestInfo?refNo={refNo}&id={id}&branchId={branchId}&signature={signature}
       var url =
-          "$domainNameLocal/Meter/getBillLatestInfo?refNo=$docId&id=${bill.id}&branchId=${bill.branchId}&signature=$signatureKey";
+          "$domainName/Meter/getBillLatestInfo?companyId=${bill.companyId}&refNo=$docId&id=${bill.id}&branchId=${bill.branchId}&signature=$signatureKey";
       http.Response response = await _netUtil.get(context, url, null);
       if (response != null) {
         if (response.statusCode == 200) {
-          MessageHandler.showMessage(context, Tran.of(context).text("success"),
-              Tran.of(context).text("sync_success"));
           return true;
         } else {
-          MessageHandler.showErrMessage(context, Tran.of(context).text("fail"),
+          ShowMessageHandler.showErrMessage(
+              context,
+              Tran.of(context).text("fail"),
               Tran.of(context).text("sync_fail"));
           return false;
         }

@@ -51,8 +51,8 @@ class _GenerateQRState extends State<GenerateQR> {
                     floating: false,
                     expandedHeight: 0.0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.vertical(
-                        bottom: new Radius.elliptical(200, 56.0),
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.elliptical(200, 56.0),
                       ),
                     ),
                     bottom: PreferredSize(
@@ -73,7 +73,7 @@ class _GenerateQRState extends State<GenerateQR> {
                 top: 100,
                 left: 0,
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
                   height: MediaQuery.of(context).size.height - 100,
                   width: MediaQuery.of(context).size.width - 30,
                   child: Column(
@@ -96,7 +96,7 @@ class _GenerateQRState extends State<GenerateQR> {
                 top: 100,
                 left: 0,
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
                   height: MediaQuery.of(context).size.height - 100,
                   width: MediaQuery.of(context).size.width - 30,
                   child: Column(
@@ -124,7 +124,7 @@ class _GenerateQRState extends State<GenerateQR> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 10, vertical: 20),
                                             child: Text(fullName,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 18,
                                                     color: Colors.grey)),
                                           ),
@@ -133,13 +133,14 @@ class _GenerateQRState extends State<GenerateQR> {
                                       Column(
                                         children: [
                                           Container(
-                                            margin: EdgeInsets.only(
+                                            margin: const EdgeInsets.only(
                                                 top: 20, bottom: 20),
                                             child: Text(Tran.of(context)
                                                 .text("scan_to_pay")),
                                           ),
                                           Container(
-                                            margin: EdgeInsets.only(bottom: 50),
+                                            margin: const EdgeInsets.only(
+                                                bottom: 50),
                                             width: 200,
                                             height: 200,
                                             //child: QrImage(data: qrData)

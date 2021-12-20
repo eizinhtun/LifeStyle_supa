@@ -1,14 +1,11 @@
 // @dart=2.9
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
-// import 'package:left_style/datas/noti_content_data.dart';
 import 'package:left_style/models/noti_model.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:url_launcher/url_launcher.dart';
 
 class ContentNotificationDetailPage extends StatefulWidget {
@@ -69,11 +66,11 @@ class _ContentNotificationDetailPage
               border: Border(bottom: BorderSide(color: Colors.grey)),
             ),
             "th": Style(
-              padding: EdgeInsets.all(6),
+              padding: const EdgeInsets.all(6),
               backgroundColor: Colors.grey,
             ),
             "td": Style(
-              padding: EdgeInsets.all(6),
+              padding: const EdgeInsets.all(6),
               alignment: Alignment.topLeft,
             ),
             'h5': Style(maxLines: 2, textOverflow: TextOverflow.ellipsis),

@@ -11,7 +11,7 @@ class SmsVerifyResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this.status;
     data['request_id'] = this.requestId;
     return data;

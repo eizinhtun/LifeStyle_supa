@@ -1,5 +1,6 @@
 // @dart=2.9
 class Meter {
+  String companyId;
   String meterName;
   bool autoPay;
   bool selfScan;
@@ -77,7 +78,8 @@ class Meter {
   Null twinLeftSeal;
 
   Meter(
-      {this.meterName,
+      {this.companyId,
+      this.meterName,
       this.autoPay,
       this.selfScan,
       this.requiredMatchGPS,
@@ -152,6 +154,7 @@ class Meter {
       this.twinLeftSeal});
 
   Meter.fromJson(Map<String, dynamic> json) {
+    companyId = json['CompanyId'];
     readDate = json['ReadDate'] ?? "";
     dueDate = json['DueDate'] ?? "";
     meterName = json['meterName'] ?? "";
@@ -214,9 +217,10 @@ class Meter {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ReadDate'] = readDate;
-    data['DueDate'] = dueDate;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['CompanyId'] = this.companyId;
+    data['ReadDate'] = this.readDate;
+    data['DueDate'] = this.dueDate;
     data['meterName'] = this.meterName;
     data['AutoPay'] = this.autoPay;
     data['SelfScan'] = this.selfScan;

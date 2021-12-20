@@ -5,6 +5,7 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/utils/validator.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 class ScanQRData extends StatefulWidget {
   const ScanQRData({Key key, this.qrcodeuid}) : super(key: key);
@@ -50,8 +51,8 @@ class _ScanQRDataState extends State<ScanQRData> {
                       floating: false,
                       expandedHeight: 0.0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.vertical(
-                          bottom: new Radius.elliptical(200, 56.0),
+                        borderRadius: BorderRadius.vertical(
+                          bottom: Radius.elliptical(200, 56.0),
                         ),
                       ),
                       bottom: PreferredSize(
@@ -72,7 +73,7 @@ class _ScanQRDataState extends State<ScanQRData> {
                   top: 100,
                   left: 0,
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     height: MediaQuery.of(context).size.height - 100,
                     width: MediaQuery.of(context).size.width - 30,
                     child: Column(
@@ -99,7 +100,7 @@ class _ScanQRDataState extends State<ScanQRData> {
                                             horizontal: 10, vertical: 20),
                                         child: user.fullName != null
                                             ? Text(user.fullName.toUpperCase(),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 18,
                                                     color: Colors.grey))
                                             : Text(
@@ -126,8 +127,13 @@ class _ScanQRDataState extends State<ScanQRData> {
                                                             .onUserInteraction,
                                                     controller:
                                                         _transferController,
-                                                    keyboardType:
-                                                        TextInputType.number,
+                                                    keyboardType: TextInputType
+                                                        .numberWithOptions(),
+                                                    inputFormatters: <
+                                                        TextInputFormatter>[
+                                                      FilteringTextInputFormatter
+                                                          .digitsOnly
+                                                    ],
                                                     validator: (val) {
                                                       return Validator.requiredField(
                                                           context,

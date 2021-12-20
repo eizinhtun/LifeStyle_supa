@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const String secretkey = "31bf3856ad364e35";
 const String domainName = "https://leftstyle.thai2d3d.com/api";
+// const String domainName = "http://192.168.1.8/LifeStyleWebApi/api";
 const String domainNameLocal = "http://192.168.1.10/LifeStyleWebApi/api";
 
 const String brandName = "Life Style";
@@ -9,7 +10,7 @@ const int codeLength = 6;
 const String smsUrl = "https://verify.smspoh.com/api";
 const String smsToken =
     "VcDFsbOAZ3xpFVql7yLczsbAZmihyV9eZnUBdJHiz6-4k7_ggfNVllQxie5gEPMc";
-const String version = "1.2.1";
+const String version = "1.0.0";
 const String serverKey =
     "AAAAp5abKQ0:APA91bG6Vl7FxmbqOqM1mCeZUzSpI-nJ3ieMC_-YVCQF7CW5jzAs10u1iu5asZ5HnwCDKd5v8mCMYPGYw6cRVf8j-uU6hjP9AONShIM5Sgijgh6tODZym01C5-KmJB2QiHX7hMhvegjd";
 String language = '';
@@ -72,6 +73,7 @@ Future<Map<String, String>> getHeadersWithOutToken() async {
 const Color mainColor = Color(0xFFfa2e73);
 const String userCollection = "users";
 const String meterCollection = "meters";
+const String readMeterMonthCollection = "readMeterMonth";
 const String subscriptionCollection = "subscription";
 const String userUploadUnitCollection = "user_upload_unit";
 const String meterBillsCollection = "meter_bills";
@@ -87,6 +89,9 @@ const String adsCollection = "ads";
 const String introCollection = "intro";
 const String notilist = "notilist";
 const String myTransactions = "myTransactions";
+const String systemConfigCollection = "system_config";
+const String hotlineCollection = "hotlines";
+const String appUpdateLink = "app_update_link";
 const int timeOut = 120;
 
 class ActionButton {
@@ -122,4 +127,10 @@ class NotiType {
   static const String appupdate = "appupdate";
   static const String content = "content";
   static const String readMeter = "readMeter";
+}
+
+class TopupStatus {
+  static const String verifying = "verifying";
+  static const String approved = "approved";
+  static const String rejected = "rejected";
 }

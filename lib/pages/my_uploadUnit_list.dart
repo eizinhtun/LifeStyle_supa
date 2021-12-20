@@ -1,8 +1,6 @@
 // @dart=2.9
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
@@ -14,9 +12,9 @@ import 'package:flutter_dash/flutter_dash.dart';
 class MyUploadUnitList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'My uploaded unit',
-      home: new MyUploadUnitListPage(),
+      home: MyUploadUnitListPage(),
     );
   }
 }
@@ -25,7 +23,7 @@ class MyUploadUnitListPage extends StatefulWidget {
   const MyUploadUnitListPage({Key key}) : super(key: key);
 
   @override
-  MyUploadUnitListPageState createState() => new MyUploadUnitListPageState();
+  MyUploadUnitListPageState createState() => MyUploadUnitListPageState();
 }
 
 class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
@@ -45,7 +43,7 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
@@ -63,11 +61,7 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
         ),*/
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: db
-            .collection(userUploadUnitCollection)
-            .doc(FirebaseAuth.instance.currentUser.uid)
-            .collection(userReadUnitCollection)
-            .snapshots(),
+        stream: db.collection(userUploadUnitCollection).snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -78,7 +72,8 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
               children: snapshot.data.docs.map((doc) {
                 MyReadUnit item = MyReadUnit.fromJson(doc.data());
                 return Card(
-                  margin: EdgeInsets.only(top: 7, left: 5, right: 5, bottom: 5),
+                  margin: const EdgeInsets.only(
+                      top: 7, left: 5, right: 5, bottom: 5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -90,15 +85,15 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => new UploadMyReadScreen(
+                                  builder: (context) => UploadMyReadScreen(
                                         customerId: item.customerId,
                                         monthName: item.monthName,
                                       )));
                         },
-                        contentPadding: EdgeInsets.only(
+                        contentPadding: const EdgeInsets.only(
                             top: 5.0, left: 0.0, right: 0.0, bottom: 0.0),
                         leading: Container(
-                          padding: EdgeInsets.only(left: 10),
+                          padding: const EdgeInsets.only(left: 10),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -108,7 +103,7 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
                           ),
                           width: 60,
                           height: 60,
-                          child: new CircleAvatar(
+                          child: CircleAvatar(
                             radius: 100.0,
                             // backgroundColor:MyTheme.getPrimaryColor(),
                             //backgroundImage: MeScreenState.fileAvatar!=null?
@@ -122,7 +117,7 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
                             alignment: Alignment.centerLeft,
                             child: Text(
                               item.meterNo + " ," + item.customerId,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.bold),
                             )),
                         subtitle: Column(
@@ -130,7 +125,7 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: EdgeInsets.only(top: 5),
+                              padding: const EdgeInsets.only(top: 5),
                               child: Text(item.readDate
                                   .toDate()
                                   .toString() //yyy-MM-ddTHH:mm:ss
@@ -138,7 +133,7 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
                             ),
                             Text(
                               item.consumerName + " - " + item.mobile,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600),
                             ),
@@ -149,7 +144,7 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
                             //             0,
                             //     child: Container(
                             //       padding:
-                            //           EdgeInsets.only(top: 5),
+                            //           const EdgeInsets.only(top: 5),
                             //       child: Text(item
                             //           .remark
                             //           .toString()),
@@ -157,7 +152,7 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
                           ],
                         ),
                         trailing: Container(
-                            padding: EdgeInsets.only(right: 20),
+                            padding: const EdgeInsets.only(right: 20),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -166,12 +161,13 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
                                     Text(
                                       NumberFormat('#,###,000')
                                           .format(item.readUnit),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.w600),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(left: 10.0),
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
                                       child: Icon(
                                         Icons.arrow_forward_ios,
                                         size: 16,
@@ -192,16 +188,17 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
                       ),
                       Container(
                           alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 20, top: 5, bottom: 10, right: 20),
                           child: Column(
                             children: [
                               Container(
-                                padding: EdgeInsets.only(top: 5, bottom: 5),
+                                padding:
+                                    const EdgeInsets.only(top: 5, bottom: 5),
                                 alignment: Alignment.center,
                                 child: Text(
                                   item.status + "    (" + item.monthName + ")",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.red, fontSize: 13),
                                 ),
                               ),
@@ -219,13 +216,13 @@ class MyUploadUnitListPageState extends State<MyUploadUnitListPage>
 
   // @override
   // void showError(String text) {
-  //   _scaffoldKey.currentState.showSnackBar(new SnackBar(
+  //   _scaffoldKey.currentState.showSnackBar(SnackBar(
   //       backgroundColor: Colors.red,
-  //       content: new Text(Tran.of(context).text(text))));
+  //       content: Text(Tran.of(context).text(text))));
   // }
 
   // @override
   // void showMessage(String text) {
-  //   MessageHandler.showMessage(context, "", text);
+  //   ShowMessageHandler.showMessage(context, "", text);
   // }
 }

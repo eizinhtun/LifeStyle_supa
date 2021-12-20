@@ -9,7 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
 import 'package:left_style/localization/translate.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 
 class Authentication {
   static SnackBar customSnackBar({String content}) {
@@ -17,7 +17,7 @@ class Authentication {
       backgroundColor: Colors.black,
       content: Text(
         content,
-        style: TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
+        style: const TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
       ),
     );
   }
@@ -113,7 +113,7 @@ class Authentication {
           return null;
       }
     } on FirebaseAuthException catch (e) {
-      MessageHandler.showErrMessage(
+      ShowMessageHandler.showErrMessage(
           context,
           Tran.of(context).text("duplicate_account"),
           Tran.of(context).text("acc_already_exist"));

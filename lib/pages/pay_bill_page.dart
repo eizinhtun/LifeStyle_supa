@@ -1,14 +1,24 @@
 // @dart=2.9
+// import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dbcrypt/dbcrypt.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/meter_bill_model.dart';
-import 'package:left_style/providers/wallet_provider.dart';
 import 'package:left_style/utils/formatter.dart';
+import 'package:left_style/utils/network_util.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 import 'package:left_style/utils/validator.dart';
-import 'package:provider/provider.dart';
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
+
+import 'my_meterBill_detail.dart';
 
 class PayBillPage extends StatefulWidget {
   const PayBillPage({Key key, this.bill, this.docId}) : super(key: key);
@@ -26,7 +36,9 @@ class _PayBillPageState extends State<PayBillPage> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _remarkController = TextEditingController();
   bool _obscureText = false;
-  TextStyle style = TextStyle(
+  bool _isLoading = true;
+  bool _submiting = false;
+  TextStyle style = const TextStyle(
     // fontWeight: FontWeight.bold,
     fontSize: 16,
   );
@@ -41,7 +53,7 @@ class _PayBillPageState extends State<PayBillPage> {
         title: Text(Tran.of(context).text("pay_bill").toString()),
       ),
       body: Container(
-        margin: EdgeInsets.all(8),
+        margin: const EdgeInsets.all(8),
         child: ListView(
           children: [
             Card(
@@ -51,17 +63,17 @@ class _PayBillPageState extends State<PayBillPage> {
               color: Colors.white,
               elevation: 0,
               child: Container(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Center(
                           child: Text(
                             widget.bill.meterNo,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -173,8 +185,8 @@ class _PayBillPageState extends State<PayBillPage> {
                         decoration: InputDecoration(
                           labelText: Tran.of(context).text("enter_remark"),
                           // hintText: "Enter your remark",
-                          // hintStyle: TextStyle(),
-                          contentPadding: EdgeInsets.all(16),
+                          // hintStyle: const TextStyle(),
+                          contentPadding: const EdgeInsets.all(16),
                           // border: OutlineInputBorder(
                           //   borderSide: BorderSide(
                           //     color: Colors.black,
@@ -192,15 +204,17 @@ class _PayBillPageState extends State<PayBillPage> {
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            // showPwDialog(context);
                             showPwBottomSheet(context);
+                            setState(() {
+                              _submiting = false;
+                            });
                           }
                         },
                         child: Container(
-                          padding: EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(12),
                           child: Text(
                             "${Tran.of(context)?.text("pay_bill")}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -228,7 +242,7 @@ class _PayBillPageState extends State<PayBillPage> {
           builder: (BuildContext context, setState) => Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               margin: const EdgeInsets.only(
                   top: 10, left: 15, right: 15, bottom: 10),
               // height: 160,
@@ -242,7 +256,7 @@ class _PayBillPageState extends State<PayBillPage> {
                 //       spreadRadius: 5)
                 // ],
               ),
-              // margin: EdgeInsets.all(16),
+              // margin: const EdgeInsets.all(16),
               child: Form(
                 key: _pwformKey,
                 child: Column(
@@ -252,7 +266,7 @@ class _PayBillPageState extends State<PayBillPage> {
                     Center(
                       child: Text(
                         Tran.of(context).text("enter_password"),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -273,7 +287,7 @@ class _PayBillPageState extends State<PayBillPage> {
                       },
                       decoration: InputDecoration(
                         labelText: "${Tran.of(context)?.text('password')}",
-                        labelStyle: TextStyle(),
+                        labelStyle: const TextStyle(),
                         hintText: "${Tran.of(context)?.text('password')}",
                         suffixIcon: IconButton(
                           onPressed: () {
@@ -317,7 +331,7 @@ class _PayBillPageState extends State<PayBillPage> {
                             ),
                           ),
                           child: Container(
-                            padding: EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(12),
                             child: Text(
                               Tran.of(context)?.text("close"),
                               style: TextStyle(
@@ -331,40 +345,66 @@ class _PayBillPageState extends State<PayBillPage> {
                             Navigator.of(context).pop();
                           },
                         ),
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            side: BorderSide(
-                              width: 1.0,
-                              color: Colors.black12,
-                              style: BorderStyle.solid,
-                            ),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.all(12),
-                            child: Text(
-                              Tran.of(context)?.text("confirm"),
-                              style: TextStyle(
+                        _submiting
+                            ? SpinKitDoubleBounce(
                                 color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                              )
+                            : OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  side: BorderSide(
+                                    width: 1.0,
+                                    color: Colors.black12,
+                                    style: BorderStyle.solid,
+                                  ),
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(
+                                    Tran.of(context)?.text("confirm"),
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                onPressed: _submiting
+                                    ? null
+                                    : () async {
+                                        if (_pwformKey.currentState
+                                            .validate()) {
+                                          setState(() {
+                                            _submiting = true;
+                                          });
+
+                                          widget.bill.remark =
+                                              _remarkController.text;
+
+                                          widget.bill.payDate =
+                                              Timestamp.fromDate(
+                                                  DateTime.now());
+
+                                          bool checkPass = await checkPassword(
+                                              _passwordController.text);
+
+                                          if (checkPass != null && checkPass) {
+                                            payMeterBill(context, widget.bill);
+
+                                            _submiting = false;
+                                          } else {
+                                            ShowMessageHandler.showErrMessage(
+                                                context,
+                                                Tran.of(context)
+                                                    .text("can_not_pay_bill"),
+                                                Tran.of(context)
+                                                    .text("pin_not_correct"));
+                                          }
+                                        }
+                                      },
                               ),
-                            ),
-                          ),
-                          onPressed: () async {
-                            if (_pwformKey.currentState.validate()) {
-                              widget.bill.remark = _remarkController.text;
-                              widget.bill.payDate =
-                                  Timestamp.fromDate(DateTime.now());
-                              await context
-                                  .read<WalletProvider>()
-                                  .payMeterBill(context, widget.bill);
-                              Navigator.of(context).pop();
-                            }
-                          },
-                        ),
                       ],
                     ),
                   ],
@@ -375,6 +415,116 @@ class _PayBillPageState extends State<PayBillPage> {
         );
       },
     );
+  }
+
+  Future<bool> checkPassword(password) async {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      var userRef = await FirebaseFirestore.instance
+          .collection(userCollection)
+          .doc(uid)
+          .get(GetOptions(source: Source.server));
+      if (userRef != null && userRef.exists) {
+        String oldPassword = userRef.data()["password"];
+        bool isCorrect = DBCrypt().checkpw(password, oldPassword);
+        if (isCorrect) {
+          setState(() {
+            _isLoading = false;
+          });
+
+          return true;
+        } else {
+          Navigator.pop(context, null);
+          ShowMessageHandler.showMessage(
+              context,
+              Tran.of(context).text("password_fail"),
+              Tran.of(context).text("password_fail_str"));
+          setState(() {
+            _isLoading = false;
+          });
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  // var userRef = FirebaseFirestore.instance.collection(userCollection);
+  // Future<bool> checkPassword(BuildContext context, String password) {
+  //   var pass = DBCrypt().hashpw(password, DBCrypt().gensalt());
+  //   if (FirebaseAuth.instance.currentUser?.uid != null) {
+  //     String uid = FirebaseAuth.instance.currentUser.uid.toString();
+  //     userRef.doc(uid).get().then((value) {
+  //       bool pwValid = value.data()['password'] == pass;
+  //       return pwValid;
+  //     });
+  //   }
+  // }
+
+  Future<bool> payMeterBill(BuildContext context, MeterBill bill) async {
+    NetworkUtil _netUtil = NetworkUtil();
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      String uid = FirebaseAuth.instance.currentUser.uid.toString();
+      var myHeaders = await getHeadersWithOutToken();
+      String signature = bill.customerId +
+          bill.branchId +
+          uid +
+          (bill.totalCost + bill.creditAmount).toString() +
+          secretkey;
+      String signatureKey =
+          md5.convert(signature.codeUnits).toString().toUpperCase();
+      var url =
+          "$domainName/Value?companyId=${bill.companyId}&customerId=${bill.customerId}&paymentAmount=${bill.totalCost + bill.creditAmount}&uid=$uid&branchId=${bill.branchId}&signature=$signatureKey";
+      http.Response response = await _netUtil.get(context, url, null);
+      if (response != null) {
+        if (response.statusCode == 200) {
+          Navigator.pop(context, true);
+          Navigator.pop(context, true);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MeterBillDetailPage(docId: bill.docId),
+            ),
+          ).then((value) {});
+          ShowMessageHandler.showMessage(
+              context,
+              Tran.of(context).text("success"),
+              Tran.of(context).text("bill_pay_success"));
+          return true;
+        } else {
+          setState(() {
+            _submiting = false;
+          });
+          Navigator.pop(context, true);
+          ShowMessageHandler.showErrMessage(
+            context,
+            Tran.of(context).text("fail"),
+            Tran.of(context).text("bill_pay_fail"),
+          );
+          return false;
+        }
+      }
+
+      // FirebaseFirestore.instance
+      //     .collection(meterBillsCollection)
+      //     .doc(bill.docId)
+      //     .update({'isPaid': true, 'status': 'Paid'});
+      // Navigator.pop(context, true);
+      // Navigator.pop(context, true);
+
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => MeterBillDetailPage(docId: bill.docId),
+      //   ),
+      // ).then((value) {});
+
+      // ShowMessageHandler.showMessage(context, Tran.of(context).text("success"),
+      //     Tran.of(context).text("bill_pay_success"));
+      // return true;
+    }
   }
 
   String getPayDate(DateTime date) {

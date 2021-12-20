@@ -2,13 +2,20 @@ import 'package:intl/intl.dart';
 
 class Formatter {
   static String dateTimeFormat(DateTime date) {
-    final f = new DateFormat('MM/dd/yyyy, hh:mm a');
+    final f = DateFormat('MM/dd/yyyy, hh:mm a');
     return f.format(date);
   }
 
   static String getDate(DateTime date) {
     var dateFormat = DateFormat("dd-MM-yyyy hh:mm a");
     return dateFormat.format(date);
+  }
+
+  static String getDateFromStr(String dateStr) {
+    var newDateFormat = DateFormat("d-MM-yyyy");
+    var originDateFormat = DateFormat("MMM dd yyyy HH:mm:ss");
+    DateTime date = originDateFormat.parse(dateStr);
+    return newDateFormat.format(date);
   }
 
   static String getDates(DateTime date) {

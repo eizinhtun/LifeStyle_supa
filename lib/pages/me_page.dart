@@ -6,14 +6,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
-import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/noti_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/main_screen.dart';
 import 'package:left_style/pages/setting.dart';
 import 'package:left_style/pages/user_profile_edit.dart';
-import 'package:left_style/providers/noti_provider.dart';
 import 'package:left_style/utils/formatter.dart';
 import 'package:left_style/widgets/user-info_screen_photo.dart';
 import 'package:provider/provider.dart';
@@ -42,16 +40,16 @@ class _MePageState extends State<MePage> {
   }
 
   List<NotiModel> notiList = [];
-  getData() async {
-    notiList = await context.read<NotiProvider>().getNotiList(context);
-    if (notiList != null && notiList.length > 0) {
-      SystemData.notiCount = notiList.where((e) => e.status == false).length;
-    } else {
-      SystemData.notiCount = 0;
-    }
-    context.read<NotiProvider>().updateNotiCount(context, SystemData.notiCount);
-    setState(() {});
-  }
+  // getData() async {
+  //   notiList = await context.read<NotiProvider>().getNotiList(context);
+  //   if (notiList != null && notiList.length > 0) {
+  //     SystemData.notiCount = notiList.where((e) => e.status == false).length;
+  //   } else {
+  //     SystemData.notiCount = 0;
+  //   }
+  //   context.read<NotiProvider>().updateNotiCount(context, SystemData.notiCount);
+  //   setState(() {});
+  // }
 
   // Route _routeToLogin() {
   //   return PageRouteBuilder(
@@ -99,7 +97,7 @@ class _MePageState extends State<MePage> {
               }
 
               return Container(
-                margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 child: ListView(
                   children: [
                     InkWell(
@@ -145,7 +143,7 @@ class _MePageState extends State<MePage> {
                                           ),
                                           Text(
                                             "${_user.fullName}",
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -158,7 +156,7 @@ class _MePageState extends State<MePage> {
                                                       "@balanceKs",
                                                       Tran.of(context)
                                                           .text("ks")),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 13,
                                                   color: Colors.black)),
@@ -207,7 +205,7 @@ class _MePageState extends State<MePage> {
                         ),
                         title: Text(
                           Tran.of(context).text("myAccount"),
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
                           Icons.arrow_forward_ios,
@@ -239,7 +237,7 @@ class _MePageState extends State<MePage> {
                         ),
                         title: Text(
                           Tran.of(context).text("changePin"),
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
                           Icons.arrow_forward_ios,
@@ -270,7 +268,7 @@ class _MePageState extends State<MePage> {
                         ),
                         title: Text(
                           Tran.of(context).text("meterList"),
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
                           Icons.arrow_forward_ios,
@@ -303,8 +301,8 @@ class _MePageState extends State<MePage> {
                           ),
                         ),
                         title: Text(
-                          Tran.of(context).text("languagePage"),
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          Tran.of(context).text("language"),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
                           Icons.arrow_forward_ios,
@@ -335,7 +333,7 @@ class _MePageState extends State<MePage> {
                         ),
                         title: Text(
                           Tran.of(context).text("setting"),
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
                           Icons.arrow_forward_ios,
@@ -366,7 +364,35 @@ class _MePageState extends State<MePage> {
                         ),
                         title: Text(
                           Tran.of(context).text("needHelp"),
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                          color: Colors.black26,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 0.5,
+                      height: 1,
+                    ),
+                    Container(
+                      height: titleHeight,
+                      child: ListTile(
+                        onTap: () async {},
+                        leading: Container(
+                          width: leadingWidth,
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            Icons.update,
+                            size: iconSize,
+                            color: mainColor,
+                          ),
+                        ),
+                        title: Text(
+                          Tran.of(context).text("app_version") + " " + version,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: Icon(
                           Icons.arrow_forward_ios,
@@ -393,7 +419,7 @@ class _MePageState extends State<MePage> {
                           ),
                           child: Text(
                             Tran.of(context).text("logout"),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, color: Colors.red),
                           ),
                           onPressed: () {
@@ -432,7 +458,7 @@ class _MePageState extends State<MePage> {
                             AlertDialog alert = AlertDialog(
                               title: Text(
                                 Tran.of(context).text("logout_confirm"),
-                                style: TextStyle(fontSize: 20),
+                                style: const TextStyle(fontSize: 20),
                               ),
                               actions: [
                                 cancelButton,
@@ -491,7 +517,7 @@ class _MePageState extends State<MePage> {
   //   AlertDialog alert = AlertDialog(
   //     title: Text(
   //       "Are you sure logout?",
-  //       style: TextStyle(fontSize: 20),
+  //       style: const TextStyle(fontSize: 20),
   //     ),
   //     actions: [
   //       cancelButton,

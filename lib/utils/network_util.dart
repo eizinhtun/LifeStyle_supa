@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:left_style/localization/translate.dart';
 
-import 'message_handler.dart';
+import 'show_message_handler.dart';
 
 class NetworkUtil {
   static NetworkUtil _instance = NetworkUtil.internal();
@@ -20,12 +20,12 @@ class NetworkUtil {
           .then((http.Response response) async {
         return handleResponse(context, response, url);
       }).catchError((onError) {
-        MessageHandler.showError(context, Tran.of(context).text("tip"),
+        ShowMessageHandler.showError(context, Tran.of(context).text("tip"),
             Tran.of(context).text("check_internet"));
         return null;
       });
     } catch (ex) {
-      MessageHandler.showError(context, Tran.of(context).text("tip"),
+      ShowMessageHandler.showError(context, Tran.of(context).text("tip"),
           Tran.of(context).text("check_internet"));
       return null;
     }
@@ -41,7 +41,7 @@ class NetworkUtil {
     //     var accStatus = await DatabaseHelper.getData(DataKeyValue.accountExist);
     //     if (accStatus == null || accStatus == "") {
     //       await DatabaseHelper.setData("exists", DataKeyValue.accountExist);
-    //       await MessageHandler.comfirmDialgRelogin(
+    //       await ShowMessageHandler.comfirmDialgRelogin(
     //           context, Tran.of(context).text("youNeedLogin"));
     //       return response;
     //     } else {
@@ -57,7 +57,7 @@ class NetworkUtil {
     //     var accStatus = await DatabaseHelper.getData(DataKeyValue.accountExist);
     //     if (accStatus == null || accStatus == "") {
     //       await DatabaseHelper.setData("exists", DataKeyValue.accountExist);
-    //       await MessageHandler.comfirmDialgRelogin(
+    //       await ShowMessageHandler.comfirmDialgRelogin(
     //           context, Tran.of(context).text("youwaspushLogout"));
     //       return response;
     //     } else {
@@ -75,12 +75,12 @@ class NetworkUtil {
       //   if(accStatus ==null || accStatus=="") {
       //     await DatabaseHelper.setData("exists", DataKeyValue.forceUpdateExist);
       //     if (Platform.isAndroid) {
-      //       await MessageHandler.foceUpdateVersion(
+      //       await ShowMessageHandler.foceUpdateVersion(
       //           context, body["message"], body["androidLink"]);
       //       return response;
       //     }
       //     if (Platform.isIOS) {
-      //       await MessageHandler.foceUpdateVersion(
+      //       await ShowMessageHandler.foceUpdateVersion(
       //           context, body["message"], body["iosAppLink"]);
       //       return response;
       //     }
@@ -92,7 +92,7 @@ class NetworkUtil {
     if (response.statusCode == 410) {
       var body = json.decode(response.body);
       if (body != null && body["Message"] != null)
-        MessageHandler.showError(
+        ShowMessageHandler.showError(
             context, Tran.of(context).text("tip"), body["Message"]);
       return response;
     }
@@ -101,19 +101,19 @@ class NetworkUtil {
       //throw  Exception("Unauthorized or Logout then login again");
     }
     if (statusCode == 403) {
-      MessageHandler.showError(context, Tran.of(context).text("tip"),
+      ShowMessageHandler.showError(context, Tran.of(context).text("tip"),
           Tran.of(context).text("need_login"));
       return response;
     }
     if (statusCode == 404) {
-      MessageHandler.showError(context, Tran.of(context).text("tip"),
+      ShowMessageHandler.showError(context, Tran.of(context).text("tip"),
           Tran.of(context).text("not_found"));
       //showError(context,"Not found");
       return response;
       //throw  Exception("Unauthorized or Logout then login again");
     }
     if (statusCode == 405) {
-      MessageHandler.showError(context, Tran.of(context).text("tip"),
+      ShowMessageHandler.showError(context, Tran.of(context).text("tip"),
           Tran.of(context).text("access_limited"));
       //showError(context, Tran.of(context).text("access_limited"));
       return response;
@@ -124,14 +124,14 @@ class NetworkUtil {
       //throw  Exception("Unauthorized or Logout then login again");
     }
     if (statusCode == 415) {
-      MessageHandler.showError(context, Tran.of(context).text("tip"),
+      ShowMessageHandler.showError(context, Tran.of(context).text("tip"),
           Tran.of(context).text("access_limited"));
       //showError(context, Tran.of(context).text("access_limited"));
       return response;
       //throw  Exception("Unauthorized or Logout then login again");
     }
     if (statusCode == 500) {
-      MessageHandler.showError(context, Tran.of(context).text("tip"),
+      ShowMessageHandler.showError(context, Tran.of(context).text("tip"),
           Tran.of(context).text("internal_server_err"));
       //
       return response;
@@ -145,10 +145,11 @@ class NetworkUtil {
       String msg = body["error_description"];
       msg = msg == null || msg == "" ? body["Message"] : msg;
       if (msg != null && msg.isNotEmpty) {
-        MessageHandler.showError(context, Tran.of(context).text("tip"), msg);
+        ShowMessageHandler.showError(
+            context, Tran.of(context).text("tip"), msg);
         return null;
       }
-      MessageHandler.showError(
+      ShowMessageHandler.showError(
           context,
           Tran.of(context).text("tip"),
           Tran.of(context).text(

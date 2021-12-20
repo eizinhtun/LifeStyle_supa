@@ -4,12 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/datas/data_key_name.dart';
 import 'package:left_style/datas/database_helper.dart';
+import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/intro_model.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/utils/authentication.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 
 class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   var userRef = FirebaseFirestore.instance.collection(userCollection);
@@ -25,6 +27,9 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
           .get(GetOptions(source: Source.server))
           .then((value) {
         userModel = UserModel.fromJson(value.data());
+        DatabaseHelper.setData(
+            userModel.balance.toString(), DataKeyValue.balance);
+        SystemData.balance = userModel.balance;
 
         notifyListeners();
         return userModel;
@@ -50,7 +55,10 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   Future<void> logOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    DatabaseHelper.setAppLoggedIn(context, false);
+
+    // DatabaseHelper.setAppLoggedIn(context, false);
+
+    DatabaseHelper.clearStorage();
     notifyListeners();
   }
 
@@ -72,7 +80,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       await _auth.signInWithCredential(credential).then((value) {
         User user = value.user;
 
-        MessageHandler.showSnackbar(
+        ShowMessageHandler.showSnackbar(
             "${Tran.of(context).text("success_sigin_uid")}: ${user.uid}",
             context,
             5);
@@ -82,7 +90,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
         } else {}
       });
     } catch (e) {
-      MessageHandler.showSnackbar(
+      ShowMessageHandler.showSnackbar(
           "${Tran.of(context).text("fail_sigin")}: " + e.toString(),
           context,
           5);
@@ -93,7 +101,9 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
     User user = await Authentication.signInWithFacebook(context: context);
 
     if (user != null && user.uid != null) {
+      String uid = user.uid;
       DatabaseHelper.setAppLoggedIn(context, true);
+      userRef.doc(uid).update({"fcmtoken": fcmtoken});
       notifyListeners();
       // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
       //
@@ -129,7 +139,9 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<void> googleLogin(BuildContext context, String fcmtoken) async {
     User user = await Authentication.signInWithGoogle(context: context);
     if (user != null && user?.uid != null) {
+      String uid = user.uid;
       DatabaseHelper.setAppLoggedIn(context, true);
+      userRef.doc(uid).update({"fcmtoken": fcmtoken});
       // FirebaseAuth.instance.currentUser.
       notifyListeners();
       // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
@@ -172,7 +184,7 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
       );
       final User user = (await _auth.signInWithCredential(credential)).user;
 
-      MessageHandler.showSnackbar(
+      ShowMessageHandler.showSnackbar(
           "${Tran.of(context).text("success_sigin_uid")}: ${user.uid}",
           context,
           5);
@@ -192,28 +204,12 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
         return false;
       }
     } catch (e) {
-      MessageHandler.showErrSnackbar(
-          "${Tran.of(context).text("fail_sigin")}" + e.toString(), context, 5);
+      ShowMessageHandler.showErrSnackbar(
+          "${Tran.of(context).text("fail_sigin")} :" + e.toString(),
+          context,
+          5);
       return false;
     }
-  }
-
-  Future<void> addUserProfile(BuildContext context, UserModel userModel) async {
-    if (FirebaseAuth.instance.currentUser?.uid != null) {
-      String uid = FirebaseAuth.instance.currentUser.uid.toString();
-      try {
-        userRef.doc(uid).set(userModel.toJson()).then((value) {
-          MessageHandler.showMessage(context, Tran.of(context).text("success"),
-              Tran.of(context).text("update_user_success"));
-        });
-
-        notifyListeners();
-      } catch (e) {
-        MessageHandler.showErrMessage(context, Tran.of(context).text("fail"),
-            Tran.of(context).text("update_user_fail"));
-      }
-    }
-    notifyListeners();
   }
 
   Future<void> updateUserInfo(BuildContext context, UserModel user) async {
@@ -238,18 +234,33 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
             // })
 
             .then((value) {
-          MessageHandler.showMessage(context, Tran.of(context).text("success"),
+          ShowMessageHandler.showMessage(
+              context,
+              Tran.of(context).text("success"),
               Tran.of(context).text("update_user_success"));
         });
 
         notifyListeners();
       } catch (e) {
-        MessageHandler.showErrMessage(context, Tran.of(context).text("fail"),
+        ShowMessageHandler.showErrMessage(
+            context,
+            Tran.of(context).text("fail"),
             Tran.of(context).text("update_user_fail"));
       }
     }
     notifyListeners();
   }
+
+  // Future<bool> checkPassword(BuildContext context, String password) {
+  //   var pass = DBCrypt().hashpw(password, DBCrypt().gensalt());
+  //   if (FirebaseAuth.instance.currentUser?.uid != null) {
+  //     String uid = FirebaseAuth.instance.currentUser.uid.toString();
+  //     userRef.doc(uid).get().then((value) {
+  //       bool pwValid = value.data()['password'] == pass;
+  //       return pwValid;
+  //     });
+  //   }
+  // }
 
   Future<bool> updateFCMtoken(BuildContext context, String fcmtoken) async {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
@@ -257,14 +268,16 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
       try {
         userRef.doc(uid).update({"fcmToken": fcmtoken}).then((_) {
-          MessageHandler.showMessage(context, Tran.of(context).text("success"),
+          ShowMessageHandler.showMessage(
+              context,
+              Tran.of(context).text("success"),
               Tran.of(context).text("update_token_success"));
           return true;
         });
 
         notifyListeners();
       } catch (e) {
-        MessageHandler.showErrMessage(
+        ShowMessageHandler.showErrMessage(
           context,
           Tran.of(context).text("fail"),
           Tran.of(context).text("update_token_fail"),

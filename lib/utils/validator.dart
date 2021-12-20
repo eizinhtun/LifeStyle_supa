@@ -26,13 +26,6 @@ class Validator {
 
   static Future<bool> checkUserIdIsExist(String uid) async {
     var userRef = FirebaseFirestore.instance.collection(userCollection);
-    // userRef.
-    // QuerySnapshot snaptData = await userRef.where('uid', isEqualTo: uid).get();
-    // if (snaptData.docs.length > 0) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
 
     try {
       var doc = await userRef.doc(uid).get();
@@ -42,16 +35,16 @@ class Validator {
     }
   }
 
-  static String registerPhone(String value) {
+  static String registerPhone(BuildContext context, String value) {
     // String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     // RegExp regExp =  RegExp(patttern);
 
     RegExp phoneExp = RegExp(r'^09\d{6,9}$');
 
     if (value.length == 0) {
-      return 'Please enter mobile number';
+      return Tran.of(context).text("enter_mobile_number");
     } else if (!phoneExp.hasMatch(value)) {
-      return 'Please enter valid mobile number';
+      return Tran.of(context).text("enter_valid_mobile_number");
     }
 
     return null;
@@ -59,11 +52,54 @@ class Validator {
 
   static String transferAmount(BuildContext context, String value) {
     if (value.length == 0) {
-      return 'Please enter transfer amount';
+      return Tran.of(context).text("enter_transfer_amt");
     }
     int amount = int.parse(value.trim());
     if (amount < 1000) {
-      return 'Please enter at least 1000Ks for transfer amount';
+      return Tran.of(context).text("enter_at_least_transfer_amt");
+    }
+    return null;
+  }
+
+  static String transferAccount(BuildContext context, String value) {
+    if (value.length == 0) {
+      return Tran.of(context).text("enter_transfer_account");
+    }
+    int length = value.trim().length;
+    if (length != 6) {
+      return Tran.of(context).text("enter_digit_for_transfer_account");
+    }
+    return null;
+  }
+
+  static String withdrawAmount(BuildContext context, String fileName,
+      String value, String minVal, int balance, bool isRequired) {
+    if (isRequired) {
+      if (value.isEmpty) {
+        return Tran.of(context)
+            .text("requiredField")
+            .replaceAll("@value", fileName);
+      }
+    }
+    if (!isNumeric(value)) {
+      return fileName + ":" + Tran.of(context).text("numerOnly");
+    }
+    if (int.parse(value) < int.parse(minVal)) {
+      return Tran.of(context).text("amount_error");
+    }
+    if (int.parse(value) > balance) {
+      return Tran.of(context).text("lowInBalance");
+    }
+    return null;
+  }
+
+  static String tracId(BuildContext context, String value) {
+    if (value.length == 0) {
+      return Tran.of(context).text("enter_trac_id");
+    }
+    int length = value.trim().length;
+    if (length != 6) {
+      return Tran.of(context).text("enter_6_trac_id");
     }
     return null;
   }
@@ -87,7 +123,7 @@ class Validator {
     }
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern.toString());
+    RegExp regex = RegExp(pattern.toString());
     if (regex.hasMatch(value)) {
       return "";
     } else {
@@ -105,16 +141,11 @@ class Validator {
     }
     if (value.length < 6) {
       String tip = "${Tran.of(context)?.text("lenghtInvaild")}";
-      tip =
-          tip.replaceAll("@filed", "${Tran.of(context)?.text("length_field")}");
+      tip = tip.replaceAll("@fileName", fileName);
 
       tip = tip.replaceAll("@size", "4");
-      if (SystemData.language == "zh") {
-        return tip;
-      } else {
-        return "${Tran.of(context)?.text("requiredField")}"
-            .replaceAll("@value", tip);
-      }
+
+      return tip;
     }
     return null;
   }
@@ -129,17 +160,11 @@ class Validator {
     }
     if (value.length < 4) {
       String tip = "${Tran.of(context)?.text("lenghtInvaild")}";
-      tip =
-          tip.replaceAll("@filed", "${Tran.of(context)?.text("length_field")}");
-
+      tip = tip.replaceAll("@fileName", fileName);
       tip = tip.replaceAll("@size", "4");
-      if (SystemData.language == "zh") {
-        return tip;
-      } else {
-        return "${Tran.of(context)?.text("requiredField")}"
-            .replaceAll("@value", tip);
-      }
+      return tip;
     }
+
     return null;
   }
 
@@ -173,8 +198,7 @@ class Validator {
 
     if (newPassword.length < 4) {
       String tip = "${Tran.of(context)?.text("lenghtInvaild1")}";
-      tip =
-          tip.replaceAll("@filed", "${Tran.of(context)?.text("length_field")}");
+      tip = tip.replaceAll("@fileName", fileName);
       tip = tip.replaceAll("@size", "4");
       if (SystemData.language == "zh") {
         return tip;
@@ -196,7 +220,7 @@ class Validator {
     }
     if (value.length < 4) {
       String tip = "${Tran.of(context)?.text("lenghtInvaild")}";
-      tip = tip.replaceAll("@filed", fileName);
+      tip = tip.replaceAll("@fileName", fileName);
       tip = tip.replaceAll("@size", "4");
       return tip;
     }

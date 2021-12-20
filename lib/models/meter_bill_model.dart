@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MeterBill {
+  String docId;
+  String companyId;
   String id;
   String branchId;
   bool isPaid;
@@ -80,7 +82,7 @@ class MeterBill {
 
   int cost;
 
-  int mMaintenanceCost;
+  double mMaintenanceCost;
 
   int mHorsePowerCost;
 
@@ -114,7 +116,11 @@ class MeterBill {
 
   int readUnit;
   MeterBill(
-      {this.id,
+      {this.docId,
+      this.mMaintenanceCost,
+      this.percentage,
+      this.companyId,
+      this.id,
       this.branchId,
       this.isPaid,
       this.remark,
@@ -173,8 +179,10 @@ class MeterBill {
       this.readUnit});
 
   MeterBill.fromJson(Map<String, dynamic> json, {String meterName}) {
-    //
-    //
+    docId = json['docId'];
+    mMaintenanceCost = json['mMaintenanceCost'];
+    percentage = json['percentage'];
+    companyId = json['companyId'];
     id = json['id'].toString();
     branchId = json['branchId'];
     meterName = meterName;
@@ -237,7 +245,11 @@ class MeterBill {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['docId'] = this.docId;
+    data['mMaintenanceCost'] = this.mMaintenanceCost;
+    data['percentage'] = this.percentage;
+    data['companyId'] = this.companyId;
     data['id'] = int.parse(this.id);
     data['branchId'] = this.branchId;
     data['isPaid'] = this.isPaid;

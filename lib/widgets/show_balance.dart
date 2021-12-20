@@ -13,8 +13,8 @@ import 'package:left_style/utils/formatter.dart';
 class ShowBalance extends StatelessWidget {
   ShowBalance(
       {Key key,
-      this.onTopuped,
-      this.onWithdrawed,
+      @required this.onTopuped,
+      @required this.onWithdrawed,
       this.color = Colors.black38,
       this.walletColor = Colors.white,
       this.showIconColor = Colors.pink})

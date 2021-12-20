@@ -2,14 +2,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/meter_model.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:location/location.dart';
 
@@ -19,9 +18,9 @@ import 'map_page.dart';
 class MeterSearchDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      home: new MeterSearchDetailPage(),
+      home: MeterSearchDetailPage(),
     );
   }
 }
@@ -35,13 +34,13 @@ class MeterSearchDetailPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  MeterSearchDetailPageState createState() => new MeterSearchDetailPageState();
+  MeterSearchDetailPageState createState() => MeterSearchDetailPageState();
 }
 
 class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
     with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  FirebaseMessaging _messaging;
+  FirebaseMessaging _messaging = FirebaseMessaging.instance;
   bool isExist = true;
   bool _isLoading = true;
   Location location;
@@ -84,7 +83,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
@@ -102,14 +101,14 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
       ),
       body: Column(
         children: [
-          new Divider(
+          Divider(
             height: 1.0,
             color: Colors.grey.withOpacity(0.3),
           ),
           Expanded(
             flex: 3,
             child: Container(
-              padding: EdgeInsets.all(2.0),
+              padding: const EdgeInsets.all(2.0),
               child: Column(
                 children: [
                   Expanded(
@@ -118,7 +117,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                     child: Stack(
                       children: [
                         Card(
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                               top: 7, left: 5, right: 5, bottom: 5),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
@@ -132,13 +131,13 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                   onTap: () async {
                                     setState(() {});
                                   },
-                                  contentPadding: EdgeInsets.only(
+                                  contentPadding: const EdgeInsets.only(
                                       top: 5.0,
                                       left: 0.0,
                                       right: 0.0,
                                       bottom: 0.0),
                                   leading: Container(
-                                    padding: EdgeInsets.all(0),
+                                    padding: const EdgeInsets.all(0),
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
@@ -154,7 +153,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                             color: Colors.green,
                                             size: 40,
                                           )
-                                        : new CircleAvatar(
+                                        : CircleAvatar(
                                             radius: 100.0,
                                             // backgroundColor:MyTheme.getPrimaryColor(),
                                             //backgroundImage: MeScreenState.fileAvatar!=null?
@@ -175,7 +174,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         "${widget.obj.meterNo}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold),
                                       )),
@@ -185,7 +184,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.only(top: 5),
+                                        padding: const EdgeInsets.only(top: 5),
                                         child: Text(
                                           "${widget.obj.insertDate}",
                                           // Formatter.getDate(
@@ -195,7 +194,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       ),
                                       Text(
                                         "${widget.obj.customerId} : ${widget.obj.categoryName}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w600),
                                       ),
@@ -214,7 +213,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                     ],
                                   ),
                                   trailing: Container(
-                                      // padding: EdgeInsets.only(right: 20),
+                                      // padding: const EdgeInsets.only(right: 20),
                                       child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -225,7 +224,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                                     widget.obj.lastReadUnit) +
                                                 " " +
                                                 Tran.of(context).text("unit"),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.w600),
                                           ),
@@ -252,14 +251,16 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                   /////// dashColor: sysData.mainColor
                                 ),
                                 Container(
-                                  padding: EdgeInsets.only(top: 5, bottom: 0),
+                                  padding:
+                                      const EdgeInsets.only(top: 5, bottom: 0),
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    "${widget.obj.consumerName} - " +
-                                        (widget.obj.mobile == null
+                                    "${widget.obj.consumerName}" +
+                                        ((widget.obj.mobile == null ||
+                                                widget.obj.mobile == "")
                                             ? ""
-                                            : widget.obj.mobile),
-                                    style: TextStyle(
+                                            : " - ${widget.obj.mobile}"),
+                                    style: const TextStyle(
                                         color: Colors.red, fontSize: 13),
                                   ),
                                 ),
@@ -279,7 +280,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           maxLines: 3,
                                           softWrap: false,
                                           overflow: TextOverflow.fade,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               color: Colors.red, fontSize: 13),
                                         ),
                                       ),
@@ -330,7 +331,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         Tran.of(context).text("read_date"),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
                                             fontSize: 13),
@@ -344,7 +345,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                         "${widget.obj.readDate}",
                                         // Formatter.getDate(
                                         //     widget.obj.readDate.toDate()),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
                                             fontSize: 13),
@@ -366,7 +367,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                 //       child: Text(
                                 //        Tran.of(context).text("last_date"),
                                 //"Last Date",
-                                //         style: TextStyle(
+                                //         style: const TextStyle(
                                 //             fontWeight: FontWeight.bold,
                                 //             color: Colors.black87,
                                 //             fontSize: 13),
@@ -380,7 +381,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                 //         "${widget.obj.dueDate}",
                                 //         // Formatter.getDate(
                                 //         //     widget.obj.dueDate.toDate()),
-                                //         style: TextStyle(
+                                //         style: const TextStyle(
                                 //             fontWeight: FontWeight.bold,
                                 //             color: Colors.black54,
                                 //             fontSize: 13),
@@ -401,7 +402,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         Tran.of(context).text("due_date"),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
                                             fontSize: 13),
@@ -415,7 +416,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                         "${widget.obj.dueDate}",
                                         // Formatter.getDate(
                                         //     widget.obj.dueDate.toDate()),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
                                             fontSize: 13),
@@ -446,7 +447,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         Tran.of(context).text("horse_power"),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
                                             fontSize: 13),
@@ -458,7 +459,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         widget.obj.horsePower.toString(),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
                                             fontSize: 13),
@@ -480,7 +481,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       child: Text(
                                         Tran.of(context)
                                             .text("horse_power_cost"),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
                                             fontSize: 13),
@@ -496,7 +497,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                         // NumberFormat('#,###,000').format(
                                         //         widget.obj.horsePowerCost) +
                                         //     " Kyat",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
                                             fontSize: 13),
@@ -525,7 +526,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       child: Text(
                                         Tran.of(context)
                                             .text("charge_per_unit"),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
                                             fontSize: 13),
@@ -538,7 +539,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       child: Text(
                                         "${widget.obj.chargePerUnit} " +
                                             Tran.of(context).text("kyat"),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
                                             fontSize: 13),
@@ -560,7 +561,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                       child: Text(
                                         Tran.of(context)
                                             .text("maintainence_cost"),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black87,
                                             fontSize: 13),
@@ -575,7 +576,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                                 widget.obj.maintainenceCost) +
                                             " " +
                                             Tran.of(context).text("kyat"),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black54,
                                             fontSize: 13),
@@ -608,9 +609,9 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                           primary: Colors.white, // background
                                           onPrimary: Colors.white, // foreground
                                         ),
-                                        child: new Text(
+                                        child: Text(
                                             Tran.of(context).text("close"),
-                                            style: new TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 16.0,
                                                 color: Colors.black54)),
                                         onPressed: () async {
@@ -629,19 +630,20 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                                         color: Colors.red)))),
 
                                         // color: Colors.black12,
-                                        child: new Text('Add',
-                                            style: new TextStyle(
+                                        child: Text('Add',
+                                            style: const TextStyle(
                                                 fontSize: 16.0,
                                                 color: Colors.white)),
                                         onPressed: () async {
                                           bool isMeterExist =
                                               await checkExist();
                                           if (isMeterExist) {
-                                            MessageHandler.showMessage(
+                                            ShowMessageHandler.showMessage(
                                               context,
-                                              "",
                                               Tran.of(context)
                                                   .text("already_meter"),
+                                              Tran.of(context)
+                                                  .text("already_meter_str"),
                                             );
                                             return;
                                           }
@@ -678,7 +680,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
           builder: (BuildContext context, setState) => Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               margin: const EdgeInsets.only(
                   top: 10, left: 15, right: 15, bottom: 10),
               // height: 160,
@@ -692,11 +694,11 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Text("Enter Password", style: TextStyle(fontSize: 16)),
+                    // Text("Enter Password", style: const TextStyle(fontSize: 16)),
                     Center(
                       child: Text(
                         Tran.of(context).text("enter_meter_remark"),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -706,7 +708,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                       height: 30,
                     ),
                     Padding(
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       child: TextFormField(
                         autofocus: true,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -722,7 +724,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                         decoration: InputDecoration(
                           labelText:
                               "${Tran.of(context)?.text('meter_remark')}",
-                          labelStyle: TextStyle(),
+                          labelStyle: const TextStyle(),
                           hintText: "${Tran.of(context)?.text('meter_remark')}",
                           hintStyle: TextStyle(color: Colors.grey[400]),
                           border: OutlineInputBorder(
@@ -751,20 +753,20 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                 borderRadius: BorderRadius.circular(25),
                               ),
                               primary: Colors.white24,
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                 left: 30,
                                 right: 30,
                                 top: 10,
                                 bottom: 10,
                               ),
                               textStyle:
-                                  TextStyle(fontWeight: FontWeight.bold)),
+                                  const TextStyle(fontWeight: FontWeight.bold)),
                           onPressed: () async {
                             Navigator.pop(context);
                           },
                           child: Text(
                             Tran.of(context).text("cancel"),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -778,7 +780,7 @@ class MeterSearchDetailPageState extends State<MeterSearchDetailPage>
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(25),
                                     ),
-                                    padding: EdgeInsets.only(
+                                    padding: const EdgeInsets.only(
                                       left: 30,
                                       right: 30,
                                       top: 10,

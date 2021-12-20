@@ -23,7 +23,7 @@ class _SettingPageState extends State<SettingPage> {
         centerTitle: true,
       ),
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: ListView(
           children: [],
         ),

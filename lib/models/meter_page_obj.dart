@@ -14,7 +14,7 @@ class MeterPageObj {
     if (json['results'] != null) {
       results = [];
       json['results'].forEach((v) {
-        results.add(new Meter.fromJson(v));
+        results.add(Meter.fromJson(v));
       });
     }
     rowCount = json['totalRows'];
@@ -23,7 +23,7 @@ class MeterPageObj {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.results != null) {
       data['results'] = this.results.map((v) => v.toJson()).toList();
     }

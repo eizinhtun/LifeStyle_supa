@@ -31,8 +31,8 @@ class _ScanQRState extends State<ScanQR> {
                       floating: false,
                       expandedHeight: 0.0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.vertical(
-                          bottom: new Radius.elliptical(200, 56.0),
+                        borderRadius: BorderRadius.vertical(
+                          bottom: Radius.elliptical(200, 56.0),
                         ),
                       ),
                       bottom: PreferredSize(
@@ -53,7 +53,7 @@ class _ScanQRState extends State<ScanQR> {
                   top: 100,
                   left: 0,
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     height: MediaQuery.of(context).size.height - 100,
                     width: MediaQuery.of(context).size.width - 30,
                     child: Column(
@@ -67,7 +67,7 @@ class _ScanQRState extends State<ScanQR> {
                             color: Colors.white,
                             elevation: 10,
                             child: Container(
-                              margin: EdgeInsets.symmetric(vertical: 100),
+                              margin: const EdgeInsets.symmetric(vertical: 100),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
@@ -93,7 +93,8 @@ class _ScanQRState extends State<ScanQR> {
                                       },
                                       child: Text(
                                         Tran.of(context).text("open_scanner"),
-                                        style: TextStyle(color: Colors.white),
+                                        style: const TextStyle(
+                                            color: Colors.white),
                                       ),
                                       //Button having rounded rectangle border
                                     ),
@@ -127,7 +128,7 @@ class _ScanQRState extends State<ScanQR> {
                 //             color: Colors.red,
                 //             child: Column(
                 //               children: [
-                //                 user.fullName !=null ?Text(user.fullName.toUpperCase(),style: TextStyle(fontSize: 20,color: Colors.grey)):Text("loading..."),
+                //                 user.fullName !=null ?Text(user.fullName.toUpperCase(),style: const TextStyle(fontSize: 20,color: Colors.grey)):Text("loading..."),
                 //                 Container(
                 //                     width: 200,
                 //                     height: 200,
@@ -149,7 +150,7 @@ class _ScanQRState extends State<ScanQR> {
     //     title: Text("Scan QR Code"),
     //   ),
     //   body: Container(
-    //     padding: EdgeInsets.all(20),
+    //     padding: const EdgeInsets.all(20),
     //     child: Column(
     //       mainAxisAlignment: MainAxisAlignment.center,
     //       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -157,12 +158,12 @@ class _ScanQRState extends State<ScanQR> {
     //         //Message displayed over here
     //         Text(
     //           "Result",
-    //           style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+    //           style: const TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
     //           textAlign: TextAlign.center,
     //         ),
     //         Text(
     //           qrCodeResult,
-    //           style: TextStyle(
+    //           style: const TextStyle(
     //             fontSize: 20.0,
     //           ),
     //           textAlign: TextAlign.center,
@@ -173,14 +174,14 @@ class _ScanQRState extends State<ScanQR> {
     //
     //         //Button to scan QR code
     //         FlatButton(
-    //           padding: EdgeInsets.all(15),
+    //           padding: const EdgeInsets.all(15),
     //           onPressed: () async {
     //             String codeSanner = await BarcodeScanner.scan(); //barcode scanner
     //             setState(() {
     //               qrCodeResult = codeSanner;
     //             });
     //           },
-    //           child: Text("Open Scanner",style: TextStyle(color: Colors.indigo[900]),),
+    //           child: Text("Open Scanner",style: const TextStyle(color: Colors.indigo[900]),),
     //           //Button having rounded rectangle border
     //           shape: RoundedRectangleBorder(
     //             side: BorderSide(color: Colors.indigo[900]),

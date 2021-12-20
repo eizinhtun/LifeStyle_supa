@@ -43,7 +43,7 @@ class _LanguagePageState extends State<LanguagePage>
         ),
       ),
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: ListView(
           children: [
             Column(
@@ -180,7 +180,7 @@ class _LanguagePageState extends State<LanguagePage>
             //     },
             //     title: Text(
             //       "မြန်မာ",
-            //       style: TextStyle(fontWeight: FontWeight.bold),
+            //       style: const TextStyle(fontWeight: FontWeight.bold),
             //     ),
             //     trailing: (SystemData.language == "my" || _selectedMy)?Icon(Icons.check,color: Colors.green,):null,
             //   ),
@@ -201,7 +201,7 @@ class _LanguagePageState extends State<LanguagePage>
             //     },
             //     title: Text(
             //       "English",
-            //       style: TextStyle(fontWeight: FontWeight.bold),
+            //       style: const TextStyle(fontWeight: FontWeight.bold),
             //     ),
             //     trailing:(SystemData.language == "en" || _selectedEn)?Icon(Icons.check,color: Colors.green,):null,
             //   ),
@@ -222,7 +222,7 @@ class _LanguagePageState extends State<LanguagePage>
             //     },
             //     title: Text(
             //       "中文",
-            //       style: TextStyle(fontWeight: FontWeight.bold),
+            //       style: const TextStyle(fontWeight: FontWeight.bold),
             //     ),
             //     trailing: (SystemData.language == "zh" || _selectedZh)?Icon(Icons.check,color: Colors.green,):null,
             //   ),

@@ -1,7 +1,6 @@
 // @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:left_style/datas/constants.dart';
@@ -13,14 +12,14 @@ import 'package:barcode_scan_fix/barcode_scan.dart' as bar;
 import 'meter_city_page.dart';
 import 'meter_search_result.dart';
 
-import 'package:left_style/utils/message_handler.dart' as msg;
+import 'package:left_style/utils/show_message_handler.dart';
 
 class MeterListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'My Meters',
-      home: new MeterListPage(),
+      home: MeterListPage(),
     );
   }
 }
@@ -30,7 +29,7 @@ class MeterListPage extends StatefulWidget {
   const MeterListPage({Key key}) : super(key: key);
 
   @override
-  MeterListPageState createState() => new MeterListPageState();
+  MeterListPageState createState() => MeterListPageState();
 }
 
 class MeterListPageState extends State<MeterListPage>
@@ -51,7 +50,7 @@ class MeterListPageState extends State<MeterListPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
@@ -86,7 +85,8 @@ class MeterListPageState extends State<MeterListPage>
               children: snapshot.data.docs.map((doc) {
                 Meter item = Meter.fromJson(doc.data());
                 return Card(
-                  margin: EdgeInsets.only(top: 0, left: 5, right: 5, bottom: 0),
+                  margin: const EdgeInsets.only(
+                      top: 0, left: 5, right: 5, bottom: 0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0.0),
                   ),
@@ -99,12 +99,12 @@ class MeterListPageState extends State<MeterListPage>
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      new MeterEditPage(obj: item)));
+                                      MeterEditPage(obj: item)));
                         },
-                        contentPadding: EdgeInsets.only(
+                        contentPadding: const EdgeInsets.only(
                             top: 5.0, left: 0.0, right: 0.0, bottom: 0.0),
                         leading: Container(
-                            padding: EdgeInsets.only(left: 10),
+                            padding: const EdgeInsets.only(left: 10),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -120,7 +120,7 @@ class MeterListPageState extends State<MeterListPage>
                               color: Colors.green,
                             )
 
-                            /*new CircleAvatar(
+                            /*CircleAvatar(
                               radius: 100.0,
                               // backgroundColor:MyTheme.getPrimaryColor(),
                               //backgroundImage: MeScreenState.fileAvatar!=null?
@@ -136,8 +136,10 @@ class MeterListPageState extends State<MeterListPage>
                         title: Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "${item.meterNo} (${item.meterName})",
-                              style: TextStyle(
+                              (item.meterName != null && item.meterName != "")
+                                  ? "${item.meterNo} (${item.meterName})"
+                                  : "${item.meterNo}",
+                              style: const TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.bold),
                             )),
                         subtitle: Column(
@@ -145,13 +147,13 @@ class MeterListPageState extends State<MeterListPage>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: EdgeInsets.only(top: 5),
+                              padding: const EdgeInsets.only(top: 5),
                               child: Text(item.insertDate),
                             ),
 
                             Text(
                               item.customerId + " : " + item.categoryName,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600),
                             ),
@@ -162,7 +164,7 @@ class MeterListPageState extends State<MeterListPage>
                             //             0,
                             //     child: Container(
                             //       padding:
-                            //           EdgeInsets.only(top: 5),
+                            //           const EdgeInsets.only(top: 5),
                             //       child: Text(item
                             //           .remark
                             //           .toString()),
@@ -170,7 +172,7 @@ class MeterListPageState extends State<MeterListPage>
                           ],
                         ),
                         // trailing: Container(
-                        //     padding: EdgeInsets.only(right: 20),
+                        //     padding: const EdgeInsets.only(right: 20),
                         //     child: Column(
                         //       mainAxisAlignment: MainAxisAlignment.center,
                         //       children: [
@@ -180,12 +182,12 @@ class MeterListPageState extends State<MeterListPage>
                         //               NumberFormat('#,###,000')
                         //                       .format(item.lastReadUnit) +
                         //                   " Unit",
-                        //               style: TextStyle(
+                        //               style: const TextStyle(
                         //                   color: Colors.black,
                         //                   fontWeight: FontWeight.w600),
                         //             ),
                         //             Padding(
-                        //               padding: EdgeInsets.only(left: 10.0),
+                        //               padding: const EdgeInsets.only(left: 10.0),
                         //               child: Icon(
                         //                 Icons.arrow_forward_ios,
                         //                 size: 16,
@@ -207,16 +209,17 @@ class MeterListPageState extends State<MeterListPage>
                       ),
                       Container(
                           alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 20, top: 5, bottom: 10, right: 20),
                           child: Column(
                             children: [
                               Container(
-                                padding: EdgeInsets.only(top: 5, bottom: 5),
+                                padding:
+                                    const EdgeInsets.only(top: 5, bottom: 5),
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   item.consumerName + " - " + item.houseNo,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.red, fontSize: 13),
                                 ),
                               ),
@@ -252,9 +255,9 @@ class MeterListPageState extends State<MeterListPage>
                           apiUrl: apiUrl,
                         )));
             if (returnResult != null && returnResult) {
-              msg.MessageHandler.showMessage(
+              ShowMessageHandler.showMessage(
                 context,
-                "",
+                Tran.of(context).text("success_added"),
                 Tran.of(context).text("meter_added"),
               );
             }
@@ -304,7 +307,7 @@ class MeterListPageState extends State<MeterListPage>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            actionsPadding: EdgeInsets.fromLTRB(4, 4, 4, 4),
+            actionsPadding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
             actions: [
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
@@ -329,7 +332,7 @@ class MeterListPageState extends State<MeterListPage>
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                new IconButton(
+                IconButton(
                   icon: Icon(
                     Icons.qr_code,
                     size: 40,
@@ -348,7 +351,7 @@ class MeterListPageState extends State<MeterListPage>
                     // return "QR";
                   },
                 ),
-                new IconButton(
+                IconButton(
                   icon: Icon(
                     Icons.search,
                     size: 40,

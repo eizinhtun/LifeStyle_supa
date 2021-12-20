@@ -17,7 +17,7 @@ class MeterPresenter {
   MeterApi api;
   MeterPresenter(MeterContract classObj, BuildContext context) {
     this._view = classObj;
-    api = new MeterApi(context);
+    api = MeterApi(context);
   }
 
   loadData({

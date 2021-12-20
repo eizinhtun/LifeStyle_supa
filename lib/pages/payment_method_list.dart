@@ -1,7 +1,6 @@
 // @dart=2.9
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/translate.dart';
@@ -10,9 +9,9 @@ import 'package:left_style/models/payment_method.dart';
 class PaymentMethodList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'My uploaded unit',
-      home: new PaymentMethodListPage(),
+      home: PaymentMethodListPage(),
     );
   }
 }
@@ -21,7 +20,7 @@ class PaymentMethodListPage extends StatefulWidget {
   const PaymentMethodListPage({Key key}) : super(key: key);
 
   @override
-  PaymentMethodListPageState createState() => new PaymentMethodListPageState();
+  PaymentMethodListPageState createState() => PaymentMethodListPageState();
 }
 
 class PaymentMethodListPageState extends State<PaymentMethodListPage>
@@ -41,7 +40,7 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
@@ -60,7 +59,8 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
               children: snapshot.data.docs.map((doc) {
                 PaymentMethod item = PaymentMethod.fromJson(doc.data());
                 return Card(
-                  margin: EdgeInsets.only(top: 0, left: 5, right: 5, bottom: 1),
+                  margin: const EdgeInsets.only(
+                      top: 0, left: 5, right: 5, bottom: 1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
                   ),
@@ -71,17 +71,17 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
                         onTap: () async {
                           Navigator.of(context).pop(item);
                         },
-                        contentPadding: EdgeInsets.only(
+                        contentPadding: const EdgeInsets.only(
                             top: 10.0, left: 0.0, right: 0.0, bottom: 10.0),
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.only(left: 20),
+                              margin: const EdgeInsets.only(left: 20),
                               alignment: Alignment.center,
                               width: 60,
                               height: 60,
-                              child: new CircleAvatar(
+                              child: CircleAvatar(
                                   radius: 100.0,
                                   backgroundImage: CachedNetworkImageProvider(
                                     item.logoUrl,
@@ -92,11 +92,11 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
                                   ),
                             ),
                             Container(
-                                padding: EdgeInsets.only(left: 20),
+                                padding: const EdgeInsets.only(left: 20),
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   item.name,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w900),
                                 )),
@@ -116,13 +116,13 @@ class PaymentMethodListPageState extends State<PaymentMethodListPage>
 
   // @override
   // void showError(String text) {
-  //   _scaffoldKey.currentState.showSnackBar(new SnackBar(
+  //   _scaffoldKey.currentState.showSnackBar(SnackBar(
   //       backgroundColor: Colors.red,
-  //       content: new Text(Tran.of(context).text(text))));
+  //       content: Text(Tran.of(context).text(text))));
   // }
 
   // @override
   // void showMessage(String text) {
-  //   MessageHandler.showMessage(context, "", text);
+  //   ShowMessageHandler.showMessage(context, "", text);
   // }
 }

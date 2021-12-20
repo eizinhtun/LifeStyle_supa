@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,9 +12,10 @@ import 'package:left_style/models/user_model.dart';
 import 'package:left_style/pages/register_verify_pin_page.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/utils/validator.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 import 'language_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             child: Center(
               child: Container(
-                padding: EdgeInsets.all(30),
+                padding: const EdgeInsets.all(30),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                     Form(
                       key: _loginformKey,
                       child: Container(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         // decoration: BoxDecoration(
                         //     color: Colors.white,
                         //     borderRadius: BorderRadius.circular(10),
@@ -87,15 +87,19 @@ class _LoginPageState extends State<LoginPage> {
                                   AutovalidateMode.onUserInteraction,
                               controller: _phoneController,
                               validator: (val) {
-                                return Validator.registerPhone(val.toString());
+                                return Validator.registerPhone(
+                                    context, val.toString());
                               },
                               keyboardType: TextInputType.phone,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
                               decoration: InputDecoration(
                                 labelText: Tran.of(context)?.text("phone"),
                                 //     border: InputBorder.none,
                                 //     hintText: Tran.of(context)?.text("phone"),
                                 //     hintStyle:
-                                //         TextStyle(color: Colors.grey[400])
+                                //         const TextStyle(color: Colors.grey[400])
                               ),
                             ),
                           ],
@@ -122,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Text(
                           "${Tran.of(context)?.text("login")}",
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -133,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                     Center(
                       child: Text(
                         "${Tran.of(context)?.text("login_with")}",
-                        style: TextStyle(color: Colors.black26),
+                        style: const TextStyle(color: Colors.black26),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -173,10 +177,10 @@ class _LoginPageState extends State<LoginPage> {
                           setState(() {});
                         },
                         child: Container(
-                          padding: EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(12.0),
                           child: Text(
                             Tran.of(context).text("select_language"),
-                            style: TextStyle(color: mainColor),
+                            style: const TextStyle(color: mainColor),
                           ),
                         ),
                       ),
@@ -212,49 +216,51 @@ class _LoginPageState extends State<LoginPage> {
 
   bool isWaiting = false;
   void register() async {
-    if (_loginformKey.currentState.validate()) {
-      String token = await checkToken(fcmtoken);
-      UserModel user = UserModel(
-          phone: phone,
-          fcmtoken: token,
-          isActive: true,
-          createdDate: Timestamp.fromDate(DateTime.now()));
+    setState(() {
+      isWaiting = true;
+    });
+    String token = await checkToken(fcmtoken);
+    UserModel user = UserModel(
+        phone: phone,
+        fcmtoken: token,
+        isActive: true,
+        createdDate: Timestamp.fromDate(DateTime.now()));
 
-      try {
-        await _auth.verifyPhoneNumber(
-            phoneNumber: phone,
-            timeout: const Duration(seconds: timeOut),
-            verificationCompleted:
-                (PhoneAuthCredential phoneAuthCredential) async {},
-            verificationFailed: (FirebaseAuthException authException) {
-              print(
-                  'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-              MessageHandler.showSnackbar(
-                  'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
-                  context,
-                  6);
-            },
-            codeSent: (String verificationId, [int forceResendingToken]) async {
-              print('Please check your phone for the verification code.' +
-                  verificationId);
-              MessageHandler.showSnackbar(
-                  'Please check your phone for the verification code.',
-                  context,
-                  6);
-              verificationId = verificationId;
+    try {
+      await _auth.verifyPhoneNumber(
+          phoneNumber: phone,
+          timeout: const Duration(seconds: timeOut),
+          verificationCompleted:
+              (PhoneAuthCredential phoneAuthCredential) async {},
+          verificationFailed: (FirebaseAuthException authException) {
+            String str = Tran.of(context)
+                .text("phoneNumberVerificationFailedCode")
+                .replaceAll('@authExceptionCode', authException.code)
+                .replaceAll('@authExceptionMessage', authException.message);
 
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => RegisterVerifyPinPage(
-                      user: user, verificationId: verificationId)));
-            },
-            codeAutoRetrievalTimeout: (String verificationId) {
-              verificationId = verificationId;
-            });
-      } catch (e) {
-        MessageHandler.showSnackbar(
-            Tran.of(context).text("failVerifyPhoneNumber $e"), context, 6);
-      }
+            ShowMessageHandler.showSnackbar(str, context, 6);
+          },
+          codeSent: (String verificationId, [int forceResendingToken]) async {
+            ShowMessageHandler.showSnackbar(
+                Tran.of(context).text("checkPhoneNumberVerificationCode"),
+                context,
+                6);
+            verificationId = verificationId;
+
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => RegisterVerifyPinPage(
+                    user: user, verificationId: verificationId)));
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            verificationId = verificationId;
+          });
+    } catch (e) {
+      ShowMessageHandler.showSnackbar(
+          Tran.of(context).text("failVerifyPhoneNumber").replaceAll('@e', e),
+          context,
+          6);
     }
+    isWaiting = false;
   }
 
   Future<void> _fblogin() async {
@@ -278,10 +284,11 @@ class _LoginPageState extends State<LoginPage> {
     // setState(() {
     //   isWaiting = false;
     // });
+    isWaiting = false;
   }
 
   String prettyPrint(Map json) {
-    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+    JsonEncoder encoder = JsonEncoder.withIndent('  ');
     String pretty = encoder.convert(json);
     return pretty;
   }

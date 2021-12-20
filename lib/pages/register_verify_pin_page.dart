@@ -5,11 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-// import 'package:otp_autofill/otp_autofill.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class RegisterVerifyPinPage extends StatefulWidget {
@@ -84,15 +85,15 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                     child: Column(
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.all(30.0),
+                          padding: const EdgeInsets.all(30.0),
                           child: Column(
                             children: <Widget>[
                               PinCodeTextField(
                                 appContext: context,
-                                pastedTextStyle: TextStyle(
-                                  color: Colors.green.shade600,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                // pastedTextStyle: TextStyle(
+                                //   color: Colors.green.shade600,
+                                //   fontWeight: FontWeight.bold,
+                                // ),
                                 length: 6,
                                 obscureText: false,
 
@@ -103,8 +104,9 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                                 // blinkWhenObscuring: true,
                                 animationType: AnimationType.fade,
                                 validator: (v) {
-                                  if (v.length < 3) {
-                                    return "I'm from validator";
+                                  if (v.length != 6) {
+                                    return Tran.of(context)
+                                        .text("otp_6_digits");
                                   } else {
                                     return null;
                                   }
@@ -125,7 +127,10 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                                 enableActiveFill: true,
                                 errorAnimationController: errorController,
                                 controller: controller,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.numberWithOptions(),
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
                                 boxShadows: [
                                   BoxShadow(
                                     offset: Offset(0, 1),
@@ -165,7 +170,7 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                                     }
                                   },
                                   child: Text(
-                                    "Resend OTP",
+                                    Tran.of(context).text("resend_otp"),
                                     style: TextStyle(
                                         color: Theme.of(context).primaryColor,
                                         fontSize: 12,
@@ -177,7 +182,7 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                                           color: Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(50)),
-                                      margin: EdgeInsets.all(5),
+                                      margin: const EdgeInsets.all(5),
                                       alignment: Alignment.center,
                                       width: 40,
                                       height: 40,
@@ -213,8 +218,8 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
                                     signInWithPhoneNumber();
                                   },
                                   child: Text(
-                                    "Verify Pin",
-                                    style: TextStyle(
+                                    Tran.of(context).text("verify_pin"),
+                                    style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -244,18 +249,17 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
           verificationCompleted:
               (PhoneAuthCredential phoneAuthCredential) async {},
           verificationFailed: (FirebaseAuthException authException) {
-            print(
-                'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-            MessageHandler.showSnackbar(
-                'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}',
-                context,
-                6);
+            String str = Tran.of(context)
+                .text("phoneNumberVerificationFailedCode")
+                .replaceAll('@authExceptionCode', authException.code)
+                .replaceAll('@authExceptionMessage', authException.message);
+            ShowMessageHandler.showSnackbar(str, context, 6);
           },
           codeSent: (String verificationId, [int forceResendingToken]) async {
             print('Please check your phone for the verification code.' +
                 verificationId);
-            MessageHandler.showSnackbar(
-                'Please check your phone for the verification code.',
+            ShowMessageHandler.showSnackbar(
+                Tran.of(context).text("checkPhoneNumberVerificationCode"),
                 context,
                 6);
             verificationId = verificationId;
@@ -268,8 +272,10 @@ class _RegisterVerifyPinPageState extends State<RegisterVerifyPinPage> {
             verificationId = verificationId;
           });
     } catch (e) {
-      MessageHandler.showSnackbar(
-          "Failed to Verify Phone Number: $e", context, 6);
+      ShowMessageHandler.showSnackbar(
+          Tran.of(context).text("failVerifyPhoneNumber").replaceAll('@e', e),
+          context,
+          6);
     }
   }
 

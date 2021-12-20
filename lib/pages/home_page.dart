@@ -2,7 +2,6 @@
 import 'package:barcode_scan_fix/barcode_scan.dart' as bar;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -43,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            actionsPadding: EdgeInsets.fromLTRB(4, 4, 4, 4),
+            actionsPadding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
             actions: [
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
@@ -68,7 +67,7 @@ class _HomePageState extends State<HomePage> {
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                new IconButton(
+                IconButton(
                   icon: Icon(
                     Icons.qr_code,
                     size: 40,
@@ -87,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                     // return "QR";
                   },
                 ),
-                new IconButton(
+                IconButton(
                   icon: Icon(
                     Icons.search,
                     size: 40,
@@ -182,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                                       AdsModel item =
                                           AdsModel.fromJson(doc.data());
                                       return Padding(
-                                        padding: EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.all(8.0),
                                         child: InkWell(
                                           onTap: () {
                                             if (item.linkUrl != null &&
@@ -198,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                                                 "content") {
                                               Navigator.push(
                                                   context,
-                                                  new MaterialPageRoute(
+                                                  MaterialPageRoute(
                                                     builder: (BuildContext
                                                             context) =>
                                                         AdsDetailPage(
@@ -210,8 +209,10 @@ class _HomePageState extends State<HomePage> {
                                           },
                                           child: Center(
                                             child: Card(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 5, vertical: 5),
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 5),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(5.0),
@@ -264,7 +265,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Container(
                                           width: 8.0,
                                           height: 8.0,
-                                          margin: EdgeInsets.symmetric(
+                                          margin: const EdgeInsets.symmetric(
                                               vertical: 8.0, horizontal: 4.0),
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
@@ -310,7 +311,7 @@ class _HomePageState extends State<HomePage> {
                         //   },
                         //   child: Text(
                         //     "Retrieve Firebase Data",
-                        //     style: TextStyle(
+                        //     style: const TextStyle(
                         //         color: Colors.white,
                         //         fontWeight: FontWeight.bold),
                         //   ),
@@ -329,7 +330,7 @@ class _HomePageState extends State<HomePage> {
                         //   },
                         //   child: Text(
                         //     "Add Meter Bill",
-                        //     style: TextStyle(
+                        //     style: const TextStyle(
                         //         color: Colors.white,
                         //         fontWeight: FontWeight.bold),
                         //   ),
@@ -351,14 +352,14 @@ class _HomePageState extends State<HomePage> {
                         //   },
                         //   child: Text(
                         //     "Add Meter",
-                        //     style: TextStyle(
+                        //     style: const TextStyle(
                         //         color: Colors.white,
                         //         fontWeight: FontWeight.bold),
                         //   ),
                         // ),
 
                         Container(
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Column(
                             children: getWidgets(context),
                           ),
@@ -374,7 +375,7 @@ class _HomePageState extends State<HomePage> {
             top: 30,
             left: 0,
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 15),
+              margin: const EdgeInsets.symmetric(horizontal: 15),
               height: MediaQuery.of(context).size.height - 100,
               width: MediaQuery.of(context).size.width - 30,
               alignment: Alignment.center,
@@ -396,6 +397,18 @@ class _HomePageState extends State<HomePage> {
                             ShowBalance(
                               color: Colors.white,
                               showIconColor: Colors.white,
+                              onTopuped: (result) {
+                                // if (result != null && result == true) {
+                                //   _isLoading = true;
+                                //   _onRefresh();
+                                // }
+                              },
+                              onWithdrawed: (result) {
+                                // if (result != null && result == true) {
+                                //   _isLoading = true;
+                                //   _onRefresh();
+                                // }
+                              },
                             )
                           ],
                         ),
@@ -420,7 +433,7 @@ class _HomePageState extends State<HomePage> {
                   //             items: snapshot.data.docs.map((doc) {
                   //               AdsModel item =Ads.fromJson(doc.data());
                   //              return Padding(
-                  //                 padding: EdgeInsets.all(8.0),
+                  //                 padding: const EdgeInsets.all(8.0),
                   //                  child: InkWell(
                   //                    onTap: () {
                   //                      if (item.linkUrl != null &&
@@ -431,7 +444,7 @@ class _HomePageState extends State<HomePage> {
                   //                      else if (item.type.toString().toLowerCase() == "content") {
                   //                        Navigator.push(
                   //                            context,
-                  //                            new MaterialPageRoute(
+                  //                            MaterialPageRoute(
                   //                              builder: (BuildContext context) =>
                   //                                  AdsDetailPage(
                   //                                      id: item.id.toString()),
@@ -441,7 +454,7 @@ class _HomePageState extends State<HomePage> {
                   //                    },
                   //                    child: Center(
                   //                      child: Card(
-                  //                        margin: EdgeInsets.symmetric(
+                  //                        margin: const EdgeInsets.symmetric(
                   //                            horizontal: 5, vertical: 5),
                   //                        shape: RoundedRectangleBorder(
                   //                          borderRadius:
@@ -485,7 +498,7 @@ class _HomePageState extends State<HomePage> {
                   //                 child: Container(
                   //                   width: 12.0,
                   //                   height: 12.0,
-                  //                   margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                  //                   margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                   //                   decoration: BoxDecoration(
                   //                       shape: BoxShape.circle,
                   //                       color: (Theme.of(context).brightness == Brightness.dark
@@ -504,7 +517,7 @@ class _HomePageState extends State<HomePage> {
                   //   height: 20,
                   // ),
                   // // Container(
-                  // //     margin: EdgeInsets.only(top: 10),
+                  // //     margin: const EdgeInsets.only(top: 10),
                   // //     color: Colors.black.withOpacity(0.05),
                   // //     child: Column(
                   // //       children: [
@@ -537,7 +550,7 @@ class _HomePageState extends State<HomePage> {
                   // //                       "content") {
                   // //                     Navigator.push(
                   // //                         context,
-                  // //                         new MaterialPageRoute(
+                  // //                         MaterialPageRoute(
                   // //                           builder: (BuildContext context) =>
                   // //                               AdsDetailPage(
                   // //                                   id: adsItems[index]
@@ -549,7 +562,7 @@ class _HomePageState extends State<HomePage> {
                   // //                 },
                   // //                 child: Center(
                   // //                   child: Card(
-                  // //                     margin: EdgeInsets.symmetric(
+                  // //                     margin: const EdgeInsets.symmetric(
                   // //                         horizontal: 5, vertical: 5),
                   // //                     shape: RoundedRectangleBorder(
                   // //                       borderRadius:
@@ -606,12 +619,12 @@ class _HomePageState extends State<HomePage> {
                   // //   },
                   // //   child: Text(
                   // //     "Add",
-                  // //     style: TextStyle(
+                  // //     style: const TextStyle(
                   // //         color: Colors.white, fontWeight: FontWeight.bold),
                   // //   ),
                   // // ),
                   // Container(
-                  //   padding: EdgeInsets.all(8),
+                  //   padding: const EdgeInsets.all(8),
                   //   child: Column(
                   //     children: getWidgets(context),
                   //   ),
@@ -635,7 +648,7 @@ class _HomePageState extends State<HomePage> {
     for (var i = 0; i < datalist.length - 1; i += 2) {
       list.add(
         Container(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html >
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en" >
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -25,7 +26,7 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7TRogvV360fOZNbhcjaa3fioVzNH3Qug"></script> -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7TRogvV360fOZNbhcjaa3fioVzNH3Qug&callback=initMap"></script>
+  <script crossorigin="anonymous"  async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7TRogvV360fOZNbhcjaa3fioVzNH3Qug&callback=initMap"></script>
 
   <title>left_style</title>
   <link rel="manifest" href="manifest.json">
@@ -42,12 +43,12 @@
 
 
 
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+  <script crossorigin="anonymous" src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script crossorigin="anonymous"  src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+  <script crossorigin="anonymous"  src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script crossorigin="anonymous"  src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
   <!-- Firebase Auth SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+  <script crossorigin="anonymous"  src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
   <script>
       // Your web app's Firebase configuration
       var firebaseConfig = {
@@ -131,7 +132,7 @@
   <picture id="splash">
     <source srcset="splash/img/light-4x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light) or (prefers-color-scheme: no-preference)">
     <source srcset="splash/img/dark-4x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
-    <img class="center" src="splash/img/light-2x.png" />
+    <img  alt ="splash" class="center" src="splash/img/light-2x.png" />
   </picture>
 </body>
 </html>

@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "719786289421-h0rcg9vubujes5il41264imlipeb6rc1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unifine.epc.left_style",
+            "certificate_hash": "9d8807ac5bc7965e0d55e2fb0e6ce1f620a4c620"
+          }
+        },
+        {
           "client_id": "719786289421-hvooo1k5bsnvunnblrkmd8lobsvv0avg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

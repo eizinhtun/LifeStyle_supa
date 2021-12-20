@@ -1,5 +1,4 @@
 // @dart=2.9
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,7 +28,7 @@ class _MeterCityPageState extends State<MeterCityPage> {
       body: Column(
         children: [
           /*   Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20.0),
+            padding: const const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20.0),
             child: TextField(
               onChanged: (value) {
               //  searchKey=value;
@@ -42,7 +41,7 @@ class _MeterCityPageState extends State<MeterCityPage> {
                   //labelText: "Search",
                   hintText: "Search",
                   prefixIcon: Icon(Icons.search),
-                  contentPadding: EdgeInsets.all(0.0),
+                  contentPadding: const EdgeInsets.all(0.0),
                   border: OutlineInputBorder(
                       gapPadding:0,
                       borderRadius: BorderRadius.all(Radius.circular(30.0)))),

@@ -13,9 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/user_model.dart';
 import 'package:left_style/providers/login_provider.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 import 'package:left_style/utils/validator.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:flutter/services.dart';
 
 class ChangePinPhonePage extends StatefulWidget {
   const ChangePinPhonePage({Key key}) : super(key: key);
@@ -64,7 +65,7 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
         centerTitle: true,
       ),
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,7 +89,7 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                 visible: isVisible,
                 child: Center(
                   child: Container(
-                    padding: EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.only(top: 16),
                     child: Form(
                       key: _formKey,
                       child: Column(
@@ -111,10 +112,10 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                           PinCodeTextField(
                             appContext: context,
                             autoFocus: true,
-                            pastedTextStyle: TextStyle(
-                              color: Colors.green.shade600,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            // pastedTextStyle: TextStyle(
+                            //   color: Colors.green.shade600,
+                            //   fontWeight: FontWeight.bold,
+                            // ),
                             length: 6,
                             obscureText: false,
 
@@ -144,7 +145,10 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                             enableActiveFill: true,
                             errorAnimationController: errorController,
                             controller: controller,
-                            keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.numberWithOptions(),
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                             boxShadows: [
                               BoxShadow(
                                 offset: Offset(0, 1),
@@ -195,7 +199,7 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(50)),
-                                  margin: EdgeInsets.all(5),
+                                  margin: const EdgeInsets.all(5),
                                   alignment: Alignment.center,
                                   width: 40,
                                   height: 40,
@@ -235,7 +239,7 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                             },
                             // decoration: InputDecoration(
                             //   labelText: "Password",
-                            //   // contentPadding: EdgeInsets.all(16),
+                            //   // contentPadding: const EdgeInsets.all(16),
                             // ),
                             decoration: InputDecoration(
                               labelText: Tran.of(context).text("password"),
@@ -260,7 +264,7 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
                                 borderSide: BorderSide(
                                     color: Theme.of(context).primaryColor),
                               ),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 12),
                             ),
                           ),
@@ -333,18 +337,22 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
     String smsCode = controller.text.trim();
     await api.verifyPin(context, requestId, smsCode).then((statusCode) async {
       if (statusCode == 0) {
-        MessageHandler.showError(context, Tran.of(context).text("invalid_pin"),
+        ShowMessageHandler.showError(
+            context,
+            Tran.of(context).text("invalid_pin"),
             Tran.of(context).text("invalid_pin_str"));
       } else if (statusCode == 10) {
-        MessageHandler.showError(
+        ShowMessageHandler.showError(
             context,
             Tran.of(context).text("attempt_exceed"),
             Tran.of(context).text("attempt_exceed_str"));
       } else if (statusCode == 11) {
-        MessageHandler.showError(context, Tran.of(context).text("pin_expired"),
+        ShowMessageHandler.showError(
+            context,
+            Tran.of(context).text("pin_expired"),
             Tran.of(context).text("pin_expired_str"));
       } else if (statusCode == 200) {
-        MessageHandler.showMessage(
+        ShowMessageHandler.showMessage(
             context,
             Tran.of(context).text("pin_verified"),
             Tran.of(context).text("pin_verified_str"));
@@ -354,7 +362,7 @@ class _ChangePinPhonePageState extends State<ChangePinPhonePage> {
         await context.read<LoginProvider>().updateUserInfo(context, user);
         Navigator.of(context).pop();
       } else {
-        MessageHandler.showError(context, Tran.of(context).text("unknown"),
+        ShowMessageHandler.showError(context, Tran.of(context).text("unknown"),
             Tran.of(context).text("unknown_str"));
       }
     });

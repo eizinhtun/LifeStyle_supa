@@ -5,19 +5,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/meter_model.dart';
 import 'package:left_style/pages/upload_my_read.dart';
-import 'package:left_style/utils/message_handler.dart';
+import 'package:left_style/utils/show_message_handler.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'map_page.dart';
 
 class MeterEditScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      home: new MeterEditPage(),
+      home: MeterEditPage(),
     );
   }
 }
@@ -31,7 +32,7 @@ class MeterEditPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  MeterEditPageState createState() => new MeterEditPageState();
+  MeterEditPageState createState() => MeterEditPageState();
 }
 
 class MeterEditPageState extends State<MeterEditPage>
@@ -79,41 +80,64 @@ class MeterEditPageState extends State<MeterEditPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         title: Text(Tran.of(context).text("meter_detail").toString()),
         actions: [
           PopupMenuButton(
-              onSelected: (val) async {
-                if (val == 1) {
-                  await Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => UploadMyReadScreen(
-                          customerId: widget.obj.customerId)));
+            onSelected: (val) async {
+              if (val == 1) {
+                if (FirebaseAuth.instance.currentUser?.uid != null) {
+                  String uid = FirebaseAuth.instance.currentUser.uid.toString();
+
+                  var value = await meterRef
+                      .doc(uid)
+                      .collection(userMeterCollection)
+                      .doc(widget.obj.customerId)
+                      .get(GetOptions(source: Source.server));
+                  if (value.exists) {
+                    if (value.data()["SelfScan"] != null &&
+                        value.data()["SelfScan"]) {
+                      await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => UploadMyReadScreen(
+                                customerId: widget.obj.customerId,
+                                branchId: widget.obj.branchId,
+                                companyId: widget.obj.companyId,
+                              )));
+                    } else {
+                      ShowMessageHandler.showErrMessage(
+                          context,
+                          Tran.of(context).text("enable_scan_by_me"),
+                          Tran.of(context).text("enable_scan_by_me_str"));
+                    }
+                  }
 
                   /*if (result != null && result == true) {
                         _isLoading = true;
                         _onRefresh();
                       }*/
                 }
-                if (val == 2) {
-                  showAlertDialog(context);
-                  // var result = await Navigator.of(context).push(
-                  //     MaterialPageRoute(
-                  //         builder: (context) => WithdrawalPage()));
-                  // onWithdrawed(result);
-                  /*if (result != null && result == true) {
+              }
+              if (val == 2) {
+                showAlertDialog(context);
+                // var result = await Navigator.of(context).push(
+                //     MaterialPageRoute(
+                //         builder: (context) => WithdrawalPage()));
+                // onWithdrawed(result);
+                /*if (result != null && result == true) {
                         _isLoading = true;
                         _onRefresh();
                       }*/
-                }
-              },
-              icon: Icon(
-                Icons.more_horiz_rounded,
-                color: Colors.white,
-              ),
-              itemBuilder: (context) => [
+              }
+            },
+            icon: Icon(
+              Icons.more_horiz_rounded,
+              color: Colors.white,
+            ),
+            itemBuilder: (context) => SystemData.onMeterUploadFunc
+                ? [
                     PopupMenuItem(
                       child: Column(
                         children: [
@@ -154,7 +178,30 @@ class MeterEditPageState extends State<MeterEditPage>
                       ),
                       value: 2,
                     )
-                  ]),
+                  ]
+                : [
+                    PopupMenuItem(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0, top: 10, bottom: 10),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  )),
+                              Text(Tran.of(context).text("meterRemove")),
+                            ],
+                          ),
+                          Divider()
+                        ],
+                      ),
+                      value: 2,
+                    )
+                  ],
+          ),
         ],
         /*flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -176,7 +223,7 @@ class MeterEditPageState extends State<MeterEditPage>
           Expanded(
             flex: 3,
             child: Container(
-              padding: EdgeInsets.all(2.0),
+              padding: const EdgeInsets.all(2.0),
               child: Column(
                 children: [
                   Expanded(
@@ -185,7 +232,7 @@ class MeterEditPageState extends State<MeterEditPage>
                     child: Stack(
                       children: [
                         Card(
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                               top: 7, left: 5, right: 5, bottom: 5),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
@@ -197,13 +244,13 @@ class MeterEditPageState extends State<MeterEditPage>
                                 onTap: () async {
                                   setState(() {});
                                 },
-                                contentPadding: EdgeInsets.only(
+                                contentPadding: const EdgeInsets.only(
                                     top: 5.0,
                                     left: 0.0,
                                     right: 0.0,
                                     bottom: 0.0),
                                 leading: Container(
-                                  padding: EdgeInsets.only(left: 10),
+                                  padding: const EdgeInsets.only(left: 10),
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
@@ -219,7 +266,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                           color: Colors.green,
                                           size: 40,
                                         )
-                                      : new CircleAvatar(
+                                      : CircleAvatar(
                                           radius: 100.0,
                                           // backgroundColor:MyTheme.getPrimaryColor(),
                                           //backgroundImage: MeScreenState.fileAvatar!=null?
@@ -239,19 +286,25 @@ class MeterEditPageState extends State<MeterEditPage>
                                 title: Container(
                                     alignment: Alignment.centerLeft,
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "${widget.obj.meterNo}",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text(
-                                          " ${widget.obj.meterName}",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                        (widget.obj.meterName != null &&
+                                                widget.obj.meterName != "")
+                                            ? Text(
+                                                "${widget.obj.meterName}",
+                                                style: const TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            : Container(),
                                       ],
                                     )),
                                 subtitle: Column(
@@ -259,7 +312,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.only(top: 5),
+                                      padding: const EdgeInsets.only(top: 5),
                                       child: Text("${widget.obj.insertDate}"
                                           // Formatter.dateTimeFormat(DateTime
                                           //     .fromMillisecondsSinceEpoch(
@@ -276,7 +329,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                       widget.obj.customerId +
                                           " : " +
                                           widget.obj.categoryName,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.w600),
                                     ),
@@ -295,7 +348,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                   ],
                                 ),
                                 trailing: Container(
-                                    padding: EdgeInsets.only(right: 20),
+                                    padding: const EdgeInsets.only(right: 20),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -307,7 +360,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                                       widget.obj.lastReadUnit) +
                                                   " " +
                                                   Tran.of(context).text("unit"),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w600),
                                             ),
@@ -335,7 +388,7 @@ class MeterEditPageState extends State<MeterEditPage>
                               ),
                               Container(
                                   alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.only(
+                                  padding: const EdgeInsets.only(
                                       left: 20, top: 5, bottom: 10, right: 20),
                                   child: Column(
                                     children: [
@@ -345,11 +398,11 @@ class MeterEditPageState extends State<MeterEditPage>
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           widget.obj.consumerName +
-                                              " - " +
-                                              (widget.obj.mobile == null
+                                              ((widget.obj.mobile == null ||
+                                                      widget.obj.mobile == "")
                                                   ? ""
-                                                  : widget.obj.mobile),
-                                          style: TextStyle(
+                                                  : " - ${widget.obj.mobile}"),
+                                          style: const TextStyle(
                                               color: Colors.red, fontSize: 13),
                                         ),
                                       ),
@@ -360,7 +413,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                           Expanded(
                                             flex: 5,
                                             child: Container(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                   top: 0, bottom: 5),
                                               alignment: Alignment.centerLeft,
                                               child: Text(
@@ -369,7 +422,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                                 maxLines: 3,
                                                 softWrap: false,
                                                 overflow: TextOverflow.fade,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: Colors.red,
                                                     fontSize: 13),
                                               ),
@@ -421,27 +474,27 @@ class MeterEditPageState extends State<MeterEditPage>
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               Tran.of(context)
                                                   .text("read_date"),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
                                                   fontSize: 13),
                                             ),
                                           ),
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               "${widget.obj.readDate}",
                                               // Formatter.getDate(
                                               //     widget.obj.readDate.toDate()),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
                                                   fontSize: 13),
@@ -458,19 +511,19 @@ class MeterEditPageState extends State<MeterEditPage>
                                       //       MainAxisAlignment.spaceBetween,
                                       //   children: [
                                       //     Container(
-                                      //       padding: EdgeInsets.only(
+                                      //       padding: const EdgeInsets.only(
                                       //           top: 0, bottom: 5),
                                       //       alignment: Alignment.centerLeft,
                                       //       child: Text(
                                       //        Tran.of(context).text("last_date"),
-                                      //         style: TextStyle(
+                                      //         style: const TextStyle(
                                       //             fontWeight: FontWeight.bold,
                                       //             color: Colors.black87,
                                       //             fontSize: 13),
                                       //       ),
                                       //     ),
                                       //     Container(
-                                      //       padding: EdgeInsets.only(
+                                      //       padding: const EdgeInsets.only(
                                       //           top: 0, bottom: 5),
                                       //       alignment: Alignment.centerLeft,
                                       //       child: Text(
@@ -478,7 +531,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                       //         // Formatter.getDate(
                                       //         //   widget.obj.dueDate.toDate(),
                                       //         // ),
-                                      //         style: TextStyle(
+                                      //         style: const TextStyle(
                                       //             fontWeight: FontWeight.bold,
                                       //             color: Colors.black54,
                                       //             fontSize: 13),
@@ -495,26 +548,26 @@ class MeterEditPageState extends State<MeterEditPage>
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               Tran.of(context).text("due_date"),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
                                                   fontSize: 13),
                                             ),
                                           ),
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              "${widget.obj.dueDate}",
-                                              // Formatter.getDate(
-                                              //     widget.obj.dueDate.toDate()),
-                                              style: TextStyle(
+                                              widget.obj.dueDate,
+                                              // Formatter.getDateFromStr(
+                                              //     widget.obj.dueDate),
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
                                                   fontSize: 13),
@@ -542,25 +595,25 @@ class MeterEditPageState extends State<MeterEditPage>
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               Tran.of(context)
                                                   .text("horse_power"),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
                                                   fontSize: 13),
                                             ),
                                           ),
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               widget.obj.horsePower.toString(),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
                                                   fontSize: 13),
@@ -577,20 +630,20 @@ class MeterEditPageState extends State<MeterEditPage>
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               Tran.of(context)
                                                   .text("horse_power_cost"),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
                                                   fontSize: 13),
                                             ),
                                           ),
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
@@ -600,7 +653,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                               //         widget
                                               //             .obj.horsePowerCost) +
                                               //     " Kyat",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
                                                   fontSize: 13),
@@ -625,20 +678,20 @@ class MeterEditPageState extends State<MeterEditPage>
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               Tran.of(context)
                                                   .text("charge_per_unit"),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
                                                   fontSize: 13),
                                             ),
                                           ),
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
@@ -648,7 +701,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                               //         widget
                                               //             .obj.chargePerUnit) +
                                               //     " Kyat",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
                                                   fontSize: 13),
@@ -665,20 +718,20 @@ class MeterEditPageState extends State<MeterEditPage>
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               Tran.of(context)
                                                   .text("maintainence_cost"),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
                                                   fontSize: 13),
                                             ),
                                           ),
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 0, bottom: 5),
                                             alignment: Alignment.centerLeft,
                                             child: Text(
@@ -688,7 +741,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                               //         widget.obj
                                               //             .maintainenceCost) +
                                               //     " Kyat",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
                                                   fontSize: 13),
@@ -709,7 +762,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                           Text(
                                             Tran.of(context)
                                                 .text("auto_pay_bill"),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black54,
                                                 fontSize: 13),
@@ -742,7 +795,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                                   setState(() {
                                                     autoPay = !value;
                                                   });
-                                                  MessageHandler.showErrMessage(
+                                                  ShowMessageHandler.showErrMessage(
                                                       context,
                                                       Tran.of(context)
                                                           .text("unavailable"),
@@ -764,7 +817,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                         children: <Widget>[
                                           Text(
                                             Tran.of(context).text("self_scan"),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black54,
                                                 fontSize: 13),
@@ -798,7 +851,7 @@ class MeterEditPageState extends State<MeterEditPage>
                                                     setState(() {
                                                       selfScan = !value;
                                                     });
-                                                    MessageHandler.showErrMessage(
+                                                    ShowMessageHandler.showErrMessage(
                                                         context,
                                                         Tran.of(context).text(
                                                             "unavailable"),
@@ -821,29 +874,29 @@ class MeterEditPageState extends State<MeterEditPage>
 
                                       //                                   });
                                       //                                 },
-                                      //                                 contentPadding: EdgeInsets.only(
+                                      //                                 contentPadding: const EdgeInsets.only(
                                       //                                     top: 5.0,
                                       //                                     left: 0.0,
                                       //                                     right: 0.0,
                                       //                                     bottom: 0.0),
 
                                       //                                 title:Container(
-                                      //   padding: EdgeInsets.only(top:0,bottom: 5),
+                                      //   padding: const EdgeInsets.only(top:0,bottom: 5),
                                       //   alignment: Alignment.centerLeft,
                                       //   child: Text(
                                       //   "Read Date",
-                                      //     style: TextStyle(
+                                      //     style: const TextStyle(
                                       //       fontWeight: FontWeight.bold,
                                       //         color: Colors.black87,fontSize: 13),
                                       //   ),
                                       //                                       ),
 
                                       //                                 trailing: Container(
-                                      //   padding: EdgeInsets.only(top:0,bottom: 5),
+                                      //   padding: const EdgeInsets.only(top:0,bottom: 5),
                                       //   alignment: Alignment.centerLeft,
                                       //   child: Text(
                                       //                                       Formatter.getDate(widget.obj.readDate),
-                                      //     style: TextStyle(
+                                      //     style: const TextStyle(
                                       //       fontWeight: FontWeight.bold,
                                       //         color: Colors.black54,fontSize: 13),
                                       //   ),
@@ -866,8 +919,8 @@ class MeterEditPageState extends State<MeterEditPage>
                                     primary: Colors.white, // background
                                     onPrimary: Colors.white, // foreground
                                   ),
-                                  child: new Text('Close',
-                                      style: new TextStyle(
+                                  child: Text('Close',
+                                      style: const TextStyle(
                                           fontSize: 16.0,
                                           color: Colors.black54)),
                                   onPressed: () async {
@@ -885,17 +938,18 @@ class MeterEditPageState extends State<MeterEditPage>
                                                   color: Colors.red)))),
 
                                   // color: Colors.black12,
-                                  child: new Text(Tran.of(context).text("add"),
-                                      style: new TextStyle(
+                                  child: Text(Tran.of(context).text("add"),
+                                      style: const TextStyle(
                                           fontSize: 16.0, color: Colors.white)),
                                   onPressed: () async {
                                     bool isMeterExist = await checkExist();
                                     if (isMeterExist) {
-                                      MessageHandler.showMessage(
+                                      ShowMessageHandler.showMessage(
                                           context,
-                                          "",
                                           Tran.of(context)
-                                              .text("already_meter"));
+                                              .text("already_meter"),
+                                          Tran.of(context)
+                                              .text("already_meter_str"));
                                       return;
                                     }
 
@@ -913,7 +967,10 @@ class MeterEditPageState extends State<MeterEditPage>
                                           .set(widget.obj.toJson());
 
                                       Navigator.pop(context, true);
-                                      MessageHandler.showMessage(context, "",
+                                      ShowMessageHandler.showMessage(
+                                          context,
+                                          Tran.of(context)
+                                              .text("success_added"),
                                           Tran.of(context).text("meter_added"));
                                     }
                                   },
@@ -939,19 +996,19 @@ class MeterEditPageState extends State<MeterEditPage>
             borderRadius: BorderRadius.circular(25),
           ),
           primary: Colors.white24,
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 30,
             right: 30,
             top: 10,
             bottom: 10,
           ),
-          textStyle: TextStyle(fontWeight: FontWeight.bold)),
+          textStyle: const TextStyle(fontWeight: FontWeight.bold)),
       onPressed: () async {
         Navigator.of(context).pop();
       },
       child: Text(
         Tran.of(context).text("cancel"),
-        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
       ),
     );
 
@@ -960,7 +1017,7 @@ class MeterEditPageState extends State<MeterEditPage>
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 30,
             right: 30,
             top: 10,

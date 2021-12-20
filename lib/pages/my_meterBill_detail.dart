@@ -4,11 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
-// import 'package:flutter_share/flutter_share.dart';
-// import 'package:flutter_share_file/flutter_share_file.dart';
 import 'package:left_style/widgets/code_Invoicepainter.dart';
-// import 'package:flutter_share/flutter_share.dart';
-// import 'package:left_style/widgets/code_painter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -31,7 +27,7 @@ class MeterBillDetailPage extends StatefulWidget {
   const MeterBillDetailPage({Key key, this.docId}) : super(key: key);
 
   @override
-  MeterBillDetailPageState createState() => new MeterBillDetailPageState();
+  MeterBillDetailPageState createState() => MeterBillDetailPageState();
 }
 
 class MeterBillDetailPageState extends State<MeterBillDetailPage> {
@@ -39,20 +35,28 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
   MeterBill bill = MeterBill();
   double x, y = 0;
   String meterName = "";
+
   @override
   void initState() {
     super.initState();
-    db
+  }
+
+  Future<String> getMeterName(MeterBill bill) async {
+    firstLaod = false;
+    await FirebaseFirestore.instance
         .collection(meterCollection)
         .doc(FirebaseAuth.instance.currentUser.uid)
         .collection(userMeterCollection)
-        .doc(widget.docId)
-        .get()
+        .doc(bill.customerId)
+        .get(GetOptions(source: Source.server))
         .then((value) {
       if (value.data() != null) {
+        setState(() {});
         meterName = value.data()["meterName"];
+        return meterName;
       }
     });
+    return meterName;
   }
 
   Future<bool> checkEnableBtn(MeterBill bill) async {
@@ -78,7 +82,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
           .where("dueDate", isLessThan: currentDateTimeStamp)
           .orderBy("dueDate", descending: true)
           .limit(1)
-          .get()
+          .get(GetOptions(source: Source.server))
           .then((value) {
         value.docs.forEach((result) {
           enablePaid = result.id == widget.docId;
@@ -87,6 +91,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
         });
       });
     }
+    enablePaid = false;
     return enablePaid;
   }
 
@@ -113,10 +118,10 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
         alignment: Alignment.center,
         width: MediaQuery.of(_context).size.width,
         // height: ScreenUtil().setSp(100),
-        margin: EdgeInsets.all(0.0),
+        margin: const EdgeInsets.all(0.0),
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
         child: Text(text, textAlign: TextAlign.center, style: getTextStyle()),
-        padding: EdgeInsets.all(0),
+        padding: const EdgeInsets.all(0),
       ),
     );
   }
@@ -125,6 +130,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
 
   bool enablePaid = false;
   bool firstLaod = true;
+
   @override
   Widget build(BuildContext context) {
     _context = context;
@@ -141,6 +147,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
             meterNo = bill.meterNo;
             if (firstLaod) {
               checkEnableBtn(bill);
+              getMeterName(bill);
             }
 
             return Scaffold(
@@ -175,18 +182,20 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                     // height: MediaQuery.of(context).size.height,
 
                     //height:ScreenUtil().setSp(2100),//
-                    // padding: EdgeInsets.only(
+                    // padding: const EdgeInsets.only(
                     //     top: 10.0, left: 8.0, right: 10.0, bottom: 0.0),
                     child: Stack(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 10.0, bottom: 0.0),
+                          padding:
+                              const EdgeInsets.only(top: 10.0, bottom: 0.0),
                           child: Column(
                             children: [
                               RepaintBoundary(
                                 key: _globalKey,
                                 child: Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
@@ -256,7 +265,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                             Align(
                                               alignment: Alignment.centerLeft,
                                               child: Container(
-                                                padding: EdgeInsets.only(
+                                                padding: const EdgeInsets.only(
                                                     left: 5, bottom: 8),
                                                 child: Text(
                                                   "လိပ်စာ- " +
@@ -617,7 +626,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                                 const EdgeInsets.only(top: 5.0),
                                             child: Text(
                                               "Total   " +
-                                                  ((bill.creditAmount == null
+                                                  (((bill.creditAmount == null)
                                                               ? 0
                                                               : bill
                                                                   .creditAmount
@@ -636,8 +645,9 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                         // height: 55.0,
                                         // width: 75.0,
                                         // color: Colors.red,
-                                        padding: EdgeInsets.only(top: 0.0),
-                                        margin: EdgeInsets.all(0.0),
+                                        padding:
+                                            const EdgeInsets.only(top: 0.0),
+                                        margin: const EdgeInsets.all(0.0),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
@@ -709,7 +719,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                       child: Column(
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.fromLTRB(
+                                            padding: const EdgeInsets.fromLTRB(
                                                 16, 8, 0, 0),
                                             child: Text(
                                               "Your meter bill payment is rejected. Please contact office.",
@@ -729,7 +739,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                             child: Text(
                                               Tran.of(context)
                                                   .text("contact_office"),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
                                               ),
@@ -801,10 +811,9 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
                                     bill: bill, docId: widget.docId),
                               ),
                             );
-                            setState(() {});
                           },
                           child: Container(
-                            padding: EdgeInsets.all(14),
+                            padding: const EdgeInsets.all(14),
                             child: Text(
                               Tran.of(context).text("pay_bill"),
                               style: TextStyle(
@@ -879,7 +888,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
       final RenderRepaintBoundary boundary =
           _globalKey.currentContext.findRenderObject();
       final ui.Image image = await boundary.toImage();
-      Size size = new Size(image.width.toDouble(), image.height.toDouble());
+      Size size = Size(image.width.toDouble(), image.height.toDouble());
       final byteData = await CodeInvoicePainter(qrImage: image, margin: 2)
           .toImageData(size, format: ui.ImageByteFormat.png);
 
@@ -924,7 +933,7 @@ class MeterBillDetailPageState extends State<MeterBillDetailPage> {
     } else {
       if (bill.status == MeterBillStatus.paid) {
         return Padding(
-          padding: EdgeInsets.only(left: 40),
+          padding: const EdgeInsets.only(left: 40),
           child: Icon(
             Icons.warning,
             color: Colors.red,

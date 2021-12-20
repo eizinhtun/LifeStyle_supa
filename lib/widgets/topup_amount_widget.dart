@@ -62,7 +62,7 @@ class _TopupAmountState extends State<TopupAmount> {
             top: 100,
             left: 0,
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 15),
+              margin: const EdgeInsets.symmetric(horizontal: 15),
               height: MediaQuery.of(context).size.height - 100,
               width: MediaQuery.of(context).size.width - 30,
               child: Column(

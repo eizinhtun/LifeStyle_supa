@@ -7,15 +7,19 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:left_style/datas/constants.dart';
+import 'package:left_style/datas/system_data.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/payment_method.dart';
 import 'package:left_style/models/transaction_model.dart';
 import 'package:left_style/pages/payment_method_list.dart';
 import 'package:left_style/utils/validator.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:left_style/utils/message_handler.dart' as myMsg;
+import 'package:left_style/utils/show_message_handler.dart';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+import '../tutorial_video_page.dart';
 
 class TopUpPage extends StatefulWidget {
   const TopUpPage({Key key}) : super(key: key);
@@ -84,18 +88,16 @@ class _TopUpPageState extends State<TopUpPage> {
       String uid = FirebaseAuth.instance.currentUser.uid.toString();
       model.status = "verifying";
       model.uid = uid;
-      // var result = await FirebaseFirestore.instance
-      //     .collection(transactions)
-      //     .doc(uid)
-      //     .collection("manyTransition")
-      //     .add(model.toJson());
+
       var result = await FirebaseFirestore.instance
           .collection(transactions)
           .add(model.toJson());
       if (result.id.isNotEmpty) {
         Navigator.pop(context, true);
-        myMsg.MessageHandler.showMessage(
-            context, "", Tran.of(context).text("success_added"));
+        ShowMessageHandler.showMessage(
+            context,
+            Tran.of(context).text("success"),
+            Tran.of(context).text("topup_add_success"));
       } else {
         setState(() {
           _submiting = false;
@@ -111,7 +113,7 @@ class _TopUpPageState extends State<TopUpPage> {
         elevation: 0.0,
         title: Center(
           child: Container(
-            margin: EdgeInsets.only(right: 40),
+            margin: const EdgeInsets.only(right: 40),
             child: Text(Tran.of(context).text("topup")),
           ),
         ),
@@ -119,66 +121,107 @@ class _TopUpPageState extends State<TopUpPage> {
       body: SingleChildScrollView(
         child: Container(
           // color: Colors.red,
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 child: Form(
                   key: _topupformKey,
                   child: Column(
                     children: [
                       Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Colors.transparent,
-                          ),
-                          child: TextFormField(
-                            readOnly: true,
-                            onTap: () async {
-                              var payment = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          new PaymentMethodListPage()));
-
-                              if (payment != null) {
-                                _paymentMethod = payment;
-                                setState(() {
-                                  _paymentController.text = _paymentMethod.name;
-                                });
-                              }
-                            },
-                            controller: _paymentController,
-                            decoration: InputDecoration(
-                              suffixIcon: Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 20,
-                                color: Colors.red,
+                        padding: EdgeInsets.only(
+                            top: 20, right: 25, left: 15, bottom: 10),
+                        child: InkWell(
+                          onTap: () async {
+                            await Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      TutorialVideoPage(
+                                          type: "topup",
+                                          url: SystemData.topupVideoLink),
+                                ));
+                          },
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                "assets/video.png",
+                                width: 30,
                               ),
-                              prefixIcon: (_paymentMethod == null ||
-                                      _paymentMethod.logoUrl == null ||
-                                      _paymentMethod.logoUrl.length == 0)
-                                  ? Container(
-                                      child:
-                                          Icon(Icons.monetization_on_outlined),
-                                    )
-                                  : Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Image.network(
-                                        _paymentMethod.logoUrl,
-                                        width: 10,
-                                        height: 10,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                              hintText:
-                                  Tran.of(context).text("payment_method_list"),
-                            ),
-                          )),
+                              Text("    "),
+                              Text("Click to watch",
+                                  style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: Theme.of(context).primaryColor,
+                                  )),
+                              Text(
+                                  " " +
+                                      Tran.of(context).text("showvideo_topup"),
+                                  style: TextStyle(color: Colors.black)),
+                            ],
+                          ),
+                        ),
+                      ),
                       SizedBox(height: 20),
                       Container(
-                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.transparent,
+                        ),
+                        child: TextFormField(
+                          readOnly: true,
+                          onTap: () async {
+                            var payment = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PaymentMethodListPage()));
+
+                            if (payment != null) {
+                              _paymentMethod = payment;
+                              setState(() {
+                                _paymentController.text = _paymentMethod.name;
+                              });
+                            }
+                          },
+                          controller: _paymentController,
+                          validator: (val) {
+                            return Validator.requiredField(
+                                context,
+                                val.toString(),
+                                Tran.of(context).text("payment_method"));
+                          },
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 20,
+                              color: Colors.red,
+                            ),
+                            prefixIcon: (_paymentMethod == null ||
+                                    _paymentMethod.logoUrl == null ||
+                                    _paymentMethod.logoUrl.length == 0)
+                                ? Container(
+                                    child: Icon(Icons.monetization_on_outlined),
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Image.network(
+                                      _paymentMethod.logoUrl,
+                                      width: 10,
+                                      height: 10,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                            hintText:
+                                Tran.of(context).text("payment_method_list"),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Container(
+                        padding: const EdgeInsets.all(4),
                         child: Center(
                           child: _previewImages(),
                         ),
@@ -188,8 +231,12 @@ class _TopUpPageState extends State<TopUpPage> {
                         autofocus: false,
                         focusNode: transferAmountFoucusNode,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
+                        // onUserInteraction,
                         controller: _transferAmountController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.numberWithOptions(),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         textInputAction: TextInputAction.next,
                         validator: (val) {
                           return Validator.transferAmount(context, val);
@@ -203,16 +250,19 @@ class _TopUpPageState extends State<TopUpPage> {
                         focusNode: transferAmountFoucusNode,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _transactionIdController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.numberWithOptions(),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         validator: (val) {
-                          return Validator.requiredField(context, val, '');
+                          return Validator.tracId(context, val);
                         },
                         decoration: buildInputDecoration(
                             Tran.of(context).text("transaction_id_6")),
                       ),
                       SizedBox(height: 20),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           OutlinedButton(
                             style: ElevatedButton.styleFrom(
@@ -220,20 +270,20 @@ class _TopUpPageState extends State<TopUpPage> {
                                   borderRadius: BorderRadius.circular(25),
                                 ),
                                 primary: Colors.white24,
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                   left: 30,
                                   right: 30,
                                   top: 10,
                                   bottom: 10,
                                 ),
-                                textStyle:
-                                    TextStyle(fontWeight: FontWeight.bold)),
+                                textStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
                             onPressed: () async {
                               Navigator.pop(context);
                             },
                             child: Text(
                               Tran.of(context).text("cancel"),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -247,7 +297,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(25),
                                       ),
-                                      padding: EdgeInsets.only(
+                                      padding: const EdgeInsets.only(
                                         left: 30,
                                         right: 30,
                                         top: 10,
@@ -257,17 +307,26 @@ class _TopUpPageState extends State<TopUpPage> {
                                   onPressed: _submiting
                                       ? null
                                       : () async {
-                                          if (file == null) {
-                                            myMsg.MessageHandler.showErrMessage(
-                                                context,
-                                                Tran.of(context)
-                                                    .text("pic_required"),
-                                                Tran.of(context)
-                                                    .text("pic_required_str"));
-                                            return;
-                                          }
+                                          // if (file == null) {
+                                          //   ShowMessageHandler.showErrMessage(
+                                          //       context,
+                                          //       Tran.of(context)
+                                          //           .text("pic_required"),
+                                          //       Tran.of(context)
+                                          //           .text("pic_required_str"));
+                                          //   return;
+                                          // }
                                           if (_topupformKey.currentState
                                               .validate()) {
+                                            if (file == null) {
+                                              ShowMessageHandler.showErrMessage(
+                                                  context,
+                                                  Tran.of(context)
+                                                      .text("pic_required"),
+                                                  Tran.of(context).text(
+                                                      "pic_required_str"));
+                                              return;
+                                            }
                                             setState(() {
                                               _submiting = true;
                                               if (file != null) {
@@ -276,7 +335,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                             });
 
                                             TransactionModel model =
-                                                new TransactionModel();
+                                                TransactionModel();
                                             model.paymentType =
                                                 _paymentMethod.id;
                                             model.type = TransactionType.Topup;
@@ -312,7 +371,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                         },
                                   child: Text(Tran.of(context).text("submit"))),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -382,7 +441,7 @@ class _TopUpPageState extends State<TopUpPage> {
     } else {
       return ElevatedButton(
           style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 15,
               right: 15,
               top: 10,
@@ -393,7 +452,7 @@ class _TopUpPageState extends State<TopUpPage> {
           child: Row(
             children: [
               Padding(
-                padding: EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.only(right: 10),
                 child: Icon(
                   Icons.photo,
                   color: Colors.white,
@@ -415,7 +474,7 @@ class _TopUpPageState extends State<TopUpPage> {
   InputDecoration buildInputDecoration(String hinttext) {
     return InputDecoration(
       labelText: hinttext,
-      labelStyle: TextStyle(),
+      labelStyle: const TextStyle(),
       border: OutlineInputBorder(
         borderSide: BorderSide(
           color: Colors.black,
@@ -424,7 +483,7 @@ class _TopUpPageState extends State<TopUpPage> {
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Theme.of(context).primaryColor),
       ),
-      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
     );
   }
 }

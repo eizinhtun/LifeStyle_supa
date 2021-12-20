@@ -34,7 +34,7 @@ import 'package:left_style/datas/database_helper.dart';
 //
 //     String data = await rootBundle.loadString('lang/I18n_$savedCode.json');
 //     Map<String, dynamic> _result = json.decode(data);
-//     this._sentences = new Map();
+//     this._sentences = Map();
 //     _result.forEach((String key, dynamic value) {
 //       this._sentences[key] = value.toString();
 //     });
@@ -74,7 +74,7 @@ class Tran {
     String savedCode = await DatabaseHelper.getLanguage();
     String data = await rootBundle.loadString('lang/I18n_$savedCode.json');
     Map<String, dynamic> _result = json.decode(data);
-    this._sentences = new Map();
+    this._sentences = Map();
     _result.forEach((String key, dynamic value) {
       this._sentences[key] = value.toString();
     });

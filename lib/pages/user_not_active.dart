@@ -17,21 +17,21 @@ class _UserNotActiveScreenState extends State<UserNotActiveScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   Tran.of(context).text("user_not_active"),
-                  style: TextStyle(fontSize: 20, color: Colors.pink),
+                  style: const TextStyle(fontSize: 20, color: Colors.pink),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
                   Tran.of(context).text("login_with_another"),
-                  style: TextStyle(fontSize: 14, color: Colors.pink),
+                  style: const TextStyle(fontSize: 14, color: Colors.pink),
                 ),
                 SizedBox(
                   height: 10,
@@ -42,7 +42,7 @@ class _UserNotActiveScreenState extends State<UserNotActiveScreen> {
                   },
                   child: Text(
                     Tran.of(context).text("log_out"),
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),

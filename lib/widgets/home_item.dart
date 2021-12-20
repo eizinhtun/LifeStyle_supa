@@ -42,7 +42,7 @@ class HomeItemWidget extends StatelessWidget {
             ),
             Text(
               Tran.of(context).text(title),
-              style: TextStyle(color: Colors.black87),
+              style: const TextStyle(color: Colors.black87),
             )
           ],
         ),

@@ -1,12 +1,14 @@
 // @dart=2.9
 import 'dart:async';
+import 'package:left_style/datas/data_key_name.dart';
 import 'package:left_style/datas/system_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:left_style/localization/translate.dart';
+import 'package:left_style/models/system_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = new DatabaseHelper.internal();
+  static final DatabaseHelper _instance = DatabaseHelper.internal();
   DatabaseHelper.internal();
   factory DatabaseHelper() => _instance;
   static SharedPreferences _db;
@@ -29,7 +31,7 @@ class DatabaseHelper {
     return true;
   }
 
-  static Future<bool> setAppData(bool data, String keyName) async {
+  static Future<bool> setBoolData(bool data, String keyName) async {
     var dbClient = await db;
     dbClient.setString(keyName, data ? "1" : "0");
     return true;
@@ -82,19 +84,80 @@ class DatabaseHelper {
     try {
       SystemData.isLoggedIn = isLoggedIn;
 
-      await DatabaseHelper.setAppData(isLoggedIn, "isLoggedIn");
+      await DatabaseHelper.setBoolData(isLoggedIn, "isLoggedIn");
       await Tran.of(context).load();
       return;
     } catch (ex) {
-      await setAppData(isLoggedIn, "isLoggedIn");
+      await setBoolData(isLoggedIn, "isLoggedIn");
       return;
     }
   }
 
-  // static Future<String> getTimeZone() async {
-  //   // final timeInUtc = new DateTime.utc(1995, 1, 1);
+  static Future<void> setIsFirstTimeData(
+      BuildContext context, bool isFirstTime) async {
+    try {
+      SystemData.isFirstTime = isFirstTime;
+      await DatabaseHelper.setBoolData(isFirstTime, DataKeyValue.isFirstTime);
+      return;
+    } catch (ex) {
+      await setBoolData(isFirstTime, DataKeyValue.isFirstTime);
+      return;
+    }
+  }
 
-  //   String timeZoneStr = new DateTime.now().timeZoneOffset.toString();
+  static Future<void> setSystemConfigData(
+      BuildContext context, SystemConfig config) async {
+    try {
+      SystemData.introAutoSkip = config.introAutoSkip;
+      SystemData.introDisplaySec = config.introDisplaySec;
+      SystemData.onMeterUploadFunc = config.onMeterUploadFunc;
+      SystemData.payMeterBillVideoLink = config.payMeterBillVideoLink;
+      SystemData.topupVideoLink = config.topupVideoLink;
+      SystemData.uploadMeterVideoLink = config.uploadMeterVideoLink;
+      SystemData.withdrawVideoLink = config.withdrawVideoLink;
+      await DatabaseHelper.setBoolData(
+          config.introAutoSkip, DataKeyValue.introAutoSkip);
+      await DatabaseHelper.setData(
+          config.introDisplaySec.toString(), DataKeyValue.introDisplaySec);
+      await DatabaseHelper.setBoolData(
+          config.onMeterUploadFunc, DataKeyValue.onMeterUploadFunc);
+      await DatabaseHelper.setData(
+          config.payMeterBillVideoLink, DataKeyValue.payMeterBillVideoLink);
+      await DatabaseHelper.setData(
+          config.topupVideoLink, DataKeyValue.topupVideoLink);
+      await DatabaseHelper.setData(
+          config.uploadMeterVideoLink, DataKeyValue.uploadMeterVideoLink);
+      await DatabaseHelper.setData(
+          config.withdrawVideoLink, DataKeyValue.withdrawVideoLink);
+
+      return;
+    } catch (ex) {
+      await DatabaseHelper.setBoolData(
+          config.introAutoSkip, DataKeyValue.introAutoSkip);
+      await DatabaseHelper.setData(
+          config.introDisplaySec.toString(), DataKeyValue.introDisplaySec);
+      await DatabaseHelper.setBoolData(
+          config.onMeterUploadFunc, DataKeyValue.onMeterUploadFunc);
+      await DatabaseHelper.setData(
+          config.payMeterBillVideoLink, DataKeyValue.payMeterBillVideoLink);
+      await DatabaseHelper.setData(
+          config.topupVideoLink, DataKeyValue.topupVideoLink);
+      await DatabaseHelper.setData(
+          config.uploadMeterVideoLink, DataKeyValue.uploadMeterVideoLink);
+      await DatabaseHelper.setData(
+          config.withdrawVideoLink, DataKeyValue.withdrawVideoLink);
+      return;
+    }
+  }
+
+  static Future<void> clearStorage() async {
+    await _db.clear();
+  }
+
+  // static Future<String> getTimeZone() async {
+  //   // final timeInUtc = DateTime.utc(1995, 1, 1);
+
+  //   String timeZoneStr = DateTime.now().timeZoneOffset.toString();
   //   int index = timeZoneStr.indexOf(".", 2) - 3;
   //   timeZoneStr = timeZoneStr.substring(0, index);
 

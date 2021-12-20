@@ -126,7 +126,8 @@ class WalletState extends State<Wallet> {
           children: [
             Container(
               height: 60,
-              padding: EdgeInsets.only(left: 20, right: 20, bottom: 0, top: 10),
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, bottom: 0, top: 10),
               alignment: Alignment.bottomCenter,
               color: Colors.transparent,
               child: ShowBalance(
@@ -220,7 +221,7 @@ class WalletState extends State<Wallet> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  new WalletDetailSuccessPage(
+                                                  WalletDetailSuccessPage(
                                                       docId: tracList[i].docId,
                                                       type: tracList[i].type,
                                                       status:
@@ -239,8 +240,8 @@ class WalletState extends State<Wallet> {
                                                   right: 10),
                                               child: Container(
                                                 color: Colors.transparent,
-                                                margin:
-                                                    EdgeInsets.only(bottom: 5),
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 5),
                                                 alignment: Alignment.center,
                                                 width: 45,
                                                 height: 45,

@@ -1,6 +1,5 @@
 // @dart=2.9
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/models/noti_model.dart';
