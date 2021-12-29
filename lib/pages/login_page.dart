@@ -267,8 +267,8 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       isWaiting = true;
     });
-    String token = await checkToken(fcmtoken);
-    await context.read<LoginProvider>().fbLogin(context, token);
+    // String token = await checkToken(fcmtoken);
+    await context.read<LoginProvider>().fbLogin(context, "");
     // setState(() {
     //   isWaiting = false;
     // });
@@ -279,8 +279,8 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       isWaiting = true;
     });
-    String token = await checkToken(fcmtoken);
-    await context.read<LoginProvider>().googleLogin(context, token);
+    // String token = await checkToken(fcmtoken);
+    await context.read<LoginProvider>().googleLogin(context, "");
     // setState(() {
     //   isWaiting = false;
     // });

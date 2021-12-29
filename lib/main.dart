@@ -28,6 +28,8 @@ import 'package:left_style/providers/intro_provider.dart';
 import 'package:left_style/providers/login_provider.dart';
 import 'package:left_style/utils/show_message_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase/supabase.dart' as supa;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:upgrader/upgrader.dart';
 import 'datas/constants.dart';
 import 'datas/data_key_name.dart';
@@ -66,6 +68,13 @@ void main() async {
     statusBarColor: Colors.transparent,
   ));
   WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+      url: supabaseUrl,
+      anonKey: supabaseKey,
+      authCallbackUrlHostname: 'login-callback', // optional
+      debug: true // optional
+      );
+
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
 
@@ -112,10 +121,13 @@ class _MyAppState extends State<MyApp> {
 
   SystemConfig systemConfig = SystemConfig();
   bool isLoading = false;
+  final client = supa.SupabaseClient(supabaseUrl, supabaseKey);
+  supa.GotrueSubscription supaSubscription = supa.GotrueSubscription();
 
   @override
   void initState() {
     super.initState();
+    // client.auth.update();
     getAppUpdateLink();
     if (!kIsWeb) {
       registerNotification(context);
@@ -210,48 +222,71 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: colorCustom,
           fontFamily: 'NotoSansMyanmar',
         ),
+        // home: ,
         initialRoute: '/intros',
         routes: {
           '/': (context) {
-            return StreamBuilder<User>(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  User user = snapshot.data;
-                  if (user == null) {
-                    return LoginPage();
-                    // setState(() {});
-                  }
+            // return StreamBuilder<User>(
+            //   stream: FirebaseAuth.instance.authStateChanges(),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.active) {
+            //       User user = snapshot.data;
+            //       if (user == null) {
+            //         return LoginPage();
+            //         // setState(() {});
+            //       }
 
-                  return StreamBuilder<DocumentSnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection(userCollection)
-                          .doc(FirebaseAuth.instance.currentUser.uid)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.active) {
-                          // && snapshot.data.exists
-                          if (snapshot.hasData && snapshot.data.exists) {
-                            //
-                            if (snapshot.data["isActive"]) {
-                              return MainScreen();
-                              // return _bottomNav(context);
+            //       return StreamBuilder<DocumentSnapshot>(
+            //           stream: FirebaseFirestore.instance
+            //               .collection(userCollection)
+            //               .doc(FirebaseAuth.instance.currentUser.uid)
+            //               .snapshots(),
+            //           builder: (context, snapshot) {
+            //             if (snapshot.connectionState ==
+            //                 ConnectionState.active) {
+            //               // && snapshot.data.exists
+            //               if (snapshot.hasData && snapshot.data.exists) {
+            //                 //
+            //                 if (snapshot.data["isActive"]) {
+            //                   return MainScreen();
+            //                   // return _bottomNav(context);
 
-                            } else {
-                              return UserNotActiveScreen();
-                            }
-                          } else
-                            return UserProfileScreen();
-                        }
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      });
+            //                 } else {
+            //                   return UserNotActiveScreen();
+            //                 }
+            //               } else
+            //                 return UserProfileScreen();
+            //             }
+            //             return Center(
+            //               child: CircularProgressIndicator(),
+            //             );
+            //           });
+            //     } else {
+            //       return Center(
+            //         child: CircularProgressIndicator(),
+            //       );
+            //     }
+            //   },
+            // );
+
+            // return client.auth.onAuthStateChange((event, session) {
+            //   if (event == supa.AuthChangeEvent.signedIn) {
+            //     return MainScreen();
+            //   } else if (event == supa.AuthChangeEvent.signedOut) {
+            //     return LoginPage();
+            //   }
+            // });
+
+            return StreamBuilder<AuthChangeEvent>(
+              stream: SupabaseAuth.instance.onAuthChange,
+              builder: (context, AsyncSnapshot<AuthChangeEvent> snapshot) {
+                print(
+                    'snap shot auth state changed to ${snapshot.data.toString()}');
+                if (snapshot.data == AuthChangeEvent.signedIn) {
+                  return MainScreen();
                 } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  // (snapshot.data == AuthChangeEvent.signedOut)
+                  return LoginPage();
                 }
               },
             );

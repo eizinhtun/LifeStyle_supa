@@ -100,78 +100,78 @@ class LoginProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<void> fbLogin(BuildContext context, String fcmtoken) async {
     User user = await Authentication.signInWithFacebook(context: context);
 
-    if (user != null && user.uid != null) {
-      String uid = user.uid;
-      DatabaseHelper.setAppLoggedIn(context, true);
-      userRef.doc(uid).update({"fcmtoken": fcmtoken});
-      notifyListeners();
-      // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
-      //
-      // if (!userIdExist) {
-      //   UserModel userModel = UserModel(
-      //       uid: user.uid,
-      //       fullName: user.displayName,
-      //       email: user.email,
-      //       phone: user.phoneNumber,
-      //       photoUrl: user.photoURL,
-      //       fcmtoken: fcmtoken,
-      //       balance: 0.0,
-      //       createdDate: DateTime.now());
-      //   userRef
-      //       .doc(user.uid)
-      //       .set(userModel.toJson()
-      //           //   {
-      //           //   "uid": user.uid,
-      //           //   "full_name": user.displayName,
-      //           //   "email": user.email,
-      //           //   "phone": user.phoneNumber,
-      //           //   "photo": user.photoURL
-      //           // }
-      //           )
-      //       // .then((value) => print("User Added $value"))
-      //       .catchError((error) =>
-      // }
+    // if (user != null && user.uid != null) {
+    //   String uid = user.uid;
+    //   DatabaseHelper.setAppLoggedIn(context, true);
+    //   userRef.doc(uid).update({"fcmtoken": fcmtoken});
+    //   notifyListeners();
+    // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
+    //
+    // if (!userIdExist) {
+    //   UserModel userModel = UserModel(
+    //       uid: user.uid,
+    //       fullName: user.displayName,
+    //       email: user.email,
+    //       phone: user.phoneNumber,
+    //       photoUrl: user.photoURL,
+    //       fcmtoken: fcmtoken,
+    //       balance: 0.0,
+    //       createdDate: DateTime.now());
+    //   userRef
+    //       .doc(user.uid)
+    //       .set(userModel.toJson()
+    //           //   {
+    //           //   "uid": user.uid,
+    //           //   "full_name": user.displayName,
+    //           //   "email": user.email,
+    //           //   "phone": user.phoneNumber,
+    //           //   "photo": user.photoURL
+    //           // }
+    //           )
+    //       // .then((value) => print("User Added $value"))
+    //       .catchError((error) =>
+    // }
 
-    } else {}
+    // } else {}
     notifyListeners();
   }
 
   Future<void> googleLogin(BuildContext context, String fcmtoken) async {
     User user = await Authentication.signInWithGoogle(context: context);
-    if (user != null && user?.uid != null) {
-      String uid = user.uid;
-      DatabaseHelper.setAppLoggedIn(context, true);
-      userRef.doc(uid).update({"fcmtoken": fcmtoken});
-      // FirebaseAuth.instance.currentUser.
-      notifyListeners();
-      // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
-      //
-      // if (!userIdExist) {
-      //   UserModel userModel = UserModel(
-      //       uid: user.uid,
-      //       fullName: user.displayName,
-      //       email: user.email,
-      //       phone: user.phoneNumber,
-      //       photoUrl: user.photoURL,
-      //       fcmtoken: fcmtoken,
-      //       balance: 0.0,
-      //       createdDate: DateTime.now());
-      //   userRef
-      //       .doc(user.uid)
-      //       .set(userModel.toJson()
-      //           //   {
-      //           //   "uid": user.uid,
-      //           //   "full_name": user.displayName,
-      //           //   "email": user.email,
-      //           //   "phone": user.phoneNumber,
-      //           //   "photo": user.photoURL,
-      //           // }
+    // if (user != null && user?.uid != null) {
+    //   String uid = user.uid;
+    //   DatabaseHelper.setAppLoggedIn(context, true);
+    //   userRef.doc(uid).update({"fcmtoken": fcmtoken});
+    // FirebaseAuth.instance.currentUser.
+    // notifyListeners();
+    // bool userIdExist = await Validator.checkUserIdIsExist(user.uid);
+    //
+    // if (!userIdExist) {
+    //   UserModel userModel = UserModel(
+    //       uid: user.uid,
+    //       fullName: user.displayName,
+    //       email: user.email,
+    //       phone: user.phoneNumber,
+    //       photoUrl: user.photoURL,
+    //       fcmtoken: fcmtoken,
+    //       balance: 0.0,
+    //       createdDate: DateTime.now());
+    //   userRef
+    //       .doc(user.uid)
+    //       .set(userModel.toJson()
+    //           //   {
+    //           //   "uid": user.uid,
+    //           //   "full_name": user.displayName,
+    //           //   "email": user.email,
+    //           //   "phone": user.phoneNumber,
+    //           //   "photo": user.photoURL,
+    //           // }
 
-      //           )
-      //       // .then((value) => print("User Added $value"))
-      //       .catchError((error) =>
-      // }
-    } else {}
+    //           )
+    //       // .then((value) => print("User Added $value"))
+    //       .catchError((error) =>
+    // }
+    // } else {}
   }
 
   Future<bool> register(BuildContext context, String vId, String vCode,

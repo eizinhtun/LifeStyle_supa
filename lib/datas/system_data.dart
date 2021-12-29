@@ -14,4 +14,5 @@ class SystemData {
   static String uploadMeterVideoLink = "";
   static String withdrawVideoLink = "";
   static String appVersion = "";
+  static String updateLink = "";
 }

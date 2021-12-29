@@ -2,6 +2,7 @@
 import 'package:barcode_scan_fix/barcode_scan.dart' as bar;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -14,6 +15,8 @@ import 'package:left_style/widgets/home_item.dart';
 import 'package:left_style/widgets/show_balance.dart';
 import 'package:left_style/pages/wallet/withdrawal_page.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
+import 'package:supabase/supabase.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'ads_detail_page.dart';
 import 'meter_city_page.dart';
@@ -131,6 +134,12 @@ class _HomePageState extends State<HomePage> {
         iconData: Icons.receipt_long,
         action: ActionButton.MeterBill),
   ];
+  void test() {
+    //   Supabase.instance.client
+    // .from(adsCollection)
+    // .select()
+    // .execute(),
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +174,14 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         StreamBuilder<QuerySnapshot>(
+                          //   stream: Supabase.instance.client
+                          //       .from(adsCollection)
+                          //       .select()
+                          //       .execute(),
+                          //                     from('countries')
+                          // .select()
+                          // .order('name', ascending: true)
+                          // .execute(),
                           stream: FirebaseFirestore.instance
                               .collection(adsCollection)
                               .snapshots(),
@@ -357,6 +374,25 @@ class _HomePageState extends State<HomePage> {
                         //         fontWeight: FontWeight.bold),
                         //   ),
                         // ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final client =
+                                SupabaseClient(supabaseUrl, supabaseKey);
+                            final insertResponse = await client
+                                .from(meterCollection)
+                                .insert([meterjson]).execute();
+                            if (insertResponse.error == null) {
+                              print(
+                                  'insertResponse.data: ${insertResponse.data}');
+                            }
+                          },
+                          child: Text(
+                            "Add Meter",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
 
                         Container(
                           padding: const EdgeInsets.all(8),

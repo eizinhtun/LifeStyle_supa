@@ -10,7 +10,7 @@ class SourceInputSection extends StatefulWidget {
 }
 
 class _SourceInputSectionState extends State<SourceInputSection> {
-   TextEditingController _textController;
+  TextEditingController _textController;
   String _playlistType;
 
   @override

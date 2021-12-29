@@ -8,8 +8,10 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
+import 'package:left_style/datas/constants.dart';
 import 'package:left_style/localization/translate.dart';
 import 'package:left_style/utils/show_message_handler.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 class Authentication {
   static SnackBar customSnackBar({String content}) {
@@ -58,32 +60,55 @@ class Authentication {
           idToken: googleSignInAuthentication.idToken,
         );
 
-        try {
-          final UserCredential userCredential =
-              await auth.signInWithCredential(credential);
+        // final response = await supa.Supabase.instance.client.auth
+        //     .signIn(email: googleSignInAccount.email, password: "123456");
+        // final response = await supa.Supabase.instance.client
+        //   .auth.signInWithProvider(Provider.github);
+        supa.SupabaseClient client =
+            supa.SupabaseClient(supabaseUrl, supabaseKey);
+        // client=Sup
+        final response = await client.auth.signInWithProvider(
+          supa.Provider.google,
+          options: supa.AuthOptions(redirectTo: '/'),
+        );
+        print(response);
 
-          user = userCredential.user;
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'account-exists-with-different-credential') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              Authentication.customSnackBar(
-                content: Tran.of(context).text("acc_exist_diff_credential"),
-              ),
-            );
-          } else if (e.code == 'invalid-credential') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              Authentication.customSnackBar(
-                content: Tran.of(context).text("err_with_credential"),
-              ),
-            );
-          }
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(
-              content: Tran.of(context).text("err_with_google_signin"),
-            ),
-          );
-        }
+        // if (response.error != null) {
+        //   // Error
+        //   print('Error: ${response.error?.message}');
+        // } else {
+        //   // Success
+        //   final session = response.data;
+        //   // SupabaseAuth.instance.onAuthChange;
+        // }
+
+        // try {
+        //   final UserCredential userCredential =
+        //       await auth.signInWithCredential(credential);
+
+        //   user = userCredential.user;
+        // } on FirebaseAuthException catch (e) {
+        //   if (e.code == 'account-exists-with-different-credential') {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       Authentication.customSnackBar(
+        //         content: Tran.of(context).text("acc_exist_diff_credential"),
+        //       ),
+        //     );
+        //   } else if (e.code == 'invalid-credential') {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       Authentication.customSnackBar(
+        //         content: Tran.of(context).text("err_with_credential"),
+        //       ),
+        //     );
+        //   }
+        // } catch (e) {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     Authentication.customSnackBar(
+        //       content: Tran.of(context).text("err_with_google_signin"),
+        //     ),
+        //   );
+        // }
+
       }
     }
 
@@ -100,10 +125,18 @@ class Authentication {
         case LoginStatus.success:
           final OAuthCredential facebookCredential =
               FacebookAuthProvider.credential(result.accessToken.token);
-          final userCredential =
-              await _auth.signInWithCredential(facebookCredential);
-          user = userCredential.user;
-          return user;
+
+          final response = await supa.Supabase.instance.client.auth
+              .signInWithProvider(supa.Provider.facebook, options: null
+                  //  supa.AuthOptions(redirectTo: '/'),
+                  );
+          print(response);
+          return null;
+
+        // final userCredential =
+        //     await _auth.signInWithCredential(facebookCredential);
+        // user = userCredential.user;
+        // return user;
         //User(status: Status.Success);
         // case LoginStatus.cancelled:
         //   return Resource(status: Status.Cancelled);

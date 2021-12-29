@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+const String supabaseUrl = 'https://sazvvzxrqasjnwsxmedb.supabase.co';
+const String supabaseKey =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MDY3NDA3NCwiZXhwIjoxOTU2MjUwMDc0fQ.j-QrtEXiZhU-MS9NtpoctiIypY4UqPT7xqaUXYMqkx4';
+
 const String secretkey = "31bf3856ad364e35";
 const String domainName = "https://leftstyle.thai2d3d.com/api";
 // const String domainName = "http://192.168.1.8/LifeStyleWebApi/api";
